@@ -1,0 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package de.uni_hamburg.corpora.conversion;
+
+import de.uni_hamburg.corpora.utilities.TypeConverter;
+import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.exmaralda.partitureditor.jexmaralda.convert.PraatConverter;
+import org.xml.sax.SAXException;
+
+/**
+ *
+ * @author Daniel Jettka
+ */
+public class EXB2Praat {
+    
+    public EXB2Praat(){
+    
+    }
+    
+    
+    public String convert(String basicTranscription) throws SAXException, 
+                                                            JexmaraldaException{
+        BasicTranscription bt = TypeConverter.String2BasicTranscription(basicTranscription);
+        PraatConverter pc = new PraatConverter();
+        return pc.BasicTranscriptionToPraat(bt);
+    }
+    
+}

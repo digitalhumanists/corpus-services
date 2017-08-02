@@ -6,6 +6,7 @@
 
 package de.uni_hamburg.corpora.conversion;
 
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,32 +68,27 @@ public class EXB2EAF {
                                                             TransformerException{
         
         /* ELANConverter in EXMARaLDA works with BasicTranscription object */
-        BasicTranscription bt = new BasicTranscription();
-        bt.BasicTranscriptionFromString(basicTranscription);
+        BasicTranscription bt = TypeConverter.String2BasicTranscription(basicTranscription);
         
         /* NOTE: conversion method from ELANConverter in EXMARaLDA cannot be used directly (private),
            so that directives from private method BasicTranscriptionToELAN method from ELANConverter 
            have to replicated here */
         
-        // make a copy of the basic transcription
-        BasicTranscription copy_bt = bt.makeCopy();
         
         // interpolate the timeline, i.e. calculate absoulute time values for timeline items
         // that don't have an absolute time value assigned
         // (is this necessary or can ELAN also handle time slots without absolute time values?)
-        copy_bt.getBody().getCommonTimeline().completeTimes();
+        bt.getBody().getCommonTimeline().completeTimes();
         
         // read BasicTranscription into a String
-        String exb = copy_bt.toXML();
+        String exb = bt.toXML();
         
         // read the XSL stylesheet into a String
-        InputStream xslIS = org.exmaralda.partitureditor.jexmaralda.convert.ELANConverter.class.getResourceAsStream(EX2ELAN_STYLESHEET);
-        java.util.Scanner s = new java.util.Scanner(xslIS).useDelimiter("\\A");
-        String xsl = s.hasNext() ? s.next() : "";
+        String xsl = TypeConverter.InputStream2String(org.exmaralda.partitureditor.jexmaralda.convert.ELANConverter.class.getResourceAsStream(EX2ELAN_STYLESHEET));
                 
         // create a class for performing a stylesheet transformation
-        XSLTransformer xslT = new XSLTransformer();
-        String eaf = xslT.transform(exb, xsl);
+        XSLTransformer xt = new XSLTransformer();
+        String eaf = xt.transform(exb, xsl);
         
         return eaf;
     }

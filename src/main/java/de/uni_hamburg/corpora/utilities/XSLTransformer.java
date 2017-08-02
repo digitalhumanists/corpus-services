@@ -6,15 +6,15 @@
 
 package de.uni_hamburg.corpora.utilities;
 
-import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -22,16 +22,20 @@ import org.w3c.dom.Document;
  */
 public class XSLTransformer {
     
-    private String xslAsString;
-    private String xmlAsString;
+    private TransformerFactory tranformerFactory;
+    private Transformer transformer;
     private String transformerFactoryImpl = "net.sf.saxon.TransformerFactoryImpl";
+    private Map<String, Object> parameters = new HashMap<>();
     
     
-    public XSLTransformer(){}
+    public XSLTransformer() throws TransformerConfigurationException{
+        tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
+    }
+    
     
     public String transform(String xml, String xsl) throws TransformerException{
-        StreamSource xslSource = new StreamSource(new StringReader(xsl));
-        StreamSource xmlSource = new StreamSource(new StringReader(xml));
+        StreamSource xslSource = TypeConverter.String2StreamSource(xsl);
+        StreamSource xmlSource = TypeConverter.String2StreamSource(xml);
         return transform(xmlSource, xslSource);
     }
     
@@ -39,8 +43,12 @@ public class XSLTransformer {
     public String transform(StreamSource xmlSource, StreamSource xslSource) throws TransformerConfigurationException, 
                                                                                    TransformerException{
         
-        TransformerFactory tf = TransformerFactory.newInstance(transformerFactoryImpl, null);
-        Transformer transformer = tf.newTransformer(xslSource);  
+        transformer = tranformerFactory.newTransformer(xslSource);
+        
+        // set the parameters for XSLT transformation
+        for (Map.Entry<String, Object> param : parameters.entrySet()){
+            transformer.setParameter(param.getKey(), param.getValue());
+        }
                 
         //transform and fetch result
         String result = "";
@@ -51,11 +59,28 @@ public class XSLTransformer {
         return result;
     }
     
-    public void setTransformerFactoryImpl(String impl){
-        transformerFactoryImpl = impl;
+    public void setParameter(String parameterName, Object parameterValue){        
+        parameters.put(parameterName, parameterValue);
     }
     
-    public String getTransformerFactoryImpl(String impl){
+    public void setParameters(Map<String, Object> params){        
+        parameters = params;
+    }
+    
+    public Object getParameter(String parameterName){
+        return parameters.get(parameterName);
+    }
+    
+    public Map getParameters(){
+        return parameters;
+    }
+        
+    public void setTransformerFactoryImpl(String impl){
+        transformerFactoryImpl = impl;
+        tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
+    }
+    
+    public String getTransformerFactoryImpl(){
         return transformerFactoryImpl;
     }
         

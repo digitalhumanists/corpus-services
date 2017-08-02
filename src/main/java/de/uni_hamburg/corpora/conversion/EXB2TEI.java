@@ -6,21 +6,16 @@
 
 package de.uni_hamburg.corpora.conversion;
 
-import static de.uni_hamburg.corpora.conversion.EXB2EAF.EX2ELAN_STYLESHEET;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamSource;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.ListTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
-import org.exmaralda.partitureditor.jexmaralda.convert.StylesheetFactory;
 import org.exmaralda.partitureditor.jexmaralda.segment.SegmentedToListInfo;
 import org.xml.sax.SAXException;
 
@@ -32,7 +27,7 @@ public class EXB2TEI {
     
     private String segmentationAlgorithm = "GENERIC";
     private String language = "en";
-    private static String STYLESHEET_PATH = "/org/exmaralda/partitureditor/jexmaralda/xsl/EXMARaLDA2TEI.xsl";
+    private static final String STYLESHEET_PATH = "/org/exmaralda/partitureditor/jexmaralda/xsl/EXMARaLDA2TEI.xsl";
     
     /** Creates a new instance of EXB2TEI */
     public EXB2TEI() {
@@ -110,17 +105,14 @@ public class EXB2TEI {
                                                                              TransformerException,
                                                                              JexmaraldaException {
         
-        BasicTranscription bt = new BasicTranscription();
-        bt.BasicTranscriptionFromString(btString);
+        BasicTranscription bt = TypeConverter.String2BasicTranscription(btString);
         
         SegmentedTranscription st = bt.toSegmentedTranscription();
         ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
         
         lt.getBody().sort();
         // read the XSL stylesheet into a String
-        InputStream xslIS = org.exmaralda.partitureditor.jexmaralda.convert.TEIConverter.class.getResourceAsStream(STYLESHEET_PATH);
-        java.util.Scanner s = new java.util.Scanner(xslIS).useDelimiter("\\A");
-        String xsl = s.hasNext() ? s.next() : "";
+        String xsl = TypeConverter.InputStream2String(org.exmaralda.partitureditor.jexmaralda.convert.TEIConverter.class.getResourceAsStream(STYLESHEET_PATH));
               
         // perform XSLT transformation
         XSLTransformer xt = new XSLTransformer();
