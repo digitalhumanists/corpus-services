@@ -8,9 +8,7 @@ package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.convert.PraatConverter;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -23,8 +21,7 @@ public class EXB2Praat {
     }
     
     
-    public String convert(String basicTranscription) throws SAXException, 
-                                                            JexmaraldaException{
+    public String convert(String basicTranscription){
         BasicTranscription bt = TypeConverter.String2BasicTranscription(basicTranscription);
         PraatConverter pc = new PraatConverter();
         return pc.BasicTranscriptionToPraat(bt);

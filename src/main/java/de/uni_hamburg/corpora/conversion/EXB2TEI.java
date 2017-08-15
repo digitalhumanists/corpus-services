@@ -8,16 +8,14 @@ package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.ListTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import org.exmaralda.partitureditor.jexmaralda.segment.SegmentedToListInfo;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -36,40 +34,18 @@ public class EXB2TEI {
                
     /** reads the EXB as String specified by basicTranscrition and returns a TEI Transcription
      * @param basicTranscription Representation of EXMARaLDA basic transcrition in String
-     * @return Representation of ISO-TEI Spoken transcription in a String
-     * @throws org.exmaralda.partitureditor.jexmaralda.JexmaraldaException
-     * @throws org.xml.sax.SAXException
-     * @throws java.io.IOException
-     * @throws javax.xml.parsers.ParserConfigurationException
-     * @throws javax.xml.transform.TransformerConfigurationException
-     * @throws javax.xml.transform.TransformerException */
+     * @return Representation of ISO-TEI Spoken transcription in a String */
     
-    public String convert(String basicTranscription) throws IOException, 
-                                                            ParserConfigurationException, 
-                                                            SAXException, 
-                                                            TransformerException,
-                                                            TransformerConfigurationException,
-                                                            JexmaraldaException{
+    public String convert(String basicTranscription){
         return convert(basicTranscription, segmentationAlgorithm);
     }
     
-    public String convert(String basicTranscription, String algorithmName) throws IOException, 
-                                                                                  SAXException, 
-                                                                                  ParserConfigurationException, 
-                                                                                  TransformerException,
-                                                                                  TransformerConfigurationException,
-                                                                                  JexmaraldaException{
+    public String convert(String basicTranscription, String algorithmName){
         
-        String result;
+        String result = null;
         
         switch (algorithmName) {
             case "GENERIC":
-                result = BasicTranscriptionToGenericISOTEI(basicTranscription);
-                break;
-            case "AZM":
-                result = BasicTranscriptionToGenericISOTEI(basicTranscription);
-                break;
-            case "MODENA":
                 result = BasicTranscriptionToGenericISOTEI(basicTranscription);
                 break;
             case "HIAT":
@@ -77,8 +53,8 @@ public class EXB2TEI {
                 break;
             default:
                 throw new IllegalArgumentException("Invalid segmentation algoritm: " + algorithmName);
-        }
-                
+        }         
+                        
         return result;
     }
     
@@ -98,25 +74,29 @@ public class EXB2TEI {
         return language;
     }
     
-    private String BasicTranscriptionToGenericISOTEI(String btString) throws IOException, 
-                                                                             SAXException, 
-                                                                             ParserConfigurationException, 
-                                                                             TransformerConfigurationException, 
-                                                                             TransformerException,
-                                                                             JexmaraldaException {
+    private String BasicTranscriptionToGenericISOTEI(String btString) {
         
-        BasicTranscription bt = TypeConverter.String2BasicTranscription(btString);
+        String result = null;
         
-        SegmentedTranscription st = bt.toSegmentedTranscription();
-        ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
+        try{
+            BasicTranscription bt = TypeConverter.String2BasicTranscription(btString);
+
+            SegmentedTranscription st = bt.toSegmentedTranscription();
+            ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
+
+            lt.getBody().sort();
+            // read the XSL stylesheet into a String
+            String xsl = TypeConverter.InputStream2String(org.exmaralda.partitureditor.jexmaralda.convert.TEIConverter.class.getResourceAsStream(STYLESHEET_PATH));
+
+            // perform XSLT transformation
+            XSLTransformer xt = new XSLTransformer();
+            result = xt.transform(lt.toXML(), xsl);
         
-        lt.getBody().sort();
-        // read the XSL stylesheet into a String
-        String xsl = TypeConverter.InputStream2String(org.exmaralda.partitureditor.jexmaralda.convert.TEIConverter.class.getResourceAsStream(STYLESHEET_PATH));
-              
-        // perform XSLT transformation
-        XSLTransformer xt = new XSLTransformer();
-        String result = xt.transform(lt.toXML(), xsl);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(EXB2TEI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(EXB2TEI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return result;
     }

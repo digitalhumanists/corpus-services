@@ -9,6 +9,8 @@ package de.uni_hamburg.corpora.utilities;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -40,22 +42,28 @@ public class XSLTransformer {
     }
     
     
-    public String transform(StreamSource xmlSource, StreamSource xslSource) throws TransformerConfigurationException, 
-                                                                                   TransformerException{
+    public String transform(StreamSource xmlSource, StreamSource xslSource){
         
-        transformer = tranformerFactory.newTransformer(xslSource);
+        String result = null;
         
-        // set the parameters for XSLT transformation
-        for (Map.Entry<String, Object> param : parameters.entrySet()){
-            transformer.setParameter(param.getKey(), param.getValue());
+        try{
+            transformer = tranformerFactory.newTransformer(xslSource);
+
+            // set the parameters for XSLT transformation
+            for (Map.Entry<String, Object> param : parameters.entrySet()){
+                transformer.setParameter(param.getKey(), param.getValue());
+            }
+
+            //transform and fetch result
+            StringWriter resultWriter = new StringWriter();
+            transformer.transform(xmlSource, new StreamResult(resultWriter));
+            result = resultWriter.toString();
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(XSLTransformer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(XSLTransformer.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
-        //transform and fetch result
-        String result = "";
-        StringWriter resultWriter = new StringWriter();
-        transformer.transform(xmlSource, new StreamResult(resultWriter));
-        result = resultWriter.toString();
-        
+
         return result;
     }
     
