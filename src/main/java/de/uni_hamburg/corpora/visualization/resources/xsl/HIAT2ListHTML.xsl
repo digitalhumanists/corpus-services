@@ -14,14 +14,14 @@
 	<!-- ************************ -->
 	<!-- Parameters Declaration   -->
 	<!-- ************************ -->        
-	<xsl:param name="TRANSCRIPTION_ID" required="no" as="xs:string"/>
-	<xsl:param name="COMMUNICATION_ID" required="no" as="xs:string"/>
-	<xsl:param name="RECORDING_PATH" required="no" as="xs:string"/>
-	<xsl:param name="RECORDING_TYPE" required="no" as="xs:string"/>
-	<xsl:param name="LABEL" required="no" as="xs:string"/>
-	<xsl:param name="EMAIL_ADDRESS" required="no" as="xs:string"/>
-	<xsl:param name="WEBSERVICE_NAME" required="no" as="xs:string"/>
-	<xsl:param name="HZSK_WEBSITE" required="no" as="xs:string"/>
+	<xsl:param name="TRANSCRIPTION_ID" required="no" as="xs:string?"/>
+	<xsl:param name="COMMUNICATION_ID" required="no" as="xs:string?"/>        
+        <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
+        <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '\.')[last()]" as="xs:string?" required="no"/>
+        <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
+        <xsl:param name="WEBSERVICE_NAME" select="'HIATListHTML'" as="xs:string?" required="no"/>
+        <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
+	<xsl:param name="LABEL" required="no" as="xs:string?"/>
 
         
 	<!-- ***************************** -->
@@ -50,18 +50,18 @@
 
 	<xsl:variable name="DATASTREAM_AUDIO" select="$RECORDING_PATH"/>
 
-	<!-- whether or not the transcription contains video -->
-	<xsl:variable name="HAS_VIDEO" select="$RECORDING_TYPE=('WEBM', 'MPEG', 'MPG')" as="xs:boolean"/>
+        <!-- whether or not the transcription contains video -->
+        <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('webm', 'mpeg', 'mpg')"/>
 
-	<!-- whether or not the transcription contains video -->
-	<xsl:variable name="HAS_AUDIO" select="$RECORDING_TYPE=('WAV', 'OGG', 'MP3')" as="xs:boolean"/>
-
-	<!-- ******************************************************************************************************************************************** -->
+        <!-- whether or not the transcription contains video -->
+        <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('wav', 'ogg', 'mp3')"/>
+	
+        <!-- ******************************************************************************************************************************************** -->
 
 	<!-- ... and then specify those which are only valid for this kind of visualisation document -->
 
 	<!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
-    <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
+        <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
 	<xsl:variable name="CSS_PATH_LIST" select="concat($TOP_LEVEL_PATH, 'ListFormat-new.css')" as="xs:string"/>
 
 	<!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
@@ -220,7 +220,7 @@
 	
 	<xsl:template match="text()">
 		<xsl:choose>
-			<xsl:when test="name(..)='ta' or name(..)='ats' or name(..)='nts' or (name(..)='ts' and ../@n='HIAT:w')">
+			<xsl:when test="name(..)='ta' or name(..)='ats' or name(..)='nts' or (name(..)='ts' and ../@n=('HIAT:w'))">
 				<xsl:value-of select="."/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -299,17 +299,20 @@
 		</div>
 	</xsl:template>
 
-    <xsl:template name="MAKE_WEB_SERVICE_INFO">
-        <div class="sidebarcontrol">
-            <div class="collapse_box" id="tier_display">
-                <div class="collapse_title"> Webservice information </div>
-                <div class="collapse_content" style="width: 310px;">
-                    <p>Visualization generated on <xsl:value-of  select="current-dateTime()"/> with <xsl:value-of select="$WEBSERVICE_NAME"/> (available on <a href="https://github.com/hzsk/visualizations">GitHub</a>).</p>
-                	<p>Contact the <a href="{$HZSK_WEBSITE}">HZSK - Hamburger Zentrum für Sprachkorpora</a> for more information.</p>
-                </div>                
+        <xsl:template name="MAKE_WEB_SERVICE_INFO">
+            <div class="sidebarcontrol">
+                <div class="collapse_box" id="tier_display">
+                    <div class="collapse_title"> Web service information </div>
+                    <div class="collapse_content" style="width:310;">
+                        <p>
+                            Generated on <xsl:value-of select="current-dateTime()"/> 
+                            with <xsl:value-of select="$WEBSERVICE_NAME"/>.
+                        </p>
+                        <p>Please contact the <a href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </xsl:template>
+        </xsl:template>
 	
 	<xsl:template name="AUDIOLINK">
 		<td class="audiolink">

@@ -13,11 +13,11 @@
     
     <xsl:param name="TRANSCRIPTION_ID" as="xs:string?" required="no"/>
     <xsl:param name="COMMUNICATION_ID" as="xs:string?" required="no"/>
-    <xsl:param name="RECORDING_PATH" as="xs:string?" required="no"/>
-    <xsl:param name="RECORDING_TYPE" as="xs:string?" required="no"/>
-    <xsl:param name="EMAIL_ADDRESS" as="xs:string?" required="no"/>
-    <xsl:param name="WEBSERVICE_NAME" as="xs:string?" required="no"/>
-    <xsl:param name="HZSK_WEBSITE" as="xs:string?" required="no"/>
+    <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
+    <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '\.')[last()]" as="xs:string?" required="no"/>
+    <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
+    <xsl:param name="WEBSERVICE_NAME" select="'ScoreHTML'" as="xs:string?" required="no"/>
+    <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
     
     
     <!-- ********************* -->
@@ -52,10 +52,10 @@
     <xsl:variable name="PROJECT_URL" as="xs:string" select="'http://www.exmaralda.org/'"/>
 
     <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="$RECORDING_TYPE=('WEBM', 'MPEG', 'MPG')"/>
+    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('webm', 'mpeg', 'mpg')"/>
 
     <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="$RECORDING_TYPE=('WAV', 'OGG', 'MP3')"/>
+    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('wav', 'ogg', 'mp3')"/>
     
     <!-- Titles of tiers by category -->
     <xsl:variable name="TIER_TITLES">
@@ -814,11 +814,10 @@
                 <div class="collapse_title"> Web service information </div>
                 <div class="collapse_content" style="width:310;">
                     <p>
-                        This visualization was generated on <xsl:value-of select="current-dateTime()"/> 
-                        with <xsl:value-of select="$WEBSERVICE_NAME"/>. 
-                        The web service source code can be found at <a href="https://github.com/hzsk/visualizations">GitHub</a>.
+                        Generated on <xsl:value-of select="current-dateTime()"/> 
+                        with <xsl:value-of select="$WEBSERVICE_NAME"/>.
                     </p>
-                    <p>Please contact <a href="{$HZSK_WEBSITE}">Hamburger Zentrum für Sprachkorpora</a> for more information.</p>
+                    <p>Please contact the <a href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.</p>
                 </div>
             </div>
         </div>

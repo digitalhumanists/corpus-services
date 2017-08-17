@@ -6,8 +6,10 @@
 
 package de.uni_hamburg.corpora.utilities;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.stream.StreamSource;
@@ -31,6 +33,10 @@ public class TypeConverter {
         return result;
     } 
     
+    public static InputStream String2InputStream(String s){
+        InputStream stream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+        return stream;
+    }
     public static String BasicTranscription2String (BasicTranscription bt){        
         return bt.toXML();
     } 
@@ -54,6 +60,11 @@ public class TypeConverter {
         return ss;
     }
     
+    public static String JdomDocument2String(org.jdom.Document jdomDocument){
+        return new XMLOutputter().outputString(jdomDocument);
+
+    }
+
     public static org.jdom.Document W3cDocument2JdomDocument(org.w3c.dom.Document input) {
         org.jdom.Document jdomDoc = null;        
         try{
@@ -65,11 +76,6 @@ public class TypeConverter {
         return jdomDoc;
     }
     
-    public static String JdomDocument2String(org.jdom.Document jdomDocument){
-        return new XMLOutputter().outputString(jdomDocument);
-
-    }
-
     public static org.w3c.dom.Document JdomDocument2W3cDocument(org.jdom.Document jdomDoc) {        
         org.w3c.dom.Document w3cDoc = null;        
         try{
@@ -80,4 +86,5 @@ public class TypeConverter {
         }        
         return w3cDoc;
     }
+    
 }
