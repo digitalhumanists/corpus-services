@@ -37,8 +37,13 @@ public class GATListHTML extends ListHTML {
         createFromBasicTranscription(btAsString);
     }
         
-        
-    // This method deals with transforming EXB to list HTML
+    
+	 /**
+	 * This method deals performs the transformation of EXB to GATList HTML
+	 *
+	 * @param  btAsString  the EXB file represented in a String object
+	 * @return  
+	 */
     private void createFromBasicTranscription(String btAsString){
     
         basicTranscriptionString = btAsString;
