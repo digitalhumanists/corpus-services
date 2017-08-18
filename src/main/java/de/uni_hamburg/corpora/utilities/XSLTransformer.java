@@ -31,13 +31,18 @@ public class XSLTransformer {
     private String transformerFactoryImpl = "net.sf.saxon.TransformerFactoryImpl";
     private Map<String, Object> parameters = new HashMap<>();
     
-    
+    /**
+    * Class constructor.
+    */
     public XSLTransformer() throws TransformerConfigurationException{
         tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
     }
 	
-	
-    public XSLTransformer() throws TransformerConfigurationException{
+	/**
+    * Class constructor specifying the TransformerFactoryImpl used for XSLT transformation.
+    */
+    public XSLTransformer(String impl) throws TransformerConfigurationException{
+		transformerFactoryImpl = impl;
         tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
     }
     
