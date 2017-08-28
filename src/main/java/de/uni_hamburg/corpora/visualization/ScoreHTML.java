@@ -44,7 +44,12 @@ public class ScoreHTML extends AbstractVisualization {
         createFromBasicTranscription(btAsString);
     }
     
-    
+    /**
+	 * This method deals performs the transformation of EXB to horizontal Score HTML
+	 *
+	 * @param  btAsString  the EXB file represented in a String object
+	 * @return  
+	 */
     public void createFromBasicTranscription(String btAsString){
         
         basicTranscriptionString = btAsString;
@@ -152,10 +157,22 @@ public class ScoreHTML extends AbstractVisualization {
         setHTML(result);
     }
 
+	/**
+	 * Get the width that was set for the Score HTML visualization
+	 *
+	 * @param  btAsString  the EXB file represented in a String object
+	 * @return  
+	 */
     public Integer getWidth() {
         return width;
     }
 
+	/**
+	 * Set the width for the Score HTML visualization
+	 *
+	 * @param  width  width in px for the HTML visualization
+	 * @return  
+	 */
     public void setWidth(Integer width) {
         this.width = width;
     }

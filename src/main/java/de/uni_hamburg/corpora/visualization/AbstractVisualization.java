@@ -29,16 +29,34 @@ public abstract class AbstractVisualization {
     public AbstractVisualization(){
     
     }
-            
+           
+	/**
+	 * Manually set the HTML content of the visualization
+	 *
+	 * @param  c  content to be set as HTML of the visualization
+	 * @return      
+	 */
     public void setHTML(String c){
         html = c;
     }
-    
+	
+    /**
+	 * Get the HTML content of the visualization
+	 *
+	 * @param  
+	 * @return  the HTML content of the visualization    
+	 */
     public String getHTML(){
         return html;
     }
         
-    
+    /**
+	 * set a media element (video or audio depending on recordingType) in the HTML content of the visualization
+	 *
+	 * @param  recordingId  path/URL to the recording file
+	 * @param  recordingType  type of the recording (e.g. wav, mp3, mpg, webm)
+	 * @return  
+	 */
     public void addMedia(String recordingId, String recordingType){
         
         /*

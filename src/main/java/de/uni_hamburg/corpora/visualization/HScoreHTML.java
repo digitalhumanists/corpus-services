@@ -35,6 +35,13 @@ public class HScoreHTML extends AbstractVisualization {
         createFromBasicTranscription(btAsString);
     }
     
+	
+	 /**
+	 * This method deals performs the transformation of EXB to horizontal Score HTML
+	 *
+	 * @param  btAsString  the EXB file represented in a String object
+	 * @return  
+	 */
     public void createFromBasicTranscription(String btAsString){
         
         basicTranscriptionString = btAsString;

@@ -21,6 +21,8 @@ import javax.xml.transform.stream.StreamSource;
 /**
  *
  * @author Daniel Jettka
+ *
+ * Class for performing XSLT transformation with net.sf.saxon.TransformerFactoryImpl or other custom implementation.
  */
 public class XSLTransformer {
     
@@ -29,19 +31,41 @@ public class XSLTransformer {
     private String transformerFactoryImpl = "net.sf.saxon.TransformerFactoryImpl";
     private Map<String, Object> parameters = new HashMap<>();
     
-    
+    /**
+    * Class constructor.
+    */
     public XSLTransformer() throws TransformerConfigurationException{
         tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
     }
+	
+	/**
+    * Class constructor specifying the TransformerFactoryImpl used for XSLT transformation.
+    */
+    public XSLTransformer(String impl) throws TransformerConfigurationException{
+		transformerFactoryImpl = impl;
+        tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
+    }
     
-    
+    /**
+	 * Returns a String object that represents the result of an XSLT transformation.
+	 *
+	 * @param  xml  XML as String object that is used as the basis for the XSLT transformation
+	 * @param  xsl  XSLT stylesheet as String object
+	 * @return      the result of the XSLT transformation as String object
+	 */
     public String transform(String xml, String xsl) throws TransformerException{
         StreamSource xslSource = TypeConverter.String2StreamSource(xsl);
         StreamSource xmlSource = TypeConverter.String2StreamSource(xml);
         return transform(xmlSource, xslSource);
     }
     
-    
+    /**
+	 * Returns a String object that represents the result of an XSLT transformation.
+	 *
+	 * @param  xml  XML as StreamSource object that is used as the basis for the XSLT transformation
+	 * @param  xsl  XSLT stylesheet as StreamSource object
+	 * @return      the result of the XSLT transformation as String object
+	 */
     public String transform(StreamSource xmlSource, StreamSource xslSource){
         
         String result = null;
@@ -67,27 +91,64 @@ public class XSLTransformer {
         return result;
     }
     
+	/**
+	 * Set a single parameter for the XSLT transformation.
+	 *
+	 * @param  parameterName   Name of the parameter
+	 * @param  parameterValue  Value of the parameter
+	 * @return      
+	 */
     public void setParameter(String parameterName, Object parameterValue){        
         parameters.put(parameterName, parameterValue);
     }
     
+	/**
+	 * Set a bunch of parameters for the XSLT transformation.
+	 *
+	 * @param  params  Map object representing parameter names and values
+	 * @return      
+	 */
     public void setParameters(Map<String, Object> params){        
         parameters = params;
     }
     
+	/**
+	 * Get a single parameter that was set for the XSLT transformation.
+	 *
+	 * @param    parameterName  Name of the parameter that shall be returned
+	 * @return   Value of the supplied parameter
+	 */
     public Object getParameter(String parameterName){
         return parameters.get(parameterName);
     }
     
+	/**
+	 * Get all parameters as Map object that were set for the XSLT transformation.
+	 *
+	 * @param    
+	 * @return   Map representing all parameters 
+	 */
     public Map getParameters(){
         return parameters;
     }
-        
+    
+	/**
+	 * Set TransformerFactoryImpl (represented as class name in String) for the XSLT transformation.
+	 *
+	 * @param  impl  TransformerFactoryImpl represented as class name in String 
+	 * @return   
+	 */
     public void setTransformerFactoryImpl(String impl){
         transformerFactoryImpl = impl;
         tranformerFactory = TransformerFactory.newInstance(transformerFactoryImpl, null);
     }
     
+	/**
+	 * Get TransformerFactoryImpl (represented as class name in String) for the XSLT transformation.
+	 *
+	 * @param  
+	 * @return   TransformerFactoryImpl represented as class name in String
+	 */
     public String getTransformerFactoryImpl(){
         return transformerFactoryImpl;
     }

@@ -45,8 +45,13 @@ public class ListHTML extends AbstractVisualization {
         createFromBasicTranscription(btAsString, segmAlgorithm);
     }
     
-            
-    // This method deals with transforming EXB to list HTML
+    
+	/**
+	* This method deals with transforming EXB to list HTML
+	*
+	* @param  btAsString  the EXB file represented in a String object
+	* @return  
+	*/
     private void createFromBasicTranscription(String btAsString, String segmAlgorithm){
 
         basicTranscriptionString = btAsString;
@@ -89,7 +94,13 @@ public class ListHTML extends AbstractVisualization {
         setHTML(result);
     }
     
-    private void createUtteranceList(){
+	/**
+	 * This method creates the intermediate utterance list needed for List visualization
+	 *
+	 * @param  
+	 * @return  
+	 */
+	 private void createUtteranceList(){
         
         String list = null;
         
@@ -153,11 +164,22 @@ public class ListHTML extends AbstractVisualization {
         setUtteranceList(list);
     }
     
-    
+    /**
+	 * Manually set the utterance list (intermediate transformation format) for this visualization
+	 *
+	 * @param  u  the String representing the utterance list
+	 * @return  
+	 */
     public void setUtteranceList(String u){
         utteranceList = u;
     }
     
+	/**
+	 * Get the utterance list (intermediate transformation format) for this visualization
+	 *
+	 * @param
+	 * @return  String representing the utterance list
+	 */
     public String getUtteranceList(){
         return utteranceList;
     }
