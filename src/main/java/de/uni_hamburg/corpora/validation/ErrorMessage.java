@@ -1,0 +1,362 @@
+/**
+ * @file ErrorMessage.java
+ *
+ * Auxiliary data structure for user friendly errors.
+ *
+ * @author Tommi A Pirinen <tommi.antero.pirinen@uni-hamburg.de>
+ * @author HZSK
+ */
+
+package de.uni_hamburg.corpora.validation;
+
+import org.xml.sax.SAXParseException;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+import java.util.Collection;
+
+/**
+ * Error message class is meant to facilitate creating user friendly error
+ * messages in HZSK validators. It kind of forces the programmer to at least
+ * rephrase an exception to two messages describing the problem and suggested
+ * solution. Can be used without exception as well.
+ */
+public class ErrorMessage {
+
+    /**
+     * Severity of error tells whether or how urgently it needs fixing:
+     * <ol>
+     * <li>critical errors <b>must</b> to be fixed before data can be added to
+     * repo</li>
+     * <li>warnings <b>should</b> fixed before data can be used</li>
+     * <li>notes are informative and can usually be ignored</li>
+     * <li>if validator outputs fixed version it should note errors that are
+     * automatically corrected as fixed</li>
+     * <li>unknown is used when developer doesn't actually expect or understand
+     * the error enough to describe it</li>
+     * </ol>
+     */
+    public enum Severity {
+        CRITICAL,
+        WARNING,
+        NOTE,
+        IFIXEDITFORYOU,
+        UNKNOWN
+    }
+
+    /** Description of error */
+    private String what;
+    /** How to fix the error */
+    private String howto;
+    /** Exception that may be related, for developer debugging mainly */
+    private Throwable e;
+    /** Severity of error */
+    private Severity severity = Severity.CRITICAL;
+    /** Errors when parsing a file should include the name of the file */
+    private String filename;
+    /**
+     * Errors when parsing file should if possible point to lines where error
+     * is.
+     */
+    private String lines;
+    /** Errors with file parsing can also include the columns when known.*/
+    private String columns;
+
+    /**
+     * Default constructor should only be used when nothing at all is known
+     * of the error.
+     */
+    public ErrorMessage() {
+        what = "Totally unknown error";
+        howto = "No known fixes";
+        e = null;
+    }
+
+    /**
+     * Errors found by XML validation errors should always include a
+     * SAXParseException. This can be used to extract file location informations
+     * in most situations.
+     */
+    public ErrorMessage(Severity s, SAXParseException saxpe,
+            String what, String howto) {
+        this.severity = s;
+        this.e = saxpe;
+        this.what = what;
+        this.howto = howto;
+        this.filename = saxpe.getSystemId();
+        this.lines = "" + saxpe.getLineNumber();
+        this.columns = "" + saxpe.getColumnNumber();
+    }
+
+    /**
+     * Generic file parsing error that can not be pointed to a line location
+     * can be constructed from filename and descriptions.
+     */
+    public ErrorMessage(Severity s, String filename,
+            String what, String howto) {
+        this.severity = s;
+        this.filename = filename;
+        this.what = what;
+        this.howto = howto;
+    }
+
+    /**
+     * Severity of the error
+     */
+    public Severity getSeverity() {
+        return this.severity;
+    }
+
+    /**
+     * Location of error in filename:lines.columns format if any.
+     */
+    public String getLocation() {
+        String loc = new String();
+        if (filename != null) {
+            loc = filename;
+        } else {
+            loc = "";
+        }
+        if (lines != null) {
+            if (columns != null) {
+                loc += ":" + lines + "." + columns;
+            } else {
+                loc += ":" + lines;
+            }
+        }
+        return loc;
+    }
+
+    /**
+     * Description of the error.
+     */
+    public String getWhat() {
+        return this.what;
+    }
+
+    /**
+     * A suggested fix to the error.
+     */
+    public String getHowto() {
+        return this.howto;
+    }
+
+    /**
+     * a localised message from the excpetion if any.
+     */
+    public String getLocalisedMessage() {
+        if (e != null) {
+            return e.getLocalizedMessage();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * A pretty printed string with most informations about the error.
+     */
+    public String toString() {
+        if (e != null) {
+            return getLocation() + ": " + getWhat() + "\n  -> " + getHowto() +
+                "\n    originally: " + getLocalisedMessage();
+        } else {
+            return getLocation() + ": " + getWhat() + "\n -> " + getHowto();
+        }
+    }
+
+    /**
+     * The stack trace of the exception if any.
+     */
+    public String getStackTrace() {
+        if (e != null) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            return sw.toString();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Generate a plain text report from validation errors for end user. This
+     * can be presented on command-line.
+     *
+     * @param  verbose if true, generates detailed report of all errors,
+     *                 otherwise returns a summary and critical errors.
+     */
+    public static String
+        generatePlainText(Collection<ErrorMessage> errors,
+                boolean verbose) {
+        String report = new String();
+        int criticals = 0;
+        int warnings = 0;
+        int notes = 0;
+        int unknowns = 0;
+        for (ErrorMessage error : errors) {
+            switch (error.getSeverity()) {
+                case CRITICAL:
+                    criticals++;
+                    break;
+                case WARNING:
+                    warnings++;
+                    break;
+                case NOTE:
+                    notes++;
+                    break;
+                case UNKNOWN:
+                    unknowns++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        report += "Messages (" + errors.size() + "), of which: ";
+        if (verbose) {
+            report += criticals + " critical, " + warnings + " warnings, " +
+                notes + " notes and " + unknowns + " not classified\n";
+        } else {
+            report += criticals + " critical and " + warnings +
+                " warnings (and " + (notes + unknowns) +
+                " hidden as non-problems or unknown)\n";
+        }
+        for (ErrorMessage error : errors) {
+            if (verbose) {
+                report += "  " + error + "\n";
+            } else if (error.getSeverity() == ErrorMessage.Severity.WARNING ||
+                    error.getSeverity() == ErrorMessage.Severity.CRITICAL) {
+                report += "  " + error.getLocation() + ": " +
+                    error.getWhat() + "\n" +
+                    "    " + error.getHowto() + "\n";
+            }
+        }
+        return report;
+    }
+
+    /**
+     * Generate a very short summary of validawtion errors.
+     */
+    public static String generateSummary(Collection<ErrorMessage>
+            errors) {
+        String report = new String();
+        int criticals = 0;
+        int warnings = 0;
+        int notes = 0;
+        int unknowns = 0;
+        for (ErrorMessage error : errors) {
+            switch (error.getSeverity()) {
+                case CRITICAL:
+                    criticals++;
+                    break;
+                case WARNING:
+                    warnings++;
+                    break;
+                case NOTE:
+                    notes++;
+                    break;
+                case UNKNOWN:
+                    unknowns++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        report = "Total of " +  (criticals + warnings + notes + unknowns) +
+            " menssages: " + criticals + " critical errors, " +
+            warnings + " warnings, " + notes + " notes and " + unknowns +
+            " others.";
+        return report;
+    }
+
+    /**
+     * Generate a simple HTML snippet version of validation errors.
+     * Includes quite ugly table of all the reports with a java script to hide
+     * errors based on severity.
+     */
+    public static String generateHTML(Collection<ErrorMessage>
+            errors) {
+        int criticals = 0;
+        int warnings = 0;
+        int notes = 0;
+        int unknowns = 0;
+        for (ErrorMessage error : errors) {
+            switch (error.getSeverity()) {
+                case CRITICAL:
+                    criticals++;
+                    break;
+                case WARNING:
+                    warnings++;
+                    break;
+                case NOTE:
+                    notes++;
+                    break;
+                case UNKNOWN:
+                    unknowns++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        String report = new String();
+        report = "<p>The following errors are from XML Schema validation only.</p>\n";
+        report += "<script type='text/javascript'>\n" +
+            "function showClick(clicksource, stuff) {\n\t" +
+            "  var elems = document.getElementsByClassName(stuff);\n" +
+            "  for (i = 0; i < elems.length; i++) {\n" +
+            "    if (clicksource.checked) {\n" +
+            "      elems[i].style.display = 'table-row';\n" +
+            "    } else {\n" +
+            "      elems[i].style.display = 'none';\n" +
+            "    }\n" +
+            "  }\n" +
+            "}\n</script>";
+        report += "<form>\n" +
+            "  <input type='checkbox' id='critical' name='critical' value='show' checked='checked' onclick='showClick(this, &apos;critical&apos;)'>"
+            + "Show criticals (" + criticals + ")</input>" +
+            "  <input type='checkbox' name='warning' value='show' checked='checked' onclick='showClick(this, &apos;warning&apos;)'>"
+            + "Show warnings (" + warnings + ")</input>" +
+            "  <input type='checkbox' name='note' value='show' onclick='showClick(this, &apos;note&apos;)'>"
+            + "Show notes (" + notes + ")</input>" +
+            "  <input type='checkbox' name='unknown' value='show' onclick='showClick(this, &apos;unknown&apos;)'>"
+            + "Show unknowns (" + unknowns + ")</input>" +
+            "</form>";
+        report += "<table>\n  <thead><tr>" +
+            "<th>File:line.column</th><th>Error</th>" +
+            "<th>Fix</th><th>Original</th>" +
+            "</tr></thead>\n";
+        report += "  <tbody>\n";
+        for (ErrorMessage error : errors) {
+            switch (error.getSeverity()) {
+                case CRITICAL:
+                    report += "<tr class='critical'><td style='border-left: red solid 3px'>";
+                    break;
+                case WARNING:
+                    report += "<tr class='warning'><td style='border-left: yellow solid 3px'>";
+                    break;
+                case NOTE:
+                    report += "<tr class='note' style='display: none;'><td style='border-left: green solid 3px'>";
+                    break;
+                case UNKNOWN:
+                    report += "<tr class='unknown' style='display: none;'><td style='border-left: orange solid 3px'>";
+                    break;
+                default:
+                    report += "<tr class='other' style='display: none;'><td style='border-left: black solid 3px'>";
+                    break;
+            }
+            report += error.getLocation() + "</td>";
+            report += "<td style='border: red solid 1px'>" +
+                error.getWhat() +
+                "</td>";
+            report += "<td style='border: green solid 1px'>" +
+                error.getHowto() +
+                "</td>";
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+                error.getLocalisedMessage() +
+                ")</td>\n";
+            report += "<!-- " + error.getStackTrace() + " -->\n";
+            report += "</tr>";
+        }
+        report += "  </tbody>\n  </table>\n";
+        return report;
+    }
+
+}
