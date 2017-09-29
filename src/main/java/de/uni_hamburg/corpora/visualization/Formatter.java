@@ -6,12 +6,24 @@
 package de.uni_hamburg.corpora.visualization;
 
 import de.uni_hamburg.corpora.utilities.AbstractFileProcessor;
+import de.uni_hamburg.corpora.validation.ErrorMessage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author fsnv625
  */
 public class Formatter extends AbstractFileProcessor {
+
+    @Override
+    public Collection<ErrorMessage> exceptionalFix(File fileToBeFixed) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
  
     /**
      * 
