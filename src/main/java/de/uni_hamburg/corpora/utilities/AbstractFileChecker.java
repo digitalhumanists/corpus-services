@@ -31,7 +31,7 @@ public abstract class AbstractFileChecker implements CommandLineable {
     ValidatorSettings settings;
     String fileasstring;
 
-    public static Collection<ErrorMessage> check(File f) {
+    public Collection<ErrorMessage> check(File f) {
         Collection<ErrorMessage> errors = new ArrayList<ErrorMessage>();
         try {
             errors = exceptionalCheck(f);
@@ -43,19 +43,11 @@ public abstract class AbstractFileChecker implements CommandLineable {
         return errors;
     }
 
-    public static Collection<ErrorMessage>
-            exceptionalCheck(File f) throws SAXException, JexmaraldaException {
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
-        //do the actual checking and error logging here
-        return errors;
-    }
+   public abstract Collection<ErrorMessage>
+            exceptionalCheck(File f) throws SAXException, JexmaraldaException;
             
-   public static Collection<ErrorMessage>
-            exceptionalCheck(File f, File g) throws SAXException, JexmaraldaException, IOException, JDOMException{
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
-        //do the actual checking and error logging here
-        return errors;
-    }         
+   public abstract Collection<ErrorMessage>
+            exceptionalCheck(File f, File g) throws SAXException, JexmaraldaException, IOException, JDOMException;
 
     public void doMain(String[] args) {
         settings = new ValidatorSettings("name",
