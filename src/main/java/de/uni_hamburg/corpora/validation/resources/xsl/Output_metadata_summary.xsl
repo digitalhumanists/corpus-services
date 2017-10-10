@@ -163,7 +163,7 @@
 
     <xsl:template name="GET_KEYS_SPEAK_LANG">
         <xsl:param name="PARENT"/>
-        <xsl:if test="//*/Language [@Type = ('L1')]//*/node() | //*/Language [@Type = ('L2')]//*/node()">
+        <xsl:if test="//*/Language [@Type = ('L1')]/Description/Key | //*/Language [@Type = ('L2')]/Description/Key">
             <h1> <xsl:value-of select="$PARENT"/>s for Speakers</h1>
             <table>
                 <tr>
@@ -171,7 +171,7 @@
                     <th>Key coverage</th>
                     <th>Key values</th>
                 </tr>
-                <xsl:for-each-group select="//*/Language [@Type = ('L1')]//*/node() | //*/Language [@Type = ('L2')]//*/node()" group-by="node()">
+                <xsl:for-each-group select="//*/Language [@Type = ('L1')]/Description/Key | //*/Language [@Type = ('L2')]/Description/Key" group-by="@Name">
                     <xsl:sort select="current-grouping-key()"/>
                     <tr>
                         <td>
@@ -204,7 +204,7 @@
 
     <xsl:template name="GET_KEYS_SPEAK_LOC">
         <xsl:param name="PARENT"/>
-        <xsl:if test="//*/Location [@Type = ('Residence')]//*/node() | //*/Language [@Type = ('Birth')]//*/node()">
+        <xsl:if test="//*/Location [@Type = ('Residence')]/Description/Key | //*/Language [@Type = ('Birth')]/Description/Key">
             <h1> <xsl:value-of select="$PARENT"/>s for Speakers</h1>
             <table>
                 <tr>
@@ -212,7 +212,7 @@
                     <th>Key coverage</th>
                     <th>Key values</th>
                 </tr>
-                <xsl:for-each-group select="//*/Location [@Type = ('Residence')]//*/node() | //*/Language [@Type = ('Birth')]//*/node()" group-by="node()">
+                <xsl:for-each-group select="//*/Location [@Type = ('Residence')]/Description/Key | //*/Language [@Type = ('Birth')]//Description/Key" group-by="@Name">
                     <xsl:sort select="current-grouping-key()"/>
                     <tr>
                         <td>
