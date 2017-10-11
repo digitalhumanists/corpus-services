@@ -5,42 +5,97 @@
  */
 package de.uni_hamburg.corpora.utilities;
 
+import java.util.Collection;
+
 /**
  *
  * @author fsnv625
  */
 public class FileCollectionManager extends AbstractCollectionManager {
-   /**
-    * fields: + filePath: String
-+ currentFilename
-    * 
-    * + getParametersFile():
-+ getCorpusStructureSpecification():
-+ getAnnotationSpecification():
-+ getComaSpecification():
 
-+ getComaFile(): String?
+    String fileAsString;
 
-+ getCMDI(): ?
-+ getAllTranscripts(): Collection?
-+ getAllAudioFiles(): Collection?
-+ getAllVideoFiles(): Collection?
+    @Override
+    public String getFileAsString(String s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-+ getAudioLinkForTranscript(): String
-+ getVideoLinkForTranscript(): String
+    @Override
+    public String getParametersFileAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-+ write():
+    @Override
+    public String getCorpusStructureSpecificationAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
+    @Override
+    public String getAnnotationSpecificationAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-+ getXpathToTranscriptions(): String
-+ getXPathToRecordings(): String
-+ getXPathToAsocFiles(): String
+    @Override
+    public String getComaSpecificationAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-+ getCurrentFilename(): String
-+ getCurrentDirectoryname(): String
-+ getNakedFilename(): String
-+ getNakedFilenameWithoutSuffix(): String
+    @Override
+    public String getComaFileAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
+    @Override
+    public String getCMDIAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    **/
+    @Override
+    public Collection getAllTranscripts() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection getAllAudioFiles() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection getAllVideoFiles() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getAudioLinkForTranscript() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getVideoLinkForTranscript() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void write() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void zipThings() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    /**
+     *
+     * + write():
+     *
+     *
+     * + getXpathToTranscriptions(): String + getXPathToRecordings(): String +
+     * getXPathToAsocFiles(): String
+     *
+     * + getCurrentFilename(): String + getCurrentDirectoryname(): String +
+     * getNakedFilename(): String + getNakedFilenameWithoutSuffix(): String
+     *
+     *
+     *
+     */
 }
