@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.AbstractCollectionManager;
 import java.util.Collection;
 
 /**
- *
+ * this class can be used to get corpus files in the repo or in a webservice
+ * 
  * @author fsnv625
  */
-public class FileCollectionManager extends AbstractCollectionManager {
+public class RepositoryCollectionManager extends AbstractCollectionManager {
 
     String fileAsString;
 
@@ -84,18 +86,20 @@ public class FileCollectionManager extends AbstractCollectionManager {
     public void zipThings() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public String getAnnotationSpecificationAsString(String s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     /**
      *
-     * + write():
      *
+     * + getAllTranscripts(): Collection? + getAllAudioFiles(): Collection? +
+     * getAllVideoFiles(): Collection?
      *
-     * + getXpathToTranscriptions(): String + getXPathToRecordings(): String +
-     * getXPathToAsocFiles(): String
+     * + getAudioLinkForTranscript(): String + getVideoLinkForTranscript():
+     * String
      *
-     * + getCurrentFilename(): String + getCurrentDirectoryname(): String +
-     * getNakedFilename(): String + getNakedFilenameWithoutSuffix(): String
-     *
-     *
-     *
+     * +
      */
 }

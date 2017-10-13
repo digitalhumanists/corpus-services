@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora;
 
 import java.util.Collection;
 
@@ -25,6 +25,8 @@ public abstract class AbstractCollectionManager {
     public abstract String getCorpusStructureSpecificationAsString();
 
     public abstract String getAnnotationSpecificationAsString();
+
+    public abstract String getAnnotationSpecificationAsString(String s);
 
     //not yet sure if we need the following
     public abstract String getComaSpecificationAsString();
