@@ -5,7 +5,7 @@
  */
 package de.uni_hamburg.corpora.conversion;
 
-import de.uni_hamburg.corpora.utilities.AbstractNewFileGenerator;
+import de.uni_hamburg.corpora.AbstractNewFileGenerator;
 
 /**
  *

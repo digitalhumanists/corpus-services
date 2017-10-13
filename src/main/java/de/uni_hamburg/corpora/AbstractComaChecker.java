@@ -5,7 +5,7 @@
  * @author HZSK
  * 
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora;
 
 /**
  *

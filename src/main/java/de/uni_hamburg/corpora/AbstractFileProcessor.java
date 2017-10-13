@@ -5,7 +5,7 @@
  * @author HZSK
  * 
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.ErrorMessage;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;

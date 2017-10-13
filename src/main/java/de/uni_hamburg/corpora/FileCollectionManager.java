@@ -3,21 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.AbstractCollectionManager;
+import java.io.File;
 import java.util.Collection;
 
 /**
+ * this class can be used to get corpus files on a filesystem
  *
  * @author fsnv625
  */
-public class RepositoryCollectionManager extends AbstractCollectionManager {
+public class FileCollectionManager extends AbstractCollectionManager {
 
     String fileAsString;
 
+    /**
+     * This method reads the filepath and turns the file into a String
+     * representation
+     *
+     * @param   s   the filepath to the file on a filesystem
+     * @return      that file as a String representation
+     */
     @Override
     public String getFileAsString(String s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        File f = new File(s);
+        return f.toString();
     }
 
     @Override
@@ -30,8 +41,15 @@ public class RepositoryCollectionManager extends AbstractCollectionManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    //Maybe work with the fact, that this has to be specified as AsocFile in Coma?
     @Override
     public String getAnnotationSpecificationAsString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    //But also if there is a String (Filepath) given 
+    @Override
+     public String getAnnotationSpecificationAsString(String s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -86,13 +104,16 @@ public class RepositoryCollectionManager extends AbstractCollectionManager {
     }
     /**
      *
+     * + write():
      *
-     * + getAllTranscripts(): Collection? + getAllAudioFiles(): Collection? +
-     * getAllVideoFiles(): Collection?
      *
-     * + getAudioLinkForTranscript(): String + getVideoLinkForTranscript():
-     * String
+     * + getXpathToTranscriptions(): String + getXPathToRecordings(): String +
+     * getXPathToAsocFiles(): String
      *
-     * +
+     * + getCurrentFilename(): String + getCurrentDirectoryname(): String +
+     * getNakedFilename(): String + getNakedFilenameWithoutSuffix(): String
+     *
+     *
+     *
      */
 }

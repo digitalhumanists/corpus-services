@@ -1,7 +1,10 @@
 /*
- *  @author fsnv625
+ *   A command-line interface for checking corpus files.
+ * 
+ *  @author Anne Ferger
+ *  @author HZSK
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.CommandLineable;
 import de.uni_hamburg.corpora.validation.ErrorMessage;

@@ -5,7 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
-import de.uni_hamburg.corpora.utilities.AbstractFileProcessor;
+import de.uni_hamburg.corpora.AbstractFileProcessor;
 import de.uni_hamburg.corpora.validation.ErrorMessage;
 import java.io.File;
 import java.io.IOException;
