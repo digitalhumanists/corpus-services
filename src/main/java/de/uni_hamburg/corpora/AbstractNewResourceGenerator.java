@@ -9,7 +9,7 @@ package de.uni_hamburg.corpora;
  *
  * @author fsnv625
  */
-public abstract class AbstractNewFileGenerator {
+public abstract class AbstractNewResourceGenerator {
     /**
      * + fileInSomeFormat: type?
      * 

@@ -11,6 +11,6 @@ package de.uni_hamburg.corpora;
  *
  * @author fsnv625
  */
-public abstract class AbstractExbChecker extends AbstractFileChecker{
+public abstract class AbstractExbChecker extends AbstractResourceChecker{
     
 }

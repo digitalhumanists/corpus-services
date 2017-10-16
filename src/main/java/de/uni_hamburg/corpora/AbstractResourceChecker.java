@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * How to also put another file as input for an check?
  *
  */
-public abstract class AbstractFileChecker implements CommandLineable {
+public abstract class AbstractResourceChecker implements CommandLineable {
 
     ValidatorSettings settings;
     String fileasstring;
