@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @author fsnv625
  */
-public abstract class AbstractFileProcessor {
+public abstract class AbstractResourceProcessor {
 
     File fileToBeFixed;
     ValidatorSettings settings;

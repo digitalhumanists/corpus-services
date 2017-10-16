@@ -11,7 +11,7 @@ package de.uni_hamburg.corpora;
  *
  * @author fsnv625
  */
-public abstract class AbstractComaChecker extends AbstractFileChecker{
+public abstract class AbstractComaChecker extends AbstractResourceChecker{
     
  public void getAllExbsInComa (){
  //to do

@@ -5,13 +5,13 @@
  */
 package de.uni_hamburg.corpora.conversion;
 
-import de.uni_hamburg.corpora.AbstractNewFileGenerator;
+import de.uni_hamburg.corpora.AbstractNewResourceGenerator;
 
 /**
  *
  * @author fsnv625
  */
-public class Converter extends AbstractNewFileGenerator{
+public class Converter extends AbstractNewResourceGenerator{
     /**
      * 
      * 
