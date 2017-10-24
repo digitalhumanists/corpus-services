@@ -36,6 +36,36 @@
                 </descriptorRefs>
               </configuration>
             </plugin>
+            <!-- Doxygen plugin -->
+            <plugin>
+              <groupId>com.soebes.maven.plugins</groupId>
+              <artifactId>doxygen-maven-plugin</artifactId>
+              <version>1.1.0</version>
+              <configuration>
+                <quiet>false</quiet>
+                <projectName>${project.artifactId}</projectName>
+                <projectNumber>${project.version}</projectNumber>
+                <optimizeOutputJava>true</optimizeOutputJava>
+                <extractAll>true</extractAll>
+                <extractStatic>true</extractStatic>
+                <recursive>true</recursive>
+                <exclude>.git</exclude>
+                <recursive>true</recursive>
+                <umlLook>true</umlLook>
+                <haveGraph>true</haveGraph>
+                <generateLatex>false</generateLatex>
+                <generateHtml>true</generateHtml>
+                <outputDirectory>${basedir}/doc</outputDirectory>
+              </configuration>
+              <executions>
+                <execution>
+                  <phase>compile</phase>
+                  <goals>
+                    <goal>report</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -79,12 +109,6 @@
             <version>1.1.6</version>
         </dependency>
 
-	<!-- Doxygen plugin -->
-	<dependency>
-            <groupId>com.soebes.maven.plugins</groupId>
-            <artifactId>doxygen-maven-plugin</artifactId>
-            <version>1.1.0</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-cli/commons-cli for validator CLI -->
         <dependency>
