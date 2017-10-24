@@ -17,6 +17,12 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * 
+ * Wenn formatieren nicht teil von visualisieren ist, brauchen wir noch formatCorpus bzw. formatTranscription :)
+In den alten WritePartiturs und WriteUtteranceLists werden auch Formatierungsstylesheets als Parameter genommen, wir müssen jetzt überlegen, wo und wie diese angewendet werden (und wo sie herkommen, wir hatten darüber gesprochen, stumpf ALLE dateien in Coma zu referenzieren, das auf Korpusebene sieht der Nutzer ja nicht) und wo wir defaults hinlegen für die Korpora, die keine besonderen Stylesheets wollen.
+Dann müssen wir auch unterscheiden zwischen Repo-(Web-)Design und Transkript-Layout/Design und Einheitlichkeit (nur) dort erzwingen, wo es keine bzw. kaum Theorie gibt.
+ * 
  */
 public class Formatter extends AbstractResourceProcessor {
 
