@@ -61,8 +61,9 @@
 	<!-- ... and then specify those which are only valid for this kind of visualisation document -->
 
 	<!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
+        <!-- Is the VisualizationFormat still needed? -->
         <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
-	<xsl:variable name="CSS_PATH_LIST" select="concat($TOP_LEVEL_PATH, 'ListFormat-new.css')" as="xs:string"/>
+	<xsl:variable name="CSS_PATH_LIST" select="css/ListFormat.css"/>
 
 	<!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
 	<xsl:variable name="DOCUMENT_SUFFIX" select="'u'" as="xs:string"/>
@@ -76,84 +77,7 @@
 			<head>
 				<xsl:call-template name="HEAD_DATA"/>
 				<!-- <xsl:call-template name="CSS_STYLES"/> -->
-			    <style type="text/css">
-			        /* ************************************************** */
-			        /*                 styles for main document parts            */
-			        /* ************************************************** */
-			        
-			        body{ margin:0; overflow:hidden; font-family:calibri, helvetica, sans-serif; }
-			        
-			        /* the header */
-			        div#head{ background-color:#40627C; color:white; font-size:12pt; font-weight:bold; padding:7px; z-index:100; position:absolute;
-			        	width:100%; height:45px; top:0; left:0; }
-			        
-			        
-			        div#content{ position:absolute; top:55px; bottom:30px; width:100%; }
-			        
-			        div#controls{ float:left; /*min-width:300px;*/ /*width:20%;*/ }
-			        
-			        div.sidebarcontrol{ padding:5px; padding-top:20px; float:left; clear:left; min-width:320px; }
-			        			        
-			        div#main{ /*padding-top: 20px;*/ /*padding-bottom: 200px;*/ border:2px solid #cfd6de; /*margin:0 auto;*/ margin:20px 0px 10px 340px;
-			        	height: 97%; /*height:800px;*/ /*width:75%;*/ /*float:right;*/ /*height:98%;*/ /*width:80%;*/ /*margin-left:300px;*/ /*clear: right;*/
-			        	/*min-width:1100px;*/ }
-			        
-			        div#transcription{ overflow:auto; /*min-width:1100px;*/ /*height:800px;*/ max-height:98%; } 
-			        
-			        div#footer{ position:absolute; height:35px; bottom:0; left:5px; color:gray; background-color:white; border:1px solid gray; text-align:center;
-			       		font-size:10pt; margin-top:0px; min-width:320px;  }
-			        
-			        div#mediaplayer{ }
-			        
-			        .collapse_box{ border:2px solid black; padding:0; }
-			        
-			        .collapse_box .collapse_title{ background-color:#adc1d6; font-weight:bold; height:17px; padding-left:5px; padding-bottom:2px; }
-			        
-			        .collapse_box .collapse_content{ background-color:#e4e9f5; padding:7px 5px 3px 5px; margin:0; }
-			        
-			        span#corpus-title{ color:blue; }
-			        
-			        #head a{ text-decoration:none; color:white; }
-			        
-			        #previous-doc, #next-doc{ font-size:10pt; }
-			        
-			        a.HeadLink{ font-family:Sans-Serif; font-size:16pt; font-style:normal; font-weight:bold; text-decoration:none }
-			        
-			    	<!-- LIST CSS -->
-			        span.subscript { font-size:8pt; font-weight:bold; vertical-align:sub; padding-left:2px; padding-right:2px }
-			        span.numbering { color:rgb(150,150,150) }
-			        span.non-verbal { color:rgb(100,100,100) }
-			        a.numbering { text-decoration:none; }
-			        
-			        table { margin-left:50px; margin-top:0px; margin-right:100px; border-collapse:collapse; }
-			        
-			        td { vertical-align:top; padding:3px; }
-			        
-			        *.numbering { font-size:8pt; font-weight:bold; color:rgb(200,200,200); }
-			        td.speaker { font-size:11pt; font-weight:bold; padding-right:8px; padding-left:4px }
-			        td.text { font-size:12pt; font-weight:normal; padding-left:8px; padding-top:5px; padding-bottom:5px; }
-			        
-			        td.translation { font-size:9pt; font-weight:normal; color:rgb(0,0,240); padding-left:8px }
-			        
-			        td.Child{ border:1px solid blue; }
-			        
-			        *.even { background-color:rgb(245,245,245); padding-left:10px; }
-			        
-			        *.odd { background-color:white; font-size:13pt; padding-left:10px; }
-			        
-			        span.pho{ color:rgb(0,0,240); font-family:"Arial Unicode MS"; }
-			        
-			        span.syll{ color:rgb(100,100,100); font-size:10pt; margin-right:5px; }
-			        
-			        span.type, span.lang{ color:rgb(100,100,100); font-size:8pt; margin-right:5px;  }
-			        span.utt-no{ color:rgb(100,100,100); font-size:8pt; font-weight:bold; }
-			        
-			        td.anno{ border-top:1px dotted gray; border-bottom:1px dotted gray; }
-			        
-			        span.pho{ font-size:11pt; color:blue; }
-			        
-			        span.syll{ font-size:9pt; color:rgb(80,80,80); }
-			    </style>
+                            <link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>			   
 			</head>
 			<body>
 				<xsl:call-template name="MAKE_TITLE"/>
@@ -265,10 +189,10 @@
 	</xsl:template>
 
 	<!-- makes a reference to a CSS stylesheet -->
-	<xsl:template name="CSS_STYLES">
+<!--	<xsl:template name="CSS_STYLES">
 		<link rel="stylesheet" type="text/css" href="{$CSS_PATH}"/>
 		<link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>
-	</xsl:template>
+	</xsl:template>-->
 
 
 	<!-- makes the navigation bar displayed at the top of diverse documents -->
