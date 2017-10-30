@@ -18,6 +18,7 @@
     <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
     <xsl:param name="WEBSERVICE_NAME" select="'ScoreHTML'" as="xs:string?" required="no"/>
     <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
+    <xsl:param name="STYLES" as="xs:string?" required="no"/>
     
     
     <!-- ********************* -->
@@ -89,7 +90,8 @@
         <html>
             <head>
                 <xsl:call-template name="HEAD_DATA"/>
-                <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>             
+                <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>
+                <style><xsl:value-of select="$STYLES"/></style>             
             <script type="text/javascript">
                 <xsl:comment>jsholder</xsl:comment>
             </script>
