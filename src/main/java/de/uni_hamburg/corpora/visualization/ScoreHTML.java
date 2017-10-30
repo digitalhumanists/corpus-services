@@ -82,6 +82,8 @@ public class ScoreHTML extends AbstractVisualization {
             it.trim(param);
 
             String itAsString = it.toXML();
+            
+            String styles = bt.getTierFormatTable().toTDCSS();
 
             final Document itDocument = FileIO.readDocumentFromString(itAsString);
             Document btDocument = bt.toJDOMDocument();
@@ -137,6 +139,7 @@ public class ScoreHTML extends AbstractVisualization {
             xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
+            xt.setParameter("STYLES", styles);
 
             // perform XSLT transformation
             result = xt.transform(xml, xsl);
