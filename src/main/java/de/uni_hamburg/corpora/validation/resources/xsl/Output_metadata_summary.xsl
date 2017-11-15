@@ -19,9 +19,9 @@
         </html>
 
         <xsl:call-template name="GET_STATISTICAL_INFO_ON_WHOLE_CORPUS"/>
-        <xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>
+        <!--<xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>-->
         <xsl:call-template name="GET_DESCRIPTIONS_WITH_ADDITIONAL_INFO"/>
-        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
+    <!--    <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>-->
         <xsl:call-template name="GET_DESCRIPTIONS">
@@ -30,15 +30,15 @@
         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Speaker</xsl:with-param>
         </xsl:call-template>
-        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
+         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Transcription</xsl:with-param>
-        </xsl:call-template>-->
-        <!--  <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>
+          <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Recording</xsl:with-param>
-        </xsl:call-template>-->
-        <!--    <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>
+            <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">AsocFile</xsl:with-param>
-        </xsl:call-template>-->
+        </xsl:call-template>
         <xsl:call-template name="GET_KEYS_LOC">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>
@@ -59,8 +59,8 @@
         <table id="" class="info">
             <thead>
                 <tr>
-                    <th class="info">Number of Utterances Whole Corpus</th>
-                    <th class="info">Number of Words Whole Corpus</th>
+                    <th class="info">Number of Sentences Whole Corpus</th>
+                    <th class="info">Number of Tokens Whole Corpus</th>
                     <th class="info">Duration of Audio (hh:mm:ss) Whole Corpus</th>
                     <th class="info">Number Exb Whole Corpus</th>
                     <th class="info">Number Exs Whole Corpus</th>
@@ -95,7 +95,98 @@
         </table>
     </xsl:template>
 
-    <xsl:template name="GET_INEL_SHORT_OVERVIEW"/>
+    <xsl:template name="GET_INEL_SHORT_OVERVIEW">
+        <h1> Short Overview</h1>
+        <table id="" class="compact">
+            <thead>
+                <tr>
+                    <th>Communication Name</th>
+                    <th>Duration of Audio (hh:mm:ss)</th>
+                    <th>Number of Sentences</th>
+                    <th>Number of Tokens</th>
+                    <th>Transcribed by</th>
+                    <th>Glossed by</th>
+                    <th>Has EXB</th>
+                </tr>
+            </thead>
+            <tbody>
+                <xsl:for-each-group select="//Communication" group-by="@Name">
+                    <xsl:sort select="current-grouping-key()"/>
+                    <xsl:variable name="commElement" select="."/>
+                    <tr>
+                        <td class="firstcolumn">
+                            <xsl:value-of select="current-grouping-key()"/>
+                        </td>
+                        <td>
+                            <xsl:choose>
+                                <xsl:when test="$commElement/Recording/Media/NSLink[ends-with(text(), '.wav')]">
+                                    <xsl:choose>
+                                        <xsl:when test="$commElement/Recording/RecordingDuration/text()">
+                                            <xsl:variable name="milliseconds">
+                                                <xsl:value-of select="$commElement/Recording/RecordingDuration/text()"/>
+                                            </xsl:variable>
+                                            <xsl:variable name="hours" select="floor($milliseconds div (1000 * 3600))"/>
+                                            <xsl:variable name="minutes" select="($milliseconds mod (1000 * 3600)) div (1000 * 60)"/>
+                                            <xsl:variable name="seconds" select="(($milliseconds mod (1000 * 60)) div 1000)"/>
+                                            <xsl:value-of select="concat(format-number($hours, '#00'), ':', format-number($minutes, '00'), ':')"/>
+                                            <xsl:value-of select="format-number($seconds, '00', 'european')"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                    no duration added
+                                </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    no wav
+                                </xsl:otherwise>
+                            </xsl:choose>
+
+                        </td>
+                        <td>
+                            <xsl:choose>
+                                <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'true'">
+                                    <!--     and it need to be a wav file too-->
+                                    <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:u']/text()"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    no exs
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </td>
+                        <td>
+                            <xsl:choose>
+                                <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'true'">
+                                    <!--     and it need to be a wav file too-->
+                                    <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:w']/text()"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    no exs
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </td>
+                        <td>
+                            <xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'transcribed')]/text()"/>
+                        </td>
+                        <td>
+                            <xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'glossed')]/text()"/>
+                        </td>
+                        <td>
+                            <xsl:choose>
+                                <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'false'"
+                                    >
+                                    yes
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    no
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </td>
+
+                    </tr>
+                </xsl:for-each-group>
+            </tbody>
+        </table>
+    </xsl:template>
 
     <xsl:template name="GET_DESCRIPTIONS_WITH_ADDITIONAL_INFO">
         <xsl:if test="//Communication/Description/Key[not(starts-with(@Name, '#'))]">
@@ -237,140 +328,146 @@
 
     <xsl:template name="GET_KEYS_LOC">
         <xsl:param name="PARENT"/>
-        <xsl:if test="//*[name() = $PARENT]/Description/Key[not(starts-with(@Name, '#'))]">
-            <h1><xsl:value-of select="$PARENT"/> Locations</h1>
-            <table id="" class="compact">
-                <xsl:variable name="temp">
-                    <xsl:for-each-group select="//*[name() = $PARENT]/Location/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
-                        <xsl:sort select="current-grouping-key()"/>
-                        <group>
-                            <xsl:value-of select="current-grouping-key()"/>
-                        </group>
-                    </xsl:for-each-group>
-                </xsl:variable>
+        <xsl:for-each-group select="//*[name() = $PARENT]/Location" group-by="@Type">
 
 
-                <xsl:variable name="columnheaders" as="text()">
-                    <xsl:value-of select="$temp/group/text()"/>
-                </xsl:variable>
-                <thead>
-                    <tr>
-                        <th><xsl:value-of select="$PARENT"/> Name</th>
-                        <th>Type</th>
-                        <xsl:for-each-group select="//*[name() = $PARENT]/Location/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
+            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]">
+                <h1><xsl:value-of select="$PARENT"/> (<xsl:value-of select="current-grouping-key()"/>) Locations</h1>
+                <table id="" class="compact">
+                    <xsl:variable name="temp">
+                        <xsl:for-each-group select="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
                             <xsl:sort select="current-grouping-key()"/>
-                            <th>
+                            <group>
                                 <xsl:value-of select="current-grouping-key()"/>
-                            </th>
+                            </group>
                         </xsl:for-each-group>
-                    </tr>
-                </thead>
-                <tbody>
-                    <xsl:for-each select="//*[name() = $PARENT]/Location">
-                        <xsl:variable name="commElement" select="."/>
+                    </xsl:variable>
+
+
+                    <xsl:variable name="columnheaders" as="text()">
+                        <xsl:value-of select="$temp/group/text()"/>
+                    </xsl:variable>
+                    <thead>
                         <tr>
-                            <td class="firstcolumn">
-                                <xsl:choose>
-                                    <xsl:when test="./../Sigle">
-                                        <xsl:value-of select="./../Sigle"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="./../@Name"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </td>
-                            <td>
-                                <xsl:value-of select="./@Type"/>
-                            </td>
-                            <xsl:for-each select="1 to count($temp/group)">
-                                <xsl:variable name="number" select="."/>
-                                <xsl:choose>
-                                    <xsl:when test="$commElement/Description/Key[@Name = $temp/group[$number]]/text()">
-                                        <td>
-                                            <xsl:value-of select="$commElement/Description/Key[@Name = $temp/group[$number]]/text()"/>
-                                        </td>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <td/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:for-each>
+                            <th><xsl:value-of select="$PARENT"/> Name</th>
+                            <th>Type</th>
+                            <xsl:for-each-group select="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
+                                <xsl:sort select="current-grouping-key()"/>
+                                <th>
+                                    <xsl:value-of select="current-grouping-key()"/>
+                                </th>
+                            </xsl:for-each-group>
                         </tr>
-                    </xsl:for-each>
-                </tbody>
-            </table>
-        </xsl:if>
+                    </thead>
+                    <tbody>
+                        <xsl:for-each select="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]">
+                            <xsl:variable name="commElement" select="."/>
+                            <tr>
+                                <td class="firstcolumn">
+                                    <xsl:choose>
+                                        <xsl:when test="./../Sigle">
+                                            <xsl:value-of select="./../Sigle"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="./../@Name"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </td>
+                                <td>
+                                    <xsl:value-of select="./@Type"/>
+                                </td>
+                                <xsl:for-each select="1 to count($temp/group)">
+                                    <xsl:variable name="number" select="."/>
+                                    <xsl:choose>
+                                        <xsl:when test="$commElement/Description/Key[@Name = $temp/group[$number]]/text()">
+                                            <td>
+                                                <xsl:value-of select="$commElement/Description/Key[@Name = $temp/group[$number]]/text()"/>
+                                            </td>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <td/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:for-each>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </xsl:if>
+        </xsl:for-each-group>
     </xsl:template>
 
     <xsl:template name="GET_KEYS_LANG">
         <xsl:param name="PARENT"/>
-        <xsl:if test="//*[name() = $PARENT]/Description/Key[not(starts-with(@Name, '#'))]">
-            <h1><xsl:value-of select="$PARENT"/> Languages</h1>
-            <table id="" class="compact">
-                <xsl:variable name="temp">
-                    <xsl:for-each-group select="//*[name() = $PARENT]/Language/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
-                        <xsl:sort select="current-grouping-key()"/>
-                        <group>
-                            <xsl:value-of select="current-grouping-key()"/>
-                        </group>
-                    </xsl:for-each-group>
-                </xsl:variable>
-
-
-                <xsl:variable name="columnheaders" as="text()">
-                    <xsl:value-of select="$temp/group/text()"/>
-                </xsl:variable>
-                <thead>
-                    <tr>
-                        <th><xsl:value-of select="$PARENT"/> Name</th>
-                        <th>Type</th>
-                        <th>LanguageCode</th>
-                        <xsl:for-each-group select="//*[name() = $PARENT]/Language/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
+        <xsl:for-each-group select="//*[name() = $PARENT]/Language" group-by="@Type">
+            <xsl:if test="//*[name() = $PARENT]/Language[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]">
+                <h1><xsl:value-of select="$PARENT"/> (<xsl:value-of select="current-grouping-key()"/>) Languages</h1>
+                <table id="" class="compact">
+                    <xsl:variable name="temp">
+                        <xsl:for-each-group select="//*[name() = $PARENT]/Language[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
                             <xsl:sort select="current-grouping-key()"/>
-                            <th>
+                            <group>
                                 <xsl:value-of select="current-grouping-key()"/>
-                            </th>
+                            </group>
                         </xsl:for-each-group>
-                    </tr>
-                </thead>
-                <tbody>
-                    <xsl:for-each select="//*[name() = $PARENT]/Language">
-                        <xsl:variable name="commElement" select="."/>
+                    </xsl:variable>
+
+
+                    <xsl:variable name="columnheaders" as="text()">
+                        <xsl:value-of select="$temp/group/text()"/>
+                    </xsl:variable>
+                    <thead>
                         <tr>
-                            <td class="firstcolumn">
-                                <xsl:choose>
-                                    <xsl:when test="./../Sigle">
-                                        <xsl:value-of select="./../Sigle"/>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <xsl:value-of select="./../@Name"/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </td>
-                            <td>
-                                <xsl:value-of select="./@Type"/>
-                            </td>
-                            <td>
-                                <xsl:value-of select="./LanguageCode/text()"/>
-                            </td>
-                            <xsl:for-each select="1 to count($temp/group)">
-                                <xsl:variable name="number" select="."/>
-                                <xsl:choose>
-                                    <xsl:when test="$commElement/Description/Key[@Name = $temp/group[$number]]/text()">
-                                        <td>
-                                            <xsl:value-of select="$commElement/Description/Key[@Name = $temp/group[$number]]/text()"/>
-                                        </td>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <td/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:for-each>
+                            <th><xsl:value-of select="$PARENT"/> Name</th>
+                            <th>Type</th>
+                            <th>LanguageCode</th>
+                            <xsl:for-each-group select="//*[name() = $PARENT]/Language[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
+                                <xsl:sort select="current-grouping-key()"/>
+                                <th>
+                                    <xsl:value-of select="current-grouping-key()"/>
+                                </th>
+                            </xsl:for-each-group>
                         </tr>
-                    </xsl:for-each>
-                </tbody>
-            </table>
-        </xsl:if>
+                    </thead>
+                    <tbody>
+                        <xsl:for-each select="//*[name() = $PARENT]/Language[@Type = current-grouping-key()]">
+                            <xsl:variable name="commElement" select="."/>
+                            <tr>
+                                <td class="firstcolumn">
+                                    <xsl:choose>
+                                        <xsl:when test="./../Sigle">
+                                            <xsl:value-of select="./../Sigle"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:value-of select="./../@Name"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </td>
+                                <td>
+                                    <xsl:value-of select="./@Type"/>
+                                </td>
+                                <td>
+                                    <xsl:value-of select="./LanguageCode/text()"/>
+                                </td>
+                                <xsl:for-each select="1 to count($temp/group)">
+                                    <xsl:variable name="number" select="."/>
+                                    <xsl:choose>
+                                        <xsl:when test="$commElement/Description/Key[@Name = $temp/group[$number]]/text()">
+                                            <td>
+                                                <xsl:value-of select="$commElement/Description/Key[@Name = $temp/group[$number]]/text()"/>
+                                            </td>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <td/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:for-each>
+                            </tr>
+                        </xsl:for-each>
+                    </tbody>
+                </table>
+            </xsl:if>
+        </xsl:for-each-group>
     </xsl:template>
 
     <xsl:template name="GET_DESCRIPTIONS">

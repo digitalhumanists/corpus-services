@@ -1,0 +1,30 @@
+  html, body{ margin:0;padding:0;font-family:"Open Sans",Helvetica,Verdana,Arial,sans-serif; }
+                    
+                    header, section#overview{ border-top:1px solid #aaa; border-bottom:1px solid #aaa; color:#888; background-color:#f0f0f0; }
+                    
+                    header{ clear:both; background-color:#f0f0f0; color:#333; padding:5px; overflow:auto; } 
+                    header h1{ font-size:1em; float:left; margin:0; }
+                    
+                    section#controls{ float:right; padding:0; font-size:0.8em; }
+                    section#sec1{ display:table; table-layout:fixed; width:100%; clear:both; }
+                    section#transcript-sec{ overflow:scroll; margin-left:8em; }
+                    div#media, div#diagram { display:table-cell; overflow-x:scroll; min-width:300px; text-align:center; vertical-align:top; background-color:#fafafa; }
+                    section#overview{ width:100%; min-height: 10px; padding:0; font-size:0.8em; }
+                    div#media video{ width:100%; min-width:250px; height: 100%; max-height:500px; min-height:200px; }
+                    div#media audio{ width:100%; min-width:250px; }
+                    footer{ width:100%; color:#aaa; font-size:0.8em; padding:10px; text-align:center; clear:both; border-top:1px solid #aaa; }                     
+                    svg { background-color:#fafafa; min-width:100%; }
+                    table#transcript{ font-size:0.8em; color: #666; border-collapse:separate; border-spacing:0 1px; background-color:#e0e0e0; }
+                    table#transcript tr{ background-color:#e0e0e0; }
+                    table#transcript tr:first-child td{ padding-top: 6px; }
+                    table#transcript tr:last-child td{ padding-bottom: 6px; }
+                    table#transcript td{ white-space:nowrap; padding: 3px 6px 3px 2px; }
+                    table#transcript td.empty{ color:transparent; }
+                    table#transcript td.event{ background-color:#fff; border:1px solid #aaa;}
+                    table#transcript tr.timeline{ background-color:#aaa; color:#fff; font-size:0.7em; font-weight:bold; }
+                    table#transcript tr.timeline td.tli{ cursor:pointer; }
+                    table#transcript tr.tier{ margin-bottom:3px; }
+                    table#transcript tr.tier td.tier-name{ position:absolute; width:8em; left:0; top:auto; margin-top:0; text-align:right; }
+                    table#transcript tr.nv td.event, table#transcript tr.ref td.event{ font-style:italic; font-size:0.9em; }
+                    form#autoActions{ margin:0; }
+                    form#autoActions label{ margin-right: 10px; }

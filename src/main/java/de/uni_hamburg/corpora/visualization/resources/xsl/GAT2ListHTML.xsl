@@ -3,11 +3,15 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="xs"
     version="2.0">
+    
+    <!-- Is the VisualizationFormat still needed? -->
+    <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
+    <xsl:variable name="CSS_PATH_LIST" select="css/ListGATFormat.css"/>
     <xsl:template match="/">
         <html>
             <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                <xsl:call-template name="MAKE_CSS_STYLES"></xsl:call-template>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>         
                 <xsl:call-template name="INSERT_JAVA_SCRIPT"/>                
             </head>
             <body>
@@ -79,132 +83,6 @@
                 <xsl:attribute name="type">audio/wav</xsl:attribute>
             </xsl:element>
         </audio>				
-    </xsl:template>
-
-    <xsl:template name="MAKE_CSS_STYLES">
-        <style type="text/css">
-            body {
-                font-family: "Courier New", Courier, monospace;
-                white-space:nowrap;
-            }
-            
-            div#head {
-            background-color: #40627C;
-            color:white;
-            font-size:12pt;
-            font-weight:bold;
-            padding:7px;
-            position:fixed;
-            left:3%;
-            right:3%;
-            width:94%;
-            z-index:100;
-            }
-            
-            div#main {
-            position:absolute;
-            top:80px;
-            right:0px;
-            bottom:0px;
-            width:98%;	
-            /*height:95%;*/
-            overflow:auto;	
-            /*margin-bottom : 1000px*/
-            }
-            
-            tr:nth-child(even) {
-                background-color: #FFF8DC;
-            }
-            
-            
-            tr:nth-child(odd) {
-                background-color: white;
-            }
-
-            
-            div#footer{
-            color:gray;
-            border:1px solid gray;
-            text-align:right;
-            font-size:10pt;
-            margin-top:10px;
-            margin-bottom: 10px;
-            position:absolute;
-            right:3%;
-            left:3%;
-            }
-            
-            span#corpus-title{
-            color: blue;
-            }
-            #head a {
-            text-decoration:none;
-            color:white;
-            }
-            #previous-doc {
-            font-size: 10pt;
-            }
-            #next-doc {
-            font-size: 10pt;
-            }
-            
-            
-            
-            span.subscript {
-            font-size:8pt;
-            font-weight:bold;
-            vertical-align:sub;
-            padding-left:2px;
-            padding-right:2px
-            }
-            
-            td.audioLink {
-                background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dE////////CVj33AAAAAlwSFlzAAAASAAAAEgARslrPgAAAfpJREFUSMe1VUFO20AUnRkSgVSo4wQhEErXbUyABWntLJ2eAxJvyIJcgWyBy9g3ICtChLBzBfsMtiVv/Fi9ukpkOTSqN98z89/7b+bP/yMAABCizPr++7vvA5PJ3d1kApwZnc6ZAXw92P+iaYXlPP2Iq+Jfm0iSJEkSYDQaDh0HqNWUqteBnR0pa7XNLXHkIW+pADpYlvmr3y+IWk1dP2wB0+n9/XQKLJdBsFwCcRzHcVxYztOPOPKQd1XIHwFUSsDFxfn55SUQRVEURdVHuWqJIw95HWc0cpy/BDBXPDIqLwt8c3N9PRwCaZqmaVotjDzNZqPRahVxGFfw0lAhj7CMkH693tXVzx4QhmEYhtVCyEs84wrD+PHdMIoF5rJKAO3x8dHRyQkwmz0/z2bluCDw/SAocKwawTLiAi/VpgJod3fr9b094PHx4eHpaR1PXvpr2sF+QwOUVFJKsf2npFJKCqHruq7r6+t5nud5XoyllFIqIbZOQbt9evqtDcznLy/z+edToGx78Nu2C2Wu67quW71jy+pblinEYvH29roQwjQtyzTLD9PzPM/zirE9GAzswT+U4Xh8ezseA1mWZVlWfftZJaVl+L8aEQNXNiL+lLViKmcdM5errZg7oh9xG7fiVSFUuu1jRJ7Kx6jMbvocd7tGp9v9/HP8AWIhUD3iQ2hbAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE2LTAzLTAxVDE3OjM3OjEzKzA4OjAwpgK6zQAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNi0wMi0yMVQwMDowNTo0NyswODowMBVFaYsAAABUdEVYdHN2ZzpiYXNlLXVyaQBmaWxlOi8vL2hvbWUvZGIvc3ZnX2luZm8vc3ZnLzY3LzJiLzY3MmI2ZmM0OTY0YmUzNGI4NGFkYjhlZDcyOGU0ZDFlLnN2Z7DScMIAAAAASUVORK5CYII%3D);
-                background-repeat:no-repeat;
-                min-width:16px;
-                min-height:16px;
-                
-            }
-            
-            td.numbering {
-                color:rgb(150,150,150);
-                padding-right: 5px;
-            }
-            
-            
-            table {
-            margin-left:50px;
-            margin-top:0px;
-            margin-right:100px;
-            }
-            
-            td {
-            vertical-align:top
-            }
-            
-            td.speaker {
-                font-weight:bold;
-                padding-right:8px;
-                padding-left:4px
-            }
-            td.text {
-            font-size:11pt;
-            font-weight:normal;
-            padding-left:8px
-            }
-            
-            td.translation {
-            font-size:9pt;
-            font-weight:normal;
-            color:rgb(0,0,240);
-            padding-left:8px
-            }
-            
-            
-            a {
-            text-decoration:none;
-            }
-        </style>        
     </xsl:template>
     
     <xsl:template name="INSERT_JAVA_SCRIPT">
