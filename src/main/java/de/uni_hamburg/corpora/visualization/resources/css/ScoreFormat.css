@@ -1,0 +1,243 @@
+
+/* ************************************************** */
+/*                 styles for generic elements                   */
+/* ************************************************** */
+
+td {
+	white-space:nowrap
+}
+
+p.spacer {
+	margin-top:50px
+}
+
+
+img {
+	border-width:0px;
+}
+
+
+
+/* ************************************************** */
+/*                 styles for partitur numbering                 */
+/* ************************************************** */
+
+p.pno {
+	padding-top:4px;
+	padding-bottom:4px;
+	font-weight:bold;
+	margin-left:50px
+}
+
+span.pno {
+	font-weight:bold;
+}
+
+/* ************************************************** */
+/**** styles for generic parts of the Partitur table **/
+/* ************************************************** */
+
+/* style for the table as a whole */
+table.p {
+	border-collapse:collapse;
+	border-spacing:0px;
+	empty-cells:show;
+	margin-left:2em;	
+}
+
+/* style for an empty cell inside a partitur */
+td.emp {
+	font-size:6pt
+}
+
+/* style for a cell above the bottom of the partitur frame */ 
+td.b {
+	border-bottom-color:rgb(153,153,153);
+	border-bottom-style:Solid;
+	border-bottom-width:1px;
+	 
+}
+
+/* style for a cell before the right edge of the partitur frame */ 
+td.r {
+	border-right-color:rgb(153,153,153);
+	border-right-style:Solid;
+	border-right-width:1px;	 
+}
+
+/* style for cells with no left border (tier labels outside the partitur frame? */ 
+td.nlb {
+               border-left-style:None;
+               border-left-width:0px;
+               border-right-style:None;
+               border-right-width:0px;
+}
+
+/* style for main tier labels (i.e. labels for tiers of type T(ranscription) */
+td.tlm {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 11pt;
+	font-style: normal;
+	font-weight: bold;
+	color: rgb(0,0,0);
+	background-color:white;
+	border-left-color:rgb(153,153,153);
+	border-left-style:Solid;
+	border-left-width:1px;	 
+	border-right:1px solid rgb(153,153,153);
+}
+
+/* style for other tier labels (i.e. labels for tiers of type other than T(ranscription) */
+td.tlo {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: bold;
+	color: rgb(200,200,200);
+	background-color:white;
+	border-left-color:rgb(153,153,153);
+	border-left-style:Solid;
+	border-left-width:1px;	 
+	border-right:1px solid rgb(153,153,153);
+}
+
+/* the style for the table cell above the tier labels in the timeline row */
+td.snc-emp {
+	border-bottom-color:rgb(153,153,153);
+	border-bottom-style:Solid;
+	border-bottom-width:1px;	 
+}
+
+/* the style for the table cell representing a timeline-item */ 
+td.snc {
+	border-bottom-color:rgb(100,100,100);
+	border-bottom-style:Solid;
+	background-color:silver;
+	color:white;
+	border-bottom-width:1px;
+}
+
+/* the style for the anchor from the partitur to the utterance list */
+a.snc-anc {
+	font-family: sans-serif;
+	font-size: 8pt;
+	font-style: normal;
+	font-weight: bold;
+	color: white;
+	background-color:silver;
+	text-decoration:none
+}
+
+/* *********************************************** */
+/* styles for tiers according to their categories */ 
+/* *********************************************** */
+
+td.v {
+	font-family: "Arial Unicode MS",Arial,sans-serif;
+	font-size: 11pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(0,0,0);
+	text-align:justify;
+}
+
+td.sup {
+	font-family: "Times New Roman",Times,serif;
+	font-size:8pt;
+	font-weight:normal;
+	color: rgb(0,0,0);
+	background-color: rgb(255,255,200);
+	border-right: solid 1px rgb(255,255,255) 
+}
+
+tr.sup {
+	height: 8px;
+}
+
+td.k {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 8pt;
+	font-style: normal;
+	font-weight: normal;
+	color:rgb(0,0,0);
+	background-color: rgb(240,240,240);
+}
+
+td.pause {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(0,0,255);
+}
+td.nn {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(0,0,255)
+}
+
+td.nsp {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(0,0,255)
+}
+
+td.nv {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 9pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(0,0,100);
+	border-right: 1px solid rgb(0,0,100);
+	border-top: 1px dotted rgb(0,0,100);
+}
+
+
+td.nr {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(0,0,255)
+}
+td.akz {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 1pt;
+	font-style: normal;
+	font-weight: normal;
+	color: rgb(100,100,100);
+	background-color: rgb(100,100,100);
+	}
+tr.akz {
+	height: 1px;
+}
+td.en {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 8pt;
+	font-style: italic;
+	font-weight: normal;
+	color: rgb(100,100,100);
+	text-align:justify;
+	
+}
+
+td.de {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 8pt;
+	font-style: italic;
+	font-weight: normal;
+	color: rgb(100,100,100)
+}
+
+td.hd {
+	font-family: "Times New Roman",Times,serif;
+	font-size: 8pt;
+	font-style: italic;
+	font-weight: normal;
+	color: rgb(100,100,100)
+}
+
