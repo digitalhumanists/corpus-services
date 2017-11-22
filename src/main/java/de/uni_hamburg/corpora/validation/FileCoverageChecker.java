@@ -200,6 +200,10 @@ public class FileCoverageChecker implements CommandLineable {
                 }
                 Text nstext = (Text)nstexts.item(j);
                 String nspath = nstext.getWholeText();
+                // added this line so it compares Coma NSLinks in the correct format of the OS
+                // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn#t be the case anyway
+                nspath = nspath.replace('/', File.separatorChar);
+                //System.out.println(nspath);
                 NSLinksPaths.add(nspath);
             }
         }
