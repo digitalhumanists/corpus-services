@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
     <xsl:decimal-format name="european" decimal-separator="."/>
     <xsl:template match="/">
@@ -21,7 +20,7 @@
         <xsl:call-template name="GET_STATISTICAL_INFO_ON_WHOLE_CORPUS"/>
         <!--<xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>-->
         <xsl:call-template name="GET_DESCRIPTIONS_WITH_ADDITIONAL_INFO"/>
-    <!--    <xsl:call-template name="GET_DESCRIPTIONS">
+        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>-->
         <xsl:call-template name="GET_DESCRIPTIONS">
@@ -30,15 +29,15 @@
         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Speaker</xsl:with-param>
         </xsl:call-template>
-         <xsl:call-template name="GET_DESCRIPTIONS">
+        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Transcription</xsl:with-param>
-        </xsl:call-template>
-          <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>-->
+        <!--  <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Recording</xsl:with-param>
-        </xsl:call-template>
-            <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>-->
+        <!--    <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">AsocFile</xsl:with-param>
-        </xsl:call-template>
+        </xsl:call-template>-->
         <xsl:call-template name="GET_KEYS_LOC">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>
@@ -107,6 +106,8 @@
                     <th>Transcribed by</th>
                     <th>Glossed by</th>
                     <th>Has EXB</th>
+                    <th>Translation completed</th>
+                    <th>Annotation completed</th>
                 </tr>
             </thead>
             <tbody>
@@ -181,7 +182,29 @@
                                 </xsl:otherwise>
                             </xsl:choose>
                         </td>
-
+                        <td>
+                            <xsl:choose>
+                                <!-- TO DO -->
+                                <xsl:when test="$commElement/Description/Key[contains(lower-case(@Name), 'translation') and (contains(text(), '.') or contains(text(), '?'))]/text()"
+                                    >
+                                    no(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'translation')]/text()"/>)
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    yes(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'translation')]/text()"/>)
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </td>
+                        <td>
+                            <xsl:choose>
+                                <xsl:when test="$commElement/Description/Key[contains(lower-case(@Name), 'annotation') and  (contains(text(), '.') or contains(text(), '?'))]/text()"
+                                    >
+                                    no(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'annotation')]/text()"/>)
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    yes(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'annotation')]/text()"/>)
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </td>
                     </tr>
                 </xsl:for-each-group>
             </tbody>
@@ -330,8 +353,7 @@
         <xsl:param name="PARENT"/>
         <xsl:for-each-group select="//*[name() = $PARENT]/Location" group-by="@Type">
 
-
-            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]">
+            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]">
                 <h1><xsl:value-of select="$PARENT"/> (<xsl:value-of select="current-grouping-key()"/>) Locations</h1>
                 <table id="" class="compact">
                     <xsl:variable name="temp">
@@ -351,6 +373,24 @@
                         <tr>
                             <th><xsl:value-of select="$PARENT"/> Name</th>
                             <th>Type</th>
+                            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Street">
+                                <th>Street</th>
+                            </xsl:if>
+                            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/City">
+                                <th>City</th>
+                            </xsl:if>
+                            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PostalCode">
+                                <th>PostalCode</th>
+                            </xsl:if>
+                            <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Country">
+                                <th>Country</th>
+                            </xsl:if>
+                            <xsl:if
+                                test="(//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodStart) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodExact) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodDuration)">
+                                <th>PeriodStart</th>
+                                <th>PeriodExcact</th>
+                                <th>PeriodDuration</th>
+                            </xsl:if>
                             <xsl:for-each-group select="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
                                 <xsl:sort select="current-grouping-key()"/>
                                 <th>
@@ -376,6 +416,38 @@
                                 <td>
                                     <xsl:value-of select="./@Type"/>
                                 </td>
+                                <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Street">
+                                    <td>
+                                        <xsl:value-of select="./Street"/>
+                                    </td>
+                                </xsl:if>
+                                <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/City">
+                                    <td>
+                                        <xsl:value-of select="./City"/>
+                                    </td>
+                                </xsl:if>
+                                <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PostalCode">
+                                    <td>
+                                        <xsl:value-of select="./PostalCode"/>
+                                    </td>
+                                </xsl:if>
+                                <xsl:if test="//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Country">
+                                    <td>
+                                        <xsl:value-of select="./Country"/>
+                                    </td>
+                                </xsl:if>
+                                <xsl:if
+                                    test="(//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodStart) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodExact) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodDuration)">
+                                    <td>
+                                        <xsl:value-of select="./Period/PeriodStart"/>
+                                    </td>
+                                    <td>
+                                        <xsl:value-of select="./Period/PeriodExcact"/>
+                                    </td>
+                                    <td>
+                                        <xsl:value-of select="./Period/PeriodDuration"/>
+                                    </td>
+                                </xsl:if>
                                 <xsl:for-each select="1 to count($temp/group)">
                                     <xsl:variable name="number" select="."/>
                                     <xsl:choose>
@@ -400,7 +472,7 @@
     <xsl:template name="GET_KEYS_LANG">
         <xsl:param name="PARENT"/>
         <xsl:for-each-group select="//*[name() = $PARENT]/Language" group-by="@Type">
-            <xsl:if test="//*[name() = $PARENT]/Language[@Type = current-grouping-key()]/Description/Key[not(starts-with(@Name, '#'))]">
+            <xsl:if test="//*[name() = $PARENT]/Language[@Type = current-grouping-key()]">
                 <h1><xsl:value-of select="$PARENT"/> (<xsl:value-of select="current-grouping-key()"/>) Languages</h1>
                 <table id="" class="compact">
                     <xsl:variable name="temp">
