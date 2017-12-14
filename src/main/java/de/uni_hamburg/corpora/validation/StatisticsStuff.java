@@ -1,5 +1,5 @@
 /**
- * @file ErrorMessage.java
+ * @file StatisticsStuff.java
  *
  * Auxiliary data structure for user friendly errors.
  *
@@ -20,7 +20,7 @@ import java.util.Collection;
  * rephrase an exception to two messages describing the problem and suggested
  * solution. Can be used without exception as well.
  */
-public class ErrorMessage {
+public class StatisticsStuff {
 
     /**
      * Severity of error tells whether or how urgently it needs fixing:
@@ -29,16 +29,22 @@ public class ErrorMessage {
      * repo</li>
      * <li>warnings <b>should</b> fixed before data can be used</li>
      * <li>notes are informative and can usually be ignored</li>
+     * <li>missing is a special case of error somehow</li>
+     * <li>correct is a case that <b>must not</b> be acted upon</li>
      * <li>if validator outputs fixed version it should note errors that are
      * automatically corrected as fixed</li>
      * <li>unknown is used when developer doesn't actually expect or understand
      * the error enough to describe it</li>
      * </ol>
+     * If the validator reports all occurrences of things it goes through, the
+     * success % or readiness % can be reported.
      */
     public enum Severity {
         CRITICAL,
         WARNING,
         NOTE,
+        MISSING,
+        CORRECT,
         IFIXEDITFORYOU,
         UNKNOWN
     }
@@ -65,10 +71,21 @@ public class ErrorMessage {
      * Default constructor should only be used when nothing at all is known
      * of the error.
      */
-    public ErrorMessage() {
+    public StatisticsStuff() {
         what = "Totally unknown error";
         howto = "No known fixes";
         e = null;
+    }
+
+    public StatisticsStuff(Severity s, String what) {
+        this.severity = s;
+        this.what = what;
+    }
+
+    public StatisticsStuff(Severity s, Throwable e, String what) {
+        this.severity = s;
+        this.e = e;
+        this.what = what;
     }
 
     /**
@@ -76,7 +93,7 @@ public class ErrorMessage {
      * SAXParseException. This can be used to extract file location informations
      * in most situations.
      */
-    public ErrorMessage(Severity s, SAXParseException saxpe,
+    public StatisticsStuff(Severity s, SAXParseException saxpe,
             String what, String howto) {
         this.severity = s;
         this.e = saxpe;
@@ -91,7 +108,7 @@ public class ErrorMessage {
      * Generic file parsing error that can not be pointed to a line location
      * can be constructed from filename and descriptions.
      */
-    public ErrorMessage(Severity s, String filename,
+    public StatisticsStuff(Severity s, String filename,
             String what, String howto) {
         this.severity = s;
         this.filename = filename;
@@ -104,6 +121,57 @@ public class ErrorMessage {
      */
     public Severity getSeverity() {
         return this.severity;
+    }
+
+    /**
+     * whether the stuff should be counted towards good statistic.
+     */
+    public boolean isGood() {
+        if ((this.severity == Severity.CORRECT) ||
+               (this.severity == Severity.NOTE)) {
+            return true;
+        } else if ((this.severity == Severity.WARNING) ||
+               (this.severity == Severity.CRITICAL) ||
+              (this.severity == Severity.MISSING)) {
+            return false;
+        } else {
+            System.out.println("Missed a severity case in isGood :-(");
+            return false;
+        }
+    }
+
+    /**
+     * whether the stuff should be counted towards bad statistic.
+     */
+    public boolean isBad() {
+        if ((this.severity == Severity.CORRECT) ||
+               (this.severity == Severity.NOTE)) {
+            return false;
+        } else if ((this.severity == Severity.WARNING) ||
+               (this.severity == Severity.CRITICAL) ||
+              (this.severity == Severity.MISSING)) {
+            return true;
+        } else {
+            System.out.println("Missed a severity case in isBad :-(");
+            return true;
+        }
+    }
+
+    /**
+     * whether the stuff should be presented as severe problem.
+     */
+    public boolean isSevere() {
+        if ((this.severity == Severity.CORRECT) ||
+               (this.severity == Severity.WARNING) ||
+               (this.severity == Severity.NOTE)) {
+            return false;
+        } else if ((this.severity == Severity.CRITICAL) ||
+              (this.severity == Severity.MISSING)) {
+            return true;
+        } else {
+            System.out.println("Missed a severity case in isSevere :-(");
+            return true;
+        }
     }
 
     /**
@@ -137,7 +205,11 @@ public class ErrorMessage {
      * A suggested fix to the error.
      */
     public String getHowto() {
-        return this.howto;
+        if (this.howto != null) {
+            return this.howto;
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -155,12 +227,8 @@ public class ErrorMessage {
      * A pretty printed string with most informations about the error.
      */
     public String toString() {
-        if (e != null) {
-            return getLocation() + ": " + getWhat() + "\n  -> " + getHowto() +
-                "\n    originally: " + getLocalisedMessage();
-        } else {
-            return getLocation() + ": " + getWhat() + "\n -> " + getHowto();
-        }
+        return getLocation() + ": " + getWhat() + ". " + getHowto() + ". " +
+            getLocalisedMessage() + "\n" + getStackTrace();
     }
 
     /**
@@ -185,14 +253,14 @@ public class ErrorMessage {
      *                 otherwise returns a summary and critical errors.
      */
     public static String
-        generatePlainText(Collection<ErrorMessage> errors,
+        generatePlainText(Collection<StatisticsStuff> errors,
                 boolean verbose) {
         String report = new String();
         int criticals = 0;
         int warnings = 0;
         int notes = 0;
         int unknowns = 0;
-        for (ErrorMessage error : errors) {
+        for (StatisticsStuff error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     criticals++;
@@ -219,11 +287,11 @@ public class ErrorMessage {
                 " warnings (and " + (notes + unknowns) +
                 " hidden as non-problems or unknown)\n";
         }
-        for (ErrorMessage error : errors) {
+        for (StatisticsStuff error : errors) {
             if (verbose) {
                 report += "  " + error + "\n";
-            } else if (error.getSeverity() == ErrorMessage.Severity.WARNING ||
-                    error.getSeverity() == ErrorMessage.Severity.CRITICAL) {
+            } else if (error.getSeverity() == StatisticsStuff.Severity.WARNING ||
+                    error.getSeverity() == StatisticsStuff.Severity.CRITICAL) {
                 report += "  " + error.getLocation() + ": " +
                     error.getWhat() + "\n" +
                     "    " + error.getHowto() + "\n";
@@ -235,14 +303,14 @@ public class ErrorMessage {
     /**
      * Generate a very short summary of validawtion errors.
      */
-    public static String generateSummary(Collection<ErrorMessage>
+    public static String generateSummary(Collection<StatisticsStuff>
             errors) {
         String report = new String();
         int criticals = 0;
         int warnings = 0;
         int notes = 0;
         int unknowns = 0;
-        for (ErrorMessage error : errors) {
+        for (StatisticsStuff error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     criticals++;
@@ -272,13 +340,13 @@ public class ErrorMessage {
      * Includes quite ugly table of all the reports with a java script to hide
      * errors based on severity.
      */
-    public static String generateHTML(Collection<ErrorMessage>
+    public static String generateHTML(Collection<StatisticsStuff>
             errors) {
         int criticals = 0;
         int warnings = 0;
         int notes = 0;
         int unknowns = 0;
-        for (ErrorMessage error : errors) {
+        for (StatisticsStuff error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     criticals++;
@@ -324,7 +392,7 @@ public class ErrorMessage {
             "<th>Fix</th><th>Original</th>" +
             "</tr></thead>\n";
         report += "  <tbody>\n";
-        for (ErrorMessage error : errors) {
+        for (StatisticsStuff error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     report += "<tr class='critical'><td style='border-left: red solid 3px'>";
