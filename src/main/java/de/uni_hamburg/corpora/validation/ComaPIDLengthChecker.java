@@ -12,7 +12,9 @@ package de.uni_hamburg.corpora.validation;
 
 import java.io.File;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.StringBufferInputStream;
 import java.io.IOException;
 import java.io.IOException;
 import java.net.URL;
@@ -65,49 +67,42 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaPIDLengthChecker implements CommandLineable {
+public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
 
     ValidatorSettings settings;
+    final String COMA_PID_LENGTH = "coma-pid-length";
 
     /**
      * Check for existence of files in a coma file.
      *
      * @return true, if all files were found, false otherwise
      */
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(String data) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            stats = exceptionalCheck(data);
         } catch(ParserConfigurationException pce) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException("coma-parse", pce, "Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException("coma-parse", saxe, "Unknown parsing error");
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException("file-io", ioe, "File reading error");
         }
-        return errors;
+        return stats;
     }
 
 
-    private Collection<ErrorMessage> exceptionalCheck(File f)
+    private StatisticsReport exceptionalCheck(String data)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(f);
+        Document doc = db.parse(new StringBufferInputStream(data));
         NodeList keys = doc.getElementsByTagName("Key");
         String corpusPrefix = "";
         String corpusVersion = "";
@@ -120,22 +115,26 @@ public class ComaPIDLengthChecker implements CommandLineable {
                 corpusVersion = keyElement.getTextContent();
             }
         }
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         if (corpusPrefix.equals("")) {
-            errors.add(new ErrorMessage(ErrorMessage.Severity.WARNING,
-                        f.getName(),
-                        "Missing <Key name='HZSK:corpusprefix'>, " +
-                        "PID length cannot be estimated accurately.",
-                        "Add that key in coma."));
+            stats.addWarning(COMA_PID_LENGTH + "-config",
+                        "Missing <Key name='HZSK:corpusprefix'>.",
+                        "PID length cannot be estimated accurately. " +
+                        "Add that key in coma.");
             corpusPrefix = "muster";
+        } else {
+            stats.addCorrect(COMA_PID_LENGTH + "-config",
+                    "HZSK corpus prefix OK: " + corpusPrefix);
         }
         if (corpusVersion.equals("")) {
-            errors.add(new ErrorMessage(ErrorMessage.Severity.WARNING,
-                        f.getName(),
-                        "Missing <Key name='HZSK:corpusversion'>, " +
-                        "PID length cannot be estimated accurately.",
-                        "Add that key in coma."));
+            stats.addWarning(COMA_PID_LENGTH + "-config",
+                        "Missing <Key name='HZSK:corpusversion'>.",
+                        "PID length cannot be estimated accurately. " +
+                        "Add that key in coma.");
             corpusVersion = "0.0";
+        } else {
+            stats.addCorrect(COMA_PID_LENGTH + "-config",
+                    "HZSK corpus version OK: " + corpusVersion);
         }
         NodeList communications = doc.getElementsByTagName("Communication");
         for (int i = 0; i < communications.getLength(); i++) {
@@ -145,22 +144,19 @@ public class ComaPIDLengthChecker implements CommandLineable {
                     "-" + corpusVersion +
                     "_" + communicationName);
             if (fedoraPID.length() >= 64) {
-                errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                            f.getName(),
+                stats.addCritical(COMA_PID_LENGTH,
                             "Communication is too long for Fedora PID" +
                             "generation: " + fedoraPID,
                             "It must be shortened, e.g. use: " +
-                            fedoraPID.substring(0, 60) + ", or change " +
-                            "the corpus prefix"));
+                            communicationName.substring(0, 40) + ", or change " +
+                            "the corpus prefix");
             } else {
-                errors.add(new ErrorMessage(ErrorMessage.Severity.NOTE,
-                            f.getName(),
+                stats.addCorrect(COMA_PID_LENGTH,
                             "Following PID will be generated for this " +
-                            "communication in Fedora: " + fedoraPID,
-                            "All ok."));
+                            "communication in Fedora: " + fedoraPID);
             }
         }
-        return errors;
+        return stats;
     }
 
     public void doMain(String[] args) {
@@ -176,10 +172,20 @@ public class ComaPIDLengthChecker implements CommandLineable {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
+            try {
+                String s = TypeConverter.InputStream2String(new FileInputStream(f));
+                StatisticsReport stats = check(s);
+                if (settings.isVerbose()) {
+                    System.out.println(stats.getFullReports());
+                } else {
+                    System.out.println(stats.getSummaryLines());
+                }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
+            /*for (ErrorMessage em : errors) {
+                System.out.println("   - "  + em);
+            }*/
         }
     }
 
