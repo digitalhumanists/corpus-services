@@ -93,7 +93,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         } catch(SAXException saxe) {
             stats.addException(saxe, comaLoc + ": Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, comaLoc + ": File reading error");
+            stats.addException(ioe, comaLoc + ": Unknown file reading error");
         }
         return stats;
     }
@@ -103,7 +103,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(new StringBufferInputStream(data));
+        Document doc = db.parse(TypeConverter.String2InputStream(data));
         NodeList keys = doc.getElementsByTagName("Key");
         String corpusPrefix = "";
         String corpusVersion = "";

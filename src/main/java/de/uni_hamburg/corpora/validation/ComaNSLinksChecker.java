@@ -105,7 +105,7 @@ public class ComaNSLinksChecker implements CommandLineable, StringChecker {
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(data);
+        Document doc = db.parse(TypeConverter.String2InputStream(data));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         StatisticsReport stats = new StatisticsReport();
         for (int i = 0; i < nslinks.getLength(); i++) {
