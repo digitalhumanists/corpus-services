@@ -77,6 +77,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
 
     ValidatorSettings settings;
     final String COMA_PID_LENGTH = "coma-pid-length";
+    String comaLoc = "";
 
     /**
      * Check for existence of files in a coma file.
@@ -88,11 +89,11 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         try {
             stats = exceptionalCheck(data);
         } catch(ParserConfigurationException pce) {
-            stats.addException("coma-parse", pce, "Unknown parsing error");
+            stats.addException(pce, comaLoc + ": Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException("coma-parse", saxe, "Unknown parsing error");
+            stats.addException(saxe, comaLoc + ": Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException("file-io", ioe, "File reading error");
+            stats.addException(ioe, comaLoc + ": File reading error");
         }
         return stats;
     }
@@ -117,23 +118,23 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         }
         StatisticsReport stats = new StatisticsReport();
         if (corpusPrefix.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH + "-config",
+            stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                         "Missing <Key name='HZSK:corpusprefix'>.",
                         "PID length cannot be estimated accurately. " +
                         "Add that key in coma.");
             corpusPrefix = "muster";
         } else {
-            stats.addCorrect(COMA_PID_LENGTH + "-config",
+            stats.addCorrect(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                     "HZSK corpus prefix OK: " + corpusPrefix);
         }
         if (corpusVersion.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH + "-config",
+            stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                         "Missing <Key name='HZSK:corpusversion'>.",
                         "PID length cannot be estimated accurately. " +
                         "Add that key in coma.");
             corpusVersion = "0.0";
         } else {
-            stats.addCorrect(COMA_PID_LENGTH + "-config",
+            stats.addCorrect(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                     "HZSK corpus version OK: " + corpusVersion);
         }
         NodeList communications = doc.getElementsByTagName("Communication");
@@ -144,14 +145,14 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
                     "-" + corpusVersion +
                     "_" + communicationName);
             if (fedoraPID.length() >= 64) {
-                stats.addCritical(COMA_PID_LENGTH,
+                stats.addCritical(COMA_PID_LENGTH, comaLoc + ": " +
                             "Communication is too long for Fedora PID" +
                             "generation: " + fedoraPID,
                             "It must be shortened, e.g. use: " +
                             communicationName.substring(0, 40) + ", or change " +
                             "the corpus prefix");
             } else {
-                stats.addCorrect(COMA_PID_LENGTH,
+                stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
                             "Following PID will be generated for this " +
                             "communication in Fedora: " + fedoraPID);
             }
@@ -159,7 +160,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         return stats;
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("ComaPIDLengthChecker",
                 "Checks Exmaralda .coma file for ID's that violate Fedora's " +
                 "PID limits", "If input is a directory, performs recursive " +
@@ -168,30 +169,27 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         if (settings.isVerbose()) {
             System.out.println("Checking COMA files for references...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
             try {
+                comaLoc = f.getName();
                 String s = TypeConverter.InputStream2String(new FileInputStream(f));
-                StatisticsReport stats = check(s);
-                if (settings.isVerbose()) {
-                    System.out.println(stats.getFullReports());
-                } else {
-                    System.out.println(stats.getSummaryLines());
-                }
+                stats = check(s);
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-            /*for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
-            }*/
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         ComaPIDLengthChecker checker = new ComaPIDLengthChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 
 }

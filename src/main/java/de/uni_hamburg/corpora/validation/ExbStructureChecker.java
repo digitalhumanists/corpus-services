@@ -38,41 +38,37 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
  */
 public class ExbStructureChecker implements CommandLineable {
 
+    String exbName;
     String filename;
     BasicTranscription bt;
     File exbfile;
     ValidatorSettings settings;
 
+    final String EXB_STRUCTURE = "exb-structure";
 
     /**
      * Check for structural errors.
      *
      * @see GetSegmentationErrorsAction
      */
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(File f) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            exbName = f.getName();
+            stats = exceptionalCheck(f);
         } catch(JexmaraldaException je) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    exbfile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException("exb-parse", je, "Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    exbfile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException("exb-parse", saxe, "Unknown parsing error");
         }
-        return errors;
+        return stats;
     }
 
-    public Collection<ErrorMessage>
+    public StatisticsReport
             exceptionalCheck(File f) throws SAXException, JexmaraldaException {
         filename = f.getAbsolutePath();
         bt = new BasicTranscription(filename);
-        List<ErrorMessage> errors = new
-            ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         String[] duplicateTranscriptionTiers =
             bt.getDuplicateTranscriptionTiers();
         String[] orphanedTranscriptionTiers =
@@ -84,48 +80,35 @@ public class ExbStructureChecker implements CommandLineable {
             bt.getAnnotationMismatches();
 
         for (String tierID : duplicateTranscriptionTiers) {
-            errors.add(new
-                    ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                        filename, "More than one transcription tier for one " +
+            stats.addCritical(EXB_STRUCTURE, exbName + ": " +
+                    "More than one transcription tier for one " +
                         "speaker. Tier: " + tierID, "Open in PartiturEditor, " +
-                        "change tier type or merge tiers."));
+                        "change tier type or merge tiers.");
         }
         for (String tliID : temporalAnomalies) {
-            errors.add(new
-                    ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                        filename, "Temporal anomaly at timeline item: " + tliID,
-                        "Open the file in PartiturEditor, " +
-                        "go to menu ??? to get more detailed report"));
+            stats.addCritical(EXB_STRUCTURE, exbName + ": " +
+                    "Temporal anomaly at timeline item: " + tliID);
         }
         for (String tierID : orphanedTranscriptionTiers) {
-            errors.add(new
-                    ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                        filename, "Orphaned transcription tier:" + tierID,
-                        "Open the file in PartiturEditor, " +
-                        "go to menu ??? to get more detailed report"));
+            stats.addCritical(EXB_STRUCTURE, exbName + ": " +
+                    "Orphaned transcription tier:" + tierID);
         }
         for (String tierID : orphanedAnnotationTiers) {
-            errors.add(new
-                    ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                        filename, "Orphaned annotation tier:" + tierID,
-                        "Open the file in PartiturEditor, " +
-                        "go to menu ??? to get more detailed report"));
+            stats.addCritical(EXB_STRUCTURE, exbName + ": " +
+                    "Orphaned annotation tier:" + tierID);
         }
         for (String tierID : annotationMismatches.keySet()) {
             String[] eventIDs = annotationMismatches.get(tierID);
             for (String eventID : eventIDs) {
-                errors.add(new
-                        ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                            filename, "Annotation mismatch: tier " + tierID +
-                            " event " + eventID, "Open the file " +
-                            "in PartiturEditor, go to menu ??? " +
-                            "to get more detailed report"));
+                stats.addCritical(EXB_STRUCTURE, exbName + ": " +
+                            "Annotation mismatch: tier " + tierID +
+                            " event " + eventID);
             }
         }
-        return errors;
+        return stats;
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("ExbStructureChecker",
                 "Checks Exmaralda .exb file for segmentation problems",
                 "If input is a directory, performs recursive check " +
@@ -135,20 +118,21 @@ public class ExbStructureChecker implements CommandLineable {
             System.out.println("Checking EXB files for segmentation " +
                     "problems...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
-            }
+            stats = check(f);
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         ExbStructureChecker checker = new ExbStructureChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 
 

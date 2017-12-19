@@ -1,13 +1,14 @@
 /*
  *   A command-line interface for checking corpus files.
- * 
+ *
  *  @author Anne Ferger
  *  @author HZSK
  */
 package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.CommandLineable;
-import de.uni_hamburg.corpora.validation.ErrorMessage;
+import de.uni_hamburg.corpora.validation.StatisticsReport;
+import de.uni_hamburg.corpora.validation.StringChecker;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.File;
 import java.io.IOException;
@@ -34,40 +35,38 @@ public abstract class AbstractResourceChecker implements CommandLineable {
     ValidatorSettings settings;
     String fileasstring;
 
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+    public StatisticsReport check(File f) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            stats = exceptionalCheck(f);
         } catch (SAXException saxe) {
-            saxe.printStackTrace();
+            stats.addException(saxe, "Unknown parsing error");
         } catch (JexmaraldaException je) {
-            je.printStackTrace();
+            stats.addException(je, "Unknown parsing error");
         }
-        return errors;
+        return stats;
     }
 
-   public abstract Collection<ErrorMessage>
+   public abstract StatisticsReport
             exceptionalCheck(File f) throws SAXException, JexmaraldaException;
-            
-   public abstract Collection<ErrorMessage>
+
+   public abstract StatisticsReport
             exceptionalCheck(File f, File g) throws SAXException, JexmaraldaException, IOException, JDOMException;
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("name",
                 "what", "fix");
         settings.handleCommandLine(args, new ArrayList<Option>());
         if (settings.isVerbose()) {
             System.out.println("");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - " + em);
-            }
+            stats = check(f);
         }
-
+        return stats;
     }
 }

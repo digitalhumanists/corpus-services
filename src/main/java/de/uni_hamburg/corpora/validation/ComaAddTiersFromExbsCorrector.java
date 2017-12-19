@@ -76,6 +76,8 @@ public class ComaAddTiersFromExbsCorrector {
     String tierNameFormat = "Tier %2$s (%1$s):";
     String tierTextFormat = "%s";
 
+    final String ADD_TIERS = "coma-add-tiers-from-exb";
+
     /**
      * Uses the list of known abbreviations to add existing tiers from exb to
      * coma. Comes from old catalog file that is used somewhere?
@@ -270,36 +272,24 @@ public class ComaAddTiersFromExbsCorrector {
      * </table>
      *
      */
-    public Collection<ErrorMessage> fix() {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport fix() {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalFix();
+            stats = exceptionalFix();
         } catch(JexmaraldaException je) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(je, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(jdome, "Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, "Unknown parsing error");
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, "Reading/writing error");
         }
-        return errors;
+        return stats;
     }
 
 
-    private Collection<ErrorMessage> exceptionalFix() throws
+    private StatisticsReport exceptionalFix() throws
             SAXException, JDOMException, IOException, JexmaraldaException {
         Map<String, String> tiers = new HashMap<String, String>();
         tiers.put("akz", "Accentuation/stress");
@@ -357,7 +347,7 @@ public class ComaAddTiersFromExbsCorrector {
         skipTiers.add("SUB-ROW-LABEL");
         skipTiers.add("EMPTY");
         skipTiers.add("EMPTY-EDITOR");
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         org.jdom.Document corpus =
             org.exmaralda.common.jdomutilities.
                     IOUtilities.readDocumentFromLocalFile(
@@ -389,10 +379,10 @@ public class ComaAddTiersFromExbsCorrector {
                 Set<String> addedTiers = new HashSet<String>();
                 for (String tierID : tierIDs) {
                     if (skipTiers.contains(tierID)) {
-                        errors.add(new ErrorMessage(ErrorMessage.Severity.NOTE,
-                                    filePath, "Skipped a tier: " + tierID,
+                        stats.addNote(ADD_TIERS,
+                                    "Skipped a tier: " + tierID,
                                     "This tier does not need to be included in "
-                                    + "coma file"));
+                                    + "coma file");
                         continue;
                     }
                     Tier tier = null;
@@ -435,19 +425,16 @@ public class ComaAddTiersFromExbsCorrector {
                         keyElement.setText(String.format(tierTextFormat,
                                     tiers.get(category)));
                         desc.addContent(keyElement);
-                        errors.add(new
-                                ErrorMessage(
-                                    ErrorMessage.Severity.IFIXEDITFORYOU,
-                                    filePath, "Tier was missing from COMA: "
+                        stats.addNote(ADD_TIERS,
+                                    "Tier was missing from COMA: "
                                     + tierID,
-                                    "The default description has been added."));
+                                    "The default description has been added.");
                         addedTiers.add(category);
                     } else {
-                        errors.add(new
-                                ErrorMessage(ErrorMessage.Severity.WARNING,
-                                    filePath, "Unrecognised tier category: "
+                        stats.addWarning(ADD_TIERS,
+                                    "Unrecognised tier category: "
                                     + category,
-                                    "Tier must be added manually tp coma"));
+                                    "Tier must be added manually to coma");
                     }
                 }
             }
@@ -458,12 +445,9 @@ public class ComaAddTiersFromExbsCorrector {
             XMLOutputter xmlout = new XMLOutputter(hzskFormat);
             xmlout.output(corpus, new FileOutputStream(settings.getOutputFile()));
         } catch (java.util.NoSuchElementException nsee) {
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                        comafile.getName(), "Could not write fixes!",
-                        "Please check file write rights or make above changes "
-                        + "manually."));
+            stats.addCritical(ADD_TIERS, "Could not write fixes!");
         }
-        return errors;
+        return stats;
     }
 
 

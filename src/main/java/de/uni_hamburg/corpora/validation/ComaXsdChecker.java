@@ -81,26 +81,20 @@ public class ComaXsdChecker implements CommandLineable {
      * @return true, if file is passable (valid enough for HZSK),
      *         false otherwise.
      */
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(File f) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            stats = exceptionalCheck(f);
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, "Unknown parsing error.");
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, "Unknown reading error.");
         }
-        return errors;
+        return stats;
     }
 
 
-    private Collection<ErrorMessage> exceptionalCheck(File f)
+    private StatisticsReport exceptionalCheck(File f)
             throws SAXException, IOException {
         URL COMA_XSD = new URL("http://www.exmaralda.org/xml/comacorpus.xsd");
         Source xmlStream = new StreamSource(f);
@@ -114,7 +108,7 @@ public class ComaXsdChecker implements CommandLineable {
         return eh.getErrors();
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("ComaXSDChecker",
                 "Checks Exmaralda .coma file against XML Schema",
                 "If input is a directory, performs recursive check " +
@@ -123,20 +117,21 @@ public class ComaXsdChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking COMA files against schema...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
-            }
+            stats = check(f);
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         ComaXsdChecker checker = new ComaXsdChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 
 }

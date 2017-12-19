@@ -289,6 +289,7 @@ public class CommandLineBatcher {
         }
         baseargs.add("-b");
         baseargs.add(baseDirectory.getAbsolutePath());
+        StatisticsReport stats = new StatisticsReport();
         for (String testclass : tests) {
             // tests for input dir
             // ...
@@ -302,13 +303,16 @@ public class CommandLineBatcher {
                     System.out.println(fargs);
                 }
                 if (testclass.equalsIgnoreCase("FileCoverageChecker")) {
-                    FileCoverageChecker.main(fargs.toArray(new String[0]));
+                    stats.merge(new FileCoverageChecker().doMain(fargs.toArray(
+                                    new String[0])));
                 }
                 else if (testclass.equalsIgnoreCase("ComaNSLinksChecker")) {
-                    ComaNSLinksChecker.main(fargs.toArray(new String[0]));
+                    stats.merge(new ComaNSLinksChecker().doMain(fargs.toArray(
+                                    new String[0])));
                 }
                 else if (testclass.equalsIgnoreCase("ComaXsdChecker")) {
-                    ComaXsdChecker.main(fargs.toArray(new String[0]));
+                    stats.merge(new ComaXsdChecker().doMain(fargs.toArray(
+                                    new String[0])));
                 }
             }
             // tests for coma fiels
@@ -321,12 +325,20 @@ public class CommandLineBatcher {
                     System.out.println(fargs);
                 }
                 if (testclass.equalsIgnoreCase("ExbFileReferenceChecker")) {
-                    ExbFileReferenceChecker.main(fargs.toArray(new String[0]));
+                    stats.merge(new ExbFileReferenceChecker().doMain(fargs.toArray(
+                                    new String[0])));
                 }
                 else if (testclass.equalsIgnoreCase("ExbStructureChecker")) {
-                    ExbStructureChecker.main(fargs.toArray(new String[0]));
+                    stats.merge(new ExbStructureChecker().doMain(fargs.toArray(
+                                    new String[0])));
                 }
             }
+        }
+        if (verbose) {
+            System.out.println(stats.getFullReports());
+        } else {
+            System.out.println(stats.getErrorReports());
+            System.out.println(stats.getSummaryLines());
         }
     }
 

@@ -44,6 +44,8 @@ public class ExbPatternChecker implements CommandLineable  {
     List<String> conventions = new ArrayList<String>();
     List<String> problems = new ArrayList<String>();
 
+    final String EXB_PATTERNS = "exb-patterns";
+
     private void tryLoadBasicTranscription(String filename)
         throws SAXException, JexmaraldaException {
         if (bt == null) {
@@ -51,21 +53,21 @@ public class ExbPatternChecker implements CommandLineable  {
         }
     }
 
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+    public StatisticsReport check(File f) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            stats = exceptionalCheck(f);
         } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
+            stats.addException(pce, "Unknown parser error");
         } catch (SAXException saxe) {
-            saxe.printStackTrace();
+            stats.addException(saxe, "Unknown parser error");
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            stats.addException(ioe, "Unknown read error");
         }
-        return errors;
+        return stats;
     }
 
-    public Collection<ErrorMessage> exceptionalCheck(File f)
+    public StatisticsReport exceptionalCheck(File f)
             throws SAXException, IOException, ParserConfigurationException {
         // XXX: get conventions from settings somehow
         List<Pattern> correctPatterns = new ArrayList<Pattern>();
@@ -80,7 +82,7 @@ public class ExbPatternChecker implements CommandLineable  {
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(f);
         NodeList events = doc.getElementsByTagName("event");
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         for (int i = 0; i < events.getLength(); i++) {
             Element event = (Element)events.item(i);
             NodeList eventTexts = event.getChildNodes();
@@ -102,32 +104,28 @@ public class ExbPatternChecker implements CommandLineable  {
                 for (Pattern pattern : correctPatterns) {
                     Matcher matcher = pattern.matcher(text);
                     if (!matcher.matches()) {
-                        errors.add(new
-                                ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                    f.getAbsolutePath(),
+                        stats.addCritical(EXB_PATTERNS,
                                     "Text: " + text + " does not fit to the " +
                                     "conventions given.", "Expression was: " +
-                                    conventions.get(k)));
+                                    conventions.get(k));
                     }
                 }
                 k = 0;
                 for (Pattern pattern : errorPatterns) {
                     Matcher matcher = pattern.matcher(text);
                     if (matcher.matches()) {
-                        errors.add(new
-                                ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                    f.getAbsolutePath(),
+                        stats.addCritical(EXB_PATTERNS,
                                     "Text: " + text + " does not fit to the " +
                                     "conventions given.", "Expression was: " +
-                                    errors.get(k)));
+                                    errorPatterns.get(k));
                     }
                 }
             }
         }
-        return errors;
+        return stats;
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("ExbPatternChecker",
                 "Checks Exmaralda .exb file annotations for conventions using " +
                 "patterns", "If input is a directory, performs recursive check "
@@ -159,19 +157,20 @@ public class ExbPatternChecker implements CommandLineable  {
             System.out.println("Checking exb files for unconventional " +
                     "annotations...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
-            }
+            stats = check(f);
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         ExbPatternChecker checker = new ExbPatternChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 }

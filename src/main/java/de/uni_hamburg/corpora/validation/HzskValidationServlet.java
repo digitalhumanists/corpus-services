@@ -113,7 +113,7 @@ public class HzskValidationServlet extends HttpServlet {
         validator.validate(xmlStream);
         output.print("    <h3>coma validations</h3>\n");
         output.print("    <p>These errors are found in XML validation</p>\n");
-        output.print(ErrorMessage.generateHTML(eh.getErrors()));
+        //output.print(ErrorMessage.generateHTML(eh.getErrors()));
         output.print("  </body>\n</html>");
     }
 
