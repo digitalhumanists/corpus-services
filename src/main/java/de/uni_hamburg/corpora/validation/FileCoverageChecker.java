@@ -186,7 +186,7 @@ public class FileCoverageChecker implements CommandLineable, StringChecker {
         Set<String> NSLinksPaths = new HashSet<String>();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(data);
+        Document doc = db.parse(TypeConverter.String2InputStream(data));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element)nslinks.item(i);
