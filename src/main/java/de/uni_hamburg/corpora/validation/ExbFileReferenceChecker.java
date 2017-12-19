@@ -31,41 +31,35 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
- * A command-line tool for checking EXB files.
+ * A validator for EXB-file's references.
  */
 public class ExbFileReferenceChecker implements CommandLineable {
 
     ValidatorSettings settings;
 
+    final String EXB_REFS="exb-referenced-file";
+
+    String exbName = "";
+
     /**
-     * Check for structural errors.
-     *
-     * @see GetSegmentationErrorsAction
+     * Check for referenced-files.
      */
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(File f) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            exbName = f.getName();
+            stats = exceptionalCheck(f);
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(ioe, "Reading error");
         } catch(ParserConfigurationException pce) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(pce, "Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, "Unknown parsing error");
         }
-        return errors;
+        return stats;
     }
 
-    public Collection<ErrorMessage> exceptionalCheck(File f)
+    public StatisticsReport exceptionalCheck(File f)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -73,17 +67,15 @@ public class ExbFileReferenceChecker implements CommandLineable {
         NodeList reffiles = doc.getElementsByTagName("referenced-file");
         int reffilesFound = 0;
         int reffilesMissing = 0;
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         for (int i = 0; i < reffiles.getLength(); i++) {
             Element reffile = (Element)reffiles.item(i);
             String url = reffile.getAttribute("url");
             if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                errors.add(new ErrorMessage(
-                            ErrorMessage.Severity.CRITICAL,
-                            f.getAbsolutePath(),
+                stats.addCritical(EXB_REFS, exbName + ": " +
                             "Referenced-file " + url +
                             " points to absolute local path",
-                            "use relative path instead?"));
+                            "use relative path instead?");
             }
             File justFile = new File(url);
             boolean found = false;
@@ -102,25 +94,19 @@ public class ExbFileReferenceChecker implements CommandLineable {
             }
             if (!found) {
                 reffilesMissing++;
-                errors.add(new ErrorMessage(
-                            ErrorMessage.Severity.CRITICAL,
-                            f.getAbsolutePath(),
-                            "File in referenced-file not found: " + url,
-                            "check that the file exists or locate it"));
+                stats.addCritical(EXB_REFS, exbName + ": " +
+                            "File in referenced-file NOT found: " + url);
             } else {
                 reffilesFound++;
-                errors.add(new ErrorMessage(
-                            ErrorMessage.Severity.NOTE,
-                            f.getAbsolutePath(),
-                            "File in referenced-file was found: " + url,
-                            "Everything's good!"));
+                stats.addCorrect(EXB_REFS, exbName + ": " +
+                            "File in referenced-file was found: " + url);
             }
         }
-        return errors;
+        return stats;
     }
 
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("ExbFileReferenceChecker",
                 "Checks Exmaralda .exb file for file references that do not " +
                 "exist", "If input is a directory, performs recursive check " +
@@ -129,19 +115,20 @@ public class ExbFileReferenceChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking EXB files for references...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
-            }
+            stats = check(f);
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         ExbFileReferenceChecker checker = new ExbFileReferenceChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 }

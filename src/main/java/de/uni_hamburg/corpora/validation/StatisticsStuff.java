@@ -93,8 +93,7 @@ public class StatisticsStuff {
      * SAXParseException. This can be used to extract file location informations
      * in most situations.
      */
-    public StatisticsStuff(Severity s, SAXParseException saxpe,
-            String what, String howto) {
+    public StatisticsStuff(Severity s, SAXParseException saxpe, String what) {
         this.severity = s;
         this.e = saxpe;
         this.what = what;
@@ -103,6 +102,7 @@ public class StatisticsStuff {
         this.lines = "" + saxpe.getLineNumber();
         this.columns = "" + saxpe.getColumnNumber();
     }
+
 
     /**
      * Generic file parsing error that can not be pointed to a line location
@@ -224,7 +224,20 @@ public class StatisticsStuff {
     }
 
     /**
-     * A pretty printed string with most informations about the error.
+     * A short string about the stuff.
+     */
+    public String getSummary() {
+        String s = "    ";
+        if (!getLocation().equals("")) {
+            s += getLocation() + ": ";
+        }
+        s += getWhat();
+        return s;
+    }
+
+    /**
+     * A pretty printed string with most informations about the error. Can be
+     * super long.
      */
     public String toString() {
         return getLocation() + ": " + getWhat() + ". " + getHowto() + ". " +

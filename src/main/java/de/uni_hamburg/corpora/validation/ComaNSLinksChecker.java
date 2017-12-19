@@ -13,7 +13,8 @@ package de.uni_hamburg.corpora.validation;
 import java.io.File;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -65,51 +66,48 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaNSLinksChecker implements CommandLineable {
+public class ComaNSLinksChecker implements CommandLineable, StringChecker {
 
     ValidatorSettings settings;
+    String referencePath = "./";
+    String comaLoc = "";
+
+    final String COMA_NSLINKS = "coma-nslinks";
+    final String COMA_RELPATHS = "coma-relpaths";
 
     /**
      * Check for existence of files in a coma file.
      *
      * @return true, if all files were found, false otherwise
      */
-    public Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(String s) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            stats = exceptionalCheck(s);
         } catch(ParserConfigurationException pce) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(pce, comaLoc + ": Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, comaLoc + ": Unknown parsing error");
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    f.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, comaLoc + ": Unknown file reading error");
         }
-        return errors;
+        return stats;
     }
 
 
-    private Collection<ErrorMessage> exceptionalCheck(File f)
+    private StatisticsReport exceptionalCheck(String data)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(f);
+        Document doc = db.parse(data);
         NodeList nslinks = doc.getElementsByTagName("NSLink");
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element)nslinks.item(i);
             NodeList nstexts = nslink.getChildNodes();
@@ -126,11 +124,6 @@ public class ComaNSLinksChecker implements CommandLineable {
                 boolean found = false;
                 if (justFile.exists()) {
                     found = true;
-                }
-                String referencePath = "./";
-                if (f.getParentFile() != null) {
-                    referencePath = f.getParentFile()
-                        .getCanonicalPath();
                 }
                 String absPath = referencePath + File.separator + nspath;
                 File absFile = new File(absPath);
@@ -156,17 +149,11 @@ public class ComaNSLinksChecker implements CommandLineable {
                     }
                 }
                 if (!found) {
-                    errors.add(new ErrorMessage(
-                                ErrorMessage.Severity.CRITICAL,
-                                f.getAbsolutePath(),
-                                "File in NSLink not found: " + nspath,
-                                "check that the file exists or locate it"));
+                    stats.addCritical(COMA_NSLINKS,
+                                "File in NSLink not found: " + nspath);
                 } else {
-                    errors.add(new ErrorMessage(
-                                ErrorMessage.Severity.NOTE,
-                                f.getAbsolutePath(),
-                                "File in NSLink was found: " + nspath,
-                                "Everything's good!"));
+                    stats.addCorrect(COMA_NSLINKS,
+                                "File in NSLink was found: " + nspath);
                 }
             }
         }
@@ -187,11 +174,6 @@ public class ComaNSLinksChecker implements CommandLineable {
                 boolean found = false;
                 if (justFile.exists()) {
                     found = true;
-                }
-                String referencePath = "./";
-                if (f.getParentFile() != null) {
-                    referencePath = f.getParentFile()
-                        .getCanonicalPath();
                 }
                 String absPath = referencePath + File.separator + relpath;
                 File absFile = new File(absPath);
@@ -217,24 +199,18 @@ public class ComaNSLinksChecker implements CommandLineable {
                     }
                 }
                 if (!found) {
-                    errors.add(new ErrorMessage(
-                                ErrorMessage.Severity.CRITICAL,
-                                f.getAbsolutePath(),
-                                "File in NSLink not found: " + relpath,
-                                "check that the file exists or locate it"));
+                    stats.addCritical(COMA_NSLINKS,
+                                "File in relPath not found: " + relpath);
                 } else {
-                    errors.add(new ErrorMessage(
-                                ErrorMessage.Severity.NOTE,
-                                f.getAbsolutePath(),
-                                "File in NSLink was found: " + relpath,
-                                "Everything's good!"));
+                    stats.addCorrect(COMA_NSLINKS,
+                                "File in relPath was found: " + relpath);
                 }
             }
         }
-        return errors;
+        return stats;
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("ComaNSLinksChecker",
                 "Checks Exmaralda .coma file for NSLink references that do not " +
                 "exist", "If input is a directory, performs recursive check " +
@@ -243,20 +219,35 @@ public class ComaNSLinksChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking COMA files for references...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
-            if (settings.isVerbose()) {
-                System.out.println(" * " + f.getName());
-            }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
+            try {
+                if (settings.isVerbose()) {
+                    System.out.println(" * " + f.getName());
+                }
+                referencePath = "./";
+                if (f.getParentFile() != null) {
+                    referencePath = f.getParentFile()
+                        .getCanonicalPath();
+                }
+                comaLoc = f.getName();
+                String s = TypeConverter.InputStream2String(new
+                        FileInputStream(f));
+                stats = check(s);
+            } catch (FileNotFoundException fnfe) {
+                fnfe.printStackTrace();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         ComaNSLinksChecker checker = new ComaNSLinksChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 
 }

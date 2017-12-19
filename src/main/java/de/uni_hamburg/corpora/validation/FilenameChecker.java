@@ -42,61 +42,63 @@ public class FilenameChecker implements CommandLineable {
     Pattern unacceptable;
     ValidatorSettings settings;
 
-
+    final String FILENAME_CONVENTIONS = "filename-conventions";
 
     /**
      * Check for existence of files in a coma file.
      *
      * @return true, if all files were found, false otherwise
      */
-    public Collection<ErrorMessage> check(File rootdir) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(File rootdir) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(rootdir);
+            stats = exceptionalCheck(rootdir);
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    rootdir.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, "Unknown reading error");
         }
-        return errors;
+        return stats;
     }
 
 
-    private Collection<ErrorMessage> exceptionalCheck(File rootdir)
+    private StatisticsReport exceptionalCheck(File rootdir)
             throws IOException {
-        Collection<ErrorMessage> errors = new ArrayList<ErrorMessage>();
-        return recursiveCheck(rootdir, errors);
+        StatisticsReport stats = new StatisticsReport();
+        return recursiveCheck(rootdir, stats);
     }
 
-    private Collection<ErrorMessage> recursiveCheck(File f,
-            Collection<ErrorMessage> errors) throws IOException {
+    private StatisticsReport recursiveCheck(File f,
+            StatisticsReport stats) throws IOException {
         String filename = f.getName();
         Matcher matchAccepting = acceptable.matcher(filename);
+        boolean allesGut = true;
         if (!matchAccepting.matches()) {
-            errors.add(new ErrorMessage(ErrorMessage.Severity.WARNING,
-                        f.getCanonicalPath(), "This filename does not follow "
-                        + "filename standards for HZSK corpora",
-                        "Please check that it is formatted according to " +
-                        "guidelines"));
+            stats.addWarning(FILENAME_CONVENTIONS,
+                        filename + " does not follow "
+                        + "filename conventions for HZSK corpora");
+            allesGut = false;
         }
         Matcher matchUnaccepting = unacceptable.matcher(filename);
         if (matchUnaccepting.find()) {
-            errors.add(new ErrorMessage(ErrorMessage.Severity.WARNING,
-                        f.getCanonicalPath(), "This filename contains " +
-                        "characters that may break in HZSK repository",
-                        "Please check that filename follows the guidelines"));
+            stats.addWarning(FILENAME_CONVENTIONS,
+                        filename + " contains " +
+                        "characters that may break in HZSK repository");
+            allesGut = false;
+        }
+
+        if (allesGut) {
+            stats.addCorrect(FILENAME_CONVENTIONS,
+                    filename + " is OK by HZSK standards.");
         }
         if (f.isDirectory()) {
             File[] files = f.listFiles();
             for (File g : files) {
-                errors = recursiveCheck(g, errors);
+                stats = recursiveCheck(g, stats);
             }
         }
-        return errors;
+        return stats;
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("FileCoverageChecker",
                 "Checks Exmaralda .coma file against directory, to find " +
                 "undocumented files",
@@ -124,20 +126,21 @@ public class FilenameChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking coma file against directory...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
-            }
+            stats = check(f);
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         FilenameChecker checker = new FilenameChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 
 }

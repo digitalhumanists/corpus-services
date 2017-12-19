@@ -16,7 +16,7 @@ package de.uni_hamburg.corpora.validation;
  * so it provides a neat entry point. A typical implementation goes like so:
  *
  * <pre>
- * public void doMain(String[] args) {
+ * public StatisticsReport doMain(String[] args) {
  *   settings.handleCommandLine(args, ...);
  *   for (File f : settings.getInputFiles()) {
  *     checker.check(f);
@@ -32,7 +32,7 @@ package de.uni_hamburg.corpora.validation;
 public interface CommandLineable {
 
 
-    public void doMain(String[] args);
+    public StatisticsReport doMain(String[] args);
 
 
 }

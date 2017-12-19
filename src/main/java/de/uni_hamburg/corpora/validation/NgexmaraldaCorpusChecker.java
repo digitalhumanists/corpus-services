@@ -46,40 +46,30 @@ public class NgexmaraldaCorpusChecker  {
     private File comafile;
     private String comadirname;
 
-    public Collection<ErrorMessage> check() {
-        Collection<ErrorMessage> errors;
+    final String NSLC = "nslc";
+
+    public StatisticsReport check() {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck();
-            errors.addAll(requireObligatoryAnnotationTiersAndTypes());
+            stats = exceptionalCheck();
+            stats.merge(requireObligatoryAnnotationTiersAndTypes());
         } catch(JexmaraldaException je) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(je, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(jdome, "Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, "Unknown parsing error");
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, "Reading error");
         }
-        return errors;
+        return stats;
     }
 
 
 
-    public Collection<ErrorMessage> exceptionalCheck() throws JDOMException,
+    public StatisticsReport exceptionalCheck() throws JDOMException,
             IOException {
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         Document nganasanCorpus =
             org.exmaralda.common.jdomutilities.
                     IOUtilities.readDocumentFromLocalFile(comafilename);
@@ -99,42 +89,42 @@ public class NgexmaraldaCorpusChecker  {
                 String filePath = comadirname + File.separator + relPath;
                 File file = new File(filePath);
                 if (!file.isFile()) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Basic transcription file doesn't exist at " +
-                                "NSLink for " + communicationName,
-                                "Find the file"));
-                } else if (Paths.get("relPath").isAbsolute()) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                                "NSLink for " + communicationName);
+                } else if (Paths.get(relPath).isAbsolute()) {
+                    stats.addCritical(NSLC,
                                 "Basic transcription NSLink is absolute for " +
-                                communicationName,
-                                "Remove the prefix up until directory " +
-                                "of coma file"));
-                }
-                if (!relPath.endsWith(communicationName + ".exb")) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                                communicationName);
+                } else if (!relPath.endsWith(communicationName + ".exb")) {
+                    stats.addCritical(NSLC,
                                 "Wrong basic transcription NSLink for " +
-                                communicationName, "Find corresponding" +
-                                "exb file instead"));
+                                communicationName);
+                } else {
+                    stats.addCorrect(NSLC,
+                            "Basic transcription NSLink OK: " +
+                            communicationName);
                 }
                 String basTransName = basTrans.getChildText("Name");
                 if (!basTransName.equals(communicationName)) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Wrong basic transcription name for " +
                                 communicationName, basTransName + " should be "
-                                + communicationName));
-                    if (!basTrans.getChildText("Filename").equals(
+                                + communicationName);
+                } else {
+                    stats.addCorrect(NSLC,
+                            "Basic transcription name OK for " +
+                            communicationName + ": " + basTransName);
+                }
+                if (!basTrans.getChildText("Filename").equals(
                             communicationName + ".exb")) {
-                        errors.add(new ErrorMessage(
-                                    ErrorMessage.Severity.CRITICAL,
-                                    comafilename,
+                    stats.addCritical(NSLC,
                                     "Wrong basic transcripton filename for "
-                                    + communicationName,
-                                    "find corresponding exb file instead"));
-                    }
+                                    + communicationName);
+                } else {
+                    stats.addCorrect(NSLC,
+                            "Correct Filename for basic transcription " +
+                            communicationName);
                 }
             }
             XPath xpSegTrans = XPath.newInstance(
@@ -147,40 +137,40 @@ public class NgexmaraldaCorpusChecker  {
                 String filePath = comadirname + File.separator + relPath;
                 File file = new File(filePath);
                 if (!file.isFile()) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Segmented transcription file doesn't exist at"
-                                + " NSLink for " + communicationName,
-                                ""));
+                                + " NSLink for " + communicationName);
                 } else if (Paths.get("relPath").isAbsolute()) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Segmented transcription NSLink is absolute for "
-                                + communicationName, ""));
-                }
-                if (!relPath.endsWith(communicationName + "_s.exs")) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                                + communicationName);
+                } else if (!relPath.endsWith(communicationName + "_s.exs")) {
+                    stats.addCritical(NSLC,
                                 "Wrong segmented transcription NSLink for "
                                 + communicationName, relPath + " should end in "
-                                + communicationName + "_s.exs"));
+                                + communicationName + "_s.exs");
+                } else {
+                    stats.addCorrect(NSLC,
+                            "Correct segmented transcription NSLink for " +
+                            communicationName);
                 }
                 String segTransName = segTrans.getChildText("Name");
                 if (!segTransName.equals(communicationName)) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Wrong segmented transcription name for " +
                                 communicationName, segTransName + " should be "
-                                + communicationName));
-                }
-                if (!segTrans.getChildText("Filename").equals(communicationName
-                        + "_s.exs")) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                                + communicationName);
+                } else if (!segTrans.getChildText("Filename").equals(
+                            communicationName + "_s.exs")) {
+                    stats.addCritical(NSLC,
                                 "Wrong segmented transcription filename for " +
                                 communicationName,
                                 segTrans.getChildText("Filename") +
-                                " should be " + communicationName + "_s.exs"));
+                                " should be " + communicationName + "_s.exs");
+                } else {
+                    stats.addCorrect(NSLC,
+                            "Correct Filename for segmented transcription " +
+                            communicationName);
                 }
             }
             XPath xpRec = XPath.newInstance("Recording/Media");
@@ -192,35 +182,34 @@ public class NgexmaraldaCorpusChecker  {
                 String filePath = comadirname + File.separator + relPath;
                 File file = new File(filePath);
                 if (!file.isFile()) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Recording file doesn't exist at NSLink for " +
-                                communicationName, ""));
+                                communicationName);
                 } else if (Paths.get("relPath").isAbsolute()) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Recording NSLink is absolute for " +
-                                communicationName, ""));
-                }
-                if (!StringUtils.substringBefore(relPath, ".").endsWith(
+                                communicationName);
+                } else if (!StringUtils.substringBefore(relPath, ".").endsWith(
                         communicationName)) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Wrong recording NSLink for " +
                                 communicationName,
                                 StringUtils.substringBefore(relPath, ".") +
-                                " should end with " + communicationName));
+                                " should end with " + communicationName);
+                } else {
+                    stats.addCorrect(NSLC,
+                            "Recording NSLink is correct for " +
+                            communicationName);
                 }
                 String recName = rec.getChildText("Name");
                 if (!recName.equals(communicationName)) {
-                    errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                comafilename,
+                    stats.addCritical(NSLC,
                                 "Wrong recording name for " + communicationName,
-                                recName + " should be " + communicationName));
+                                recName + " should be " + communicationName);
                 }
             }
         }
-        return errors;
+        return stats;
     }
 
     /**
@@ -332,7 +321,7 @@ public class NgexmaraldaCorpusChecker  {
      * </table>
      *
      */
-    public List<ErrorMessage> requireObligatoryAnnotationTiersAndTypes() throws
+    public StatisticsReport requireObligatoryAnnotationTiersAndTypes() throws
             SAXException, JDOMException, IOException, JexmaraldaException {
         Map<String, String> obligatoryTiers = new HashMap<String, String>();
         Map<String, String> optionalTiers = new HashMap<String, String>();
@@ -381,7 +370,7 @@ public class NgexmaraldaCorpusChecker  {
         tierTypes.put("so", "d");
         tierTypes.put("fh", "d");
 
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+        StatisticsReport stats = new StatisticsReport();
         Document nganasanCorpus =
             org.exmaralda.common.jdomutilities.
                     IOUtilities.readDocumentFromLocalFile(comafilename);
@@ -419,17 +408,17 @@ public class NgexmaraldaCorpusChecker  {
                 String[] tierIDs = bb.getAllTierIDs();
                 for (String tierID : tierIDs) {
                     if (skipTiers.contains(tierID)) {
-                        errors.add(new ErrorMessage(ErrorMessage.Severity.NOTE,
-                                    filePath, "Skipped a tier: " + tierID,
+                        stats.addNote(NSLC,
+                                    "Skipped a tier: " + tierID,
                                     "This tier does not need to be included in "
-                                    + "coma file"));
+                                    + "coma file");
                         continue;
                     }
                     Tier tier = null;
                     try {
                         tier = bb.getTierWithID(tierID);
                     } catch (JexmaraldaException je) {
-                        System.out.println("ERRORR: tier with ID " + tierID +
+                        stats.addException(je, "ERRORR: tier with ID " + tierID +
                                 " is lost...");
                         continue;
                     }
@@ -441,36 +430,30 @@ public class NgexmaraldaCorpusChecker  {
                     } else if (optionalTiers.containsKey(category)) {
                         optionalsSeen.add(category);
                     } else {
-                        errors.add(new
-                                ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                    filePath, "Unrecognised tier name: "
-                                    + tierID,
-                                    "Tier ID should be in the list "
-                                    + "in Annotation Guidelines p. XX"));
+                        stats.addCritical(NSLC,
+                                    "Unrecognised tier name: "
+                                    + tierID);
                     }
                     if (tierTypes.containsKey(category)) {
                         if (!tierTypes.get(category).equals(tierType)) {
-                            errors.add(new
-                                    ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                        filePath, "Wrong tier type for: " +
+                            stats.addCritical(NSLC,
+                                        "Wrong tier type for: " +
                                         tierID, "Switch to annotation or " +
-                                        " description tier"));
+                                        " description tier");
+                        } else {
+                            stats.addCorrect(NSLC,
+                                    "Correct tier type for: " + tierID);
                         }
                     } else {
-                        errors.add(new
-                                ErrorMessage(ErrorMessage.Severity.WARNING,
-                                    filePath, "Not known if tier: " +
+                        stats.addWarning(NSLC,
+                                    "Not known if tier: " +
                                     tierID + " should be annotation or " +
-                                    "description", "This should’ve been in the "
-                                    + "Annotation Guidelines"));
+                                    "description");
                     }
                     if (!category.equals(tierID)) {
-                        errors.add(new
-                                ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                    filePath, "Tier ID should match category, "
-                                    + "but " + tierID + " is not " + category,
-                                    "Please change either ID or category " +
-                                    "according to Annotation Guidelines"));
+                        stats.addCritical(NSLC,
+                                    "Tier ID should match category, "
+                                    + "but " + tierID + " is not " + category);
                     }
                 } // for each tier
                 for (Map.Entry<String, String> entry : obligatoryTiers.entrySet()) {
@@ -481,16 +464,14 @@ public class NgexmaraldaCorpusChecker  {
                         }
                     }
                     if (!found) {
-                        errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                                filePath, "Missing required tier: " +
-                                entry.getKey() + ": " + entry.getValue(),
-                                "This tier should be added as instructed in the " +
-                                "Annotation Guidelines"));
+                        stats.addCritical(
+                                "Missing required tier: " +
+                                entry.getKey() + ": " + entry.getValue());
                     }
                 }
             } // for each transcirption
         }
-        return errors;
+        return stats;
     }
 
 

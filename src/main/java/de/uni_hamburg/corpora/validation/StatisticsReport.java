@@ -35,6 +35,11 @@ import java.util.ArrayList;
  */
 public class StatisticsReport {
 
+    /** Special statistics counter for higher level exceptions.
+     * I use this to produce an error count with no possible successes, a bit
+     * like root logger in logging
+     */
+    public final String ROOT_BUCKET = "root";
 
     /** the data structure holding all statistics. */
     private Map<String, Collection<StatisticsStuff>> statistics;
@@ -62,7 +67,7 @@ public class StatisticsReport {
      */
     public void merge(StatisticsReport sr) {
         for (Map.Entry<String, Collection<StatisticsStuff>> kv :
-                statistics.entrySet()) {
+                sr.statistics.entrySet()) {
             if (statistics.containsKey(kv.getKey())) {
                 Collection<StatisticsStuff> c =
                     statistics.get(kv.getKey());
@@ -72,6 +77,15 @@ public class StatisticsReport {
                 statistics.put(kv.getKey(), kv.getValue());
             }
         }
+    }
+
+    /**
+     * Add a critical error in the root log.
+     *
+     * @sa addCritical(String, String)
+     */
+    public void addCritical(String description) {
+        addCritical(ROOT_BUCKET, description);
     }
 
     /**
@@ -92,6 +106,23 @@ public class StatisticsReport {
     }
 
     /**
+     * Add note for correctly formatted data in named statistics bucket.
+     */
+    public void addCritical(String statId, Throwable e, String description, String
+            extrablah) {
+        addCritical(statId, description + "::" + extrablah +
+                "..." + e.getStackTrace()[0]);
+    }
+    /**
+     * Add a critical error in named statistics bucket.
+     * @todo extrablah
+     */
+    public void addCritical(String statId, Throwable e, String description) {
+        addCritical(statId, description + e.getStackTrace()[0]);
+    }
+
+
+    /**
      * Add a non-critical error in named statistics bucket.
      */
     public void addWarning(String statId, String description) {
@@ -108,6 +139,14 @@ public class StatisticsReport {
         addWarning(statId, description + extraBlah);
     }
 
+    /**
+     * Add note for correctly formatted data in named statistics bucket.
+     */
+    public void addWarning(String statId, Throwable e, String description, String
+            extrablah) {
+        addWarning(statId, description + "::" + extrablah +
+                "..." + e.getStackTrace()[0]);
+    }
     /**
      * Add error about missing data in named statistics bucket.
      */
@@ -127,6 +166,47 @@ public class StatisticsReport {
     }
 
     /**
+     * Add note for correctly formatted data in named statistics bucket.
+     */
+    public void addNote(String statId, String description) {
+        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
+        stat.add(new StatisticsStuff(StatisticsStuff.Severity.NOTE,
+                    description));
+    }
+
+    /**
+     * Add note for correctly formatted data in named statistics bucket.
+     */
+    public void addNote(String statId, Throwable e, String description) {
+        addNote(statId, description + "..." + e.getStackTrace()[0]);
+    }
+
+    /**
+     * Add note for correctly formatted data in named statistics bucket.
+     */
+    public void addNote(String statId, Throwable e, String description, String
+            extrablah) {
+        addNote(statId, description + "::" + extrablah +
+                "..." + e.getStackTrace()[0]);
+    }
+    /**
+     * Add note for correctly formatted data in named statistics bucket.
+     */
+    public void addNote(String statId, String description, String extraBlah) {
+        addNote(statId, description + "::" + extraBlah);
+    }
+
+
+    /**
+     * Add error with throwable to root log.
+     *
+     * @sa addException(String, Throwable, String)
+     */
+    public void addException(Throwable e, String description) {
+        addException(ROOT_BUCKET, e, description);
+    }
+
+    /**
      * Add error with throwable in statistics bucket. The exception provides
      * extra information about the error, ideally e.g. when parsing a file if
      * error comes in form of exception is a good idea to re-use the throwable
@@ -136,6 +216,15 @@ public class StatisticsReport {
         Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
         stat.add(new StatisticsStuff(StatisticsStuff.Severity.CRITICAL,
                     e, description));
+    }
+
+
+    /**
+     * Add error with throwable in statistics bucket. The exception provides
+     */
+    public void addException(String statId, Throwable e, String description,
+            String extrablah) {
+        addException(statId, e, description + "\n\t" + extrablah);
     }
 
     /**
@@ -155,8 +244,9 @@ public class StatisticsReport {
                 unk += 1;
             }
         }
-        return MessageFormat.format("{1}: {2} % done: {3} OK + {4} bad + " +
-                "{5} ??? = {6} items", statId, good / (good + bad + unk),
+        return MessageFormat.format("  {0}: {1} % done: {2} OK, {3} bad, " +
+                " and {4} unknown. " +
+                "= {5} items.\n", statId, 100 * good / (good + bad + unk),
                 good, bad, unk, good + bad + unk);
     }
 
@@ -164,7 +254,7 @@ public class StatisticsReport {
      * Genereate summaries for all buckets.
      */
     public String getSummaryLines() {
-        String rv = "Summaries:\n";
+        String rv = "";
         for (Map.Entry<String, Collection<StatisticsStuff>> kv :
                 statistics.entrySet()) {
             rv += getSummaryLine(kv.getKey());
@@ -178,17 +268,17 @@ public class StatisticsReport {
      */
     public String getErrorReport(String statId) {
         Collection<StatisticsStuff> stats = statistics.get(statId);
-        String rv = MessageFormat.format("{1}:\n", statId);
+        String rv = MessageFormat.format("{0}:\n", statId);
         int suppressed = 0;
         for (StatisticsStuff s : stats) {
             if (s.isSevere()) {
-                rv += s.toString() + "\n";
+                rv += s.getSummary() + "\n";
             } else {
                 suppressed += 1;
             }
         }
         if (suppressed != 0) {
-            rv += MessageFormat.format("\nand {1} warnings not included",
+            rv += MessageFormat.format("{0} warnings and notes hidden\n",
                     suppressed);
         }
         return rv;
@@ -211,7 +301,7 @@ public class StatisticsReport {
      */
     public String getFullReport(String statId) {
         Collection<StatisticsStuff> stats = statistics.get(statId);
-        String rv = MessageFormat.format("{1}:\n", statId);
+        String rv = MessageFormat.format("{0}:\n", statId);
         for (StatisticsStuff s : stats) {
             if (s.isGood()) {
                 rv += s.toString() + "\n";

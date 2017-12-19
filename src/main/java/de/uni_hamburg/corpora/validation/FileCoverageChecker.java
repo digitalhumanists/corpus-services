@@ -13,7 +13,8 @@ package de.uni_hamburg.corpora.validation;
 import java.io.File;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -65,52 +66,51 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import de.uni_hamburg.corpora.utilities.TypeConverter;
+
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class FileCoverageChecker implements CommandLineable {
+public class FileCoverageChecker implements CommandLineable, StringChecker {
 
-    static ValidatorSettings settings;
+    ValidatorSettings settings;
+    String referencePath = "./";
+    File referenceFile;
+    String comaLoc = "";
+
+    final String COMA_FILECOVERAGE = "coma-filecoverage";
 
     /**
      * Check for existence of files in a coma file.
      *
      * @return true, if all files were found, false otherwise
      */
-    public static Collection<ErrorMessage> check(File comafile) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport check(String s) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(comafile);
+            stats = exceptionalCheck(s);
         } catch(ParserConfigurationException pce) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(pce, comaLoc + ": " + "Unknown parsing error");
         } catch(SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, comaLoc + ": " + "Unknown parsing error");
         } catch(IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    comafile.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, comaLoc + ": " + "Unknown file reading error");
         }
-        return errors;
+        return stats;
     }
 
-    private static String stripPrefix(String path, String prefix) {
+    private String stripPrefix(String path, String prefix) {
         return path.replaceFirst("^" + prefix.replace("\\", "\\\\") +
                 File.separator.replace("\\", "\\\\"), "");
 
     }
 
-    private static Collection<ErrorMessage> exceptionalCheck(File comafile)
+    private StatisticsReport exceptionalCheck(String data)
             throws SAXException, IOException, ParserConfigurationException {
         Set<String> allFilesPaths = new HashSet<String>();
+        StatisticsReport stats = new StatisticsReport();
         if (settings.getDataDirectory() != null) {
             Stack<File> dirs = new Stack<File>();
             dirs.add(settings.getDataDirectory());
@@ -161,8 +161,8 @@ public class FileCoverageChecker implements CommandLineable {
         }
         if (allFilesPaths.size() == 0) {
             Stack<File> dirs = new Stack();
-            dirs.add(comafile.getParentFile());
-            String prefix = comafile.getParentFile().getCanonicalPath();
+            dirs.add(referenceFile);
+            String prefix = referencePath;
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
@@ -186,7 +186,7 @@ public class FileCoverageChecker implements CommandLineable {
         Set<String> NSLinksPaths = new HashSet<String>();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(comafile);
+        Document doc = db.parse(data);
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element)nslinks.item(i);
@@ -224,27 +224,21 @@ public class FileCoverageChecker implements CommandLineable {
                 RelPaths.add(relpath);
             }
         }
-        List<ErrorMessage> errors = new ArrayList<ErrorMessage>();
         Set<String> comaPaths = new HashSet<String>(NSLinksPaths);
         comaPaths.addAll(RelPaths);
-        if (comaPaths.containsAll(allFilesPaths) &&
-                allFilesPaths.containsAll(comaPaths)) {
-            return errors;
-        } else {
-            Set<String> extraFiles = new HashSet<String>(allFilesPaths);
-            extraFiles.removeAll(comaPaths);
-            for (String s : extraFiles) {
-                errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                            comafile.getAbsolutePath(),
-                            "File on filesystem is not explained in coma: " + s,
-                            "Add description to coma or remove the file if it's"
-                            + " not part of corpus"));
+        for (String s : allFilesPaths) {
+            if (comaPaths.contains(s)) {
+                stats.addCorrect(COMA_FILECOVERAGE, comaLoc + ": " +
+                        "File both in coma and filesystem: " + s);
+            } else {
+                stats.addCritical(COMA_FILECOVERAGE, comaLoc + ": " +
+                        "File on filesystem is not explained in coma: " + s);
             }
         }
-        return errors;
+        return stats;
     }
 
-    public void doMain(String[] args) {
+    public StatisticsReport doMain(String[] args) {
         settings = new ValidatorSettings("FileCoverageChecker",
                 "Checks Exmaralda .coma file against directory, to find " +
                 "undocumented files",
@@ -254,20 +248,35 @@ public class FileCoverageChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking coma file against directory...");
         }
+        StatisticsReport stats = new StatisticsReport();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
+            try {
+                comaLoc = f.getName();
+                String s = TypeConverter.InputStream2String(new
+                        FileInputStream(f));
+                referencePath = "./";
+                if (f.getParentFile() != null) {
+                    referenceFile = f.getParentFile();
+                    referencePath = f.getParentFile().getCanonicalPath();
+                }
+                stats = check(s);
+            } catch (FileNotFoundException fnfe) {
+                fnfe.printStackTrace();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
         }
+        return stats;
     }
 
     public static void main(String[] args) {
         FileCoverageChecker checker = new FileCoverageChecker();
-        checker.doMain(args);
+        StatisticsReport stats = checker.doMain(args);
+        System.out.println(stats.getSummaryLines());
+        System.out.println(stats.getErrorReports());
     }
 
 

@@ -44,19 +44,19 @@ public class ExbSegmentationChecker  {
     static ValidatorSettings settings;
 
 
-    public static Collection<ErrorMessage> check(File f) {
-        Collection<ErrorMessage> errors = new ArrayList<ErrorMessage>();
+    public static StatisticsReport check(File f) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalCheck(f);
+            stats = exceptionalCheck(f);
         } catch (SAXException saxe) {
             saxe.printStackTrace();
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         }
-        return errors;
+        return stats;
     }
 
-    public static Collection<ErrorMessage>
+    public static StatisticsReport
             exceptionalCheck(File f) throws SAXException, JexmaraldaException {
         filename = f.getAbsolutePath();
         bt = new BasicTranscription(filename);
@@ -68,7 +68,7 @@ public class ExbSegmentationChecker  {
         //eed.setErrorList(errorsDocument);
         //eed.setLocationRelativeTo(table);
         //eed.setVisible(true);
-        return new ArrayList<ErrorMessage>();
+        return new StatisticsReport();
     }
 
 
@@ -86,9 +86,11 @@ public class ExbSegmentationChecker  {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = check(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - "  + em);
+            StatisticsReport stats = check(f);
+            if (settings.isVerbose()) {
+                System.out.println(stats.getFullReports());
+            } else {
+                System.out.println(stats.getSummaryLines());
             }
         }
     }

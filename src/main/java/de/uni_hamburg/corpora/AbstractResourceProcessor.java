@@ -1,13 +1,13 @@
 /*
  * A command-line interface for checking corpus files.
- * 
+ *
  * @author Anne Ferger
  * @author HZSK
- * 
+ *
  */
 package de.uni_hamburg.corpora;
 
-import de.uni_hamburg.corpora.validation.ErrorMessage;
+import de.uni_hamburg.corpora.validation.StatisticsReport;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,37 +40,25 @@ public abstract class AbstractResourceProcessor {
     File fileToBeFixed;
     ValidatorSettings settings;
 
-    public Collection<ErrorMessage> fix(File fileToBeFixed) {
-        Collection<ErrorMessage> errors;
+    public StatisticsReport fix(File fileToBeFixed) {
+        StatisticsReport stats = new StatisticsReport();
         try {
-            errors = exceptionalFix(fileToBeFixed);
+            stats = exceptionalFix(fileToBeFixed);
         } catch (JexmaraldaException je) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    fileToBeFixed.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(je, "Unknown parsing error");
         } catch (JDOMException jdome) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    fileToBeFixed.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(jdome, "Unknown parsing error");
         } catch (SAXException saxe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    fileToBeFixed.getName(),
-                    "Parsing error", "Unknown"));
+            stats.addException(saxe, "Unknown parsing error");
         } catch (IOException ioe) {
-            errors = new ArrayList<ErrorMessage>();
-            errors.add(new ErrorMessage(ErrorMessage.Severity.CRITICAL,
-                    fileToBeFixed.getName(),
-                    "Reading error", "Unknown"));
+            stats.addException(ioe, "File reading error");
         }
-        return errors;
+        return stats;
     }
 
-    public abstract Collection<ErrorMessage> exceptionalFix(File fileToBeFixed) throws
+    public abstract StatisticsReport exceptionalFix(File fileToBeFixed) throws
             SAXException, JDOMException, IOException, JexmaraldaException;
-    
+
      public void doMain(String[] args) {
         settings = new ValidatorSettings("name",
                 "what", "fix");
@@ -82,9 +70,11 @@ public abstract class AbstractResourceProcessor {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            Collection<ErrorMessage> errors = fix(f);
-            for (ErrorMessage em : errors) {
-                System.out.println("   - " + em);
+            StatisticsReport stats = fix(f);
+            if (settings.isVerbose()) {
+                System.out.println(stats.getFullReports());
+            } else {
+                System.out.println(stats.getSummaryLines());
             }
         }
 
