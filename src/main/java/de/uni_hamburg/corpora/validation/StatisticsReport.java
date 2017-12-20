@@ -244,7 +244,7 @@ public class StatisticsReport {
                 unk += 1;
             }
         }
-        return MessageFormat.format("  {0}: {1} % done: {2} OK, {3} bad, " +
+        return MessageFormat.format("  {0}: {1} %: {2} OK, {3} bad, " +
                 " and {4} unknown. " +
                 "= {5} items.\n", statId, 100 * good / (good + bad + unk),
                 good, bad, unk, good + bad + unk);
