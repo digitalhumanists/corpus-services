@@ -12,8 +12,12 @@ import java.util.Collection;
  *
  * @author fsnv625
  */
-public abstract class AbstractCollectionManager {
+public abstract class CorpusIO {
 
+    //The content in here probably has not much to do with what we decided in UML now,
+    //need to be reworked
+    //and the class is not supposed to be abstract anymore  
+    
     //important: That shouldn't be the filepath, but the File itself as a String!!
     String fileAsString;
 
