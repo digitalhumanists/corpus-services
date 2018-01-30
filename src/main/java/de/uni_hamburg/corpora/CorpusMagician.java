@@ -40,14 +40,17 @@ public class CorpusMagician {
     return chosencorpusfunctions;
     }
 
-    public ErrorList runCorpusFunction(CorpusData cd, CorpusFunction cf) {
-    cf.execute(cd);
+    public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {
+    return cf.execute(cd);
     }
     
-     public ErrorList runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfs) {
+    public Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfs) {
+    Report report = new Report();
     for (CorpusFunction cf :cfs){
-         cf.execute(cd);
+         Report newReport = (cf.execute(cd));
+         report.merge(newReport);
     }
+    return report;
     }
 
     public void readParameters() {
