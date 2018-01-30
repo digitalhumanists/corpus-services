@@ -8,7 +8,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.validation.StringChecker;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.File;
@@ -36,7 +36,7 @@ public interface Fixer extends CommandLineable {
     //ValidatorSettings settings;
     //String fileasstring;
 
-    public StatisticsReport fix(CorpusData cd);
+    public Report fix(CorpusData cd);
 //    {
 //        StatisticsReport stats = new StatisticsReport();
 //        try {
@@ -50,13 +50,13 @@ public interface Fixer extends CommandLineable {
 //    }
 
     //Still to do all that here (Anne)
-   public StatisticsReport
+   public Report
             exceptionalCheck(CorpusData cd) throws SAXException, JexmaraldaException;
 
-   public StatisticsReport
+   public Report
             exceptionalCheck(CorpusData cd, CorpusData cd2) throws SAXException, JexmaraldaException, IOException, JDOMException;
 
-    public StatisticsReport doMain(String[] args);
+    public Report doMain(String[] args);
 //    {
 //        settings = new ValidatorSettings("name",
 //                "what", "fix");

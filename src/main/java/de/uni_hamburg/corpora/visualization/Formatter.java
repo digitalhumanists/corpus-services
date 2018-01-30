@@ -6,7 +6,7 @@
 package de.uni_hamburg.corpora.visualization;
 
 import de.uni_hamburg.corpora.AbstractResourceProcessor;
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -27,7 +27,7 @@ Dann müssen wir auch unterscheiden zwischen Repo-(Web-)Design und Transkript-La
 public class Formatter extends AbstractResourceProcessor {
 
     @Override
-    public StatisticsReport exceptionalFix(File fileToBeFixed) throws SAXException, JDOMException, IOException, JexmaraldaException {
+    public Report exceptionalFix(File fileToBeFixed) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

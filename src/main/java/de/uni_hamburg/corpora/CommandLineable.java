@@ -32,7 +32,7 @@ package de.uni_hamburg.corpora;
 public interface CommandLineable {
 
 
-    public StatisticsReport doMain(String[] args);
+    public Report doMain(String[] args);
 
 
 }

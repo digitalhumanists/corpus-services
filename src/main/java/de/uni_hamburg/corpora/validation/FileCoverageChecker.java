@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.File;
 import java.io.File;
@@ -89,8 +89,8 @@ public class FileCoverageChecker implements CommandLineable, StringChecker {
      *
      * @return true, if all files were found, false otherwise
      */
-    public StatisticsReport check(String s) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(String s) {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck(s);
         } catch(ParserConfigurationException pce) {
@@ -109,10 +109,10 @@ public class FileCoverageChecker implements CommandLineable, StringChecker {
 
     }
 
-    private StatisticsReport exceptionalCheck(String data)
+    private Report exceptionalCheck(String data)
             throws SAXException, IOException, ParserConfigurationException {
         Set<String> allFilesPaths = new HashSet<String>();
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         if (settings.getDataDirectory() != null) {
             Stack<File> dirs = new Stack<File>();
             dirs.add(settings.getDataDirectory());
@@ -240,7 +240,7 @@ public class FileCoverageChecker implements CommandLineable, StringChecker {
         return stats;
     }
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("FileCoverageChecker",
                 "Checks Exmaralda .coma file against directory, to find " +
                 "undocumented files",
@@ -250,7 +250,7 @@ public class FileCoverageChecker implements CommandLineable, StringChecker {
         if (settings.isVerbose()) {
             System.out.println("Checking coma file against directory...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -276,7 +276,7 @@ public class FileCoverageChecker implements CommandLineable, StringChecker {
 
     public static void main(String[] args) {
         FileCoverageChecker checker = new FileCoverageChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }

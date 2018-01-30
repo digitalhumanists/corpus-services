@@ -10,7 +10,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.IOException;
 import java.io.File;
@@ -46,8 +46,8 @@ public class ExbFileReferenceChecker implements CommandLineable {
     /**
      * Check for referenced-files.
      */
-    public StatisticsReport check(File f) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(File f) {
+        Report stats = new Report();
         try {
             exbName = f.getName();
             stats = exceptionalCheck(f);
@@ -61,7 +61,7 @@ public class ExbFileReferenceChecker implements CommandLineable {
         return stats;
     }
 
-    public StatisticsReport exceptionalCheck(File f)
+    public Report exceptionalCheck(File f)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -69,7 +69,7 @@ public class ExbFileReferenceChecker implements CommandLineable {
         NodeList reffiles = doc.getElementsByTagName("referenced-file");
         int reffilesFound = 0;
         int reffilesMissing = 0;
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (int i = 0; i < reffiles.getLength(); i++) {
             Element reffile = (Element)reffiles.item(i);
             String url = reffile.getAttribute("url");
@@ -108,7 +108,7 @@ public class ExbFileReferenceChecker implements CommandLineable {
     }
 
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("ExbFileReferenceChecker",
                 "Checks Exmaralda .exb file for file references that do not " +
                 "exist", "If input is a directory, performs recursive check " +
@@ -117,7 +117,7 @@ public class ExbFileReferenceChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking EXB files for references...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -129,7 +129,7 @@ public class ExbFileReferenceChecker implements CommandLineable {
 
     public static void main(String[] args) {
         ExbFileReferenceChecker checker = new ExbFileReferenceChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }

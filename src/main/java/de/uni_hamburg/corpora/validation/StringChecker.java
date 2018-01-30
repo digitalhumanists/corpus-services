@@ -9,7 +9,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 
 /**
  * A HZSK validator that can check data from a string. Most validators should
@@ -24,7 +24,7 @@ public interface StringChecker {
     /**
      * Check string data and create a report.
      */
-    public StatisticsReport check(String data);
+    public Report check(String data);
 
 
 }

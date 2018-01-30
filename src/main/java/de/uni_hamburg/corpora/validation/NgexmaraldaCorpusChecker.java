@@ -5,7 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,8 +49,8 @@ public class NgexmaraldaCorpusChecker  {
 
     final String NSLC = "nslc";
 
-    public StatisticsReport check() {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check() {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck();
             stats.merge(requireObligatoryAnnotationTiersAndTypes());
@@ -68,9 +68,9 @@ public class NgexmaraldaCorpusChecker  {
 
 
 
-    public StatisticsReport exceptionalCheck() throws JDOMException,
+    public Report exceptionalCheck() throws JDOMException,
             IOException {
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         Document nganasanCorpus =
             org.exmaralda.common.jdomutilities.
                     IOUtilities.readDocumentFromLocalFile(comafilename);
@@ -322,7 +322,7 @@ public class NgexmaraldaCorpusChecker  {
      * </table>
      *
      */
-    public StatisticsReport requireObligatoryAnnotationTiersAndTypes() throws
+    public Report requireObligatoryAnnotationTiersAndTypes() throws
             SAXException, JDOMException, IOException, JexmaraldaException {
         Map<String, String> obligatoryTiers = new HashMap<String, String>();
         Map<String, String> optionalTiers = new HashMap<String, String>();
@@ -371,7 +371,7 @@ public class NgexmaraldaCorpusChecker  {
         tierTypes.put("so", "d");
         tierTypes.put("fh", "d");
 
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         Document nganasanCorpus =
             org.exmaralda.common.jdomutilities.
                     IOUtilities.readDocumentFromLocalFile(comafilename);

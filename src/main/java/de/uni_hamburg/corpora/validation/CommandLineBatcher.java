@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -290,7 +290,7 @@ public class CommandLineBatcher {
         }
         baseargs.add("-b");
         baseargs.add(baseDirectory.getAbsolutePath());
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (String testclass : tests) {
             // tests for input dir
             // ...

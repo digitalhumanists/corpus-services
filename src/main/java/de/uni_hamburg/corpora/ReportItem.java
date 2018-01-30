@@ -20,7 +20,7 @@ import java.util.Collection;
  * rephrase an exception to two messages describing the problem and suggested
  * solution. Can be used without exception as well.
  */
-public class StatisticsStuff {
+public class ReportItem {
 
     /**
      * Severity of error tells whether or how urgently it needs fixing:
@@ -71,18 +71,18 @@ public class StatisticsStuff {
      * Default constructor should only be used when nothing at all is known
      * of the error.
      */
-    public StatisticsStuff() {
+    public ReportItem() {
         what = "Totally unknown error";
         howto = "No known fixes";
         e = null;
     }
 
-    public StatisticsStuff(Severity s, String what) {
+    public ReportItem(Severity s, String what) {
         this.severity = s;
         this.what = what;
     }
 
-    public StatisticsStuff(Severity s, Throwable e, String what) {
+    public ReportItem(Severity s, Throwable e, String what) {
         this.severity = s;
         this.e = e;
         this.what = what;
@@ -93,7 +93,7 @@ public class StatisticsStuff {
      * SAXParseException. This can be used to extract file location informations
      * in most situations.
      */
-    public StatisticsStuff(Severity s, SAXParseException saxpe, String what) {
+    public ReportItem(Severity s, SAXParseException saxpe, String what) {
         this.severity = s;
         this.e = saxpe;
         this.what = what;
@@ -108,7 +108,7 @@ public class StatisticsStuff {
      * Generic file parsing error that can not be pointed to a line location
      * can be constructed from filename and descriptions.
      */
-    public StatisticsStuff(Severity s, String filename,
+    public ReportItem(Severity s, String filename,
             String what, String howto) {
         this.severity = s;
         this.filename = filename;
@@ -266,14 +266,14 @@ public class StatisticsStuff {
      *                 otherwise returns a summary and critical errors.
      */
     public static String
-        generatePlainText(Collection<StatisticsStuff> errors,
+        generatePlainText(Collection<ReportItem> errors,
                 boolean verbose) {
         String report = new String();
         int criticals = 0;
         int warnings = 0;
         int notes = 0;
         int unknowns = 0;
-        for (StatisticsStuff error : errors) {
+        for (ReportItem error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     criticals++;
@@ -300,11 +300,11 @@ public class StatisticsStuff {
                 " warnings (and " + (notes + unknowns) +
                 " hidden as non-problems or unknown)\n";
         }
-        for (StatisticsStuff error : errors) {
+        for (ReportItem error : errors) {
             if (verbose) {
                 report += "  " + error + "\n";
-            } else if (error.getSeverity() == StatisticsStuff.Severity.WARNING ||
-                    error.getSeverity() == StatisticsStuff.Severity.CRITICAL) {
+            } else if (error.getSeverity() == ReportItem.Severity.WARNING ||
+                    error.getSeverity() == ReportItem.Severity.CRITICAL) {
                 report += "  " + error.getLocation() + ": " +
                     error.getWhat() + "\n" +
                     "    " + error.getHowto() + "\n";
@@ -316,14 +316,14 @@ public class StatisticsStuff {
     /**
      * Generate a very short summary of validawtion errors.
      */
-    public static String generateSummary(Collection<StatisticsStuff>
+    public static String generateSummary(Collection<ReportItem>
             errors) {
         String report = new String();
         int criticals = 0;
         int warnings = 0;
         int notes = 0;
         int unknowns = 0;
-        for (StatisticsStuff error : errors) {
+        for (ReportItem error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     criticals++;
@@ -353,13 +353,13 @@ public class StatisticsStuff {
      * Includes quite ugly table of all the reports with a java script to hide
      * errors based on severity.
      */
-    public static String generateHTML(Collection<StatisticsStuff>
+    public static String generateHTML(Collection<ReportItem>
             errors) {
         int criticals = 0;
         int warnings = 0;
         int notes = 0;
         int unknowns = 0;
-        for (StatisticsStuff error : errors) {
+        for (ReportItem error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     criticals++;
@@ -405,7 +405,7 @@ public class StatisticsStuff {
             "<th>Fix</th><th>Original</th>" +
             "</tr></thead>\n";
         report += "  <tbody>\n";
-        for (StatisticsStuff error : errors) {
+        for (ReportItem error : errors) {
             switch (error.getSeverity()) {
                 case CRITICAL:
                     report += "<tr class='critical'><td style='border-left: red solid 3px'>";

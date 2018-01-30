@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class ComaErrorReportGenerator implements ErrorHandler {
 
     // store latest file name for laughs
     private String currentFileName;
-    private StatisticsReport stats;
+    private Report stats;
     final String COMA_XSD = "coma-validate-xsd";
 
     /**
@@ -47,10 +47,10 @@ public class ComaErrorReportGenerator implements ErrorHandler {
      */
     public ComaErrorReportGenerator() {
         super();
-        stats = new StatisticsReport();
+        stats = new Report();
     }
 
-    public StatisticsReport getErrors() {
+    public Report getErrors() {
         return stats;
     }
 
