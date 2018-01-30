@@ -7,7 +7,9 @@
  * @author HZSK
  */
 
-package de.uni_hamburg.corpora.validation;
+package de.uni_hamburg.corpora;
+
+import de.uni_hamburg.corpora.validation.StatisticsReport;
 
 /**
  * A command-line interface for error-checking corpora files. This ensures that
