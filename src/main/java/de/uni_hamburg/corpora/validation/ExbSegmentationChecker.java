@@ -10,6 +10,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.StatisticsReport;
 import java.io.IOException;
 import java.io.File;
 import java.util.Hashtable;

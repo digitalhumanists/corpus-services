@@ -31,12 +31,12 @@ import org.xml.sax.SAXException;
  * How to also put another file as input for an check?
  *
  */
-public interface Checker extends CommandLineable {
+public interface Fixer extends CommandLineable {
 
     //ValidatorSettings settings;
     //String fileasstring;
 
-    public StatisticsReport check(CorpusData cd);
+    public StatisticsReport fix(CorpusData cd);
 //    {
 //        StatisticsReport stats = new StatisticsReport();
 //        try {
@@ -49,6 +49,7 @@ public interface Checker extends CommandLineable {
 //        return stats;
 //    }
 
+    //Still to do all that here (Anne)
    public StatisticsReport
             exceptionalCheck(CorpusData cd) throws SAXException, JexmaraldaException;
 

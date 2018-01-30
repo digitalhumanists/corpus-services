@@ -9,6 +9,8 @@
 
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.StatisticsReport;
+
 /**
  * A HZSK validator that can check data from a string. Most validators should
  * start with this. The data is typically file contents as string, but not
