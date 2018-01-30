@@ -5,8 +5,9 @@
  * @author Tommi A Pirinen <tommi.antero.pirinen@uni-hamburg.de>
  * @author HZSK
  */
-package de.uni_hamburg.corpora.validation;
+package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaErrorReportGenerator;
 import java.net.URL;
 import java.io.File;
 import java.io.InputStream;

@@ -9,8 +9,6 @@
 
 package de.uni_hamburg.corpora;
 
-import de.uni_hamburg.corpora.validation.StatisticsReport;
-
 /**
  * A command-line interface for error-checking corpora files. This ensures that
  * a check has an entry point that can be called after construction. This is

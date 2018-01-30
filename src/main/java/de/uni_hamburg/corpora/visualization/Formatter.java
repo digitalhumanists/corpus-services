@@ -6,7 +6,7 @@
 package de.uni_hamburg.corpora.visualization;
 
 import de.uni_hamburg.corpora.AbstractResourceProcessor;
-import de.uni_hamburg.corpora.validation.StatisticsReport;
+import de.uni_hamburg.corpora.StatisticsReport;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;

@@ -7,7 +7,6 @@
  */
 package de.uni_hamburg.corpora;
 
-import de.uni_hamburg.corpora.validation.StatisticsReport;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.File;
 import java.io.FileOutputStream;

@@ -7,7 +7,7 @@
  * @author HZSK
  */
 
-package de.uni_hamburg.corpora.validation;
+package de.uni_hamburg.corpora;
 
 import org.xml.sax.SAXParseException;
 import java.io.StringWriter;

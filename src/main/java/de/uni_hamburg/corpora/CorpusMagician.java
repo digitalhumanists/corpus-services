@@ -5,6 +5,8 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.util.Collection;
+
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
  * Corpus Function on a corpus in a main method.
@@ -12,30 +14,41 @@ package de.uni_hamburg.corpora;
  * @author fsnv625
  */
 public class CorpusMagician {
-    //Corpus corpus;
-    //CorpusFunction corpusfunction;
+    Corpus corpus;
+    CorpusFunction corpusfunction;
 
     public CorpusMagician() {
 
     }
 
-    //Corpus initCorpus(){
-    // }
-//    public <CorpusFunction> getUsableFunctions(CorpusData) {
-//
-//    }
-//
-//    public public <CorpusFunction> getDefaultUsableFunctions() {
-//
-//    }
-//
-//    public <CorpusFunction> chooseFunctionDialog() {
-//
-//    }
-//
-//    public ErrorList runCorpusFunction(CorpusData, CorpusFunction) {
-//
-//    }
+    public void initCorpus(){
+    corpus = new Corpus();
+    }
+    
+    public Collection<CorpusFunction> getUsableFunctions(CorpusData cd) {
+    Collection<CorpusFunction> usablecorpusfunctions = null;
+    return usablecorpusfunctions;
+    }
+
+    public Collection<CorpusFunction> getDefaultUsableFunctions() {
+    Collection<CorpusFunction> defaultcorpusfunctions = null;
+    return defaultcorpusfunctions;
+    }
+
+    public Collection<CorpusFunction> chooseFunctionDialog() {
+    Collection<CorpusFunction> chosencorpusfunctions = null;
+    return chosencorpusfunctions;
+    }
+
+    public ErrorList runCorpusFunction(CorpusData cd, CorpusFunction cf) {
+    cf.execute(cd);
+    }
+    
+     public ErrorList runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfs) {
+    for (CorpusFunction cf :cfs){
+         cf.execute(cd);
+    }
+    }
 
     public void readParameters() {
 
