@@ -33,7 +33,7 @@ import java.util.ArrayList;
  *      12400 of annotations: 100 % done correctly, 7 % with warnings.
  * </pre>
  */
-public class StatisticsReport {
+public class Report {
     
     
     //Anne: Is this the ErrorList in the UML? If so, should we rename here or use StatisticsReport in UML? Or maybe best: ErrorReport?
@@ -46,14 +46,14 @@ public class StatisticsReport {
     public final String ROOT_BUCKET = "root";
 
     /** the data structure holding all statistics. */
-    private Map<String, Collection<StatisticsStuff>> statistics;
+    private Map<String, Collection<ReportItem>> statistics;
 
     /**
      * convenience function to create new statistic set if missing or get old.
      */
-    private Collection<StatisticsStuff> getOrCreateStatistic(String statId) {
+    private Collection<ReportItem> getOrCreateStatistic(String statId) {
         if (!statistics.containsKey(statId)) {
-            statistics.put(statId, new ArrayList<StatisticsStuff>());
+            statistics.put(statId, new ArrayList<ReportItem>());
         }
         return statistics.get(statId);
     }
@@ -61,19 +61,19 @@ public class StatisticsReport {
     /**
      * Create empty report.
      */
-    public StatisticsReport() {
-        statistics = new HashMap<String, Collection<StatisticsStuff>>();
+    public Report() {
+        statistics = new HashMap<String, Collection<ReportItem>>();
     }
 
     /**
      * Merge two error reports. Efficiently adds statistics from other report
      * to this one.
      */
-    public void merge(StatisticsReport sr) {
-        for (Map.Entry<String, Collection<StatisticsStuff>> kv :
+    public void merge(Report sr) {
+        for (Map.Entry<String, Collection<ReportItem>> kv :
                 sr.statistics.entrySet()) {
             if (statistics.containsKey(kv.getKey())) {
-                Collection<StatisticsStuff> c =
+                Collection<ReportItem> c =
                     statistics.get(kv.getKey());
                 c.addAll(kv.getValue());
                 statistics.put(kv.getKey(), c);
@@ -96,8 +96,8 @@ public class StatisticsReport {
      * Add a critical error in named statistics bucket.
      */
     public void addCritical(String statId, String description) {
-        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
-        stat.add(new StatisticsStuff(StatisticsStuff.Severity.CRITICAL,
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
                     description));
     }
 
@@ -130,8 +130,8 @@ public class StatisticsReport {
      * Add a non-critical error in named statistics bucket.
      */
     public void addWarning(String statId, String description) {
-        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
-        stat.add(new StatisticsStuff(StatisticsStuff.Severity.WARNING,
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.WARNING,
                     description));
     }
 
@@ -155,8 +155,8 @@ public class StatisticsReport {
      * Add error about missing data in named statistics bucket.
      */
     public void addMissing(String statId, String description) {
-        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
-        stat.add(new StatisticsStuff(StatisticsStuff.Severity.MISSING,
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.MISSING,
                     description));
     }
 
@@ -164,8 +164,8 @@ public class StatisticsReport {
      * Add note for correctly formatted data in named statistics bucket.
      */
     public void addCorrect(String statId, String description) {
-        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
-        stat.add(new StatisticsStuff(StatisticsStuff.Severity.CORRECT,
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.CORRECT,
                     description));
     }
 
@@ -173,8 +173,8 @@ public class StatisticsReport {
      * Add note for correctly formatted data in named statistics bucket.
      */
     public void addNote(String statId, String description) {
-        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
-        stat.add(new StatisticsStuff(StatisticsStuff.Severity.NOTE,
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.NOTE,
                     description));
     }
 
@@ -217,8 +217,8 @@ public class StatisticsReport {
      * in statistics.
      */
     public void addException(String statId, Throwable e, String description) {
-        Collection<StatisticsStuff> stat = getOrCreateStatistic(statId);
-        stat.add(new StatisticsStuff(StatisticsStuff.Severity.CRITICAL,
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
                     e, description));
     }
 
@@ -238,8 +238,8 @@ public class StatisticsReport {
         int good = 0;
         int bad = 0;
         int unk = 0;
-        Collection<StatisticsStuff> stats = statistics.get(statId);
-        for (StatisticsStuff s : stats) {
+        Collection<ReportItem> stats = statistics.get(statId);
+        for (ReportItem s : stats) {
             if (s.isBad()) {
                 bad += 1;
             } else if (s.isGood()) {
@@ -259,7 +259,7 @@ public class StatisticsReport {
      */
     public String getSummaryLines() {
         String rv = "";
-        for (Map.Entry<String, Collection<StatisticsStuff>> kv :
+        for (Map.Entry<String, Collection<ReportItem>> kv :
                 statistics.entrySet()) {
             rv += getSummaryLine(kv.getKey());
         }
@@ -271,10 +271,10 @@ public class StatisticsReport {
      * problems in detail.
      */
     public String getErrorReport(String statId) {
-        Collection<StatisticsStuff> stats = statistics.get(statId);
+        Collection<ReportItem> stats = statistics.get(statId);
         String rv = MessageFormat.format("{0}:\n", statId);
         int suppressed = 0;
-        for (StatisticsStuff s : stats) {
+        for (ReportItem s : stats) {
             if (s.isSevere()) {
                 rv += s.getSummary() + "\n";
             } else {
@@ -293,7 +293,7 @@ public class StatisticsReport {
      */
     public String getErrorReports() {
         String rv= "Errors:\n";
-        for (Map.Entry<String, Collection<StatisticsStuff>> kv :
+        for (Map.Entry<String, Collection<ReportItem>> kv :
                 statistics.entrySet()) {
             rv += getErrorReport(kv.getKey());
         }
@@ -304,14 +304,14 @@ public class StatisticsReport {
      * Generate verbose report for given bucket.
      */
     public String getFullReport(String statId) {
-        Collection<StatisticsStuff> stats = statistics.get(statId);
+        Collection<ReportItem> stats = statistics.get(statId);
         String rv = MessageFormat.format("{0}:\n", statId);
-        for (StatisticsStuff s : stats) {
+        for (ReportItem s : stats) {
             if (s.isGood()) {
                 rv += s.toString() + "\n";
             }
         }
-        for (StatisticsStuff s : stats) {
+        for (ReportItem s : stats) {
             if (s.isBad()) {
                 rv += s.toString() + "\n";
             }
@@ -324,7 +324,7 @@ public class StatisticsReport {
      */
     public String getFullReports() {
         String rv = "All reports\n";
-        for (Map.Entry<String, Collection<StatisticsStuff>> kv :
+        for (Map.Entry<String, Collection<ReportItem>> kv :
                 statistics.entrySet()) {
             rv += getFullReport(kv.getKey());
         }
@@ -334,9 +334,9 @@ public class StatisticsReport {
     /**
      * Get single collection of statistics.
      */
-    public Collection<StatisticsStuff> getRawStatistics() {
-        Collection<StatisticsStuff> allStats = new ArrayList<StatisticsStuff>();
-        for (Map.Entry<String, Collection<StatisticsStuff>> kv :
+    public Collection<ReportItem> getRawStatistics() {
+        Collection<ReportItem> allStats = new ArrayList<ReportItem>();
+        for (Map.Entry<String, Collection<ReportItem>> kv :
                 statistics.entrySet()) {
             allStats.addAll(kv.getValue());
         }

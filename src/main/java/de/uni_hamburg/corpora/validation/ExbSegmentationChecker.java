@@ -10,7 +10,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.io.File;
 import java.util.Hashtable;
@@ -45,8 +45,8 @@ public class ExbSegmentationChecker  {
     static ValidatorSettings settings;
 
 
-    public static StatisticsReport check(File f) {
-        StatisticsReport stats = new StatisticsReport();
+    public static Report check(File f) {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck(f);
         } catch (SAXException saxe) {
@@ -57,7 +57,7 @@ public class ExbSegmentationChecker  {
         return stats;
     }
 
-    public static StatisticsReport
+    public static Report
             exceptionalCheck(File f) throws SAXException, JexmaraldaException {
         filename = f.getAbsolutePath();
         bt = new BasicTranscription(filename);
@@ -69,7 +69,7 @@ public class ExbSegmentationChecker  {
         //eed.setErrorList(errorsDocument);
         //eed.setLocationRelativeTo(table);
         //eed.setVisible(true);
-        return new StatisticsReport();
+        return new Report();
     }
 
 
@@ -87,7 +87,7 @@ public class ExbSegmentationChecker  {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            StatisticsReport stats = check(f);
+            Report stats = check(f);
             if (settings.isVerbose()) {
                 System.out.println(stats.getFullReports());
             } else {

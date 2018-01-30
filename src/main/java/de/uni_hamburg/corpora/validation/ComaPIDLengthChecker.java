@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.File;
 import java.io.File;
@@ -86,8 +86,8 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
      *
      * @return true, if all files were found, false otherwise
      */
-    public StatisticsReport check(String data) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(String data) {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck(data);
         } catch(ParserConfigurationException pce) {
@@ -101,7 +101,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
     }
 
 
-    private StatisticsReport exceptionalCheck(String data)
+    private Report exceptionalCheck(String data)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -118,7 +118,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
                 corpusVersion = keyElement.getTextContent();
             }
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         if (corpusPrefix.equals("")) {
             stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                         "Missing <Key name='HZSK:corpusprefix'>.",
@@ -162,7 +162,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         return stats;
     }
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("ComaPIDLengthChecker",
                 "Checks Exmaralda .coma file for ID's that violate Fedora's " +
                 "PID limits", "If input is a directory, performs recursive " +
@@ -171,7 +171,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         if (settings.isVerbose()) {
             System.out.println("Checking COMA files for references...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -189,7 +189,7 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
 
     public static void main(String[] args) {
         ComaPIDLengthChecker checker = new ComaPIDLengthChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }

@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,8 +51,8 @@ public class FilenameChecker implements CommandLineable {
      *
      * @return true, if all files were found, false otherwise
      */
-    public StatisticsReport check(File rootdir) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(File rootdir) {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck(rootdir);
         } catch(IOException ioe) {
@@ -62,14 +62,14 @@ public class FilenameChecker implements CommandLineable {
     }
 
 
-    private StatisticsReport exceptionalCheck(File rootdir)
+    private Report exceptionalCheck(File rootdir)
             throws IOException {
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         return recursiveCheck(rootdir, stats);
     }
 
-    private StatisticsReport recursiveCheck(File f,
-            StatisticsReport stats) throws IOException {
+    private Report recursiveCheck(File f,
+            Report stats) throws IOException {
         String filename = f.getName();
         Matcher matchAccepting = acceptable.matcher(filename);
         boolean allesGut = true;
@@ -100,7 +100,7 @@ public class FilenameChecker implements CommandLineable {
         return stats;
     }
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("FileCoverageChecker",
                 "Checks Exmaralda .coma file against directory, to find " +
                 "undocumented files",
@@ -128,7 +128,7 @@ public class FilenameChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking coma file against directory...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -140,7 +140,7 @@ public class FilenameChecker implements CommandLineable {
 
     public static void main(String[] args) {
         FilenameChecker checker = new FilenameChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }

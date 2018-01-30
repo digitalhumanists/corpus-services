@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.File;
 import java.io.File;
@@ -83,8 +83,8 @@ public class ComaXsdChecker implements CommandLineable {
      * @return true, if file is passable (valid enough for HZSK),
      *         false otherwise.
      */
-    public StatisticsReport check(File f) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(File f) {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck(f);
         } catch(SAXException saxe) {
@@ -96,7 +96,7 @@ public class ComaXsdChecker implements CommandLineable {
     }
 
 
-    private StatisticsReport exceptionalCheck(File f)
+    private Report exceptionalCheck(File f)
             throws SAXException, IOException {
         URL COMA_XSD = new URL("http://www.exmaralda.org/xml/comacorpus.xsd");
         Source xmlStream = new StreamSource(f);
@@ -110,7 +110,7 @@ public class ComaXsdChecker implements CommandLineable {
         return eh.getErrors();
     }
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("ComaXSDChecker",
                 "Checks Exmaralda .coma file against XML Schema",
                 "If input is a directory, performs recursive check " +
@@ -119,7 +119,7 @@ public class ComaXsdChecker implements CommandLineable {
         if (settings.isVerbose()) {
             System.out.println("Checking COMA files against schema...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -131,7 +131,7 @@ public class ComaXsdChecker implements CommandLineable {
 
     public static void main(String[] args) {
         ComaXsdChecker checker = new ComaXsdChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }

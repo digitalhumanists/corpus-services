@@ -39,8 +39,8 @@ public abstract class AbstractResourceProcessor {
     File fileToBeFixed;
     ValidatorSettings settings;
 
-    public StatisticsReport fix(File fileToBeFixed) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report fix(File fileToBeFixed) {
+        Report stats = new Report();
         try {
             stats = exceptionalFix(fileToBeFixed);
         } catch (JexmaraldaException je) {
@@ -55,7 +55,7 @@ public abstract class AbstractResourceProcessor {
         return stats;
     }
 
-    public abstract StatisticsReport exceptionalFix(File fileToBeFixed) throws
+    public abstract Report exceptionalFix(File fileToBeFixed) throws
             SAXException, JDOMException, IOException, JexmaraldaException;
 
      public void doMain(String[] args) {
@@ -69,7 +69,7 @@ public abstract class AbstractResourceProcessor {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
             }
-            StatisticsReport stats = fix(f);
+            Report stats = fix(f);
             if (settings.isVerbose()) {
                 System.out.println(stats.getFullReports());
             } else {

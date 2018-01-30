@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -273,8 +273,8 @@ public class ComaAddTiersFromExbsCorrector {
      * </table>
      *
      */
-    public StatisticsReport fix() {
-        StatisticsReport stats = new StatisticsReport();
+    public Report fix() {
+        Report stats = new Report();
         try {
             stats = exceptionalFix();
         } catch(JexmaraldaException je) {
@@ -290,7 +290,7 @@ public class ComaAddTiersFromExbsCorrector {
     }
 
 
-    private StatisticsReport exceptionalFix() throws
+    private Report exceptionalFix() throws
             SAXException, JDOMException, IOException, JexmaraldaException {
         Map<String, String> tiers = new HashMap<String, String>();
         tiers.put("akz", "Accentuation/stress");
@@ -348,7 +348,7 @@ public class ComaAddTiersFromExbsCorrector {
         skipTiers.add("SUB-ROW-LABEL");
         skipTiers.add("EMPTY");
         skipTiers.add("EMPTY-EDITOR");
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         org.jdom.Document corpus =
             org.exmaralda.common.jdomutilities.
                     IOUtilities.readDocumentFromLocalFile(

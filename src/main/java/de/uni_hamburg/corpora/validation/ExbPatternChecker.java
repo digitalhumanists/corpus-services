@@ -10,7 +10,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.IOException;
 import java.io.File;
@@ -55,8 +55,8 @@ public class ExbPatternChecker implements CommandLineable  {
         }
     }
 
-    public StatisticsReport check(File f) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(File f) {
+        Report stats = new Report();
         try {
             stats = exceptionalCheck(f);
         } catch (ParserConfigurationException pce) {
@@ -69,7 +69,7 @@ public class ExbPatternChecker implements CommandLineable  {
         return stats;
     }
 
-    public StatisticsReport exceptionalCheck(File f)
+    public Report exceptionalCheck(File f)
             throws SAXException, IOException, ParserConfigurationException {
         // XXX: get conventions from settings somehow
         List<Pattern> correctPatterns = new ArrayList<Pattern>();
@@ -84,7 +84,7 @@ public class ExbPatternChecker implements CommandLineable  {
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(f);
         NodeList events = doc.getElementsByTagName("event");
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (int i = 0; i < events.getLength(); i++) {
             Element event = (Element)events.item(i);
             NodeList eventTexts = event.getChildNodes();
@@ -127,7 +127,7 @@ public class ExbPatternChecker implements CommandLineable  {
         return stats;
     }
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("ExbPatternChecker",
                 "Checks Exmaralda .exb file annotations for conventions using " +
                 "patterns", "If input is a directory, performs recursive check "
@@ -159,7 +159,7 @@ public class ExbPatternChecker implements CommandLineable  {
             System.out.println("Checking exb files for unconventional " +
                     "annotations...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -171,7 +171,7 @@ public class ExbPatternChecker implements CommandLineable  {
 
     public static void main(String[] args) {
         ExbPatternChecker checker = new ExbPatternChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }

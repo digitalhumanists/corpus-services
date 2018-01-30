@@ -10,7 +10,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.StatisticsReport;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import java.io.IOException;
 import java.io.File;
@@ -53,8 +53,8 @@ public class ExbStructureChecker implements CommandLineable {
      *
      * @see GetSegmentationErrorsAction
      */
-    public StatisticsReport check(File f) {
-        StatisticsReport stats = new StatisticsReport();
+    public Report check(File f) {
+        Report stats = new Report();
         try {
             exbName = f.getName();
             stats = exceptionalCheck(f);
@@ -66,11 +66,11 @@ public class ExbStructureChecker implements CommandLineable {
         return stats;
     }
 
-    public StatisticsReport
+    public Report
             exceptionalCheck(File f) throws SAXException, JexmaraldaException {
         filename = f.getAbsolutePath();
         bt = new BasicTranscription(filename);
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         String[] duplicateTranscriptionTiers =
             bt.getDuplicateTranscriptionTiers();
         String[] orphanedTranscriptionTiers =
@@ -110,7 +110,7 @@ public class ExbStructureChecker implements CommandLineable {
         return stats;
     }
 
-    public StatisticsReport doMain(String[] args) {
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("ExbStructureChecker",
                 "Checks Exmaralda .exb file for segmentation problems",
                 "If input is a directory, performs recursive check " +
@@ -120,7 +120,7 @@ public class ExbStructureChecker implements CommandLineable {
             System.out.println("Checking EXB files for segmentation " +
                     "problems...");
         }
-        StatisticsReport stats = new StatisticsReport();
+        Report stats = new Report();
         for (File f : settings.getInputFiles()) {
             if (settings.isVerbose()) {
                 System.out.println(" * " + f.getName());
@@ -132,7 +132,7 @@ public class ExbStructureChecker implements CommandLineable {
 
     public static void main(String[] args) {
         ExbStructureChecker checker = new ExbStructureChecker();
-        StatisticsReport stats = checker.doMain(args);
+        Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }
