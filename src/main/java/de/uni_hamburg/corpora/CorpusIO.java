@@ -20,6 +20,12 @@ public class CorpusIO {
     //Maybe it's fine if we work with strings here? Then we would get a CorpusData 
     //object, turn it into a string, maybe prettyprint it, and save that on the fileserver 
     //or as a datastream in the repo :)
+    
+    
+    
+    //maybe we can work with the Java Interfaces DataInput and DataOutput? Or DataInputStream and DataOutputstream?
+    
+    
     String fileAsString;
 
     public String getCorpusDataAsString(CorpusData cd) {
@@ -29,7 +35,7 @@ public class CorpusIO {
     //not yet sure if we need the following
 
     /*
-    * The follwing methods need to be in the Iterators for Coma and CMDI that don't exist yet
+    * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
     *
   
     public abstract Collection getAllTranscripts();
