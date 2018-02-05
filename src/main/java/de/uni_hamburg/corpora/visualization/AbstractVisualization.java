@@ -11,6 +11,11 @@ import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 /**
  *
  * @author Daniel Jettka
+ * 
+ * This now should be a normal, not abstract class that has 
+ * an implementation of "Visualize" as its field (that would be e.g. ListHTML)
+ * which seems to make things a lot easier
+ * 
  */
 public abstract class AbstractVisualization {
     

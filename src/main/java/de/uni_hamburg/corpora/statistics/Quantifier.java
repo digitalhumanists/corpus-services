@@ -11,7 +11,7 @@ package de.uni_hamburg.corpora.statistics;
  *
  * @author fsnv625
  */
-public class AbstractStatistics {
+public class Quantifier {
     
     //just so we know we still have to implement that
     
