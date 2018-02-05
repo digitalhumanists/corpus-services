@@ -12,33 +12,26 @@ import java.util.Collection;
  *
  * @author fsnv625
  */
-public abstract class CorpusIO {
+public class CorpusIO {
 
     //The content in here probably has not much to do with what we decided in UML now,
     //need to be reworked
-    //and the class is not supposed to be abstract anymore  
-    
     //important: That shouldn't be the filepath, but the File itself as a String!!
+    //Maybe it's fine if we work with strings here? Then we would get a CorpusData 
+    //object, turn it into a string, maybe prettyprint it, and save that on the fileserver 
+    //or as a datastream in the repo :)
     String fileAsString;
 
-    public abstract String getFileAsString(String s);
-
-    public abstract String getParametersFileAsString();
-
-    //or should this be an array or something?
-    public abstract String getCorpusStructureSpecificationAsString();
-
-    public abstract String getAnnotationSpecificationAsString();
-
-    public abstract String getAnnotationSpecificationAsString(String s);
+    public String getCorpusDataAsString(CorpusData cd) {
+        return cd.toString();
+    }
 
     //not yet sure if we need the following
-    public abstract String getComaSpecificationAsString();
 
-    public abstract String getComaFileAsString();
-
-    public abstract String getCMDIAsString();
-
+    /*
+    * The follwing methods need to be in the Iterators for Coma and CMDI that don't exist yet
+    *
+  
     public abstract Collection getAllTranscripts();
 
     public abstract Collection getAllAudioFiles();
@@ -49,7 +42,17 @@ public abstract class CorpusIO {
 
     public abstract String getVideoLinkForTranscript();
 
-    public abstract void write();
+   */
 
-    public abstract void zipThings();
+    public void write(){
+        
+    }
+
+    public void writePrettyPrinted(){
+        
+    }
+
+    public void zipThings(){
+        
+    }
 }

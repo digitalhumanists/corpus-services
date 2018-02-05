@@ -10,5 +10,7 @@ package de.uni_hamburg.corpora;
  * @author fsnv625
  */
 public interface CorpusData {
-    
+
+    @Override
+    public String toString();
 }
