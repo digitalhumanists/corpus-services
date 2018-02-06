@@ -43,7 +43,12 @@ public class Checker implements CorpusFunction{
     //will add it for now
     CorpusData cd;
     
+    public Checker(Check c){    
+    check = c;
+    }
+    
     public Report check(CorpusData cd){  
+        //here needs to be the "check" field too
         Report stats = new Report();
         try {
             stats = exceptionalCheck(cd);
