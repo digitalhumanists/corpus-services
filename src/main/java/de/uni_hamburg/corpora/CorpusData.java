@@ -11,6 +11,7 @@ package de.uni_hamburg.corpora;
  */
 public interface CorpusData {
 
-    @Override
-    public String toString();
+
+    public String toSavableString();
+    
 }
