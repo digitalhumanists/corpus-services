@@ -29,7 +29,7 @@ public class CorpusIO {
     String fileAsString;
 
     public String getCorpusDataAsString(CorpusData cd) {
-        return cd.toString();
+        return cd.toSaveableString();
     }
 
     //not yet sure if we need the following
