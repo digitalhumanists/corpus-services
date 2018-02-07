@@ -1,6 +1,6 @@
 # Gitlab artifacts
 
-The latest artifact/ compiled .jar you can find at this address: 
+The latest compiled .jar can be found here: 
 https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/master/browse?job=compile_withmaven
 
 
