@@ -15,6 +15,10 @@ import de.uni_hamburg.corpora.Report;
  * A HZSK validator that can check data from a string. Most validators should
  * start with this. The data is typically file contents as string, but not
  * necessarily. The validator should create a statistics report while checking.
+ * 
+ * 
+ * This would not be used anymore if all the Checker implement the CorpusFunction 
+ * and all the Checks the Check Interface.
  *
  * @sa de.uni_hamburg.corpora.utilities.TypeConverter
  *

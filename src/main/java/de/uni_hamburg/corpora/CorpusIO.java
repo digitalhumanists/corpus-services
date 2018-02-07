@@ -28,7 +28,7 @@ public class CorpusIO {
     
     String fileAsString;
 
-    public String getCorpusDataAsString(CorpusData cd) {
+    public String CorpusData2String(CorpusData cd) {
         return cd.toSaveableString();
     }
 
@@ -50,11 +50,12 @@ public class CorpusIO {
 
    */
 
-    public void write(){
+    //or should we write only Strings?
+    public void write(CorpusData cd){
         
     }
 
-    public void writePrettyPrinted(){
+    public void writePrettyPrinted(CorpusData cd){
         
     }
 
