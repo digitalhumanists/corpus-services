@@ -10,8 +10,6 @@ https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_
 
 # functions
 
-h2. corpus-validator functions 
-
 To see the currently available functions, check the Doxygen files.
 
 # compile
