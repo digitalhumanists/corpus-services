@@ -1,3 +1,7 @@
+# Introduction
+
+The HZSK Corpus Services project bundles functionality used for maintenance, curation, conversion, and visualization of corpus data at the HZSK.  
+
 # Gitlab artifacts
 
 The latest compiled .jar can be found here: 
