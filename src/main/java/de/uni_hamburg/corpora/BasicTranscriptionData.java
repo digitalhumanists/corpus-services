@@ -29,7 +29,7 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
  * ends up being implemented as. It seems to me like a bridge now, or just
  * aggregate.
  */
-public class BasicTranscriptionData implements CorpusData {
+public class BasicTranscriptionData implements CorpusData, ContentData, XMLData {
 
     private BasicTranscription bt;
 
