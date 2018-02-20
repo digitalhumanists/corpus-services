@@ -10,9 +10,16 @@
 
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import java.io.UnsupportedEncodingException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.File;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import de.uni_hamburg.corpora.BasicTranscriptionData;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -24,11 +31,28 @@ public class BasicTranscriptTest {
     @Test
     public void readWriteBT() {
         try {
-            File exbFile = new File("src/test/java/de/uni_hamburg/corpora/resoruces/example.exb");
+            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resoruces/example.exb";
+            String exbString = new
+                String(Files.readAllBytes(Paths.get(exbFilename)), "UTF-8");
+            File exbFile = new File(exbFilename);
             BasicTranscriptionData btd = new BasicTranscriptionData();
             btd.loadFile(exbFile);
             String prettyXML = btd.toSaveableString();
             assertNotNull(prettyXML);
+            // could be assertThat()
+            assertFalse(prettyXML.equals(exbString));
+            PrintWriter exbOut = new PrintWriter("outxample.exb");
+            exbOut.print(prettyXML);
+            exbOut.close();
+        } catch (UnsupportedEncodingException uee) {
+            uee.printStackTrace();
+            fail("Unexpected exception " + uee);
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+            fail("Unexpected exception " + fnfe);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            fail("Unexpected exception " + ioe);
         } catch (SAXException saxe) {
             saxe.printStackTrace();
             fail("Unexpected exception " + saxe);
