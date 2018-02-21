@@ -5,19 +5,22 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.CorpusData;
+
 /**
  *
  * @author fsnv625
  */
 public class PrettyPrintData implements Check{
 
+
     @Override
-    public void check() {
+    public void check(CorpusData cd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void fix() {
+    public void fix(CorpusData cd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
