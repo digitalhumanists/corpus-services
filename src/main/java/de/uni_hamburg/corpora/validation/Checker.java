@@ -37,9 +37,11 @@ public class Checker implements CorpusFunction{
     //I will keep the settings for now, so they can stay as they are for the Moment 
     //and we know where to refactor when we change them 
     ValidatorSettings settings;
+    //The file as String is not needed anymore, because we work with the CorpusData
+    //object. 
     //String fileasstring;
     Check check;
-    //don't know if this is needed or what we said about ir
+    //don't know if this is needed or what we said about it
     //will add it for now
     CorpusData cd;
     
@@ -49,6 +51,7 @@ public class Checker implements CorpusFunction{
     
     public Report check(CorpusData cd){  
         //here needs to be the "check" field too
+        check.check(cd);
         Report stats = new Report();
         try {
             stats = exceptionalCheck(cd);
