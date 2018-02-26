@@ -45,6 +45,8 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         bt = new BasicTranscription(f.getAbsolutePath());
     }
 
+    //couldn't we use the hzsk-corpus-services\src\main\java\de\ uni_hamburg\corpora\
+    //utilities\PrettyPrinter.java here to prettx print the files?
     private String toPrettyPrintedXML() throws SAXException, JDOMException,
             IOException, UnsupportedEncodingException {
         String xmlString = bt.toXML();
