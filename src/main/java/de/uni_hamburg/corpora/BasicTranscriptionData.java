@@ -12,7 +12,10 @@ package de.uni_hamburg.corpora;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -20,6 +23,7 @@ import org.jdom.input.SAXBuilder;
 import org.xml.sax.SAXException;
 import org.jdom.JDOMException;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
@@ -33,7 +37,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
 
     private BasicTranscription bt;
 
-    /** 
+    /**
      * loads basic transcription from file. Some versions of exmaralda this
      * emits a harmless message to stdout.
      */
@@ -52,7 +56,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         hzskFormat.setIndent("\t");
         XMLOutputter xmlout = new XMLOutputter(hzskFormat);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xmlout.output(xmlDoc, baos); 
+        xmlout.output(xmlDoc, baos);
         return new String(baos.toByteArray(), "UTF-8");
     }
 
@@ -71,6 +75,47 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             // XXX:
             ioe.printStackTrace();
             return ioe.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        if ((args.length != 2) && (args.length != 1)) {
+            System.out.println("Usage: " +
+                    BasicTranscriptionData.class.getName() +
+                    " INPUT [OUTPUT]");
+            System.exit(1);
+        }
+        try {
+            BasicTranscriptionData btd = new BasicTranscriptionData();
+            btd.loadFile(new File(args[0]));
+            String prettyXML = btd.toSaveableString();
+            boolean emplace = false;
+            PrintWriter output;
+            if (args.length == 2) {
+                output = new PrintWriter(args[1]);
+            } else {
+                // FIXME: reaö temp
+                output = new PrintWriter("tempfile.exb");
+                emplace = true;
+            }
+            output.print(prettyXML);
+            output.close();
+            if (emplace) {
+                Files.move(Paths.get("tempfile.exb"), Paths.get(args[0]),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (SAXException saxe) {
+            saxe.printStackTrace();
+            System.exit(1);
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+            System.exit(1);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            System.exit(1);
+        } catch (JexmaraldaException je) {
+            je.printStackTrace();
+            System.exit(1);
         }
     }
 }
