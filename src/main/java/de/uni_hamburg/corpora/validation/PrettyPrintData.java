@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
+import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 
 /**
  *
@@ -15,12 +16,26 @@ public class PrettyPrintData implements Check{
 
 
     @Override
-    public void check(CorpusData cd) {
+    public void check(CorpusData cd) {      
+        // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
+        String prettyCorpusData = indent(cd.toSaveableString(), "event");
+        //save it in temp folder
+        //compare the files
+        // if difference then - needs to be pretty printed
+        // if no diff - all fine, nothing needs to be done
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
     }
 
     @Override
     public void fix(CorpusData cd) {
+        // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
+        String prettyCorpusData = indent(cd.toSaveableString(), "event");
+        //save it instead of the old file
+        // output which files were pretty printed
+        // catch errors when writing etc. doesn't work 
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
