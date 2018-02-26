@@ -9,6 +9,7 @@
 
 package de.uni_hamburg.corpora;
 
+import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,8 +46,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         bt = new BasicTranscription(f.getAbsolutePath());
     }
 
-    //couldn't we use the hzsk-corpus-services\src\main\java\de\ uni_hamburg\corpora\
-    //utilities\PrettyPrinter.java here to prettx print the files?
+/* 
     private String toPrettyPrintedXML() throws SAXException, JDOMException,
             IOException, UnsupportedEncodingException {
         String xmlString = bt.toXML();
@@ -61,23 +61,19 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         xmlout.output(xmlDoc, baos);
         return new String(baos.toByteArray(), "UTF-8");
     }
+*/
+   
+    //I jusr use the hzsk-corpus-services\src\main\java\de\ uni_hamburg\corpora\
+    //utilities\PrettyPrinter.java here to pretty print the files, so they
+    //will always get pretty printed in the same way
+    private String toPrettyPrintedXML(){
+   
+    String prettyCorpusData = indent(bt.toXML(), "event");
+    return prettyCorpusData;
+    }
 
-    public String toSaveableString() {
-        try {
-            return toPrettyPrintedXML();
-        } catch(SAXException saxe) {
-            // XXX:
-            saxe.printStackTrace();
-            return saxe.toString();
-        } catch(JDOMException jdome) {
-            // XXX:
-            jdome.printStackTrace();
-            return jdome.toString();
-        } catch(IOException ioe) {
-            // XXX:
-            ioe.printStackTrace();
-            return ioe.toString();
-        }
+    public String toSaveableString() {      
+    return toPrettyPrintedXML();     
     }
 
     public static void main(String[] args) {
