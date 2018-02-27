@@ -5,8 +5,9 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.net.URL;
 import java.util.Collection;
-
+import de.uni_hamburg.corpora.CorpusData;
 /**
  *
  * @author fsnv625
@@ -20,4 +21,15 @@ public class Corpus {
     AnnotationSpecification annotationspecification;
     ConfigParameters configparameters;
     
+    public Corpus(){
+        
+    }
+    
+    public Corpus(URL url){
+    }
+    
+    public Collection<CorpusData> getCorpusData(){
+    Collection<CorpusData> col = null; 
+    return col;
+    }
 }
