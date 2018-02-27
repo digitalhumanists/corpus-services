@@ -93,7 +93,7 @@ public class Checker implements CorpusFunction{
 
     @Override
     public Collection<CorpusData> IsUsableFor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return check.getIsUsableFor();       
     }
 
     @Override
