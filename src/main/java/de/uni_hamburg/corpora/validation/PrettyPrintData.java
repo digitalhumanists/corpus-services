@@ -7,6 +7,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import java.util.Collection;
 
 /**
  *
@@ -36,6 +37,11 @@ public class PrettyPrintData implements Check{
         // output which files were pretty printed
         // catch errors when writing etc. doesn't work 
         
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<CorpusData> getIsUsableFor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
+import java.util.Collection;
 
 /**
  *
@@ -18,5 +19,5 @@ public interface Check {
   //fixen gibt, dann muss Erklärung in die ErrorMeldung
   public void fix(CorpusData cd);
 
-    
+  public Collection<CorpusData> getIsUsableFor();
 }
