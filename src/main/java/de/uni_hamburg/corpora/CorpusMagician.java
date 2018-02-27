@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.net.URL;
 import java.util.Collection;
 
 /**
@@ -23,6 +24,10 @@ public class CorpusMagician {
 
     public void initCorpus(){
     corpus = new Corpus();
+    }
+    
+    public void initCorpusWithURL(URL url){
+    corpus = new Corpus(url);
     }
     
     public Collection<CorpusFunction> getUsableFunctions(CorpusData cd) {
