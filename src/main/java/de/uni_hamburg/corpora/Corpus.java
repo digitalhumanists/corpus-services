@@ -8,29 +8,104 @@ package de.uni_hamburg.corpora;
 import java.net.URL;
 import java.util.Collection;
 import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusIO;
+
 /**
  *
  * @author fsnv625
  */
 public class Corpus {
-    
-    Metadata metadata;
-    Collection <ContentData> contentdata;
-    Collection <Recording> recording;
-    Collection <AdditionalData> additionaldata;
-    AnnotationSpecification annotationspecification;
-    ConfigParameters configparameters;
-    
-    public Corpus(){
-        
+
+    //only the metadata file, coma or cmdi in most cases, or a list of files
+    Collection<Metadata> metadata;
+    //the transcriptions
+    Collection<ContentData> contentdata;
+    Collection<Recording> recording;
+    Collection<AdditionalData> additionaldata;
+    Collection<AnnotationSpecification> annotationspecification;
+    Collection<ConfigParameters> configparameters;
+    //all the data together
+    Collection<CorpusData> cdc;
+
+    public Corpus() {
+
     }
-    
-    public Corpus(URL url){
-    CorpusIO.read(url);
+
+    public Corpus(URL url) {
+        CorpusIO cio = new CorpusIO();
+        cdc = cio.read(url);
+        for (CorpusData cd : cdc) {
+            if (cd instanceof ContentData) {
+                contentdata.add((ContentData) cd);
+            } else if (cd instanceof Recording) {
+                recording.add((Recording) cd);
+            } else if (cd instanceof AdditionalData) {
+                additionaldata.add((AdditionalData) cd);
+            } else if (cd instanceof Metadata) {
+                metadata.add((Metadata) cd);
+            } else if (cd instanceof AnnotationSpecification) {
+                annotationspecification.add((AnnotationSpecification) cd);
+            } else if (cd instanceof ConfigParameters) {
+                configparameters.add((ConfigParameters) cd);
+            }
+        }
+        //and also the other collections maybe
     }
-    
-    public Collection<CorpusData> getCorpusData(){
-    Collection<CorpusData> col = null; 
-    return col;
+
+    public Collection<CorpusData> getCorpusData() {
+        return cdc;
     }
+
+    public Collection<Metadata> getMetadata() {
+        return metadata;
+    }
+
+    public Collection<ContentData> getContentdata() {
+        return contentdata;
+    }
+
+    public Collection<Recording> getRecording() {
+        return recording;
+    }
+
+    public Collection<AdditionalData> getAdditionaldata() {
+        return additionaldata;
+    }
+
+    public Collection<AnnotationSpecification> getAnnotationspecification() {
+        return annotationspecification;
+    }
+
+    public Collection<ConfigParameters> getConfigparameters() {
+        return configparameters;
+    }
+
+    public void setMetadata(Collection<Metadata> metadata) {
+        this.metadata = metadata;
+    }
+
+    public void setContentdata(Collection<ContentData> contentdata) {
+        this.contentdata = contentdata;
+    }
+
+    public void setRecording(Collection<Recording> recording) {
+        this.recording = recording;
+    }
+
+    public void setAdditionaldata(Collection<AdditionalData> additionaldata) {
+        this.additionaldata = additionaldata;
+    }
+
+    public void setAnnotationspecification(Collection<AnnotationSpecification> annotationspecification) {
+        this.annotationspecification = annotationspecification;
+    }
+
+    public void setConfigparameters(Collection<ConfigParameters> configparameters) {
+        this.configparameters = configparameters;
+    }
+
+    public void setCdc(Collection<CorpusData> cdc) {
+        this.cdc = cdc;
+    }
+
 }
