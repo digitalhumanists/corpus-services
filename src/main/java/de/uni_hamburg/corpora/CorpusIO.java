@@ -5,7 +5,14 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.xml.sax.SAXException;
 
 /**
  * Still to do
@@ -16,23 +23,14 @@ public class CorpusIO {
 
     //The content in here probably has not much to do with what we decided in UML now,
     //need to be reworked
-    //important: That shouldn't be the filepath, but the File itself as a String!!
-    //Maybe it's fine if we work with strings here? Then we would get a CorpusData 
-    //object, turn it into a string, maybe prettyprint it, and save that on the fileserver 
-    //or as a datastream in the repo :)
-    
-    
-    
-    //maybe we can work with the Java Interfaces DataInput and DataOutput? Or DataInputStream and DataOutputstream?
-    
-    
-    String fileAsString;
+    //that's the local filepath or repository url
+    URL url;
+    Collection<CorpusData> cdc;
 
     public String CorpusData2String(CorpusData cd) {
         return cd.toSaveableString();
     }
 
-    //not yet sure if we need the following
 
     /*
     * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
@@ -48,18 +46,81 @@ public class CorpusIO {
 
     public abstract String getVideoLinkForTranscript();
 
-   */
+     */
+    public void write(CorpusData cd, URL url) {
 
-    //or should we write only Strings?
-    public void write(CorpusData cd){
-        
     }
 
-    public void writePrettyPrinted(CorpusData cd){
-        
+    public void write(Collection<CorpusData> cdc, URL url) {
+
     }
 
-    public void zipThings(){
-        
+    public CorpusData readFile(URL url) {
+        CorpusData cd = null;
+        return cd;
+    }
+
+    public Collection<CorpusData> read(URL url) {
+        Collection<CorpusData> cdc = Collections.EMPTY_LIST;
+        if (isLocalFile(url)) {
+            //if the url points to a directory
+            if (new File(url.getFile()).isDirectory()) {
+                //we need to iterate    
+                //and add everything to the cdc list
+                return cdc;
+            } //if the url points to a file
+            else if (new File(url.getFile()).isFile()) {
+                //we need to read this file as some implementation of corpusdata
+                //for now maybe only exbs and coma
+                if (new File(url.getFile()).getName().endsWith("exb")) {
+                    BasicTranscriptionData bt = new BasicTranscriptionData();
+                    try {
+                        bt.loadFile(new File(url.getFile()));
+                    } catch (SAXException ex) {
+                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (JexmaraldaException ex) {
+                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    cdc.add(bt);
+                    return cdc;
+                } else if (new File(url.getFile()).getName().endsWith("coma")) {
+                    //TODO
+                    return cdc;
+                } else {
+                    //we can't read files other than coma and exb yet...
+                    return cdc;
+                }
+            } else {
+                //there's probably an error
+                return cdc;
+            }
+
+        } else {
+            //it's a datastream in the repo
+            //TODO later           
+            return cdc;
+        }
+
+    }
+
+    /**
+     * Whether the URL is a file in the local file system.
+     */
+    public static boolean isLocalFile(java.net.URL url) {
+        String scheme = url.getProtocol();
+        return "file".equalsIgnoreCase(scheme) && !hasHost(url);
+    }
+
+    public static boolean hasHost(java.net.URL url) {
+        String host = url.getHost();
+        return host != null && !"".equals(host);
+    }
+
+    public void writePrettyPrinted(CorpusData cd, URL url) {
+
+    }
+
+    public void zipThings() {
+
     }
 }
