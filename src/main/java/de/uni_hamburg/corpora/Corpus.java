@@ -26,6 +26,7 @@ public class Corpus {
     }
     
     public Corpus(URL url){
+    CorpusIO.read(url);
     }
     
     public Collection<CorpusData> getCorpusData(){
