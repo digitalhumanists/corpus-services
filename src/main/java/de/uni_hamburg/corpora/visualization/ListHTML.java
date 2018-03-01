@@ -94,7 +94,6 @@ public class ListHTML extends AbstractVisualization {
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
 
-            System.out.println(getUtteranceList());
             // perform XSLT transformation
             result = xt.transform(getUtteranceList(), xsl);
 
