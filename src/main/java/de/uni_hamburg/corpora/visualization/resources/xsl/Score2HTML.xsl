@@ -10,7 +10,7 @@
     <!-- ********************** -->
     <!-- Parameters Declaration -->
     <!-- ********************** -->
-    
+
     <xsl:param name="TRANSCRIPTION_ID" as="xs:string?" required="no"/>
     <xsl:param name="COMMUNICATION_ID" as="xs:string?" required="no"/>
     <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
@@ -19,12 +19,12 @@
     <xsl:param name="WEBSERVICE_NAME" select="'ScoreHTML'" as="xs:string?" required="no"/>
     <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
     <xsl:param name="STYLES" as="xs:string?" required="no"/>
-    
-    
+
+
     <!-- ********************* -->
     <!-- Variables Declaration -->
     <!-- ********************* -->
-    
+
     <!-- The displayed name of the corpus -->
     <!-- occurs, for example in the navigation bar -->
     <xsl:variable name="CORPUS_NAME" select="//project-name" as="xs:string?"/>
@@ -38,7 +38,7 @@
         <xsl:value-of select="//referenced-file[1]/@url"/>
         <!-- <xsl:value-of select="//ud-information[@attribute-name='Code']"/> -->
     </xsl:variable>
-    
+
     <!-- the path to the folder with resources -->
     <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
 
@@ -57,7 +57,7 @@
 
     <!-- whether or not the transcription contains video -->
     <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('wav', 'ogg', 'mp3')"/>
-    
+
     <!-- Titles of tiers by category -->
     <xsl:variable name="TIER_TITLES">
         <tier category="k" title="Commentary tier"/>
@@ -71,7 +71,7 @@
         <tier category="sup" title="intonation tier"/>
         <tier category="nv" title="non-verbal actions tier"/>
     </xsl:variable>
-    
+
 
     <!-- ******************************************************************************************************************************************** -->
 
@@ -80,7 +80,7 @@
     <!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
     <!-- Is the VisualizationFormat still needed? -->
     <xsl:variable name="CSS_PATH" as="xs:string" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')"/>
-    <xsl:variable name="CSS_PATH_SCORE" as="xs:string" select="css/ScoreFormat.css"/>
+    <xsl:variable name="CSS_PATH_SCORE" as="xs:string" select="'css/ScoreFormat.css'"/>
 
     <!-- ************************ -->
     <!--    Top level template   -->
@@ -91,7 +91,7 @@
             <head>
                 <xsl:call-template name="HEAD_DATA"/>
                 <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>
-                <style><xsl:value-of select="$STYLES"/></style>             
+                <style><xsl:value-of select="$STYLES"/></style>
             <script type="text/javascript">
                 <xsl:comment>jsholder</xsl:comment>
             </script>
@@ -227,7 +227,7 @@
 
                 </xsl:choose>
             </xsl:for-each>
-        
+
     </xsl:template>
 
     <xsl:template match="it-label">
@@ -272,7 +272,7 @@
         <xsl:variable name="cellspan" select="count(../../sync-points/sync-point[@id=current()/@end-sync]/preceding-sibling::*)-count(../../sync-points/sync-point[@id=current()/@start-sync]/preceding-sibling::*)"/>
         <xsl:variable name="tiercategory" select="//tier[@id=current()/@formatref]/@category"/>
 
-        <td colspan="{$cellspan}">            
+        <td colspan="{$cellspan}">
             <xsl:attribute name="class">
                 <xsl:if
                     test="($CATEGORY!='k' and count(../following-sibling::*)=0) or ($CATEGORY!='k' and //tier[@id=current()/../following-sibling::*[1]/@formatref]/@category='k')">
@@ -280,9 +280,9 @@
                 </xsl:if>
                 <xsl:value-of select="$tiercategory"/>
             </xsl:attribute>
-            
+
             <xsl:attribute name="data-tl">
-                <xsl:variable name="TIMESTART" select="0 + //tli[@id=current()/@start-sync]/@time"/>                
+                <xsl:variable name="TIMESTART" select="0 + //tli[@id=current()/@start-sync]/@time"/>
                 <xsl:variable name="TIMEEND">
                     <xsl:choose>
                         <xsl:when
@@ -303,7 +303,7 @@
                 </xsl:variable>
                 <xsl:value-of select="concat(format-number($TIMESTART, '#.##'), '-', format-number($TIMEEND, '#.##'))"/>
             </xsl:attribute>
-            
+
             <xsl:apply-templates/>
         </td>
     </xsl:template>
@@ -324,7 +324,7 @@
         </title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <script type="text/javascript" src="{$TOP_LEVEL_PATH}jsfunctions.js">
-            <xsl:text><![CDATA[  
+            <xsl:text><![CDATA[
 			]]></xsl:text>
         </script>
     </xsl:template>
@@ -356,7 +356,7 @@
         <div class="sidebarcontrol">
             <div class="collapse_box" id="tier_display">
                 <div class="collapse_title">
-                    <!--<img alt="Minimize_grey" class="collapse_icon" src="../../resources/minusButton.png" /> --> 
+                    <!--<img alt="Minimize_grey" class="collapse_icon" src="../../resources/minusButton.png" /> -->
 					Tier display
 				</div>
                 <div class="collapse_content">
@@ -382,7 +382,7 @@
                     <a href="{test}/EXB" style="text-decoration:none;font-weight:bold;font-family:sans-serif;font-size:10pt;">
                         EXMARaLDA Basic Transcription
                     </a>
-                    <br/>                    
+                    <br/>
                     <img alt="EXS" class="collapse_icon" src="{$TOP_LEVEL_PATH}exs-icon.png"/>
                     <a href="{$RECORDING_PATH}/EXB" style="text-decoration:none;font-weight:bold;font-family:sans-serif;font-size:10pt;">
                         EXMARaLDA Segmented Transcription
@@ -396,8 +396,8 @@
     <xsl:template name="MAKE_FOOTER">
         <div id="footer-new">
             <p>
-                This visualization was generated on <xsl:value-of select="current-dateTime()"/> 
-                with <xsl:value-of select="$WEBSERVICE_NAME"/>. 
+                This visualization was generated on <xsl:value-of select="current-dateTime()"/>
+                with <xsl:value-of select="$WEBSERVICE_NAME"/>.
                 Please contact HZSK for more information: <xsl:value-of select="$EMAIL_ADDRESS"/>
             </p>
         </div>
@@ -409,7 +409,7 @@
                 <div class="collapse_title"> Web service information </div>
                 <div class="collapse_content" style="width:310;">
                     <p>
-                        Generated on <xsl:value-of select="current-dateTime()"/> 
+                        Generated on <xsl:value-of select="current-dateTime()"/>
                         with <xsl:value-of select="$WEBSERVICE_NAME"/>.
                     </p>
                     <p>Please contact the <a href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.</p>
