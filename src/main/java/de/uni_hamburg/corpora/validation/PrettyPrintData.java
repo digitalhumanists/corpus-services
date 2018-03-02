@@ -13,10 +13,9 @@ import java.util.Collection;
  *
  * @author fsnv625
  */
-public class PrettyPrintData implements Check{
+public class PrettyPrintData{
 
 
-    @Override
     public void check(CorpusData cd) {      
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         String prettyCorpusData = indent(cd.toSaveableString(), "event");
@@ -29,7 +28,6 @@ public class PrettyPrintData implements Check{
     
     }
 
-    @Override
     public void fix(CorpusData cd) {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         String prettyCorpusData = indent(cd.toSaveableString(), "event");
@@ -40,7 +38,6 @@ public class PrettyPrintData implements Check{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public Collection<CorpusData> getIsUsableFor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

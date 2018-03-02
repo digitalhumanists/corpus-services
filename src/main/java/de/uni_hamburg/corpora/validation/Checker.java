@@ -32,26 +32,17 @@ import org.xml.sax.SAXException;
  * How to also put another file as input for an check?
  *
  */
-public class Checker implements CorpusFunction{
+public abstract class Checker implements CorpusFunction{
 
     //I will keep the settings for now, so they can stay as they are for the Moment 
     //and we know where to refactor when we change them 
     ValidatorSettings settings;
-    //The file as String is not needed anymore, because we work with the CorpusData
-    //object. 
-    //String fileasstring;
-    Check check;
-    //don't know if this is needed or what we said about it
-    //will add it for now
     CorpusData cd;
     
-    public Checker(Check c){    
-    check = c;
+    public Checker(){    
     }
     
     public Report check(CorpusData cd){  
-        //here needs to be the "check" field too
-        check.check(cd);
         Report stats = new Report();
         try {
             stats = exceptionalCheck(cd);
@@ -88,12 +79,33 @@ public class Checker implements CorpusFunction{
             }
             stats = check(cd);
         }
+        
+        
+        
+        settings = new ValidatorSettings("name",
+                "what", "fix");
+        settings.handleCommandLine(args, new ArrayList<Option>());
+        if (settings.isVerbose()) {
+            System.out.println("");
+        }
+        for (File f : settings.getInputFiles()) {
+            if (settings.isVerbose()) {
+                System.out.println(" * " + f.getName());
+            }
+            stats = fix(f);
+            if (settings.isVerbose()) {
+                System.out.println(stats.getFullReports());
+            } else {
+                System.out.println(stats.getSummaryLines());
+            }
+        }
+        
         return stats;
     }
 
     @Override
     public Collection<CorpusData> IsUsableFor() {
-        return check.getIsUsableFor();       
+        return getIsUsableFor();       
     }
 
     @Override
@@ -101,4 +113,36 @@ public class Checker implements CorpusFunction{
        Report report = check(cd);
        return report;
     }
+    
+
+  //Wenn es keine automatische Möglichkeit zum
+  //fixen gibt, dann muss Erklärung in die ErrorMeldung
+
+    /**
+     *
+     * @param cd
+     */
+  public abstract void fix(CorpusData cd);
+
+  public abstract Collection<CorpusData> getIsUsableFor();
+
+    public Report fix(File fileToBeFixed) {
+        Report stats = new Report();
+        try {
+            stats = exceptionalFix(fileToBeFixed);
+        } catch (JexmaraldaException je) {
+            stats.addException(je, "Unknown parsing error");
+        } catch (JDOMException jdome) {
+            stats.addException(jdome, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, "File reading error");
+        }
+        return stats;
+    }
+
+    public abstract Report exceptionalFix(File fileToBeFixed) throws
+            SAXException, JDOMException, IOException, JexmaraldaException;
+    
 }
