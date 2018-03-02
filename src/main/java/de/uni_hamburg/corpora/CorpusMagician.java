@@ -54,6 +54,19 @@ public class CorpusMagician {
   
      }
     
+    //Give it a path to a parameters file that tells you
+    //which functions with which parameters should be
+    //run on which files
+    public void readConfig(URL url){
+        //this depends on how this file will be structured
+    }
+    
+    //this one can write a configfile with the workflow in the
+    //selected format
+     public void writeConfig(URL url){
+        //needs to have more params
+        //this depends on how this file will be structured
+    }
     
     public void registerCorpusFunction(CorpusFunction cf){
         allExistingCFs.add(cf);
