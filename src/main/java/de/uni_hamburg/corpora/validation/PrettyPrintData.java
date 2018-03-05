@@ -45,9 +45,11 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         return report;
     }
 
-    public Report fix(CorpusData cd) {
+    public Report fix(CorpusData cd) throws IOException {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         String prettyCorpusData = indent(cd.toSaveableString(), "event");
+        System.out.println(cd.toSaveableString());
+        System.out.println(prettyCorpusData);
         //save it instead of the old file
         CorpusIO cio = new CorpusIO();
         cio.write(prettyCorpusData, cd.getURL());

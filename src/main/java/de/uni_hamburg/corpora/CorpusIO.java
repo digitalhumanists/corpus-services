@@ -6,11 +6,17 @@
 package de.uni_hamburg.corpora;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import static java.lang.System.out;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -55,10 +61,24 @@ public class CorpusIO {
     public void write(CorpusData cd, URL url) {
 
     }
-    
-    //TODO
-    public void write(String s, URL url) {
 
+    //TODO
+    public void write(String s, URL url) throws FileNotFoundException, IOException {
+        //If URL is on fileserver only...
+        System.out.println("started writing document...");
+        outappend("============================\n");
+        FileOutputStream fos = new FileOutputStream(new File(url.getFile()));
+        fos.write(s.getBytes(("UTF-8")));
+        fos.close();
+        System.out.println("Document written...");
+    }
+
+    public void outappend(String a) {
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String time = sdf.format(cal.getTime());
+        out.append("[" + time + "] ");
+        out.append(a);
     }
 
     public void write(Collection<CorpusData> cdc, URL url) {
