@@ -26,6 +26,7 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
@@ -38,13 +39,15 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 public class BasicTranscriptionData implements CorpusData, ContentData, XMLData {
 
     private BasicTranscription bt;
+    URL url;
 
     /**
      * loads basic transcription from file. Some versions of exmaralda this
      * emits a harmless message to stdout.
      */
-    public void loadFile(File f) throws SAXException, JexmaraldaException {
+    public void loadFile(File f) throws SAXException, JexmaraldaException, MalformedURLException {
         bt = new BasicTranscription(f.getAbsolutePath());
+        url = f.toURI().toURL();
     }
 
 /* 
@@ -120,7 +123,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
 
     @Override
     public URL getURL() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return url;
     }
 }
 

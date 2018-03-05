@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Collection;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,11 +20,11 @@ public class Corpus {
     //only the metadata file, coma or cmdi in most cases, or a list of files
     Collection<Metadata> metadata;
     //the transcriptions
-    Collection<ContentData> contentdata;
-    Collection<Recording> recording;
-    Collection<AdditionalData> additionaldata;
-    Collection<AnnotationSpecification> annotationspecification;
-    Collection<ConfigParameters> configparameters;
+    Collection<ContentData> contentdata = new ArrayList();
+    Collection<Recording> recording  = new ArrayList();
+    Collection<AdditionalData> additionaldata  = new ArrayList();
+    Collection<AnnotationSpecification> annotationspecification  = new ArrayList();
+    Collection<ConfigParameters> configparameters  = new ArrayList();
     //all the data together
     Collection<CorpusData> cdc;
 

@@ -204,6 +204,10 @@ public class CorpusMagician {
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {
         return cf.execute(cd);
     }
+    
+    public Report runCorpusFunction(CorpusData cd, CorpusFunction cf, boolean fix) {
+        return cf.execute(cd, fix);
+    }
 
     public Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc) {
         Report report = new Report();

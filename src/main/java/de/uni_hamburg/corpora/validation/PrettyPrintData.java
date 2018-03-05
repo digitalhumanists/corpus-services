@@ -9,6 +9,7 @@ import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import java.io.IOException;
@@ -28,24 +29,32 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
 
     public Report check(CorpusData cd) {      
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
+        //this one works for BasicTranscriptions only!!
+        //need to have another string not intended depending on which
+        //file is the input
         String prettyCorpusData = indent(cd.toSaveableString(), "event");
-        //save it in temp folder
         //compare the files
-        // if difference then - needs to be pretty printed
-        // if no diff - all fine, nothing needs to be done
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    
+                // if no diff - all fine, nothing needs to be done       
+        if (cd.toSaveableString().equals(prettyCorpusData)){
+        report.addCorrect("PrettyPrintData", "Already pretty printed.");
+        }
+                // if difference then - needs to be pretty printed
+        else{
+        report.addCritical("PrettyPrintData", "Needs to be pretty printed.");
+        }
+        return report;
     }
 
     public Report fix(CorpusData cd) {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         String prettyCorpusData = indent(cd.toSaveableString(), "event");
         //save it instead of the old file
+        CorpusIO cio = new CorpusIO();
+        cio.write(prettyCorpusData, cd.getURL());
+        report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was pretty printed and saved.");
         // output which files were pretty printed
         // catch errors when writing etc. doesn't work 
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return report;
     }
 
 
@@ -59,15 +68,11 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void setIsUsableFor(Collection<Class> cdc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
-            Class cl = Class.forName("BasicTranscriptionData");
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);           
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
