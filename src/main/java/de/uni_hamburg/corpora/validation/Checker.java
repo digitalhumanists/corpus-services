@@ -42,6 +42,7 @@ public abstract class Checker implements CorpusFunction {
     ValidatorSettings settings;
     CorpusData cd;
     Report report;
+    Collection<Class> IsUsableFor;
 
     public Checker() {
     }
@@ -174,10 +175,8 @@ public abstract class Checker implements CorpusFunction {
         return report;
     }
 
-    public Collection<CorpusData> IsUsableFor() {
-        return getIsUsableFor();
+    public Collection<Class> getIsUsableFor() {
+        return IsUsableFor;
     }
-
-    public abstract Collection<CorpusData> getIsUsableFor();
 
 }
