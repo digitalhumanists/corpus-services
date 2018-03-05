@@ -21,6 +21,9 @@ import org.xml.sax.SAXException;
  */
 public class CorpusIO {
 
+    public CorpusIO() {
+    }
+
     //The content in here probably has not much to do with what we decided in UML now,
     //need to be reworked
     //that's the local filepath or repository url
