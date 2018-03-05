@@ -71,8 +71,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //utilities\PrettyPrinter.java here to pretty print the files, so they
     //will always get pretty printed in the same way
     private String toPrettyPrintedXML(){
-   
-    String prettyCorpusData = indent(bt.toXML(), "event");
+    String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
     return prettyCorpusData;
     }
 
