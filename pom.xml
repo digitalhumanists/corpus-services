@@ -151,5 +151,10 @@
           <version>2.0.2</version>
         </dependency>
        -->
-   </dependencies>
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-schematron</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+    </dependencies>
 </project>
