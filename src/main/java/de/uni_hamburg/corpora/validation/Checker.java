@@ -178,5 +178,11 @@ public abstract class Checker implements CorpusFunction {
     public Collection<Class> getIsUsableFor() {
         return IsUsableFor;
     }
+    
+    public void setIsUsableFor(Collection<Class> cdc){
+        for (Class cl : cdc){
+        IsUsableFor.add(cl);
+        }
+    }
 
 }

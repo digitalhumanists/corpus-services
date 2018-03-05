@@ -6,7 +6,9 @@
 package de.uni_hamburg.corpora;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -53,6 +55,11 @@ public class CorpusIO {
     public void write(CorpusData cd, URL url) {
 
     }
+    
+    //TODO
+    public void write(String s, URL url) {
+
+    }
 
     public void write(Collection<CorpusData> cdc, URL url) {
 
@@ -64,7 +71,9 @@ public class CorpusIO {
     }
 
     public Collection<CorpusData> read(URL url) {
-        Collection<CorpusData> cdc = Collections.EMPTY_LIST;
+        Collection<CorpusData> cdc = new ArrayList();
+        ArrayList<CorpusData> acdc;
+        acdc = (ArrayList) cdc;
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (new File(url.getFile()).isDirectory()) {
@@ -83,8 +92,10 @@ public class CorpusIO {
                         Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (JexmaraldaException ex) {
                         Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    cdc.add(bt);
+                    acdc.add(bt);
                     return cdc;
                 } else if (new File(url.getFile()).getName().endsWith("coma")) {
                     //TODO
