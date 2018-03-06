@@ -5,17 +5,16 @@
  */
 package de.uni_hamburg.corpora;
 
-import de.uni_hamburg.corpora.validation.Checker;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.reflections.*;
+import java.lang.String;
+import java.util.Arrays;
+
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -29,25 +28,41 @@ public class CorpusMagician {
     Corpus corpus;
     //one file I want to run a check on 
     CorpusData corpusData;
-    //all functions there are in the code 
-    Collection<CorpusFunction> allExistingCFs;
+    //all functions there are in the code
+    Collection<String> allExistingCFs;
     //all functions that should be run
-    Collection<CorpusFunction> chosencorpusfunctions;
+    Collection<String> chosencorpusfunctions = new ArrayList();
+    //the final Report
+    Report report;
 
     public CorpusMagician() {
-
     }
 
     //TODO main method
     //TODO we need a webservice for this functionality too
     //in the furture (for repo and external users)
+    //this should work via commandline like that:
+    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
+    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
     public static void main(String[] args) {
         try {
             //one args needs to be the URL
             URL url = new URL(args[0]);
             CorpusMagician corpuma = new CorpusMagician();
             corpuma.initCorpusWithURL(url);
-            //one args needs to be a string for the wanted corpus function
+            //now the place where Report should end up
+            URL reportlocation = new URL(args[1]);
+            //now add the functionsstrings to array
+            //other args need to be a strings for the wanted corpus functions
+            String[] helper = new String[args.length-2];
+            ArrayList<String> helperarraylist = new ArrayList<>(Arrays.asList(helper));
+            //please put the args into it here
+            corpuma.setChosencorpusfunctions(helperarraylist);
+            for (int i = 2; i < args.length; i++) {
+                corpuma.chosencorpusfunctions.add("test");
+                corpuma.chosencorpusfunctions.add(args[i]);
+            }
+            corpuma.runChosencorpusfunctions();
             //how do we align/code the checks with strings?
             //CorpusFunction cf = new Checker(args[1]);
             //corpuma.runCorpusFunction(corpus, cf);
@@ -72,7 +87,7 @@ public class CorpusMagician {
     }
 
     public void registerCorpusFunction(CorpusFunction cf) {
-        allExistingCFs.add(cf);
+        allExistingCFs.add(cf.getClass().getName());
     }
 
     //creates a new empty corpus object
@@ -89,34 +104,44 @@ public class CorpusMagician {
     //this shows that it doesn't work to just check for implementations of corpus functions
     //probably need to check for implementations of CorpusFunction?
     //TODO
-    public Collection<CorpusFunction> getAllExistingCFs() {
-        allExistingCFs = Collections.EMPTY_LIST;
-        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
-        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
-        for (Class c : classes) {
-            System.out.println(c.toString() + "1");
-            try {
-                Constructor cons = c.getConstructor();
-                try {
-                    CorpusFunction cf = (CorpusFunction) cons.newInstance();
-                    allExistingCFs.add(cf);
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
-                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } catch (NoSuchMethodException ex) {
-                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        for (CorpusFunction cf : allExistingCFs) {
-            System.out.println(cf.toString() + "test2");
+    public Collection<String> getAllExistingCFs() {
+
+        this.allExistingCFs = new ArrayList<String>();
+        allExistingCFs.add("PrettyPrintData");
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+        allExistingCFs.add("ComaErrorReportGenerator");
+        allExistingCFs.add("ComaNSLinksChecker");
+        allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbSegmentationChecker");
+        allExistingCFs.add("ExbStructureChecker");
+        allExistingCFs.add("FileCoverageChecker");
+
+//        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
+//        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
+//        for (Class c : classes) {
+//            System.out.println(c.toString());
+//            try {
+//                Constructor cons = c.getConstructor();
+//                try {
+//                    CorpusFunction cf = (CorpusFunction) cons.newInstance();
+//                    allExistingCFs.add(cf.getClass().getName());
+//                } catch (InstantiationException ex) {
+//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IllegalAccessException ex) {
+//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IllegalArgumentException ex) {
+//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (InvocationTargetException ex) {
+//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            } catch (NoSuchMethodException ex) {
+//                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (SecurityException ex) {
+//                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+        for (String cf : allExistingCFs) {
+            System.out.println(cf);
         }
 
         return allExistingCFs;
@@ -139,10 +164,29 @@ public class CorpusMagician {
     }
 
     //TODO a dialog to choose functions you want to apply
-    public Collection<CorpusFunction> chooseFunctionDialog() {
+    public Collection<String> chooseFunctionDialog() {
         chosencorpusfunctions = null;
         //add the chosen Functions
         return chosencorpusfunctions;
+    }
+
+    //TODO
+    //run the chosen functions on the chosen corpus
+    Report runChosencorpusfunctions() {
+        for (String function : chosencorpusfunctions) {
+            switch (function.toLowerCase()) {
+                case "prettyprintdata":
+                    PrettyPrintData cf = new PrettyPrintData();
+                    report.merge(runCorpusFunction(corpus, cf));
+                case "prettyprintdatafix":
+                    cf = new PrettyPrintData();
+                    //report.merge(runCorpusFunction(corpus, cf, true));
+                case "comaaddtiersfromexbscorrector": 
+                    //cf = new ComaAddTiersFromExbsCorrector();
+                    //rest .... usw.
+            }
+        }
+        return report;
     }
 
     //run multiple functions on a corpus, that means all the files in the corpus
@@ -204,7 +248,7 @@ public class CorpusMagician {
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {
         return cf.execute(cd);
     }
-    
+
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf, boolean fix) {
         return cf.execute(cd, fix);
     }
@@ -227,7 +271,7 @@ public class CorpusMagician {
         this.corpusData = corpusData;
     }
 
-    public void setChosencorpusfunctions(Collection<CorpusFunction> chosencorpusfunctions) {
+    public void setChosencorpusfunctions(Collection<String> chosencorpusfunctions) {
         this.chosencorpusfunctions = chosencorpusfunctions;
     }
 
@@ -239,7 +283,7 @@ public class CorpusMagician {
         return corpusData;
     }
 
-    public Collection<CorpusFunction> getChosencorpusfunctions() {
+    public Collection<String> getChosencorpusfunctions() {
         return chosencorpusfunctions;
     }
 

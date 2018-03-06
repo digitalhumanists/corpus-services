@@ -23,34 +23,30 @@ public class StupidCorpusMagicianTester {
     String[] args ={"test", "test2"};
     
     public static void main(String[] args) {
-        try {
-            //one args needs to be the URL
-            URL url = new URL("file:///E:\\Anne\\DolganCorpus\\conv\\AkNN_KuNS_200212_LifeHandicraft_conv\\AkNN_KuNS_200212_LifeHandicraft_conv.exb");
-            CorpusMagician corpuma = new CorpusMagician();
-
-            corpuma.initCorpusWithURL(url);
-            CorpusData cd = new BasicTranscriptionData();
-            File f = new File(url.getFile());
-            BasicTranscriptionData cdb;
-            cdb = (BasicTranscriptionData) cd;
-            cdb.loadFile(f);
-            System.out.println(url);
-            System.out.println(corpuma.getCorpus().toString());
-            CorpusFunction cf = new PrettyPrintData();
-            cd = (CorpusData) cdb;
-             System.out.println(corpuma.runCorpusFunction(cd, cf, true).getFullReports());
-            
-            //one args needs to be a string for the wanted corpus function
-            //how do we align/code the checks with strings?
-            //CorpusFunction cf = new Checker(args[1]);
-            //corpuma.runCorpusFunction(corpus, cf);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(StupidCorpusMagicianTester.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JexmaraldaException ex) {
-            Logger.getLogger(StupidCorpusMagicianTester.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        //one args needs to be the URL
+        //URL url = new URL("file:///E:\\Anne\\DolganCorpus\\conv\\AkNN_KuNS_200212_LifeHandicraft_conv\\AkNN_KuNS_200212_LifeHandicraft_conv.exb");
+        CorpusMagician corpuma = new CorpusMagician();
+        args = new String[3];
+        args[0] = "file:///E:\\Anne\\DolganCorpus";
+        args[1] = "file:///E:\\Anne\\DolganCorpus";
+        args[2] = "PrettyPrintDataFix";
+        corpuma.main(args);
+        //corpuma.initCorpusWithURL(url);
+        //CorpusData cd = new BasicTranscriptionData();
+        //File f = new File(url.getFile());
+        //BasicTranscriptionData cdb;
+        //cdb = (BasicTranscriptionData) cd;
+        //cdb.loadFile(f);
+        //System.out.println(url);
+        //System.out.println(corpuma.getCorpus().toString());
+        //CorpusFunction cf = new PrettyPrintData();
+        //corpuma.runChosencorpusfunctions();
+        //cd = (CorpusData) cdb;
+        //System.out.println(corpuma.runCorpusFunction(cd, cf, true).getFullReports());
+        
+        //one args needs to be a string for the wanted corpus function
+        //how do we align/code the checks with strings?
+        //CorpusFunction cf = new Checker(args[1]);
+        //corpuma.runCorpusFunction(corpus, cf);
     }
 }

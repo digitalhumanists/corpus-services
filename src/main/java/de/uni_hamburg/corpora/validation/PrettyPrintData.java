@@ -26,7 +26,9 @@ import org.xml.sax.SAXException;
  */
 public class PrettyPrintData extends Checker implements CorpusFunction {
 
-
+    public PrettyPrintData() {
+    }
+    
     public Report check(CorpusData cd) {      
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         //this one works for BasicTranscriptions only!!
