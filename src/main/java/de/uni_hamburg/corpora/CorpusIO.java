@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,9 +88,54 @@ public class CorpusIO {
 
     }
 
+    //TODO
     public CorpusData readFile(URL url) {
         CorpusData cd = null;
         return cd;
+    }
+
+    public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
+        if (f.getName().endsWith("exb")) {
+            BasicTranscriptionData bt = new BasicTranscriptionData();
+                bt.loadFile(f);
+            return bt;
+        } else if (f.getName().endsWith("coma")) {
+                ComaData cm = new ComaData(f.toURI().toURL());
+                //TODO
+                return cm;
+        } else if (f.getName().endsWith("exs")||f.getName().endsWith("xml")){
+            UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
+            return usd;
+            //we can't read files other than coma and exb yet...
+
+        } else {
+            System.out.println(f.getName()+ "is not xml CorpusData");
+            CorpusData cd = null;
+            return cd;
+        }
+    }
+
+    //TODO
+    public Collection<File> getFileURLSRecursively(URL directoryURL) {
+        Set<String> recursionBlackList = new HashSet<String>();
+        recursionBlackList.add(".git");
+        Set<File> recursed = new HashSet<File>();
+        Stack<File> dirs = new Stack();
+        File d = new File(directoryURL.getFile());
+        dirs.add(d);
+        while (!dirs.empty()) {
+            File[] files = dirs.pop().listFiles();
+            for (File f : files) {
+                if (recursionBlackList.contains(f.getName())) {
+                    continue;
+                } else if (f.isDirectory()) {
+                    dirs.add(f);
+                } else {
+                    recursed.add(f);
+                }
+            }
+        }
+        return recursed;
     }
 
     public Collection<CorpusData> read(URL url) {
@@ -99,42 +147,50 @@ public class CorpusIO {
             if (new File(url.getFile()).isDirectory()) {
                 //we need to iterate    
                 //and add everything to the cdc list
-                return cdc;
-            } //if the url points to a file
-            else if (new File(url.getFile()).isFile()) {
-                //we need to read this file as some implementation of corpusdata
-                //for now maybe only exbs and coma
-                if (new File(url.getFile()).getName().endsWith("exb")) {
-                    BasicTranscriptionData bt = new BasicTranscriptionData();
+                Collection<File> recursed = getFileURLSRecursively(url);
+                for (File f : recursed) {
                     try {
-                        bt.loadFile(new File(url.getFile()));
+                        CorpusData cd = toCorpusData(f);
+                        if(cd!=null){
+                        acdc.add(toCorpusData(f));
+                        }
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SAXException ex) {
                         Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (JexmaraldaException ex) {
                         Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    acdc.add(bt);
-                    return cdc;
-                } else if (new File(url.getFile()).getName().endsWith("coma")) {
-                    //TODO
-                    return cdc;
-                } else {
-                    //we can't read files other than coma and exb yet...
-                    return cdc;
                 }
+                cdc = (Collection) acdc;
+                return cdc;
+            } //if the url points to a file
+            else if (new File(url.getFile()).isFile()) {
+                //we need to read this file as some implementation of corpusdata
+                File f = new File(url.getFile());
+                try {
+                    CorpusData cd = toCorpusData(f);
+                        if(cd!=null){
+                        acdc.add(toCorpusData(f));
+                        }
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SAXException ex) {
+                    Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (JexmaraldaException ex) {
+                    Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                cdc = (Collection) acdc;
+                return cdc;
             } else {
                 //there's probably an error
                 return cdc;
             }
-
         } else {
             //it's a datastream in the repo
             //TODO later           
             return cdc;
         }
-
     }
 
     /**

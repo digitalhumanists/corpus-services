@@ -28,7 +28,7 @@ public class StupidCorpusMagicianTester {
         CorpusMagician corpuma = new CorpusMagician();
         args = new String[3];
         args[0] = "file:///E:\\Anne\\DolganCorpus";
-        args[1] = "file:///E:\\Anne\\DolganCorpus";
+        args[1] = "file:///E:\\Anne\\DolganCorpus\\report-output.txt";
         args[2] = "PrettyPrintDataFix";
         corpuma.main(args);
         //corpuma.initCorpusWithURL(url);
@@ -42,7 +42,7 @@ public class StupidCorpusMagicianTester {
         //CorpusFunction cf = new PrettyPrintData();
         //corpuma.runChosencorpusfunctions();
         //cd = (CorpusData) cdb;
-        //System.out.println(corpuma.runCorpusFunction(cd, cf, true).getFullReports());
+        //System.out.println(corpuma.runCorpusFunctqion(cd, cf, true).getFullReports());
         
         //one args needs to be a string for the wanted corpus function
         //how do we align/code the checks with strings?
