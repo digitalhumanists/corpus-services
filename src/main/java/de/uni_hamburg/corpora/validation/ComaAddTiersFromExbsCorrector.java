@@ -79,6 +79,9 @@ public class ComaAddTiersFromExbsCorrector {
 
     final String ADD_TIERS = "coma-add-tiers-from-exb";
 
+    public ComaAddTiersFromExbsCorrector() {
+    }
+
     /**
      * Uses the list of known abbreviations to add existing tiers from exb to
      * coma. Comes from old catalog file that is used somewhere?

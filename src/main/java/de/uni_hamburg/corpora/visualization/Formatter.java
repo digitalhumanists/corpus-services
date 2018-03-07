@@ -5,7 +5,9 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
-import de.uni_hamburg.corpora.AbstractResourceProcessor;
+import de.uni_hamburg.corpora.Corpus;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.IOException;
@@ -18,21 +20,21 @@ import org.xml.sax.SAXException;
  *
  * @author fsnv625
  *
+ * Wie soll der hier funktionieren? Er bekommt ein Stylesheet zum formatieren?
  *
+ * Alte Kommentare/Gedanken von Hanna:
  * Wenn formatieren nicht teil von visualisieren ist, brauchen wir noch formatCorpus bzw. formatTranscription :)
-In den alten WritePartiturs und WriteUtteranceLists werden auch Formatierungsstylesheets als Parameter genommen, wir müssen jetzt überlegen, wo und wie diese angewendet werden (und wo sie herkommen, wir hatten darüber gesprochen, stumpf ALLE dateien in Coma zu referenzieren, das auf Korpusebene sieht der Nutzer ja nicht) und wo wir defaults hinlegen für die Korpora, die keine besonderen Stylesheets wollen.
+In den alten WritePartiturs und WriteUtteranceLists werden auch Formatierungsstylesheets als Parameter genommen, wir müssen jetzt überlegen, wo und wie diese angewendet werden 
+* (und wo sie herkommen, wir hatten darüber gesprochen, stumpf ALLE dateien in Coma zu referenzieren, das auf Korpusebene sieht der Nutzer ja nicht) und wo wir defaults hinlegen 
+* für die Korpora, die keine besonderen Stylesheets wollen.
 Dann müssen wir auch unterscheiden zwischen Repo-(Web-)Design und Transkript-Layout/Design und Einheitlichkeit (nur) dort erzwingen, wo es keine bzw. kaum Theorie gibt.
  *
  */
-public class Formatter extends AbstractResourceProcessor {
+public class Formatter {
 
-    @Override
-    public Report exceptionalFix(File fileToBeFixed) throws SAXException, JDOMException, IOException, JexmaraldaException {
+    public Collection<CorpusData> IsUsableFor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     *
-     *
-     */
+
 }
