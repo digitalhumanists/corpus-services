@@ -26,9 +26,11 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
-/**
+/**  
  * Provides access to basic transcriptions as a data type that can be read
  * and written HZSK corpus services. Naming might change, depending on what it
  * ends up being implemented as. It seems to me like a bridge now, or just
@@ -37,13 +39,15 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 public class BasicTranscriptionData implements CorpusData, ContentData, XMLData {
 
     private BasicTranscription bt;
+    URL url;
 
     /**
      * loads basic transcription from file. Some versions of exmaralda this
      * emits a harmless message to stdout.
      */
-    public void loadFile(File f) throws SAXException, JexmaraldaException {
+    public void loadFile(File f) throws SAXException, JexmaraldaException, MalformedURLException {
         bt = new BasicTranscription(f.getAbsolutePath());
+        url = f.toURI().toURL();
     }
 
 /* 
@@ -67,8 +71,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //utilities\PrettyPrinter.java here to pretty print the files, so they
     //will always get pretty printed in the same way
     private String toPrettyPrintedXML(){
-   
-    String prettyCorpusData = indent(bt.toXML(), "event");
+    String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
     return prettyCorpusData;
     }
 
@@ -115,6 +118,11 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             je.printStackTrace();
             System.exit(1);
         }
+    }
+
+    @Override
+    public URL getURL() {
+        return url;
     }
 }
 
