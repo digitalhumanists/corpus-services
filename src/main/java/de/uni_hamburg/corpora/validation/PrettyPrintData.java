@@ -86,5 +86,10 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     return IsUsableFor;
     }
 
+    @Override
+    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

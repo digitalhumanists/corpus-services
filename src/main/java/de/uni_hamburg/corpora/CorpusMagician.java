@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,8 +65,12 @@ public class CorpusMagician {
             }
             Report report = corpuma.runChosencorpusfunctions();
             System.out.println(report.getFullReports());
+            CorpusIO cio =  new CorpusIO();
+            cio.write(report.getFullReports(), reportlocation);
             //TODO save the Report on the url
         } catch (MalformedURLException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -114,6 +119,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
+        allExistingCFs.add("SchematronChecker");
 
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
@@ -183,6 +189,8 @@ public class CorpusMagician {
                 case "comaaddtiersfromexbscorrector": 
                     //cf = new ComaAddTiersFromExbsCorrector();
                     //rest .... usw.
+                case "schematron": 
+                    //
             }
         }
         return report;
