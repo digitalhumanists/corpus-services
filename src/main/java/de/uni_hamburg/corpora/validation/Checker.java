@@ -114,18 +114,13 @@ public abstract class Checker implements CorpusFunction {
     }
 
     //TODO
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report report = new Report();
-        return report;
-    }
+    public abstract Report check(CorpusData cd) throws SAXException, JexmaraldaException;
+    
 
     //TODO
     //needed for annotation panel check maybe
     //no iteration because files need to be treated differently
-    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
-        Report report = new Report();
-        return report;
-    }
+    public abstract Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException;
 
     //Wenn es keine automatische Möglichkeit zum
     //fixen gibt, dann muss Erklärung in die ErrorMeldung
@@ -175,9 +170,7 @@ public abstract class Checker implements CorpusFunction {
         return report;
     }
 
-    public Collection<Class> getIsUsableFor() {
-        return IsUsableFor;
-    }
+    public abstract Collection<Class> getIsUsableFor();
     
     public void setIsUsableFor(Collection<Class> cdc){
         for (Class cl : cdc){
