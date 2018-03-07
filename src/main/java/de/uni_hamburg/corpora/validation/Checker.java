@@ -42,7 +42,7 @@ public abstract class Checker implements CorpusFunction {
     ValidatorSettings settings;
     CorpusData cd;
     Report report;
-    Collection<Class> IsUsableFor;
+    Collection<Class> IsUsableFor = new ArrayList();
 
     public Checker() {
     }

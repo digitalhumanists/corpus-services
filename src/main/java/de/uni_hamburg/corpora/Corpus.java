@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Corpus {
 
     //only the metadata file, coma or cmdi in most cases, or a list of files
-    Collection<Metadata> metadata;
+    Collection<Metadata> metadata  = new ArrayList();;
     //the transcriptions
     Collection<ContentData> contentdata = new ArrayList();
     Collection<Recording> recording  = new ArrayList();

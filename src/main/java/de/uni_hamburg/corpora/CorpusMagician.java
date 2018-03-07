@@ -33,7 +33,7 @@ public class CorpusMagician {
     //all functions that should be run
     Collection<String> chosencorpusfunctions = new ArrayList();
     //the final Report
-    Report report;
+    Report report = new Report();
 
     public CorpusMagician() {
     }
@@ -53,19 +53,18 @@ public class CorpusMagician {
             //now the place where Report should end up
             URL reportlocation = new URL(args[1]);
             //now add the functionsstrings to array
-            //other args need to be a strings for the wanted corpus functions
-            String[] helper = new String[args.length-2];
-            ArrayList<String> helperarraylist = new ArrayList<>(Arrays.asList(helper));
+            //other args(2 and more) need to be a strings for the wanted corpus functions
+            ArrayList<String> corpusfunctionarraylist = new ArrayList();
             //please put the args into it here
-            corpuma.setChosencorpusfunctions(helperarraylist);
+            corpuma.setChosencorpusfunctions(corpusfunctionarraylist);
             for (int i = 2; i < args.length; i++) {
-                corpuma.chosencorpusfunctions.add("test");
+                //corpuma.chosencorpusfunctions.add("test");
                 corpuma.chosencorpusfunctions.add(args[i]);
+                System.out.println(corpuma.chosencorpusfunctions.toString());
             }
-            corpuma.runChosencorpusfunctions();
-            //how do we align/code the checks with strings?
-            //CorpusFunction cf = new Checker(args[1]);
-            //corpuma.runCorpusFunction(corpus, cf);
+            Report report = corpuma.runChosencorpusfunctions();
+            System.out.println(report.getFullReports());
+            //TODO save the Report on the url
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -180,7 +179,7 @@ public class CorpusMagician {
                     report.merge(runCorpusFunction(corpus, cf));
                 case "prettyprintdatafix":
                     cf = new PrettyPrintData();
-                    //report.merge(runCorpusFunction(corpus, cf, true));
+                    report.merge(runCorpusFunction(corpus, cf, true));
                 case "comaaddtiersfromexbscorrector": 
                     //cf = new ComaAddTiersFromExbsCorrector();
                     //rest .... usw.
@@ -224,6 +223,26 @@ public class CorpusMagician {
             {
                 if (cl.isInstance(cd)) {
                     Report newReport = runCorpusFunction(cd, cf);
+                    report.merge(newReport);
+                }
+            }
+        }
+        return report;
+    }
+    
+    //run one function on a corpus, that means all the files in the corpus
+    //the funciton can run on 
+    public Report runCorpusFunction(Corpus c, CorpusFunction cf, boolean fix) {
+        Report report = new Report();
+        //find out on which objects this corpus function can run
+        //choose those from the corpus 
+        //and run the checks on those files recursively
+        for (Class cl : cf.getIsUsableFor()) {
+            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
+            //of the class cl, run the function
+            {
+                if (cd !=null && cl.isInstance(cd)) {
+                    Report newReport = runCorpusFunction(cd, cf, fix);
                     report.merge(newReport);
                 }
             }

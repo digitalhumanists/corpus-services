@@ -50,8 +50,8 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     public Report fix(CorpusData cd) throws IOException {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         String prettyCorpusData = indent(cd.toSaveableString(), "event");
-        System.out.println(cd.toSaveableString());
-        System.out.println(prettyCorpusData);
+        //System.out.println(cd.toSaveableString());
+        //System.out.println(prettyCorpusData);
         //save it instead of the old file
         CorpusIO cio = new CorpusIO();
         cio.write(prettyCorpusData, cd.getURL());
@@ -76,8 +76,10 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
-            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
-            IsUsableFor.add(cl);           
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
+            IsUsableFor.add(cl);
+            Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
+            IsUsableFor.add(cl2);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
         }
