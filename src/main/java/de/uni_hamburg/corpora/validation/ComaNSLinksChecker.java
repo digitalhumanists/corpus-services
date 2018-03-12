@@ -12,6 +12,9 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
+import de.uni_hamburg.corpora.Corpus;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -74,7 +77,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaNSLinksChecker implements CommandLineable, StringChecker {
+public class ComaNSLinksChecker extends Checker implements CommandLineable, CorpusFunction {
 
     ValidatorSettings settings;
     String referencePath = "./";
@@ -121,7 +124,7 @@ public class ComaNSLinksChecker implements CommandLineable, StringChecker {
                     continue;
                 }
                 Text nstext = (Text)nstexts.item(j);
-                String nspath = nstext.getWholeText();
+                String nspath = nstext.getWholeText().replaceAll("/", File.separator);
                 File justFile = new File(nspath);
                 boolean found = false;
                 if (justFile.exists()) {
@@ -250,6 +253,42 @@ public class ComaNSLinksChecker implements CommandLineable, StringChecker {
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
+    }
+
+    @Override
+    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report fix(Collection<CorpusData> cdc) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Class> getIsUsableFor() {
+        try {   
+            Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ComaNSLinksChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return IsUsableFor;
+    }
+
+    @Override
+    public Report execute(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
