@@ -80,6 +80,8 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
             IsUsableFor.add(cl2);
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");   
+            IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
         }
