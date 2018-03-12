@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
+import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -189,8 +190,10 @@ public class CorpusMagician {
                 case "comaaddtiersfromexbscorrector": 
                     //cf = new ComaAddTiersFromExbsCorrector();
                     //rest .... usw.
-                case "schematron": 
-                    //
+                case "xsltchecker":
+                    XSLTChecker xc = new XSLTChecker();
+                    report.merge(runCorpusFunction(corpus, xc, false));
+                    
             }
         }
         return report;

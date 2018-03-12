@@ -5,33 +5,29 @@
  */
 package de.uni_hamburg.corpora.validation;
 
-import com.helger.schematron.ISchematronResource;
-import com.helger.schematron.xslt.SchematronResourceSCH;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.io.File;
+import de.uni_hamburg.corpora.utilities.XSLTransformer;
+import de.uni_hamburg.corpora.visualization.ListHTML;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collection;
-import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
-import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author Daniel Jettka, daniel.jettka@uni-hamburg.de
  */
-public class SchematronChecker extends Checker implements CorpusFunction{
+public class XSLTChecker extends Checker implements CorpusFunction{
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -52,55 +48,39 @@ public class SchematronChecker extends Checker implements CorpusFunction{
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         
         Report r = new Report();
+        
+        try{
 
+            // get the XSLT stylesheet
+            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/nslc-exb-checks.xsl"));
+
+            // create XSLTransformer and set the parameters 
+            XSLTransformer xt = new XSLTransformer();
+        
+            // perform XSLT transformation
+            String result = xt.transform(cd.toSaveableString(), xsl);
+
+            //read lines and add to Report
+            Scanner scanner = new Scanner(result);
             
-        
-        StringBuilder result = new StringBuilder("");
-
-	//Get file from resources folder
-	File file = new File(getClass().getResource("/schematron/nslc-exb.sch").getFile());
-
-	try (Scanner scanner = new Scanner(file)) {
-
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			result.append(line).append("\n");
-		}
-
-		scanner.close();
-
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
-        
-        System.out.println(result.toString());
-
-	r.addNote("SchematronChecker", result.toString());
-        
-        return r;
-        
-        /*
-        final ISchematronResource aResSCH = SchematronResourceSCH.fromClassPath("/schematron/nslc-exb.sch");
-        
-        r.addNote("SchematronChecker", TypeConverter.InputStream2String(aResSCH.getResource().getInputStream()));
-        
-        if (!aResSCH.isValidSchematron ())            
-            r.addCritical("", new IllegalArgumentException ("Invalid Schematron!"), "Schematron validation not executed!");
-        
-        try {
-            SchematronOutputType sot = aResSCH.applySchematronValidationToSVRL (TypeConverter.String2StreamSource(cd.toSaveableString()));
-            
-            List<String> schNoteList = sot.getText();
-            for (int i = 0; i < schNoteList.size(); i++) {
-                r.addNote("SchematronChecker", schNoteList.get(i)); 
+            int i = 1;
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                r.addWarning("XSLTChecker", line);
+                i++;
             }
-                   
-        } catch (Exception ex) {
-            r.addCritical("SchematronChecker", ex, "Schematron validation not executed!");            
+
+            scanner.close();
+
+
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(ListHTML.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(ListHTML.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return r;
-        */
+        
     }
 
     @Override
