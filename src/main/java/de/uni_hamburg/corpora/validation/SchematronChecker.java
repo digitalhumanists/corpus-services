@@ -15,8 +15,10 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.stream.StreamSource;
@@ -50,12 +52,38 @@ public class SchematronChecker extends Checker implements CorpusFunction{
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         
         Report r = new Report();
-        
-        //for now choosing fix schematron file
-        ClassLoader classLoader = getClass().getClassLoader();
-        File schematronFile = new File(classLoader.getResource("/schematron/nslc-exb.sch").getFile());
 
-        final ISchematronResource aResSCH = SchematronResourceSCH.fromFile (schematronFile);
+            
+        
+        StringBuilder result = new StringBuilder("");
+
+	//Get file from resources folder
+	File file = new File(getClass().getResource("/schematron/nslc-exb.sch").getFile());
+
+	try (Scanner scanner = new Scanner(file)) {
+
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			result.append(line).append("\n");
+		}
+
+		scanner.close();
+
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+        
+        System.out.println(result.toString());
+
+	r.addNote("SchematronChecker", result.toString());
+        
+        return r;
+        
+        /*
+        final ISchematronResource aResSCH = SchematronResourceSCH.fromClassPath("/schematron/nslc-exb.sch");
+        
+        r.addNote("SchematronChecker", TypeConverter.InputStream2String(aResSCH.getResource().getInputStream()));
+        
         if (!aResSCH.isValidSchematron ())            
             r.addCritical("", new IllegalArgumentException ("Invalid Schematron!"), "Schematron validation not executed!");
         
@@ -64,15 +92,15 @@ public class SchematronChecker extends Checker implements CorpusFunction{
             
             List<String> schNoteList = sot.getText();
             for (int i = 0; i < schNoteList.size(); i++) {
-                r.addNote("schematron", schNoteList.get(i)); 
+                r.addNote("SchematronChecker", schNoteList.get(i)); 
             }
                    
         } catch (Exception ex) {
-            r.addCritical("", ex, "Schematron validation not executed!");            
+            r.addCritical("SchematronChecker", ex, "Schematron validation not executed!");            
         }
         
         return r;
-        
+        */
     }
 
     @Override
@@ -88,9 +116,8 @@ public class SchematronChecker extends Checker implements CorpusFunction{
             IsUsableFor.add(cl);
             Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
             IsUsableFor.add(cl2);
-             Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            IsUsableFor.add(cl2);
-            IsUsableFor.add(cl3);
+            //Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
+            //IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
         }
