@@ -120,7 +120,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
-        allExistingCFs.add("SchematronChecker");
+        allExistingCFs.add("XSLTChecker");
 
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
