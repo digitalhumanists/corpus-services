@@ -66,11 +66,12 @@ public class CorpusMagician {
             Report report = corpuma.runChosencorpusfunctions();
             System.out.println(report.getFullReports());
             CorpusIO cio = new CorpusIO();
-            String reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
+            String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
                 reportOutput = ReportItem.generateHTML(report.getRawStatistics());
                 cio.write(reportOutput, reportlocation);
             } else {
+                reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
                 cio.write(reportOutput, reportlocation);
             }
         } catch (MalformedURLException ex) {
