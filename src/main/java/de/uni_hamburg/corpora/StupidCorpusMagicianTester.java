@@ -27,9 +27,9 @@ public class StupidCorpusMagicianTester {
         //URL url = new URL("file:///E:\\Anne\\DolganCorpus\\conv\\AkNN_KuNS_200212_LifeHandicraft_conv\\AkNN_KuNS_200212_LifeHandicraft_conv.exb");
         CorpusMagician corpuma = new CorpusMagician();
         args = new String[3];
-        args[0] = "file:///E:\\Anne\\DolganCorpus";
-        args[1] = "file:///E:\\Anne\\DolganCorpus\\report-output.txt";
-        args[2] = "PrettyPrintDataFix";
+        args[0] = "file:///C:\\Users\\djettka\\Desktop\\hcs-data\\demo_AnneWill.exb";
+        args[1] = "file:///C:\\Users\\djettka\\Desktop\\hcs-report\\report-output.txt";
+        args[2] = "XSLTChecker";
         corpuma.main(args);
         //corpuma.initCorpusWithURL(url);
         //CorpusData cd = new BasicTranscriptionData();
