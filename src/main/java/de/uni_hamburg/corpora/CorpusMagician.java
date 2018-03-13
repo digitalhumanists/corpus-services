@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.String;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -48,12 +49,26 @@ public class CorpusMagician {
     //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
     public static void main(String[] args) {
         try {
-            //one args needs to be the URL
-            URL url = new URL(args[0]);
+            //first args needs to be the URL
+            //check if it's a filepath, we could just convert it to an url
+            String urlstring = args[0];
+            URL url;
+            if(urlstring.startsWith("file://")){
+            url = new URL(urlstring);    
+            } else {
+            url = Paths.get(urlstring).toUri().toURL();    
+            }
             CorpusMagician corpuma = new CorpusMagician();
             corpuma.initCorpusWithURL(url);
             //now the place where Report should end up
-            URL reportlocation = new URL(args[1]);
+            //also allow normal filepaths and convert them
+            String reportstring = args[1];
+            URL reportlocation;
+            if(reportstring.startsWith("file://")){
+            reportlocation = new URL(reportstring);    
+            } else {
+            reportlocation = Paths.get(reportstring).toUri().toURL();    
+            }
             //now add the functionsstrings to array
             //other args(2 and more) need to be a strings for the wanted corpus functions
             ArrayList<String> corpusfunctionarraylist = new ArrayList();
@@ -72,7 +87,8 @@ public class CorpusMagician {
                 reportOutput = ReportItem.generateHTML(report.getRawStatistics());
                 cio.write(reportOutput, reportlocation);
             } else {
-                reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
+                //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
+                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
                 cio.write(reportOutput, reportlocation);
             }
         } catch (MalformedURLException ex) {
