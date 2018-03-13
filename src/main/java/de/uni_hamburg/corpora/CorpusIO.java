@@ -165,14 +165,14 @@ public class CorpusIO {
                 cdc = (Collection) acdc;
                 return cdc;
             } //if the url points to a file
-            else if (new File(url.getFile()).isFile()) {
+            else {
                 //we need to read this file as some implementation of corpusdata
                 File f = new File(url.getFile());
                 try {
                     CorpusData cd = toCorpusData(f);
                         if(cd!=null){
                         acdc.add(toCorpusData(f));
-                        }
+                    }
                 } catch (MalformedURLException ex) {
                     Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SAXException ex) {
@@ -182,15 +182,13 @@ public class CorpusIO {
                 }
                 cdc = (Collection) acdc;
                 return cdc;
-            } else {
-                //there's probably an error
-                return cdc;
-            }
-        } else {
-            //it's a datastream in the repo
-            //TODO later           
-            return cdc;
+            
         }
+    } else {
+        //it's a datastream in the repo
+        //TODO later          
+        return null;
+    }
     }
 
     /**
