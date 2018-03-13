@@ -69,7 +69,7 @@ public class CorpusMagician {
             CorpusIO cio = new CorpusIO();
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
-                reportOutput = ReportItem.generateHTML(report.getRawStatistics());
+                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics());
                 cio.write(reportOutput, reportlocation);
             } else {
                 reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
