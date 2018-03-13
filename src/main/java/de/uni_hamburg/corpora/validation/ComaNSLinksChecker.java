@@ -146,7 +146,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 if(cd.getURL() != null){
                     URL urlPath = cd.getURL();
                     URL urlAbsPath = new URL(urlPath , nspath.replace(File.separator, "/"));
-                    System.out.println(urlPath + "##############");
+                    //System.out.println(urlPath + "##############");
                     File dataFile = new File(urlAbsPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
@@ -201,6 +201,15 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 File absFile = new File(absPath);
                 if (absFile.exists()) {
                     found = true;
+                }
+                if(cd.getURL() != null){
+                    URL urlPath = cd.getURL();
+                    URL urlRelPath = new URL(urlPath , relpath.replace(File.separator, "/"));
+                    //System.out.println(urlPath + "##############");
+                    File dataFile = new File(urlRelPath.toURI());
+                    if (dataFile.exists()) {
+                        found = true;
+                    } 
                 }
                 if (settings.getDataDirectory() != null) {
                     String dataPath
