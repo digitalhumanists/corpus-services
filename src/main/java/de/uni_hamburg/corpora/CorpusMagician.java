@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import java.lang.String;
 import java.util.Arrays;
 
-
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
  * Corpus Function on a corpus in a main method.
@@ -66,10 +65,14 @@ public class CorpusMagician {
             }
             Report report = corpuma.runChosencorpusfunctions();
             System.out.println(report.getFullReports());
-            CorpusIO cio =  new CorpusIO();
+            CorpusIO cio = new CorpusIO();
             String reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
-            cio.write(reportOutput, reportlocation);
-            //TODO save the Report on the url
+            if (reportlocation.getFile().endsWith("html")) {
+                reportOutput = ReportItem.generateHTML(report.getRawStatistics());
+                cio.write(reportOutput, reportlocation);
+            } else {
+                cio.write(reportOutput, reportlocation);
+            }
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -188,11 +191,11 @@ public class CorpusMagician {
                 case "prettyprintdatafix":
                     pd = new PrettyPrintData();
                     report.merge(runCorpusFunction(corpus, pd, true));
-                case "comaaddtiersfromexbscorrector": 
-                    //cf = new ComaAddTiersFromExbsCorrector();
-                    //rest .... usw.
-                case "schematron": 
-                    //
+                case "comaaddtiersfromexbscorrector":
+                //cf = new ComaAddTiersFromExbsCorrector();
+                //rest .... usw.
+                case "schematron":
+                //
                 case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     report.merge(runCorpusFunction(corpus, cnslc));
@@ -242,7 +245,7 @@ public class CorpusMagician {
         }
         return report;
     }
-    
+
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on 
     public Report runCorpusFunction(Corpus c, CorpusFunction cf, boolean fix) {
@@ -254,7 +257,7 @@ public class CorpusMagician {
             for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
             //of the class cl, run the function
             {
-                if (cd !=null && cl.isInstance(cd)) {
+                if (cd != null && cl.isInstance(cd)) {
                     Report newReport = runCorpusFunction(cd, cf, fix);
                     report.merge(newReport);
                 }
