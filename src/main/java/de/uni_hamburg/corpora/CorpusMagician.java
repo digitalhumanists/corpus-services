@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.String;
 import java.util.Arrays;
-
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -66,9 +66,15 @@ public class CorpusMagician {
             }
             Report report = corpuma.runChosencorpusfunctions();
             System.out.println(report.getFullReports());
-            CorpusIO cio =  new CorpusIO();
-            cio.write(report.getFullReports(), reportlocation);
-            //TODO save the Report on the url
+            CorpusIO cio = new CorpusIO();
+            String reportOutput;
+            if (reportlocation.getFile().endsWith("html")) {
+                reportOutput = ReportItem.generateHTML(report.getRawStatistics());
+                cio.write(reportOutput, reportlocation);
+            } else {
+                reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
+                cio.write(reportOutput, reportlocation);
+            }
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -113,14 +119,15 @@ public class CorpusMagician {
 
         this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("PrettyPrintData");
-        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
-        allExistingCFs.add("ComaErrorReportGenerator");
         allExistingCFs.add("ComaNSLinksChecker");
-        allExistingCFs.add("ExbFileReferenceChecker");
-        allExistingCFs.add("ExbSegmentationChecker");
-        allExistingCFs.add("ExbStructureChecker");
-        allExistingCFs.add("FileCoverageChecker");
+        //allExistingCFs.add("ExbFileReferenceChecker");
+        //allExistingCFs.add("ExbSegmentationChecker");
+        //allExistingCFs.add("ExbStructureChecker");
+        //allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("XSLTChecker");
+        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+        //allExistingCFs.add("ComaErrorReportGenerator");
+        //allExistingCFs.add("SchematronChecker");
 
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
@@ -182,18 +189,20 @@ public class CorpusMagician {
         for (String function : chosencorpusfunctions) {
             switch (function.toLowerCase()) {
                 case "prettyprintdata":
-                    PrettyPrintData cf = new PrettyPrintData();
-                    report.merge(runCorpusFunction(corpus, cf));
+                    PrettyPrintData pd = new PrettyPrintData();
+                    report.merge(runCorpusFunction(corpus, pd));
                 case "prettyprintdatafix":
-                    cf = new PrettyPrintData();
-                    report.merge(runCorpusFunction(corpus, cf, true));
-                case "comaaddtiersfromexbscorrector": 
-                    //cf = new ComaAddTiersFromExbsCorrector();
-                    //rest .... usw.
-                case "xsltchecker":
+                    pd = new PrettyPrintData();
+                    report.merge(runCorpusFunction(corpus, pd, true));
+                case "comaaddtiersfromexbscorrector":
+                //cf = new ComaAddTiersFromExbsCorrector();
+                //rest .... usw.
+                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     report.merge(runCorpusFunction(corpus, xc, false));
-                    
+                case "comanslinkschecker":
+                    ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
+                    report.merge(runCorpusFunction(corpus, cnslc));
             }
         }
         return report;
@@ -240,7 +249,7 @@ public class CorpusMagician {
         }
         return report;
     }
-    
+
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on 
     public Report runCorpusFunction(Corpus c, CorpusFunction cf, boolean fix) {
@@ -252,7 +261,7 @@ public class CorpusMagician {
             for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
             //of the class cl, run the function
             {
-                if (cd !=null && cl.isInstance(cd)) {
+                if (cd != null && cl.isInstance(cd)) {
                     Report newReport = runCorpusFunction(cd, cf, fix);
                     report.merge(newReport);
                 }
