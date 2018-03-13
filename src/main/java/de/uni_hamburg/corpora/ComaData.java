@@ -27,15 +27,16 @@ import org.xml.sax.SAXException;
  *
  * @author fsnv625
  */
-public class ComaData implements Metadata, CorpusData{
+public class ComaData implements Metadata, CorpusData {
+
     //TODO
     //private Coma coma;
-    URL url;  
+    URL url;
     Document readcomaasjdom = new Document();
-    
+
     public ComaData() {
     }
-    
+
     public ComaData(URL url) {
         try {
             this.url = url;
@@ -57,7 +58,6 @@ public class ComaData implements Metadata, CorpusData{
 //        coma = new BasicTranscription(f.getAbsolutePath());
 //        url = f.toURI().toURL();
 //    }
-     
     //TODO
     /*  
      public void updateReadcomaasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
@@ -65,8 +65,7 @@ public class ComaData implements Metadata, CorpusData{
         SAXBuilder builder = new SAXBuilder();
         readbtasjdom = builder.build(xmlString);
     }
-    */
-    
+     */
     @Override
     public URL getURL() {
         return url;
@@ -76,12 +75,18 @@ public class ComaData implements Metadata, CorpusData{
     public String toSaveableString() {
         return toPrettyPrintedXML();
     }
-    
+
     private String toPrettyPrintedXML() {
-        XMLOutputter xmOut = new XMLOutputter();
-        String prettyCorpusData = indent(xmOut.outputString(readcomaasjdom), "event");
+        String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
-    
+
+    @Override
+    public String toUnformattedString() {
+        XMLOutputter xmOut = new XMLOutputter();
+        String unformattedCorpusData = xmOut.outputString(readcomaasjdom);
+        return unformattedCorpusData;
+    }
+
 }

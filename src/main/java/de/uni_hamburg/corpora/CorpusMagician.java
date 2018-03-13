@@ -207,18 +207,23 @@ public class CorpusMagician {
                 case "prettyprintdata":
                     PrettyPrintData pd = new PrettyPrintData();
                     report.merge(runCorpusFunction(corpus, pd));
+                    break;
                 case "prettyprintdatafix":
                     pd = new PrettyPrintData();
                     report.merge(runCorpusFunction(corpus, pd, true));
+                    break;
                 case "comaaddtiersfromexbscorrector":
                 //cf = new ComaAddTiersFromExbsCorrector();
                 //rest .... usw.
-                 case "xsltchecker":
+                    break;
+                case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     report.merge(runCorpusFunction(corpus, xc, false));
+                    break;
                 case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     report.merge(runCorpusFunction(corpus, cnslc));
+                    break;
             }
         }
         return report;
