@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -18,8 +19,8 @@ import org.jdom.output.XMLOutputter;
  *
  * @author fsnv625
  */
-public class UnspecifiedXMLData implements CorpusData, Metadata{
-    
+public class UnspecifiedXMLData implements CorpusData, Metadata {
+
     Document jdom;
     URL url;
 
@@ -41,9 +42,19 @@ public class UnspecifiedXMLData implements CorpusData, Metadata{
     }
 
     @Override
-    public String toSaveableString() { 
-    XMLOutputter xmOut = new XMLOutputter();
-    return xmOut.outputString(jdom);
+    public String toSaveableString() {
+        return toPrettyPrintedXML();
     }
-    
+
+    @Override
+    public String toUnformattedString() {
+        XMLOutputter xmOut = new XMLOutputter();
+        return xmOut.outputString(jdom);
+    }
+
+    private String toPrettyPrintedXML() {
+        String prettyCorpusData = indent(toUnformattedString(), "event");
+        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+        return prettyCorpusData;
+    }
 }
