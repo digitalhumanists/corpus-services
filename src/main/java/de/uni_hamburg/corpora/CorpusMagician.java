@@ -224,6 +224,8 @@ public class CorpusMagician {
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     report.merge(runCorpusFunction(corpus, cnslc));
                     break;
+                default:
+                    report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
         }
         return report;
