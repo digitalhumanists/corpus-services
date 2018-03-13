@@ -213,7 +213,7 @@ public class CorpusMagician {
                 case "comaaddtiersfromexbscorrector":
                 //cf = new ComaAddTiersFromExbsCorrector();
                 //rest .... usw.
-                 case "xsltchecker":
+                case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     report.merge(runCorpusFunction(corpus, xc, false));
                 case "comanslinkschecker":

@@ -102,8 +102,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //will always get pretty printed in the same way
     //TODO
     private String toPrettyPrintedXML() {
-        XMLOutputter xmOut = new XMLOutputter();
-        String prettyCorpusData = indent(xmOut.outputString(readbtasjdom), "event");
+        String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
@@ -156,5 +155,12 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     @Override
     public URL getURL() {
         return url;
+    }
+
+    @Override
+    public String toUnformattedString() {
+       XMLOutputter xmOut = new XMLOutputter();
+       String unformattedCorpusData = xmOut.outputString(readbtasjdom);
+       return unformattedCorpusData;
     }
 }
