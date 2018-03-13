@@ -96,8 +96,8 @@ public class CorpusIO {
 
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
         if (f.getName().endsWith("exb")) {
-            BasicTranscriptionData bt = new BasicTranscriptionData();
-                bt.loadFile(f);
+            BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
+            //bt.loadFile(f);
             return bt;
         } else if (f.getName().endsWith("coma")) {
                 ComaData cm = new ComaData(f.toURI().toURL());
@@ -109,7 +109,7 @@ public class CorpusIO {
             //we can't read files other than coma and exb yet...
 
         } else {
-            System.out.println(f.getName()+ "is not xml CorpusData");
+            System.out.println(f.getName()+ " is not xml CorpusData");
             CorpusData cd = null;
             return cd;
         }
