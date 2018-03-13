@@ -30,15 +30,8 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     }
     
     public Report check(CorpusData cd) {      
-        // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
-        //this one works for BasicTranscriptions only!!
-        //need to have another string not intended depending on which
-        //file is the input
-        String prettyCorpusData = indent(cd.toSaveableString(), "event");
-        //compare the files
-        // if no diff - all fine, nothing needs to be done
-        //TODO error - to saveableString already pretty printed - need to change that        
-        if (cd.toSaveableString().equals(prettyCorpusData)){
+        // if no diff - all fine, nothing needs to be done     
+        if (CorpusDataIsAlreadyPretty(cd)){
         report.addCorrect("PrettyPrintData", "Already pretty printed.");
         }
                 // if difference then - needs to be pretty printed
@@ -50,13 +43,18 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
 
     public Report fix(CorpusData cd) throws IOException {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
-        String prettyCorpusData = indent(cd.toSaveableString(), "event");
+        if(CorpusDataIsAlreadyPretty(cd)){
+        String prettyCorpusData = indent(cd.toUnformattedString(), "event");
         //System.out.println(cd.toSaveableString());
         //System.out.println(prettyCorpusData);
         //save it instead of the old file
         CorpusIO cio = new CorpusIO();
         cio.write(prettyCorpusData, cd.getURL());
         report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was pretty printed and saved.");
+        }
+        else{
+        report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was already pretty printed, nothing done.");
+        }
         // output which files were pretty printed
         // catch errors when writing etc. doesn't work 
         return report;
@@ -94,5 +92,21 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public boolean CorpusDataIsAlreadyPretty(CorpusData cd){
+        //take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
+        //this one works for BasicTranscriptions only (keeping events togehter), but doesn't harm others
+        //need to have another string not intended depending on which
+        //file is the input
+        String prettyCorpusData = indent(cd.toUnformattedString(), "event");
+        //compare the files
+        // if no diff - all fine, nothing needs to be done
+        //TODO error - to saveableString already pretty printed - need to change that        
+        if (cd.toUnformattedString().equals(prettyCorpusData)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     
 }
