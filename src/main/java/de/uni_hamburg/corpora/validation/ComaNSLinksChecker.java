@@ -88,7 +88,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
 
     public ComaNSLinksChecker() {
     settings = new ValidatorSettings("ComaNSLinksChecker",
-                "Checks Exmaralda .coma file for NSLink references that do not "
+                "Checks Exmaralda .coma file for NSLink references and relPaths that do not "
                 + "exist", "If input is a directory, performs recursive check "
                 + "from that directory, otherwise checks input file");   
     }
