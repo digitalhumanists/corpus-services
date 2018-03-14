@@ -40,7 +40,7 @@
     </xsl:variable>
 
     <!-- the path to the folder with resources -->
-    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
+    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'//corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
 
     <xsl:variable name="DATASTREAM_VIDEO" as="xs:string?" select="$RECORDING_PATH"/>
 
@@ -91,6 +91,7 @@
             <head>
                 <xsl:call-template name="HEAD_DATA"/>
                 <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>
+                <link rel="stylesheet" type="text/css" href="{$CSS_PATH}"/>
                 <style><xsl:value-of select="$STYLES"/></style>
             <script type="text/javascript">
                 <xsl:comment>jsholder</xsl:comment>

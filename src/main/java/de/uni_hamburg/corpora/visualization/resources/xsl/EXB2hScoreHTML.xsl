@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:exb="https://corpora.uni-hamburg.de/exmaralda"
     xmlns:svg="http://www.w3.org/2000/svg"
@@ -7,21 +7,23 @@
     xmlns:string="http://modiko.net/xpath-ns/string"
     exclude-result-prefixes="xsl xs string"
     version="2.0">
-    
+
     <xsl:import href="https://corpora.uni-hamburg.de:8443/fedora/objects/hzsk:config/datastreams/general-functions-variables.xsl/content"/>
-    
+
     <xsl:output method="xhtml" encoding="UTF-8" doctype-public="html" omit-xml-declaration="no"/>
-    
+
     <xsl:param name="TRANSCRIPTION_ID" required="no" as="xs:string?"/>
     <xsl:param name="COMMUNICATION_ID" required="no" as="xs:string?"/>
     <xsl:param name="RECORDING_PATH" required="no" as="xs:string?"/>
     <xsl:param name="RECORDING_TYPE" required="no" as="xs:string?"/>
-    
+    <!-- the path to the folder with resources -->
+    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'//corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
+
     <xsl:key name="time-by-id" match="tli/@time" use="../@id"/>
     <xsl:key name="highlight-times-by-event-id" match="elem/@time" use="../@id"/>
     <xsl:key name="elem-id-by-highlight-times" match="elem/@id" use="../@time"/>
     <xsl:key name="mime-type-by-extension" match="*:mime/@type" use="../@extension"/>
-    
+
     <xsl:variable name="TLI_IDs" select="//common-timeline/tli/@id" as="xs:string+"/>
     <xsl:variable name="EVENT_HIGHLIGHT_TIMES">
         <xsl:for-each select="//event">
@@ -33,26 +35,27 @@
             </xsl:for-each>
         </xsl:for-each>
     </xsl:variable>
-    
+
     <!-- Is the VisualizationFormat still needed? -->
     <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
-    <xsl:variable name="CSS_PATH_SCORE" select="css/ScoreHFormat.css"/>
-    
+    <xsl:variable name="CSS_PATH_SCORE" select="'css/ScoreHFormat.css'"/>
+
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml">
             <head>
                 <title></title>
-                <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>                 
+                <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>
+                <link rel="stylesheet" type="text/css" href="{$CSS_PATH}"/>
                 <script type="text/javascript">
                     <xsl:comment>
                      <![CDATA[
                      var activeEvents = new Array();
-                     var highlightedBackground = "rgba(255,30,30,0.1)";                    
+                     var highlightedBackground = "rgba(255,30,30,0.1)";
                      var highlightedStroke = "#ff3030";
                      var unhighlightedBackground = "#ffffff";
                      var unhighlightedFill = "transparent";
                      var currentlyScrolledToID = '';
-                     
+
                      function bodyloaded(){
                         // fill some variables
                         mediaElem = document.getElementById('mediaElem');
@@ -61,14 +64,14 @@
                         highlightEvents = document.getElementById('highlightEventsInput').checked;
                         scrollEvents = document.getElementById('scrollEventsInput').checked;
                      }
-                     
+
                      function mediaTimeUpdate(){
                         transcriptEventProcessor();
                      }
-                     
+
                      function transcriptEventProcessor(){
                         idArray = eventTimes[Math.floor(mediaElem.currentTime * 100)]
-                     
+
                         // first remove and dehighlight old IDs from activeEvents
                         countActiveEvents = activeEvents.length; //has to remain constant value
                         for (var i=0; i<countActiveEvents; i++) {
@@ -77,7 +80,7 @@
                                 activeEvents.splice(countActiveEvents - i - 1, 1);
                             }
                         }
-                     
+
                         // then push and highlight new IDs
                         for (var i = 0; i < idArray.length; i++) {
                             if(!activeEvents.indexOf(idArray[i]) >= 0){
@@ -85,13 +88,13 @@
                                 activeEvents.push(idArray[i]);
                             }
                         }
-                        
+
                         // scroll to first event in activeEvents
                         if((idArray.length > 0) && scrollEvents){
                             transcriptSection.scrollLeft = document.getElementById(idArray[0]).offsetLeft;
                         }
                      }
-                                          
+
                      ]]>
                      </xsl:comment>
                 </script>
@@ -102,7 +105,7 @@
                     <section id="controls">
                         <!--<span id="mediaTime"></span>-->
                         <form action="#" id="autoActions">
-                            Automatic actions: 
+                            Automatic actions:
                             <input id="highlightEventsInput" name="highlightEventsInput" checked="checked" type="checkbox" onchange="highlightEvents = this.checked;"/>
                             <label for="highlightEventsInput">highlight transcription</label>
                             <input id="scrollEventsInput" name="scrollEventsInput" checked="checked" type="checkbox" onchange="scrollEvents = this.checked;"/>
@@ -113,7 +116,7 @@
                 <section id="sec1">
                     <div id="media">
                         <xsl:choose>
-                            <xsl:when test="exists($RECORDING_PATH[not(matches(., '^\s+$'))]) and exists($RECORDING_TYPE[not(matches(., '^\s+$'))])">    
+                            <xsl:when test="exists($RECORDING_PATH[not(matches(., '^\s+$'))]) and exists($RECORDING_TYPE[not(matches(., '^\s+$'))])">
                                 <xsl:comment>media found ($RECORDING_PATH=<xsl:value-of select="$RECORDING_PATH"/>; $RECORDING_TYPE=<xsl:value-of select="$RECORDING_TYPE"/>; mimetype=<xsl:value-of select="key('mime-type-by-extension', lower-case($RECORDING_TYPE), $MIMETYPES)"/>)</xsl:comment>
                                 <xsl:for-each select="replace(key('mime-type-by-extension', lower-case($RECORDING_TYPE), $MIMETYPES), 'mpeg3', 'mpeg')">
                                     <xsl:element name="{tokenize(., '/')[1]}">
@@ -150,11 +153,11 @@
             </body>
         </html>
     </xsl:template>
-    
+
     <xsl:template name="process-svg">
         <xsl:apply-templates mode="SVG"/>
     </xsl:template>
-    
+
     <xsl:template name="process-exb">
         <table id="transcript">
             <tr class="timeline">
@@ -185,9 +188,9 @@
             eventTimes = [<xsl:for-each select="0 to xs:integer(ceiling((round-half-to-even(max(//common-timeline/tli/@time), 2) * 100))) ">[<xsl:for-each select="key('elem-id-by-highlight-times', xs:string(.), $EVENT_HIGHLIGHT_TIMES)"><xsl:value-of select="concat('''', ., '''')"/><xsl:if test="position()!=last()">,</xsl:if></xsl:for-each>]<xsl:if test="position()!=last()">,</xsl:if></xsl:for-each>]
         </script>
     </xsl:template>
-    
+
     <xsl:template match="event">
-        <xsl:for-each select="if(exists(preceding-sibling::event[1])) 
+        <xsl:for-each select="if(exists(preceding-sibling::event[1]))
             then (index-of($TLI_IDs, @start) - index-of($TLI_IDs, preceding-sibling::event[1]/@end))[.&gt;0]
             else (index-of($TLI_IDs, @start) - 1)[.&gt;0]">
             <td class="empty">
@@ -215,7 +218,7 @@
             </td>
         </xsl:if>
     </xsl:template>
-    
+
     <xsl:template name="create-overview">
         <xsl:variable name="LINE_WIDTH" select="2" as="xs:integer"/>
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="{(count(//tier[exists(event)]) * 5) + 5}" viewBox="0 0 {max(for $time in key('time-by-id', //event/@start) return ($time * 2))} {(count(//tier[exists(event)]) * 5) + 5}">
@@ -224,10 +227,10 @@
                 <xsl:for-each select="event[exists(@start) and exists(@end)]">
                     <line x1="{key('time-by-id', @start) * 2}" y1="{$pos * 5}" x2="{key('time-by-id', @end) * 2}" y2="{$pos * 5}" style="stroke:rgb(255,0,0);stroke-width:2" />
                 </xsl:for-each>
-            </xsl:for-each>            
+            </xsl:for-each>
         </svg>
     </xsl:template>
-    
+
     <xsl:function name="string:multi-replace">
         <xsl:param name="string" as="xs:string*"/>
         <xsl:param name="replacee" as="xs:string*"/>
@@ -243,5 +246,5 @@
             </xsl:choose>
         </xsl:if>
     </xsl:function>
-    
+
 </xsl:stylesheet>
