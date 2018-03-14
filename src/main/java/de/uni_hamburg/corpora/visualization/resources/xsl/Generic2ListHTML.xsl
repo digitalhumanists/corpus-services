@@ -40,7 +40,7 @@
 	<!-- <xsl:value-of select="//ud-information[@attribute-name='Code']"/> -->
 
 	<!-- the path to the folder with resources -->
-	<xsl:variable name="TOP_LEVEL_PATH" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'" as="xs:string"/>
+	<xsl:variable name="TOP_LEVEL_PATH" select="'//corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'" as="xs:string"/>
 
 	<!-- <xsl:variable name="DATASTREAM">
 		<xsl:value-of select="concat('https://corpora.uni-hamburg.de/drupal/de/islandora/object/', $TRANSCRIPTION_ID, '/datastream')"/>
@@ -62,8 +62,8 @@
 
 	<!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
         <!-- Is the VisualizationFormat still needed? -->
-        <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
-	<xsl:variable name="CSS_PATH_LIST" select="css/ListFormat.css"/>
+        <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, '/VisualizationFormat.css')" as="xs:string"/>
+	<xsl:variable name="CSS_PATH_LIST" select="'css/ListFormat.css'"/>
 
 	<!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
 	<xsl:variable name="DOCUMENT_SUFFIX" select="'u'" as="xs:string"/>
@@ -78,6 +78,7 @@
 				<xsl:call-template name="HEAD_DATA"/>
 				<!-- <xsl:call-template name="CSS_STYLES"/> -->
                             <link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>
+                            <link rel="stylesheet" type="text/css" href="{$CSS_PATH}"/>
 			</head>
 			<body>
 				<xsl:call-template name="MAKE_TITLE"/>

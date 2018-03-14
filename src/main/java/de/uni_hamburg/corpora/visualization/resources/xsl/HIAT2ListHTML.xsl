@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" exclude-result-prefixes="#all" version="2.0">
-	
-	<xsl:output encoding="UTF-8" method="xhtml" omit-xml-declaration="yes"/>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" exclude-result-prefixes="exmaralda" version="2.0">
+
+	<xsl:output encoding="UTF-8" method="html" omit-xml-declaration="yes"/>
 
 	<!-- **** -->
 	<!-- Keys -->
-	<!-- **** -->     
+	<!-- **** -->
 	<xsl:key name="speaker-by-id" match="speaker" use="@id"/>
 	<xsl:key name="annotation-by-name" match="annotation" use="@name"/>
 	<xsl:key name="time-by-tli-id" match="tli/@time" use="../@id"/>
@@ -13,9 +13,9 @@
 
 	<!-- ************************ -->
 	<!-- Parameters Declaration   -->
-	<!-- ************************ -->        
+	<!-- ************************ -->
 	<xsl:param name="TRANSCRIPTION_ID" required="no" as="xs:string?"/>
-	<xsl:param name="COMMUNICATION_ID" required="no" as="xs:string?"/>        
+	<xsl:param name="COMMUNICATION_ID" required="no" as="xs:string?"/>
         <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
         <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '\.')[last()]" as="xs:string?" required="no"/>
         <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
@@ -23,25 +23,25 @@
         <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
 	<xsl:param name="LABEL" required="no" as="xs:string?"/>
 
-        
+
 	<!-- ***************************** -->
 	<!-- Global variables Declaration  -->
 	<!-- ***************************** -->
-	
-	<!-- The displayed name of the corpus; e.g. occurs in the navigation bar -->	
+
+	<!-- The displayed name of the corpus; e.g. occurs in the navigation bar -->
 	<xsl:variable name="CORPUS_NAME" select="//project-name" as="xs:string?"/>
-	
+
 	<!-- The displayed name of the transcription -->
 	<!-- occurs, for example in the navigation bar -->
 	<xsl:variable name="TRANSCRIPTION_NAME" select="//transcription-name" as="xs:string?"/>
-	
+
 	<!-- the base of the filename from which the names of all linked files are derived -->
 	<xsl:variable name="BASE_FILENAME" select="substring-before(//referenced-file[1]/@url,'.')" as="xs:string?"/>
 	<!-- <xsl:value-of select="//ud-information[@attribute-name='Code']"/> -->
-	
+
 	<!-- the path to the folder with resources -->
 	<xsl:variable name="TOP_LEVEL_PATH" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'" as="xs:string"/>
-	
+
 	<!-- <xsl:variable name="DATASTREAM">
 		<xsl:value-of select="concat('https://corpora.uni-hamburg.de/drupal/de/islandora/object/', $TRANSCRIPTION_ID, '/datastream')"/>
 	</xsl:variable>-->
@@ -55,14 +55,14 @@
 
         <!-- whether or not the transcription contains video -->
         <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('wav', 'ogg', 'mp3')"/>
-	
+
         <!-- ******************************************************************************************************************************************** -->
 
 	<!-- ... and then specify those which are only valid for this kind of visualisation document -->
 
 	<!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
         <!-- Is the VisualizationFormat still needed? -->
-        <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
+        <xsl:variable name="CSS_PATH" select="css/VisualizationFormat.css" as="xs:string"/>
 	<xsl:variable name="CSS_PATH_LIST" select="css/ListFormat.css"/>
 
 	<!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
@@ -77,7 +77,7 @@
 			<head>
 				<xsl:call-template name="HEAD_DATA"/>
 				<!-- <xsl:call-template name="CSS_STYLES"/> -->
-                            <link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>			   
+                            <link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>
 			</head>
 			<body>
 				<xsl:call-template name="MAKE_TITLE"/>
@@ -107,18 +107,18 @@
 	<!-- for the speaker contributions ... -->
 	<xsl:template match="speaker-contribution">
 		<!-- ... make a table row ... -->
-		<tr>			
+		<tr>
 			<!-- ... link for playing audio from here ... -->
 			<xsl:call-template name="AUDIOLINK"/>
-			
+
 			<!-- ... with one cell for numbering ... -->
 			<xsl:call-template name="NUMBERING"/>
-			
+
 			<!-- ... one cell for the speaker abbreviation ... -->
 			<xsl:call-template name="SPEAKER_ABBR"/>
-			
+
 			<!-- ... more cells ... -->
-			<xsl:call-template name="TEXT_CELL"/>			
+			<xsl:call-template name="TEXT_CELL"/>
 			<xsl:call-template name="ANNO_CELLS"/>
 		</tr>
 	</xsl:template>
@@ -141,7 +141,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="text()">
 		<xsl:choose>
 			<xsl:when test="name(..)='ta' or name(..)='ats' or name(..)='nts' or (name(..)='ts' and ../@n=('HIAT:w'))">
@@ -181,7 +181,7 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 		<script type="text/javascript" src="{$TOP_LEVEL_PATH}jsfunctions.js"></script>
-		
+
 		<!-- placeholder for js script, inserted by Java -->
 		<script type="text/javascript">
 			<xsl:comment>jsholder</xsl:comment>
@@ -229,7 +229,7 @@
                     <div class="collapse_title"> Web service information </div>
                     <div class="collapse_content" style="width:310;">
                         <p>
-                            Generated on <xsl:value-of select="current-dateTime()"/> 
+                            Generated on <xsl:value-of select="current-dateTime()"/>
                             with <xsl:value-of select="$WEBSERVICE_NAME"/>.
                         </p>
                         <p>Please contact the <a href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.</p>
@@ -237,19 +237,19 @@
                 </div>
             </div>
         </xsl:template>
-	
+
 	<xsl:template name="AUDIOLINK">
 		<td class="audiolink">
 			<!-- if this entitiy has a start point with an absolute time value... -->
 			<xsl:if test="//tli[@id=current()/descendant::ts[1]/@s]/@time">
-				<xsl:variable name="TIME" select="0 + //tli[@id=current()/descendant::ts[1]/@s]/@time"/>					
+				<xsl:variable name="TIME" select="0 + //tli[@id=current()/descendant::ts[1]/@s]/@time"/>
 				<a onclick="jump('{format-number(($TIME - 0.1), '#.##')}');">
 					<img class="media" title="{exmaralda:FORMAT_TIME($TIME)}&#x0020;-&#x0020;Click to start player" src="{$TOP_LEVEL_PATH}play_button.gif"/>
 				</a>
 			</xsl:if>
 		</td>
 	</xsl:template>
-	
+
 	<xsl:template name="NUMBERING">
 		<td class="numbering ">
 			<!-- ... and anchors for all start timeline references included in this sc -->
@@ -276,15 +276,15 @@
 				</xsl:element>-->
 		</td>
 	</xsl:template>
-	
+
 	<xsl:template name="SPEAKER_ABBR">
-		<td class="abbreviation speaker">		
+		<td class="abbreviation speaker">
 			<xsl:if	test="not((preceding-sibling::speaker-contribution[1]/@speaker = current()/@speaker) and (preceding-sibling::speaker-contribution[1]/descendant::ts[1]/@e = current()/descendant::ts[1]/@s))">
 				<xsl:value-of select="translate(key('speaker-by-id', current()/@speaker)/abbreviation,' ' , '&#x00A0;')"/>
 			</xsl:if>
 		</td>
 	</xsl:template>
-	
+
 	<xsl:template name="TEXT_CELL">
 		<xsl:variable name="EVEN_ODD" select="if(position() mod 2=0) then 'even' else if(position() mod 2&gt;0) then 'odd' else ''" as="xs:string"/>
 		<xsl:variable name="time-start" select="key('time-by-tli-id', main/ts[ends-with(@n, ':u')]/@s)" as="xs:string?"/>
@@ -296,7 +296,7 @@
 			<xsl:apply-templates select="main"/>
 		</td>
 	</xsl:template>
-	
+
 	<xsl:template name="ANNO_CELLS">
 		<xsl:variable name="EVEN_ODD" select="if(position() mod 2=0) then 'even' else if(position() mod 2&gt;0) then 'odd' else ''" as="xs:string"/>
 		<xsl:if test="key('annotation-by-name', 'de')">
@@ -310,7 +310,7 @@
 			</td>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:function name="exmaralda:FORMAT_TIME" as="xs:string">
 		<xsl:param name="TIME"/>
 		<xsl:variable name="totalseconds" select="0 + $TIME"/>
@@ -319,7 +319,7 @@
 		<xsl:variable name="seconds" select="0 + ($totalseconds - 3600*$hours - 60*$minutes)"/>
 		<xsl:value-of select="concat(concat('0', $hours)[$hours+0 &lt; 10 and $hours &gt;0], '00'[$hours + 0 = 0], ':', '0'[$minutes+0 &lt; 10], $minutes, ':', '0'[$seconds+0 &lt; 10], (round($seconds*100) div 100))"/>
 	</xsl:function>
-		
+
 
 </xsl:stylesheet>
 
