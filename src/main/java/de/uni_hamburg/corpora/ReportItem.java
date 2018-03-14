@@ -461,17 +461,56 @@ public class ReportItem {
         report += "<script>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/js/jquery/jquery-3.1.1.min.js")) + "</script>\n";
         report += "<script>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/js/DataTables/jquery.dataTables-1.10.12.min.js")) + "</script>\n";
         report += "<script>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/js/DataTables/dataTables-bootstrap.min.js")) + "</script>\n";
-        //report += "<script>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/js/bootstrap/bootstrap-3.3.7.min.js")) + "</script>\n";
+        report += "<script>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/js/bootstrap/bootstrap-3.3.7.min.js")) + "</script>\n";
         
         //add CSS
         report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/DataTables/dataTables.bootstrap.min.css")) + "</style>\n";
         report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/DataTables/buttons.dataTables.min.css")) + "</style>\n";
-        //report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/bootstrap/bootstrap-3.3.7.min.css")) + "</style>\n";
+        report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/bootstrap/bootstrap-3.3.7.min.css")) + "</style>\n";
         
         
         report += "   </head>\n   <body>\n";
         
-        report += ReportItem.generateHTML(errors);
+        report += "<table>\n  <thead><tr>" +
+            "<th>Type</th>"+
+            "<th>File:line.column</th>"+
+            "<th>Error</th>" +
+            "<th>Fix</th>"+
+            "<th>Original</th>" +
+            "</tr></thead>\n";
+        report += "  <tbody>\n";
+        for (ReportItem error : errors) {
+            switch (error.getSeverity()) {
+                case CRITICAL:
+                    report += "<tr class='critical'><td style='border-left: red solid 3px'>Critical</td><td>";
+                    break;
+                case WARNING:
+                    report += "<tr class='warning'><td style='border-left: yellow solid 3px'>Warning</td><td>";
+                    break;
+                case NOTE:
+                    report += "<tr class='note'><td style='border-left: green solid 3px'>Note</td><td>";
+                    break;
+                case UNKNOWN:
+                    report += "<tr class='unknown'><td style='border-left: orange solid 3px'>Unknown</td><td>";
+                    break;
+                default:
+                    report += "<tr class='other'><td style='border-left: black solid 3px'>Other</td><td>";
+                    break;
+            }
+            report += error.getLocation() + "</td>";
+            report += "<td style='border: red solid 1px'>" +
+                error.getWhat() +
+                "</td>";
+            report += "<td style='border: green solid 1px'>" +
+                error.getHowto() +
+                "</td>";
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+                error.getLocalisedMessage() +
+                ")</td>\n";
+            report += "<!-- " + error.getStackTrace() + " -->\n";
+            report += "</tr>";
+        }
+        report += "  </tbody>\n  </table>\n";
         
         //initiate DataTable on <table>
         report += "<script>$(document).ready( function () {\n" +
