@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.uni_hamburg.corpora</groupId>
@@ -24,50 +24,53 @@
             https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven
             -->
             <plugin>
-              <artifactId>maven-assembly-plugin</artifactId>
-              <configuration>
-                <archive>
-                  <manifest>
-                    <mainClass>de.uni_hamburg.corpora.validation.CommandLineBatcher</mainClass>
-                  </manifest>
-                </archive>
-                <descriptorRefs>
-                  <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-              </configuration>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.uni_hamburg.corpora.validation.CommandLineBatcher</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
             </plugin>
             <!-- Doxygen plugin -->
             <plugin>
-              <groupId>com.soebes.maven.plugins</groupId>
-              <artifactId>doxygen-maven-plugin</artifactId>
-              <version>1.1.0</version>
-              <configuration>
-                <quiet>false</quiet>
-                <projectName>${project.artifactId}</projectName>
-                <projectNumber>${project.version}</projectNumber>
-                <optimizeOutputJava>true</optimizeOutputJava>
-                <extractAll>true</extractAll>
-                <extractStatic>true</extractStatic>
-                <recursive>true</recursive>
-                <exclude>.git</exclude>
-                <recursive>true</recursive>
-                <umlLook>true</umlLook>
-                <haveGraph>true</haveGraph>
-                <generateLatex>false</generateLatex>
-                <generateHtml>true</generateHtml>
-                <outputDirectory>${basedir}/doc</outputDirectory>
-              </configuration>
-              <executions>
-                <execution>
-                  <phase>compile</phase>
-                  <goals>
-                    <goal>report</goal>
-                  </goals>
-                </execution>
-              </executions>
+                <groupId>com.soebes.maven.plugins</groupId>
+                <artifactId>doxygen-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <quiet>false</quiet>
+                    <projectName>${project.artifactId}</projectName>
+                    <projectNumber>${project.version}</projectNumber>
+                    <optimizeOutputJava>true</optimizeOutputJava>
+                    <extractAll>true</extractAll>
+                    <extractStatic>true</extractStatic>
+                    <recursive>true</recursive>
+                    <exclude>.git</exclude>
+                    <recursive>true</recursive>
+                    <umlLook>true</umlLook>
+                    <haveGraph>true</haveGraph>
+                    <generateLatex>false</generateLatex>
+                    <generateHtml>true</generateHtml>
+                    <outputDirectory>${basedir}/doc</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
+            <resource>
+                <directory>src/main/java/de/uni_hamburg/corpora/validation/resources</directory>
+            </resource>
             <resource>
                 <directory>src/main/java/de/uni_hamburg/corpora/visualization/resources</directory>
             </resource>
@@ -121,35 +124,50 @@
             <version>1.3.1</version>
         </dependency>
 
-	<!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+        <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
         <dependency>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-          <version>2.6</version>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
         </dependency>
 
-	<!-- https://mvnrepository.com/artifact/org.ini4j/ini4j testing using ini as configuration file format-->
+        <!-- https://mvnrepository.com/artifact/org.ini4j/ini4j testing using ini as configuration file format-->
         <dependency>
-          <groupId>org.ini4j</groupId>
-          <artifactId>ini4j</artifactId>
-          <version>0.5.4</version>
+            <groupId>org.ini4j</groupId>
+            <artifactId>ini4j</artifactId>
+            <version>0.5.4</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
-             for validator servlet e.g. -->
+        for validator servlet e.g. -->
         <dependency>
-          <groupId>javax.servlet</groupId>
-          <artifactId>javax.servlet-api</artifactId>
-          <version>3.1.0</version>
-          <scope>provided</scope>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
-       <!-- https://mvnrepository.com/artifact/org.jdom/jdom
+
+        <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
         <dependency>
-          <groupId>org.jdom</groupId>
-          <artifactId>jdom</artifactId>
-          <version>2.0.2</version>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
         </dependency>
-       -->
-   </dependencies>
+        
+        <!-- https://github.com/phax/ph-schematron -->
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-schematron</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jdom/jdom
+         <dependency>
+           <groupId>org.jdom</groupId>
+           <artifactId>jdom</artifactId>
+           <version>2.0.2</version>
+         </dependency>
+        -->
+    </dependencies>
 </project>
