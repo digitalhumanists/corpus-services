@@ -7,6 +7,7 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CommandLineable;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -32,73 +35,147 @@ import org.xml.sax.SAXException;
  * How to also put another file as input for an check?
  *
  */
-public class Checker implements CorpusFunction{
+public abstract class Checker implements CorpusFunction {
 
     //I will keep the settings for now, so they can stay as they are for the Moment 
     //and we know where to refactor when we change them 
     ValidatorSettings settings;
-    //The file as String is not needed anymore, because we work with the CorpusData
-    //object. 
-    //String fileasstring;
-    Check check;
-    //don't know if this is needed or what we said about it
-    //will add it for now
     CorpusData cd;
-    
-    public Checker(Check c){    
-    check = c;
+    Report report;
+    Collection<Class> IsUsableFor = new ArrayList();
+
+    public Checker() {
     }
-    
-    public Report check(CorpusData cd){  
-        //here needs to be the "check" field too
-        check.check(cd);
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
-        } catch (JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+
+    public Report execute(CorpusData cd) {
+        return execute(cd, false);
+    }
+
+    public Report execute(Collection<CorpusData> cdc) {
+        return execute(cdc, false);
+    }
+
+    public Report execute(CorpusData cd, boolean fix) {
+        report = new Report();
+        if (fix) {
+            try {
+                report = fix(cd);
+            } catch (JexmaraldaException je) {
+                report.addException(je, "Unknown parsing error");
+            } catch (JDOMException jdome) {
+                report.addException(jdome, "Unknown parsing error");
+            } catch (SAXException saxe) {
+                report.addException(saxe, "Unknown parsing error");
+            } catch (IOException ioe) {
+                report.addException(ioe, "File reading error");
+            }
+            return report;
+        } else {
+            try {
+                report = check(cd);
+            } catch (SAXException saxe) {
+                report.addException(saxe, "Unknown parsing error");
+            } catch (JexmaraldaException je) {
+                report.addException(je, "Unknown parsing error");
+            }
+            return report;
         }
-        return stats;
     }
 
-   public Report exceptionalCheck(CorpusData cd) throws SAXException, JexmaraldaException{
-                Report report = new Report();
-                return report;
+    public Report execute(Collection<CorpusData> cdc, boolean fix) {
+        report = new Report();
+        if (fix) {
+            try {
+                return fix(cdc);
+            } catch (SAXException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JDOMException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-   public Report exceptionalCheck(CorpusData cd, CorpusData cd2) throws SAXException, JexmaraldaException, IOException, JDOMException{
-                Report report = new Report();
-                return report;
+            return report;
+        } else {
+            try {
+                return check(cdc);
+            } catch (SAXException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JDOMException ex) {
+                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
             }
+            return report;
+        }
+    }
 
-    public Report doMain(String[] args){
+    //TODO
+    public abstract Report check(CorpusData cd) throws SAXException, JexmaraldaException;
     
+
+    //TODO
+    //needed for annotation panel check maybe
+    //no iteration because files need to be treated differently
+    public abstract Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException;
+
+    //Wenn es keine automatische Möglichkeit zum
+    //fixen gibt, dann muss Erklärung in die ErrorMeldung
+    public abstract Report fix(CorpusData cd) throws
+            SAXException, JDOMException, IOException, JexmaraldaException;
+
+    //Wenn es keine automatische Möglichkeit zum
+    //fixen gibt, dann muss Erklärung in die ErrorMeldung
+    //also for stuff like Annotation Panel Check
+    public abstract Report fix(Collection<CorpusData> cdc) throws
+            SAXException, JDOMException, IOException, JexmaraldaException;
+
+    //TODO
+    public Report doMain(String[] args) {
         settings = new ValidatorSettings("name",
                 "what", "fix");
         settings.handleCommandLine(args, new ArrayList<Option>());
         if (settings.isVerbose()) {
             System.out.println("");
         }
-        Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            if (settings.isVerbose()) {
-                System.out.println(" * " + f.getName());
-            }
-            stats = check(cd);
+        report = new Report();
+        //TODO
+//        for (File f : settings.getInputFiles()) {
+//            if (settings.isVerbose()) {
+//                System.out.println(" * " + f.getName());
+//            }
+//            stats = check(cd);
+//        }
+//
+//        settings = new ValidatorSettings("name",
+//                "what", "fix");
+//        settings.handleCommandLine(args, new ArrayList<Option>());
+//        if (settings.isVerbose()) {
+//            System.out.println("");
+//        }
+//        for (File f : settings.getInputFiles()) {
+//            if (settings.isVerbose()) {
+//                System.out.println(" * " + f.getName());
+//            }
+//            stats = fix(f);
+//            if (settings.isVerbose()) {
+//                System.out.println(stats.getFullReports());
+//            } else {
+//                System.out.println(stats.getSummaryLines());
+//            }
+//        }
+        return report;
+    }
+
+    public abstract Collection<Class> getIsUsableFor();
+    
+    public void setIsUsableFor(Collection<Class> cdc){
+        for (Class cl : cdc){
+        IsUsableFor.add(cl);
         }
-        return stats;
     }
 
-    @Override
-    public Collection<CorpusData> IsUsableFor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report execute(CorpusData cd) {
-       Report report = check(cd);
-       return report;
-    }
 }
