@@ -1,3 +1,5 @@
+package de.uni_hamburg.corpora;
+
 /**
  * @file BasicTranscriptionData.java
  *
@@ -21,6 +23,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import java.net.URL;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -35,8 +38,9 @@ public class BasicTranscriptTest {
             String exbString = new
                 String(Files.readAllBytes(Paths.get(exbFilename)), "UTF-8");
             File exbFile = new File(exbFilename);
-            BasicTranscriptionData btd = new BasicTranscriptionData();
-            btd.loadFile(exbFile);
+            URL url = exbFile.toURI().toURL();
+            BasicTranscriptionData btd = new BasicTranscriptionData(url);
+            //btd.loadFile(exbFile);
             String prettyXML = btd.toSaveableString();
             assertNotNull(prettyXML);
             // could be assertThat()
@@ -53,12 +57,6 @@ public class BasicTranscriptTest {
         } catch (IOException ioe) {
             ioe.printStackTrace();
             fail("Unexpected exception " + ioe);
-        } catch (SAXException saxe) {
-            saxe.printStackTrace();
-            fail("Unexpected exception " + saxe);
-        } catch (JexmaraldaException je) {
-            je.printStackTrace();
-            fail("Unexpected exception " + je);
         }
     }
 }
