@@ -52,7 +52,7 @@ public class XSLTChecker extends Checker implements CorpusFunction{
         try{
 
             // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/nslc-exb-checks.xsl"));
+            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/nslc-checks.xsl"));
 
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
@@ -66,7 +66,27 @@ public class XSLTChecker extends Checker implements CorpusFunction{
             int i = 1;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                r.addWarning("XSLTChecker", line);
+                
+                //split line by ;
+                String[] lineParts = line.split(";");
+                
+                switch (lineParts[0].toUpperCase()) {
+                    case "WARNING":
+                        r.addWarning("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        break;
+                    case "CRITICAL":
+                        r.addCritical("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        break;
+                    case "NOTE":                    
+                        r.addNote("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        break;
+                    case "MISSING": 
+                        r.addMissing("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        break;
+                    default:
+                        r.addCritical("XSLTChecker", "(Unrecognized report type) "+ cd.getURL().getFile() + ": " + lineParts[1]);
+                }
+                
                 i++;
             }
 
@@ -93,7 +113,9 @@ public class XSLTChecker extends Checker implements CorpusFunction{
     public Collection<Class> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
-            IsUsableFor.add(cl);
+            IsUsableFor.add(cl);            
+            Class cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");   
+            IsUsableFor.add(cl1);
             Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
             IsUsableFor.add(cl2);
             //Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
