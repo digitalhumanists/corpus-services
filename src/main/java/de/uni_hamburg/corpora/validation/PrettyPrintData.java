@@ -43,7 +43,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
 
     public Report fix(CorpusData cd) throws IOException {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
-        if(CorpusDataIsAlreadyPretty(cd)){
+        if(!CorpusDataIsAlreadyPretty(cd)){
         String prettyCorpusData = indent(cd.toUnformattedString(), "event");
         //System.out.println(cd.toSaveableString());
         //System.out.println(prettyCorpusData);
