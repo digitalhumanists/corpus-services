@@ -19,7 +19,7 @@ import org.jdom.output.XMLOutputter;
  *
  * @author fsnv625
  */
-public class UnspecifiedXMLData implements CorpusData, Metadata {
+public class UnspecifiedXMLData implements CorpusData {
 
     Document jdom;
     URL url;
