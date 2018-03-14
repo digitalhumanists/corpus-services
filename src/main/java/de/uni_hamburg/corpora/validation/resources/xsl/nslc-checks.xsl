@@ -50,6 +50,11 @@
                 <xsl:value-of select="concat('CRITICAL;The transcription NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
             </xsl:for-each>
             
+            <!-- check if paths are relative -->
+            <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
+                <xsl:value-of select="concat('WARNING;The file reference ''', text(), ''' appears to be an absolute path', $NEWLINE)"/>
+            </xsl:for-each>
+            
         </xsl:for-each>
         
         
