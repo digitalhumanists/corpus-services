@@ -8,23 +8,28 @@ package de.uni_hamburg.corpora.visualization;
 
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Vector;
 import javax.xml.transform.TransformerException;
 import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.partitureditor.interlinearText.HTMLParameters;
 import org.exmaralda.partitureditor.interlinearText.InterlinearText;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
 import org.exmaralda.partitureditor.jexmaralda.convert.ItConverter;
+import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.filter.ElementFilter;
+import org.jdom.JDOMException;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
@@ -33,32 +38,32 @@ import org.jdom.xpath.XPath;
  * @author Daniel Jettka
  */
 public class ScoreHTML extends AbstractVisualization {
-    
+
     // resources loaded from directory supplied in pom.xml
     private static final String STYLESHEET_PATH = "/xsl/Score2HTML.xsl";
     private final String SERVICE_NAME = "ScoreHTML";
     private Integer width = 900;
-    
-        
+
+
     public ScoreHTML(String btAsString){
         createFromBasicTranscription(btAsString);
     }
-    
+
     /**
 	 * This method deals performs the transformation of EXB to horizontal Score HTML
 	 *
 	 * @param  btAsString  the EXB file represented in a String object
-	 * @return  
+	 * @return
 	 */
     public void createFromBasicTranscription(String btAsString){
-        
+
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(btAsString);
-        
+
         String result = null;
-        
+
         try{
-        
+
             BasicTranscription bt = basicTranscription;
             bt.normalize();
 
@@ -82,8 +87,10 @@ public class ScoreHTML extends AbstractVisualization {
             it.trim(param);
 
             String itAsString = it.toXML();
-            
-            String styles = bt.getTierFormatTable().toTDCSS();
+            String styles = "/* EMTPY TIER FORMAT TABLE!!! */";
+            if (bt.getTierFormatTable() != null) {
+                styles = bt.getTierFormatTable().toTDCSS();
+            }
 
             final Document itDocument = FileIO.readDocumentFromString(itAsString);
             Document btDocument = bt.toJDOMDocument();
@@ -98,8 +105,8 @@ public class ScoreHTML extends AbstractVisualization {
                 Element e = (Element) (toBeRemoved.elementAt(pos));
                 e.detach();
             }
-            
-            
+
+
             XPath xpath1 = XPath.newInstance("//common-timeline");
             Element timeline = (Element) (xpath1.selectSingleNode(btDocument));
             timeline.detach();
@@ -130,7 +137,7 @@ public class ScoreHTML extends AbstractVisualization {
 
             itDocument.getRootElement().addContent(btElement);
 
-            XMLOutputter xmOut = new XMLOutputter(); 
+            XMLOutputter xmOut = new XMLOutputter();
             String xml = xmOut.outputString(itDocument);
 
             String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
@@ -156,7 +163,7 @@ public class ScoreHTML extends AbstractVisualization {
         } catch (JDOMException ex) {
             Logger.getLogger(ScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+
         setHTML(result);
     }
 
@@ -164,7 +171,7 @@ public class ScoreHTML extends AbstractVisualization {
 	 * Get the width that was set for the Score HTML visualization
 	 *
 	 * @param  btAsString  the EXB file represented in a String object
-	 * @return  
+	 * @return
 	 */
     public Integer getWidth() {
         return width;
@@ -174,13 +181,38 @@ public class ScoreHTML extends AbstractVisualization {
 	 * Set the width for the Score HTML visualization
 	 *
 	 * @param  width  width in px for the HTML visualization
-	 * @return  
+	 * @return
 	 */
     public void setWidth(Integer width) {
         this.width = width;
     }
-    
-    
-    
-    
+
+
+
+
+
+    public static void main(String[] args) {
+        try {
+            if (args.length == 0) {
+                System.out.println("Usage: " + ScoreHTML.class.getName() +
+                        "EXB [HTML]");
+                System.exit(1);
+            } else {
+                byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
+                String btString = new String(encoded, "UTF-8");
+                ScoreHTML score = new ScoreHTML(btString);
+                if (args.length >= 2) {
+                    PrintWriter htmlOut = new PrintWriter(args[1]);
+                    htmlOut.print(score.getHTML());
+                    htmlOut.close();
+                } else {
+                    System.out.println(score.getHTML());
+                }
+            }
+        } catch (UnsupportedEncodingException uee) {
+            uee.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 }
