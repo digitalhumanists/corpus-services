@@ -11,6 +11,7 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -65,6 +66,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         } catch (JDOMException ex) {
             Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
+            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
             Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
         }
         return report;
@@ -136,32 +139,38 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    public List findAllAbsolutePathsExb(CorpusData cd) throws JDOMException, URISyntaxException {
+    public List findAllAbsolutePathsExb(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
         // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>        
         xp1 = XPath.newInstance("/basic-transcription/head/meta-information/referenced-file/@url");
         List allAbsolutePaths = xp1.selectNodes(doc);
-        if(!allAbsolutePaths.isEmpty()){
-        for (int i = 0; i < allAbsolutePaths.size(); i++) {
-            Object o = allAbsolutePaths.get(i);
-            Attribute a = (Attribute) o;
-            Path pabs = Paths.get(a.getValue());
-            //System.out.println(pabs.toString());
-            if (pabs.isAbsolute()) {
-                URL url = cd.getURL();
-                Path pabsFile = Paths.get(url.toURI());
-                //System.out.println(pabsFile.toString());
-                pathRelative = pabsFile.getParent().relativize(pabs);
-                //System.out.println(pathRelative);
-                //if it already is absolute, do nothing
-            } else {
-                report.addCorrect("RemoveAbsolutePaths", "paths are already relative, nothing to do");
-                allAbsolutePaths.clear();
+        if (!allAbsolutePaths.isEmpty()) {
+            for (int i = 0; i < allAbsolutePaths.size(); i++) {
+                Object o = allAbsolutePaths.get(i);
+                Attribute a = (Attribute) o;
+                String refurl = a.getValue();
+                Path pabs;
+                if (refurl.startsWith("file")) {
+                    URL refurlurl = new URL(refurl);
+                    pabs = Paths.get(refurlurl.toURI());
+                } else {
+                    pabs = Paths.get(refurl);
+                }
+                //System.out.println(pabs.toString());
+                if (pabs.isAbsolute()) {
+                    URL url = cd.getURL();
+                    Path pabsFile = Paths.get(url.toURI());
+                    //System.out.println(pabsFile.toString());
+                    pathRelative = pabsFile.getParent().relativize(pabs);
+                    //System.out.println(pathRelative);
+                    //if it already is absolute, do nothing
+                } else {
+                    report.addCorrect("RemoveAbsolutePaths", "paths are already relative, nothing to do");
+                    allAbsolutePaths.clear();
+                }
             }
-        }
-        }
-        else {
+        } else {
             report.addWarning("RemoveAbsolutePaths", "no paths found in file " + cd.getURL().getFile());
         }
 
@@ -176,15 +185,19 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         //  <relPath>narrative/KBD_71_Fish_nar/NG_6_1971_506-507_KBD_71_Fish_nar.pdf</relPath>
         xp1 = XPath.newInstance("/Corpus/CorpusData/Communication/(File/relPath|Transcription/NSLink)");
         List allAbsolutePaths = xp1.selectNodes(doc);
-         for (int i = 0; i < allAbsolutePaths.size(); i++) {
+        for (int i = 0; i < allAbsolutePaths.size(); i++) {
             Object o = allAbsolutePaths.get(i);
             Element e = (Element) o;
             Path pabs = Paths.get(e.getText());
+            URL url = cd.getURL();
+            Path pabsFile = Paths.get(url.toURI());
             if (pabs.isAbsolute()) {
-                URL url = cd.getURL();
-                Path pabsFile = Paths.get(url.toURI());
-                pathRelative = pabsFile.relativize(pabs.getParent());
-                //System.out.println(pathRelative);
+                if (pabs.getRoot().equals(pabsFile.getRoot())) {
+                    pathRelative = pabsFile.relativize(pabs.getParent());
+                } else {
+                    pathRelative  = null;
+                    report.addCritical("RemoveAbsolutePaths", "relative path cannot be figured out for file " + cd.getURL().getFile() + "with path " + pabs.toString());
+                }
             } //if it already is absolute, do nothing
             else {
                 report.addCorrect("RemoveAbsolutePaths", "paths are already relative, nothing to do");
