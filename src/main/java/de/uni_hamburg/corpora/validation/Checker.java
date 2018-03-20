@@ -47,6 +47,10 @@ public abstract class Checker implements CorpusFunction {
     public Checker() {
     }
 
+    public Report execute(Corpus c) {
+        return execute(c.getCorpusData());
+    }
+      
     public Report execute(CorpusData cd) {
         return execute(cd, false);
     }
@@ -120,7 +124,12 @@ public abstract class Checker implements CorpusFunction {
     //TODO
     //needed for annotation panel check maybe
     //no iteration because files need to be treated differently
-    public abstract Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException;
+    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
+        for (CorpusData cd: cdc){
+            report.merge(check(cd));
+        }
+        return report;
+    }
 
     //Wenn es keine automatische Möglichkeit zum
     //fixen gibt, dann muss Erklärung in die ErrorMeldung
@@ -130,8 +139,13 @@ public abstract class Checker implements CorpusFunction {
     //Wenn es keine automatische Möglichkeit zum
     //fixen gibt, dann muss Erklärung in die ErrorMeldung
     //also for stuff like Annotation Panel Check
-    public abstract Report fix(Collection<CorpusData> cdc) throws
-            SAXException, JDOMException, IOException, JexmaraldaException;
+    public Report fix(Collection<CorpusData> cdc) throws
+            SAXException, JDOMException, IOException, JexmaraldaException{
+        for (CorpusData cd: cdc){
+            report.merge(fix(cd));
+        }
+        return report;
+    }
 
     //TODO
     public Report doMain(String[] args) {
