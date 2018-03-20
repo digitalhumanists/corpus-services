@@ -156,6 +156,10 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     public URL getURL() {
         return url;
     }
+    
+    public Document getReadbtasjdom() {
+        return readbtasjdom;
+    }
 
     @Override
     public String toUnformattedString() {
