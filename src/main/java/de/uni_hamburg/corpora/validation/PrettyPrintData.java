@@ -61,16 +61,6 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     }
 
 
-    @Override
-    public Report fix(Collection<CorpusData> cdc) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report execute(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 
     @Override
     public Collection<Class> getIsUsableFor() {
@@ -87,10 +77,6 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     return IsUsableFor;
     }
 
-    @Override
-    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     public boolean CorpusDataIsAlreadyPretty(CorpusData cd){
         //take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
