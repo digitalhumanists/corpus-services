@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,6 +24,8 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.Document;
+import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 /**
@@ -75,6 +78,13 @@ public class CorpusIO {
         fos.close();
         System.out.println("Document written...");
     }
+    
+    public void write(Document doc, URL url) throws IOException {
+       XMLOutputter xmOut = new XMLOutputter();
+       String unformattedCorpusData = xmOut.outputString(doc);
+       String prettyCorpusData = indent(unformattedCorpusData, "event");
+       write(prettyCorpusData, url);
+    }
 
     public void outappend(String a) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
@@ -94,6 +104,7 @@ public class CorpusIO {
         return cd;
     }
 
+    //TODO
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
         if (f.getName().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
