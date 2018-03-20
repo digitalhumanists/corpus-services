@@ -61,8 +61,8 @@ public class CorpusIO {
     public abstract String getVideoLinkForTranscript();
 
      */
-    public void write(CorpusData cd, URL url) {
-
+    public void write(CorpusData cd, URL url) throws IOException {
+        write(cd.toSaveableString(), cd.getURL());
     }
 
     //TODO
@@ -204,8 +204,8 @@ public class CorpusIO {
         return host != null && !"".equals(host);
     }
 
-    public void writePrettyPrinted(CorpusData cd, URL url) {
-
+    public void writePrettyPrinted(CorpusData cd, URL url) throws IOException {
+        write(cd.toSaveableString(), cd.getURL());
     }
 
     public void zipThings() {
