@@ -160,6 +160,11 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     public Document getReadbtasjdom() {
         return readbtasjdom;
     }
+    
+    public Document setReadbtasjdom(Document doc) {
+        readbtasjdom = doc;
+        return readbtasjdom;
+    }
 
     @Override
     public String toUnformattedString() {
