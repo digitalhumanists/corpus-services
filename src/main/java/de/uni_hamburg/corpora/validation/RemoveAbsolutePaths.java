@@ -48,7 +48,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 if (al.isEmpty()) {
                     report.addCorrect("RemoveAbsolutePaths", "there is no absolute path left, nothing to do");
                 } else {
-                    report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be removed in " + cd.getURL().getFile());
+                    report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be removed in " + cd.getURL().getFile() + " with " + pathRelative);
                 }
             } else if (cl2.isInstance(cd)) {
                 List al = findAllAbsolutePathsComa(cd);
@@ -161,9 +161,35 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 if (pabs.isAbsolute()) {
                     URL url = cd.getURL();
                     Path pabsFile = Paths.get(url.toURI());
-                    //System.out.println(pabsFile.toString());
-                    pathRelative = pabsFile.getParent().relativize(pabs);
-                    //System.out.println(pathRelative);
+                    
+                    if (pabs.getRoot().equals(pabsFile.getRoot())) {
+                        pathRelative = pabsFile.relativize(pabs.getParent());
+                    } else {
+                        //pathRelative = null;
+                        Path pabsParent = pabs.getParent();
+                        System.out.println(pabsParent);
+                        Path pabsFileParent = pabsFile.getParent();
+                        System.out.println(pabsFileParent);
+                        System.out.println(pabsParent.getNameCount());
+                        //this works only if the file is in the same folder as the exb
+                        pathRelative = pabs.getFileName();
+                        System.out.println(pathRelative);
+//                        for (i = pabsParent.getNameCount()-1; i > 0; i--) {
+//                            int u = pabsFileParent.getNameCount()-1;
+//                            System.out.println(pabsParent.subpath(i, pabsParent.getNameCount()));
+//                            System.out.println(pabsParent.subpath(u, pabsFileParent.getNameCount()));
+//                            if (pabsParent.subpath(i, pabsParent.getNameCount()).equals(pabsFileParent.subpath(u, pabsFileParent.getNameCount()))) {
+//                                pathRelative = pabsParent.subpath(i, pabsParent.getNameCount());
+//                            } else {
+//                                System.out.println("break at" + i);
+//                                break;
+//                            }
+//                            u--;
+//                        }
+                        if (pathRelative == null) {
+                            report.addCritical("RemoveAbsolutePaths", "relative path cannot be figured out for file " + cd.getURL().getFile() + " with path " + pabs.toString());
+                        }
+                    }
                     //if it already is absolute, do nothing
                 } else {
                     report.addCorrect("RemoveAbsolutePaths", "paths are already relative, nothing to do");
@@ -195,7 +221,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 if (pabs.getRoot().equals(pabsFile.getRoot())) {
                     pathRelative = pabsFile.relativize(pabs.getParent());
                 } else {
-                    pathRelative  = null;
+                    pathRelative = null;
                     report.addCritical("RemoveAbsolutePaths", "relative path cannot be figured out for file " + cd.getURL().getFile() + "with path " + pabs.toString());
                 }
             } //if it already is absolute, do nothing
