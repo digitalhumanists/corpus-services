@@ -167,7 +167,7 @@ public class CmdiChecker implements CommandLineable, StringChecker {
             boolean legalOwner = false;
             boolean pidFound = false;
             for (int j = 0; j < childs.getLength(); j++) {
-                Node n = childs.item(i);
+                Node n = childs.item(j);
                 if (n.getNodeType() != Node.ELEMENT_NODE) {
                     continue;
                 }
@@ -202,6 +202,9 @@ public class CmdiChecker implements CommandLineable, StringChecker {
                     legalOwner = true;
                     stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
                             "LegalOwner present");
+                } else {
+                    System.out.println("DEBUG: GeneralInfo/" + e.getTagName());
+                    // pass
                 }
             }
             if (!englishTitle) {
@@ -219,7 +222,130 @@ public class CmdiChecker implements CommandLineable, StringChecker {
                         "PID missing");
             }
         }
+        NodeList cis = doc.getElementsByTagName("CorpusInfo");
+        for (int i = 0; i < cis.getLength(); i++) {
+            Node cinode = cis.item(i);
+            if (cinode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element ci = (Element)cis.item(i);
+            checkCorpusInfo(ci, stats);
+        }
         return stats;
+    }
+
+    private void checkCorpusInfo(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        boolean corpusType = false;
+        boolean genre = false;
+        boolean modality = false;
+        boolean annotationTypes = false;
+        boolean timeCoverage = false;
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("CorpusContext")) {
+                NodeList cts = e.getElementsByTagName("CorpusType");
+                if (cts.getLength() != 0) {
+                    corpusType = true;
+                }
+            } else if (e.getTagName().equals("SubjectLanguages")) {
+                checkSubjectLanguages(e, stats);
+            } else if (e.getTagName().equals("Coverage")) {
+                NodeList tcs = e.getElementsByTagName("TimeCoverage");
+                if (tcs.getLength() != 0) {
+                    timeCoverage = true;
+                }
+                checkCoverage(e, stats);
+            } else if (e.getTagName().equals("Content")) {
+                NodeList genres = e.getElementsByTagName("Genre");
+                if (genres.getLength() != 0) {
+                    genre = true;
+                }
+                NodeList modalities = e.getElementsByTagName("Modalities");
+                if (modalities.getLength() != 0) {
+                    modality = true;
+                }
+            } else {
+                //
+                System.out.println("DEBUG: CorpusInfo/" + e.getTagName());
+            }
+        }
+        if (!corpusType) {
+            stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                    "Corpus type is needed for repo web pages");
+        } else {
+            stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Corpus type included");
+        }
+        if (!genre) {
+            stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                    "Genre is needed for repo web pages");
+        } else {
+            stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Genre included");
+        }
+        if (!modality) {
+            stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                    "Modality is needed for repo web pages");
+        } else {
+            stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "modality included");
+        }
+        if (!timeCoverage) {
+            stats.addWarning(CMDI_MISC, cmdiLoc + ": " +
+                    "time coverage is missing (recommended for VLO)");
+        }
+    }
+
+    private void checkCoverage(Element coverage, Report stats) {
+        NodeList timeCoverages = coverage.getElementsByTagName("TimeCoverage");
+        for (int i = 0; i < timeCoverages.getLength(); i++) {
+            Node n = timeCoverages.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            String tc = e.getTextContent();
+            if (tc.matches("[0-9]+/[0-9]+")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                        "Good time coverage");
+            } else {
+                stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                        "TimeCoverage should be YYYY/YYYY for VLO");
+            }
+        }
+
+    }
+
+    private void checkSubjectLanguages(Element sls, Report stats) {
+        NodeList langs = sls.getElementsByTagName("Language");
+        for (int i = 0; i < langs.getLength(); i++) {
+            Node n = langs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            NodeList childs = e.getElementsByTagName("LanguageName");
+            boolean engFound = false;
+            for (int j = 0; j < childs.getLength(); j++) {
+                Element lang = (Element)childs.item(j);
+                if (lang.getAttribute("xml:lang").equals("eng")) {
+                    engFound = true;
+                }
+            }
+            if (!engFound) {
+                stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                        "Each subject language must have @xml:lang eng " +
+                        "filled in");
+            } else {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                        "Goog language data");
+            }
+        }
     }
 
     public Report doMain(String[] args) {
@@ -251,7 +377,7 @@ public class CmdiChecker implements CommandLineable, StringChecker {
         CmdiChecker checker = new CmdiChecker();
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
+        System.out.println(stats.getWarningReports());
     }
 
 }

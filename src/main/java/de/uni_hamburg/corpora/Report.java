@@ -306,6 +306,28 @@ public class Report {
     }
 
     /**
+     * Generate error report for given bucket. Includes only severe errors and
+     * problems in detail.
+     */
+    public String getWarningReport(String statId) {
+        Collection<ReportItem> stats = statistics.get(statId);
+        String rv = MessageFormat.format("{0}:\n", statId);
+        int suppressed = 0;
+        for (ReportItem s : stats) {
+            if (s.isBad()) {
+                rv += s.getSummary() + "\n";
+            } else {
+                suppressed += 1;
+            }
+        }
+        if (suppressed != 0) {
+            rv += MessageFormat.format("{0} notes hidden\n",
+                    suppressed);
+        }
+        return rv;
+    }
+
+    /**
      * Generate error reports for all buckets.
      */
     public String getErrorReports() {
@@ -313,6 +335,18 @@ public class Report {
         for (Map.Entry<String, Collection<ReportItem>> kv :
                 statistics.entrySet()) {
             rv += getErrorReport(kv.getKey());
+        }
+        return rv;
+    }
+
+    /**
+     * Generate error reports for all buckets.
+     */
+    public String getWarningReports() {
+        String rv= "Warnings:\n";
+        for (Map.Entry<String, Collection<ReportItem>> kv :
+                statistics.entrySet()) {
+            rv += getWarningReport(kv.getKey());
         }
         return rv;
     }
