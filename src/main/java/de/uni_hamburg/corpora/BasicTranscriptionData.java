@@ -6,7 +6,6 @@
  * @author Tommi A Pirinen <tommi.antero.pirinen@uni-hamburg.de>
  * @author HZSK
  */
-
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
@@ -26,28 +25,63 @@ import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
-/**  
- * Provides access to basic transcriptions as a data type that can be read
- * and written HZSK corpus services. Naming might change, depending on what it
- * ends up being implemented as. It seems to me like a bridge now, or just
- * aggregate.
+/**
+ * Provides access to basic transcriptions as a data type that can be read and
+ * written HZSK corpus services. Naming might change, depending on what it ends
+ * up being implemented as. It seems to me like a bridge now, or just aggregate.
  */
 public class BasicTranscriptionData implements CorpusData, ContentData, XMLData {
 
     private BasicTranscription bt;
+    URL url;
+    Document readbtasjdom = new Document();
+
+    public BasicTranscriptionData() {
+    }
+
+    public BasicTranscriptionData(URL url) {
+        try {
+            this.url = url;
+            SAXBuilder builder = new SAXBuilder();
+            readbtasjdom = builder.build(url);
+            File f = new File(url.toURI());
+            loadFile(f);
+        } catch (JDOMException ex) {
+            Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(BasicTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(BasicTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JexmaraldaException ex) {
+            Logger.getLogger(BasicTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * loads basic transcription from file. Some versions of exmaralda this
      * emits a harmless message to stdout.
      */
-    public void loadFile(File f) throws SAXException, JexmaraldaException {
+    public void loadFile(File f) throws SAXException, JexmaraldaException, MalformedURLException {
         bt = new BasicTranscription(f.getAbsolutePath());
+        url = f.toURI().toURL();
+    }
+    
+    public void updateReadbtasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
+        String xmlString = bt.toXML();
+        SAXBuilder builder = new SAXBuilder();
+        readbtasjdom = builder.build(xmlString);
     }
 
-/* 
+    /* 
     private String toPrettyPrintedXML() throws SAXException, JDOMException,
             IOException, UnsupportedEncodingException {
         String xmlString = bt.toXML();
@@ -62,26 +96,26 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         xmlout.output(xmlDoc, baos);
         return new String(baos.toByteArray(), "UTF-8");
     }
-*/
-   
-    //I jusr use the hzsk-corpus-services\src\main\java\de\ uni_hamburg\corpora\
+     */
+    //I just use the hzsk-corpus-services\src\main\java\de\ uni_hamburg\corpora\
     //utilities\PrettyPrinter.java here to pretty print the files, so they
     //will always get pretty printed in the same way
-    private String toPrettyPrintedXML(){
-   
-    String prettyCorpusData = indent(bt.toXML(), "event");
-    return prettyCorpusData;
+    //TODO
+    private String toPrettyPrintedXML() {
+        String prettyCorpusData = indent(toUnformattedString(), "event");
+        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+        return prettyCorpusData;
     }
 
-    public String toSaveableString() {      
-    return toPrettyPrintedXML();     
+    public String toSaveableString() {
+        return toPrettyPrintedXML();
     }
 
     public static void main(String[] args) {
         if ((args.length != 2) && (args.length != 1)) {
-            System.out.println("Usage: " +
-                    BasicTranscriptionData.class.getName() +
-                    " INPUT [OUTPUT]");
+            System.out.println("Usage: "
+                    + BasicTranscriptionData.class.getName()
+                    + " INPUT [OUTPUT]");
             System.exit(1);
         }
         try {
@@ -120,7 +154,13 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
 
     @Override
     public URL getURL() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return url;
+    }
+
+    @Override
+    public String toUnformattedString() {
+       XMLOutputter xmOut = new XMLOutputter();
+       String unformattedCorpusData = xmOut.outputString(readbtasjdom);
+       return unformattedCorpusData;
     }
 }
-

@@ -12,9 +12,11 @@ import java.net.URL;
  * @author fsnv625
  */
 public interface CorpusData {
-    
-public URL getURL();
 
-public String toSaveableString();
-    
+    public URL getURL();
+
+    public String toSaveableString();
+
+    public String toUnformattedString();
+
 }

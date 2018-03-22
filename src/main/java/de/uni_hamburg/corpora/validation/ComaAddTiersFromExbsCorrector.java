@@ -11,6 +11,8 @@ package de.uni_hamburg.corpora.validation;
 
 
 import de.uni_hamburg.corpora.Report;
+import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -78,6 +80,9 @@ public class ComaAddTiersFromExbsCorrector {
     String tierTextFormat = "%s";
 
     final String ADD_TIERS = "coma-add-tiers-from-exb";
+
+    public ComaAddTiersFromExbsCorrector() {
+    }
 
     /**
      * Uses the list of known abbreviations to add existing tiers from exb to
@@ -441,9 +446,11 @@ public class ComaAddTiersFromExbsCorrector {
             }
         }
         try {
-            Format hzskFormat = Format.getPrettyFormat();
-            hzskFormat.setIndent("\t");
-            XMLOutputter xmlout = new XMLOutputter(hzskFormat);
+            XMLOutputter xmlout = new XMLOutputter();
+           
+            String corpusString = xmlout.outputString(corpus);
+            corpusString = indent(corpusString, "event");
+            corpus = TypeConverter.String2JdomDocument(corpusString);
             xmlout.output(corpus, new FileOutputStream(settings.getOutputFile()));
         } catch (java.util.NoSuchElementException nsee) {
             stats.addCritical(ADD_TIERS, "Could not write fixes!");
