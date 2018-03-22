@@ -9,6 +9,6 @@ package de.uni_hamburg.corpora;
  *
  * @author fsnv625
  */
-interface ContentData {
+interface ContentData extends CorpusData{
     
 }

@@ -9,6 +9,6 @@ package de.uni_hamburg.corpora;
  *
  * @author fsnv625
  */
-class Metadata {
+interface Metadata extends CorpusData{
     
 }

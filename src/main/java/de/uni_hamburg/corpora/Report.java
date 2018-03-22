@@ -39,6 +39,7 @@ public class Report {
     //Anne: Is this the ErrorList in the UML? If so, should we rename here or use StatisticsReport in UML? Or maybe best: ErrorReport?
     //But what would be the Items in here? ReportItems? Errors? StatisticsStuff?
 
+
     /** Special statistics counter for higher level exceptions.
      * I use this to produce an error count with no possible successes, a bit
      * like root logger in logging

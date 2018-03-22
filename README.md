@@ -55,4 +55,4 @@ Some checks may require exb or coma file paths instead of corpus directory. If y
 ```
 java -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.validation.
 ```
-and hitting tab twice.
+and hitting tab twice.   
