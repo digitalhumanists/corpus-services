@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,6 +24,8 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.Document;
+import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 /**
@@ -61,8 +64,8 @@ public class CorpusIO {
     public abstract String getVideoLinkForTranscript();
 
      */
-    public void write(CorpusData cd, URL url) {
-
+    public void write(CorpusData cd, URL url) throws IOException {
+        write(cd.toSaveableString(), cd.getURL());
     }
 
     //TODO
@@ -74,6 +77,13 @@ public class CorpusIO {
         fos.write(s.getBytes(("UTF-8")));
         fos.close();
         System.out.println("Document written...");
+    }
+    
+    public void write(Document doc, URL url) throws IOException {
+       XMLOutputter xmOut = new XMLOutputter();
+       String unformattedCorpusData = xmOut.outputString(doc);
+       String prettyCorpusData = indent(unformattedCorpusData, "event");
+       write(prettyCorpusData, url);
     }
 
     public void outappend(String a) {
@@ -94,6 +104,7 @@ public class CorpusIO {
         return cd;
     }
 
+    //TODO
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
         if (f.getName().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
@@ -204,8 +215,8 @@ public class CorpusIO {
         return host != null && !"".equals(host);
     }
 
-    public void writePrettyPrinted(CorpusData cd, URL url) {
-
+    public void writePrettyPrinted(CorpusData cd, URL url) throws IOException {
+        write(cd.toSaveableString(), cd.getURL());
     }
 
     public void zipThings() {
