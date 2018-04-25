@@ -50,8 +50,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 //if there is no absolute path, nothing needs to be done
                 //check if the paths that are there are absolute
                 if (!al.isEmpty()) {
-                     for (int i = 0; i < al.size(); i++) {
-                        Object o = al.get(i);                   
+                    for (int i = 0; i < al.size(); i++) {
+                        Object o = al.get(i);
                         Attribute a = (Attribute) o;
                         //System.out.println(a);
                         String refurl = a.getValue();
@@ -108,7 +108,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             Class cl2 = Class.forName("de.uni_hamburg.corpora.ComaData");
             if (cl.isInstance(cd)) {
-                List al = findAllAbsolutePathsExb(cd);               
+                List al = findAllAbsolutePathsExb(cd);
                 System.out.println(cd.getURL());
                 Path directory = Paths.get(cd.getURL().toURI());
                 System.out.println(directory);
@@ -125,28 +125,27 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         } else {
                             pabs = Paths.get(refurl);
                         }
-                        if(pabs.isAbsolute()){
-                        //make the path relative to the exb folder
-                        //need to cut it somehow
-                        System.out.println(pabs);
-                        System.out.println(nameOfExbFolder);
-                        pathRelative = trimFilePathBeforeDirectory(pabs, nameOfExbFolder);
-                        System.out.println(pathRelative);
-                        if (!(pathRelative == null)) {
-                            a.setValue(pathRelative.toString());
-                            //then save file
-                            //add a report message
-                            CorpusIO cio = new CorpusIO();
-                            cio.write(doc, cd.getURL());
-                            report.addCorrect("RemoveAbsolutePaths", "removed absolute path in " + cd.getURL().getFile());
+                        if (pabs.isAbsolute()) {
+                            //make the path relative to the exb folder
+                            //need to cut it somehow
+                            System.out.println(pabs);
+                            System.out.println(nameOfExbFolder);
+                            pathRelative = trimFilePathBeforeDirectory(pabs, nameOfExbFolder);
+                            System.out.println(pathRelative);
+                            if (!(pathRelative == null)) {
+                                a.setValue(pathRelative.toString());
+                                //then save file
+                                //add a report message
+                                CorpusIO cio = new CorpusIO();
+                                cio.write(doc, cd.getURL());
+                                report.addCorrect("RemoveAbsolutePaths", "removed absolute path in " + cd.getURL().getFile());
+                            } else {
+                                report.addCritical("RemoveAbsolutePaths",
+                                        "relative path cannot be figured out for file "
+                                        + cd.getURL().getFile() + " with path " + pabs.toString());
+                            }
                         } else {
-                            report.addCritical("RemoveAbsolutePaths",
-                                    "relative path cannot be figured out for file "
-                                    + cd.getURL().getFile() + " with path " + pabs.toString());
-                        }
-                        }
-                        else{
-                         report.addCorrect("RemoveAbsolutePaths", "path is already relative in" + cd.getURL().getFile());   
+                            report.addCorrect("RemoveAbsolutePaths", "path is already relative in" + cd.getURL().getFile());
                         }
                     }
                 } else {
@@ -168,17 +167,23 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                             pabs = Paths.get(refurl);
                         }
                         pathRelative = trimFilePathBeforeDirectory(pabs, nameOfCorpusFolder);
-                        if (!(pathRelative == null)) {
-                            e.setText(pathRelative.toString());
-                            //then save file
-                            //add a report message
-                            CorpusIO cio = new CorpusIO();
-                            cio.write(doc, cd.getURL());
-                            report.addCorrect("RemoveAbsolutePaths", "removed absolute path in " + cd.getURL().getFile());
+                        if (pabs.isAbsolute()) {
+                            if (!(pathRelative == null)) {
+                                e.setText(pathRelative.toString());
+                                //then save file
+                                //add a report message
+                                CorpusIO cio = new CorpusIO();
+                                cio.write(doc, cd.getURL());
+                                report.addCorrect("RemoveAbsolutePaths", "removed absolute path in " + cd.getURL().getFile());
+                            } else {
+                                report.addCritical("RemoveAbsolutePaths",
+                                        "relative path cannot be figured out for file "
+                                        + cd.getURL().getFile() + " with path " + pabs.toString());
+                            }
+
                         } else {
-                            report.addCritical("RemoveAbsolutePaths",
-                                    "relative path cannot be figured out for file "
-                                    + cd.getURL().getFile() + " with path " + pabs.toString());
+                            al.remove(o);
+                            report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
                         }
                     }
                 }
@@ -294,7 +299,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         XPath xp1;
         // in Coma: NSLinks and relPaths <NSLink>narrative/KBD_71_Fish_nar/KBD_71_Fish_nar_s.exs</NSLink>
         //  <relPath>narrative/KBD_71_Fish_nar/NG_6_1971_506-507_KBD_71_Fish_nar.pdf</relPath>
-        xp1 = XPath.newInstance("/Corpus/CorpusData/Communication/(File/relPath|Transcription/NSLink)");
+        xp1 = XPath.newInstance("/Corpus/CorpusData/Communication/File/relPath | /Corpus/CorpusData/Communication/Transcription/NSLink");
         List allAbsolutePaths = xp1.selectNodes(doc);
         if (allAbsolutePaths.isEmpty()) {
             report.addWarning("RemoveAbsolutePaths", "no paths found in file " + cd.getURL().getFile());
@@ -306,7 +311,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         //find the index where the directoryname occurs
         for (int i = 0; i < filepath.getNameCount() - 1; i++) {
             if (filepath.getName(i).toString().equals(directory)) {
-                Path trimmedPath = filepath.subpath(i+1, filepath.getNameCount());
+                Path trimmedPath = filepath.subpath(i + 1, filepath.getNameCount());
                 return trimmedPath;
             }
         }
