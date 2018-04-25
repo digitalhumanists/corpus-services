@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
+import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -55,10 +56,10 @@ public class CorpusMagician {
             //check if it's a filepath, we could just convert it to an url
             String urlstring = args[0];
             URL url;
-            if(urlstring.startsWith("file://")){
-            url = new URL(urlstring);    
+            if (urlstring.startsWith("file://")) {
+                url = new URL(urlstring);
             } else {
-            url = Paths.get(urlstring).toUri().toURL();    
+                url = Paths.get(urlstring).toUri().toURL();
             }
             CorpusMagician corpuma = new CorpusMagician();
             corpuma.initCorpusWithURL(url);
@@ -66,10 +67,10 @@ public class CorpusMagician {
             //also allow normal filepaths and convert them
             String reportstring = args[1];
             URL reportlocation;
-            if(reportstring.startsWith("file://")){
-            reportlocation = new URL(reportstring);    
+            if (reportstring.startsWith("file://")) {
+                reportlocation = new URL(reportstring);
             } else {
-            reportlocation = Paths.get(reportstring).toUri().toURL();    
+                reportlocation = Paths.get(reportstring).toUri().toURL();
             }
             //now add the functionsstrings to array
             //other args(2 and more) need to be a strings for the wanted corpus functions
@@ -146,8 +147,9 @@ public class CorpusMagician {
         //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
-         allExistingCFs.add("RemoveAutoSaveExb");
-         allExistingCFs.add("RemoveAbsolutePaths");
+        allExistingCFs.add("RemoveAutoSaveExb");
+        allExistingCFs.add("RemoveAbsolutePaths");
+        allExistingCFs.add("ComaOverviewGeneration");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -216,8 +218,8 @@ public class CorpusMagician {
                     report.merge(runCorpusFunction(corpus, pd, true));
                     break;
                 case "comaaddtiersfromexbscorrector":
-                //cf = new ComaAddTiersFromExbsCorrector();
-                //rest .... usw.
+                    //cf = new ComaAddTiersFromExbsCorrector();
+                    //rest .... usw.
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
@@ -227,22 +229,30 @@ public class CorpusMagician {
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     report.merge(runCorpusFunction(corpus, cnslc));
                     break;
-                case "removeautosaveexb":    
+                case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
                     report.merge(runCorpusFunction(corpus, rase));
                     break;
-                 case "removeautosaveexbfix":    
+                case "removeautosaveexbfix":
                     rase = new RemoveAutoSaveExb();
                     report.merge(runCorpusFunction(corpus, rase, true));
                     break;
-                 case "removeabsolutepaths":
-                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
-                     report.merge(runCorpusFunction(corpus, rap));
-                     break;
-                 case "removeabsolutepathsfix":
-                     rap = new RemoveAbsolutePaths();
-                     report.merge(runCorpusFunction(corpus, rap, true));
-                     break;
+                case "removeabsolutepaths":
+                    RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
+                    report.merge(runCorpusFunction(corpus, rap));
+                    break;
+                case "removeabsolutepathsfix":
+                    rap = new RemoveAbsolutePaths();
+                    report.merge(runCorpusFunction(corpus, rap, true));
+                    break;
+                case "comaoverviewgeneration":
+                    ComaOverviewGeneration cog = new ComaOverviewGeneration();
+                    report.merge(runCorpusFunction(corpus, cog));
+                    break;
+                case "comaoverviewgenerationfix":
+                    cog = new ComaOverviewGeneration();
+                    report.merge(runCorpusFunction(corpus, cog, true));
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
