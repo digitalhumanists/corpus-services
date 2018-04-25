@@ -7,6 +7,8 @@ package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
+import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
+import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -144,7 +146,8 @@ public class CorpusMagician {
         //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
-
+         allExistingCFs.add("RemoveAutoSaveExb");
+         allExistingCFs.add("RemoveAbsolutePaths");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -224,6 +227,22 @@ public class CorpusMagician {
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     report.merge(runCorpusFunction(corpus, cnslc));
                     break;
+                case "removeautosaveexb":    
+                    RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
+                    report.merge(runCorpusFunction(corpus, rase));
+                    break;
+                 case "removeautosaveexbfix":    
+                    rase = new RemoveAutoSaveExb();
+                    report.merge(runCorpusFunction(corpus, rase, true));
+                    break;
+                 case "removeabsolutepaths":
+                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
+                     report.merge(runCorpusFunction(corpus, rap));
+                     break;
+                 case "removeabsolutepathsfix":
+                     rap = new RemoveAbsolutePaths();
+                     report.merge(runCorpusFunction(corpus, rap, true));
+                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
