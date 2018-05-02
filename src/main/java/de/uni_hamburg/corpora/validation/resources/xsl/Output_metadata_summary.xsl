@@ -29,15 +29,15 @@
         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Speaker</xsl:with-param>
         </xsl:call-template>
-        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
+        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Transcription</xsl:with-param>
-        </xsl:call-template>-->
-        <!--  <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>
+       <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Recording</xsl:with-param>
-        </xsl:call-template>-->
-        <!--    <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>
+       <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">AsocFile</xsl:with-param>
-        </xsl:call-template>-->
+        </xsl:call-template>
         <xsl:call-template name="GET_KEYS_LOC">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>
@@ -120,7 +120,7 @@
                         </td>
                         <td>
                             <xsl:choose>
-                                <xsl:when test="not($commElement//Recording/Media/NSLink[ends-with(text(), '.wav')])"
+                                <xsl:when test="not($commElement//Recording/Media/NSLink[ends-with(lower-case(text()), '.wav')])"
                                     >
                                     no wav
                                 </xsl:when>
@@ -292,7 +292,7 @@
                             </td>
                             <td>
                                 <xsl:choose>
-                                    <xsl:when test="not($commElement//Recording/Media/NSLink[ends-with(text(), '.wav')])"
+                                    <xsl:when test="not($commElement//Recording/Media/NSLink[ends-with(lower-case(text()), '.wav')])"
                                         >
                                         no wav
                                     </xsl:when>
