@@ -254,7 +254,7 @@ public class CorpusMagician {
                     report.merge(runCorpusFunction(corpus, cog, true));
                     break;
                 default:
-                    report.addCritical("CommandlineFunctionality", "Function String is not recognized");
+                    report.addCritical("CommandlineFunctionality", "Function String" + function + "is not recognized");
             }
         }
         return report;
