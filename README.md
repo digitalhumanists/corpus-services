@@ -5,7 +5,7 @@ The HZSK Corpus Services project bundles functionality used for maintenance, cur
 # Gitlab artifacts
 
 The latest compiled .jar can be found here: 
-https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/master/browse?job=compile_withmaven
+https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
 
 
 
