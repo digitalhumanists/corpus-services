@@ -9,6 +9,7 @@ import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
+import de.uni_hamburg.corpora.validation.TierChecker;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -56,9 +57,9 @@ public class CorpusMagician {
             String urlstring = args[0];
             URL url;
             if(urlstring.startsWith("file://")){
-            url = new URL(urlstring);    
+                url = new URL(urlstring);    
             } else {
-            url = Paths.get(urlstring).toUri().toURL();    
+                url = Paths.get(urlstring).toUri().toURL();    
             }
             CorpusMagician corpuma = new CorpusMagician();
             corpuma.initCorpusWithURL(url);
@@ -67,9 +68,9 @@ public class CorpusMagician {
             String reportstring = args[1];
             URL reportlocation;
             if(reportstring.startsWith("file://")){
-            reportlocation = new URL(reportstring);    
+                reportlocation = new URL(reportstring);    
             } else {
-            reportlocation = Paths.get(reportstring).toUri().toURL();    
+                reportlocation = Paths.get(reportstring).toUri().toURL();    
             }
             //now add the functionsstrings to array
             //other args(2 and more) need to be a strings for the wanted corpus functions
@@ -146,8 +147,9 @@ public class CorpusMagician {
         //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
-         allExistingCFs.add("RemoveAutoSaveExb");
-         allExistingCFs.add("RemoveAbsolutePaths");
+        allExistingCFs.add("RemoveAutoSaveExb");
+        allExistingCFs.add("RemoveAbsolutePaths");
+        allExistingCFs.add("TierChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -231,18 +233,22 @@ public class CorpusMagician {
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
                     report.merge(runCorpusFunction(corpus, rase));
                     break;
-                 case "removeautosaveexbfix":    
+                case "removeautosaveexbfix":    
                     rase = new RemoveAutoSaveExb();
                     report.merge(runCorpusFunction(corpus, rase, true));
                     break;
-                 case "removeabsolutepaths":
-                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
-                     report.merge(runCorpusFunction(corpus, rap));
-                     break;
-                 case "removeabsolutepathsfix":
-                     rap = new RemoveAbsolutePaths();
-                     report.merge(runCorpusFunction(corpus, rap, true));
-                     break;
+                case "removeabsolutepaths":
+                    RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
+                    report.merge(runCorpusFunction(corpus, rap));
+                    break;
+                case "removeabsolutepathsfix":
+                    rap = new RemoveAbsolutePaths();
+                    report.merge(runCorpusFunction(corpus, rap, true));
+                    break;
+                case "tierchecker":
+                    TierChecker tc = new TierChecker();
+                    report.merge(runCorpusFunction(corpus, tc));
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
