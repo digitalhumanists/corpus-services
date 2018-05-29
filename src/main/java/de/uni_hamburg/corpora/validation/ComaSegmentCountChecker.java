@@ -1,10 +1,10 @@
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -21,11 +21,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * A class that checks whether or not there is a mismatch between
- * basic and segmented names, basic and segmented file names, plus their
- * NSLinks for each communication in the coma file.
+ * A class that checks whether there are more than one segmentation algorithms used 
+ * in the corpus. If that is the case, it issues warnings.
  */
-public class ComaNameChecker extends Checker implements CorpusFunction{
+public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
     
     String comaLoc = "";
 
@@ -51,18 +50,11 @@ public class ComaNameChecker extends Checker implements CorpusFunction{
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
         NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
+        ArrayList<String> algorithmNames = new ArrayList<>(); // array for holding algorithm names
         Report stats = new Report(); //create a new report
         for (int i = 0; i < communications.getLength(); i++) { //iterate through communications
             Element communication = (Element) communications.item(i);
-            NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication
-            String communicationID = communication.getAttribute("Id"); // get communication id to use it in the warning
-            String communicationName = communication.getAttribute("Name"); // get communication name to use it in the warning
-            String basicTranscriptName = "";
-            String basicFileName = "";
-            String basicNSLink = "";
-            String segmentedTranscriptName = "";
-            String segmentedFileName = "";
-            String segmentedNSLink = "";
+            NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication     
             for (int j = 0; j < transcriptions.getLength(); j++) {   // iterate through transcriptions 
                 Element transcription = (Element) transcriptions.item(j);
                 NodeList keys =  transcription.getElementsByTagName("Key");  // get keys of current transcription
@@ -76,37 +68,28 @@ public class ComaNameChecker extends Checker implements CorpusFunction{
                         break;
                     }
                 }
-                if (!segmented){ // get name, file name and nslink of basic transcription
-                    basicTranscriptName = transcription.getElementsByTagName("Name").item(0).getTextContent();
-                    basicFileName = transcription.getElementsByTagName("Filename").item(0).getTextContent();
-                    basicNSLink = transcription.getElementsByTagName("NSLink").item(0).getTextContent();
+                if (segmented){ // get the names of the segmentation algorithms in the coma file
+                    for (int k = 0; k < keys.getLength(); k++){  // look for the keys with algorithm 
+                        Element key = (Element) keys.item(k);
+                        if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")){
+                            String text = key.getAttribute("Name");
+                            int colonIndex = key.getAttribute("Name").lastIndexOf(':');
+                            int hashIndex = key.getAttribute("Name").indexOf('#');
+                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex+2, colonIndex));
+                        }
+                    }
                 }
-                else{  // get name, file name and nslink of segmented transcription
-                    segmentedTranscriptName = transcription.getElementsByTagName("Name").item(0).getTextContent();
-                    segmentedFileName = transcription.getElementsByTagName("Filename").item(0).getTextContent();
-                    segmentedNSLink = transcription.getElementsByTagName("NSLink").item(0).getTextContent();
-                }
             }
-            if(!basicTranscriptName.equals(segmentedTranscriptName)){ // check for mismatch between names
-                // issue a warning if necessary
-                System.err.println("Basic transcription name and segmented transcription name do not match "
-                        + "for communication " + communicationName + ", id: " + communicationID + ".");
-                stats.addWarning("coma-name-checker", "Name mismatch "
-                         + "for communication " + communicationName + ", id: " + communicationID + ".");
-            }
-            // check for mismatch between file names, issue a warning if necessary
-            if(!basicFileName.substring(0, basicFileName.indexOf(".")).equals(segmentedFileName.substring(0, segmentedFileName.indexOf("_")))){
-                System.err.println("Basic file name and segmented file name do not match "
-                        + "for communication " + communicationName + ", id: " + communicationID + ".");
-                stats.addWarning("coma-name-checker", "File name mismatch "
-                         + "for communication " + communicationName + ", id: " + communicationID + ".");
-            }
-            // check for mismatch between nslinks, issue a warning if necessary
-            if(!basicNSLink.substring(0, basicNSLink.indexOf(".")).equals(segmentedNSLink.substring(0, segmentedNSLink.indexOf("_")))){
-                System.err.println("Basic NSLink and segmented NSLink do not match "
-                        + "for communication " + communicationName + ", id: " + communicationID + ".");
-                stats.addWarning("coma-name-checker", "NSLink mismatch "
-                         + "for communication " + communicationName + ", id: " + communicationID + ".");
+        }
+        String algorithmName = "";
+        if(!algorithmNames.isEmpty()){
+            algorithmName = algorithmNames.get(0);
+        }
+        for(int i = 1; i < algorithmNames.size(); i++){ // check if come file contains different seg algorithms
+            if(!algorithmName.equals(algorithmNames.get(i))){
+                System.err.println("Coma file contains different segmentation algorithms!");
+                stats.addWarning("coma-segment-count-checker", "More than one segmentation algorithm");
+                break;
             }
         }
         return stats; // return the report with warnings
