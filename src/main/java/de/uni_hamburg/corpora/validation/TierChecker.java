@@ -29,7 +29,11 @@ public class TierChecker extends Checker implements CorpusFunction{
     
     String tierLoc = "";
             
-    @Override
+    /**
+     * Check for existence of files in an XML file.
+     *
+     * @return true, if all files were found, false otherwise
+     */
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -48,26 +52,26 @@ public class TierChecker extends Checker implements CorpusFunction{
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString()));
-        String transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent();
-        NodeList tiers = doc.getElementsByTagName("tier");
-        NodeList speakers = doc.getElementsByTagName("speaker");
-        HashMap<String, String> speakerMap = new HashMap<String, String>();
-        Report stats = new Report();
-        for (int i = 0; i < speakers.getLength(); i++){
+        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
+        String transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
+        NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript
+        NodeList speakers = doc.getElementsByTagName("speaker"); // get all speakers of the transcript 
+        HashMap<String, String> speakerMap = new HashMap<String, String>(); // map for each speaker and its corresponding abbreviation
+        Report stats = new Report(); // create a new report for the transcript
+        for (int i = 0; i < speakers.getLength(); i++){ // put speakers and their abbreviations into the map
             Element speaker = (Element) speakers.item(i);
             speakerMap.put(speaker.getAttribute("id"), speaker.getElementsByTagName("abbreviation").item(0).getTextContent());
         }
-        for (int i = 0; i < tiers.getLength(); i++){
+        for (int i = 0; i < tiers.getLength(); i++){ // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);
-            String category = tier.getAttribute("category");
-            String displayName = tier.getAttribute("display-name");
-            String speakerName = tier.getAttribute("speaker");
-            if(!displayName.isEmpty()){
+            String category = tier.getAttribute("category"); // get category  
+            String displayName = tier.getAttribute("display-name"); // get display name
+            String speakerName = tier.getAttribute("speaker"); // get speaker name
+            if(!displayName.isEmpty()){ // if display name exists compare it with other attributes   
                 int openingPar = displayName.indexOf("[");
                 int closingPar = displayName.indexOf("]");
                 String displayNameCategory = displayName.substring(openingPar+1, closingPar);
-                if(!speakerName.isEmpty()){
+                if(!speakerName.isEmpty()){ // if speaker name exists check if it complies with tier display name
                     String displayNameSpeaker = displayName.substring(0, openingPar-1);
                     if(!category.equals(displayNameCategory) || !displayNameSpeaker.equals(speakerMap.get(speakerName))){
                         System.err.println("Category or speaker abbreviation and display name for tier do not match"
@@ -78,7 +82,7 @@ public class TierChecker extends Checker implements CorpusFunction{
                                 + " in transcription of " + transcriptName);
                     }
                 }
-                else{
+                else{  // if speaker name doesn't exist check only if the category complies with the display of the tier
                     if(!category.equals(displayNameCategory)){
                         System.err.println("Category and display name for tier do not match"
                                 + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
@@ -90,7 +94,7 @@ public class TierChecker extends Checker implements CorpusFunction{
                 }
             }    
         }
-        return stats;
+        return stats; // return all the warnings
     }
     
     @Override
