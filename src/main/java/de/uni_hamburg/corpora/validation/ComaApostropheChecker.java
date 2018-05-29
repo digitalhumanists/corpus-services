@@ -1,0 +1,109 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.uni_hamburg.corpora.validation;
+
+import de.uni_hamburg.corpora.Corpus;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
+import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+/**
+ * A class that checks whether or not the coma file contains an apostrophe ’.
+ * If it does then this all apostrophes ’ are changed to apostrophes '.
+ */
+public class ComaApostropheChecker extends Checker implements CorpusFunction{
+
+    String comaLoc = "";
+    String comaFile = "";
+    boolean apostrophe = false;
+    
+    public Report check(CorpusData cd) {
+        Report stats = new Report();
+        try {
+            stats = exceptionalCheck(cd);
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, comaLoc + ": Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+        } catch (URISyntaxException ex) {
+            stats.addException(ex, comaLoc + ": Unknown file reading error");
+        }
+        return stats;
+    }
+
+    private Report exceptionalCheck(CorpusData cd)     // check whether there's any illegal apostrophes ’
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+        Report stats = new Report();         // create a new report
+        comaFile = cd.toSaveableString();     // read the coma file as a string
+        if(comaFile.contains("’")){          // if coma file contains an apostrophe ’ then issue warning
+            apostrophe = true;
+            System.err.println("Coma file is containing apostrophe(s) ’");
+            stats.addWarning("coma-apostrophe-checker", "apostrophe error");
+        }
+        return stats; // return the report with warnings
+    }
+
+    @Override
+    // fix apostrophes ’ with apostrophes '
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        Report stats = new Report();   // create a new report
+        if(apostrophe){                // flag points out if there are illegal apostrophes
+            comaFile = comaFile.replaceAll("’", "'");    //replace all ’s with 's
+            CorpusIO cio = new CorpusIO();
+            cio.write(comaFile, cd.getURL());    // write back to coma file with allowed apostrophes ' 
+            stats.addCorrect("ComaApostropheChecker", "corrected the apostrophes in " + cd.getURL().getFile()); // fix report 
+        }
+        return stats;
+    }
+
+    @Override
+    public Collection<Class> getIsUsableFor() {
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return IsUsableFor;
+    }
+    
+    // execute function for checking and fixing the illegal apostrophes
+    public Report execute(CorpusData cd, boolean fix) {  
+        Report report = new Report();
+        try {
+            report.merge(check(cd));
+            if(fix)
+                report.merge(fix(cd));            
+        } catch (SAXException ex) {
+            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JDOMException ex) {
+            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JexmaraldaException ex) {
+            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return report;
+    }
+}

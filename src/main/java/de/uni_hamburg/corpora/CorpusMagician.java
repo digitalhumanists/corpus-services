@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -152,6 +153,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("TierChecker");
         allExistingCFs.add("ComaNameChecker");
+        allExistingCFs.add("ComaApostropheChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -255,6 +257,10 @@ public class CorpusMagician {
                     ComaNameChecker cnc = new ComaNameChecker();
                     report.merge(runCorpusFunction(corpus, cnc));
                     break;
+                case "comaapostrophechecker":
+                    ComaApostropheChecker cac = new ComaApostropheChecker();
+                    report.merge(runCorpusFunction(corpus, cac, true));
+                    break;    
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
