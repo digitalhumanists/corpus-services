@@ -8,6 +8,7 @@ package de.uni_hamburg.corpora;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -20,9 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.String;
 import java.nio.file.Paths;
-import java.util.Arrays;
+
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -154,6 +154,7 @@ public class CorpusMagician {
         allExistingCFs.add("TierChecker");
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("ComaApostropheChecker");
+        allExistingCFs.add("ComaSegmentCountChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -261,6 +262,10 @@ public class CorpusMagician {
                     ComaApostropheChecker cac = new ComaApostropheChecker();
                     report.merge(runCorpusFunction(corpus, cac, true));
                     break;    
+                case "comasegmentcountchecker":
+                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
+                    report.merge(runCorpusFunction(corpus, cscc));   
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
