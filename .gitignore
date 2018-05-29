@@ -1,3 +1,7 @@
 /target/
 /doc/
 Doxygen.config
+.settings/
+bin/
+doxygen.exe
+outxample.exb
