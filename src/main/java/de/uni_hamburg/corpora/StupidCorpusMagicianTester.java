@@ -13,7 +13,7 @@ public class StupidCorpusMagicianTester {
         args[0] = "C:\\Users\\Ozzy\\Desktop\\Demo-Corpus";
         args[1] = "C:\\Users\\Ozzy\\Desktop\\report\\report.txt";
         //args[2] = "filecoveragechecker";
-        args[2] = "tierchecker";
+        args[2] = "comanamechecker";
         //args[0] = "E:\\Anne\\NganasanCorpus_HZSK_master\\NSLC_SubCorp.coma";
         //args[1] = "-verbose";
         corpuma.main(args);

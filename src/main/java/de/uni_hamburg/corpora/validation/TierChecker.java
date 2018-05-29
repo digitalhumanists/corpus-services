@@ -29,11 +29,6 @@ public class TierChecker extends Checker implements CorpusFunction{
     
     String tierLoc = "";
             
-    /**
-     * Check for existence of files in an XML file.
-     *
-     * @return true, if all files were found, false otherwise
-     */
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
