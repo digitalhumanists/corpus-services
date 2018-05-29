@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.TierChecker;
+import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -155,6 +156,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaSegmentCountChecker");
+        allExistingCFs.add("TierCheckerWithAnnotation");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -265,6 +267,10 @@ public class CorpusMagician {
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
                     report.merge(runCorpusFunction(corpus, cscc));   
+                    break;
+                case "tiercheckerwithannotation":
+                    TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
+                    report.merge(runCorpusFunction(corpus, tcwa));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
