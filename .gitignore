@@ -5,3 +5,4 @@ Doxygen.config
 bin/
 doxygen.exe
 outxample.exb
+.project
