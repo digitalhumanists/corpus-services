@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -13,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,6 +49,7 @@ public class TierChecker extends Checker implements CorpusFunction{
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString()));
+        String transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent();
         NodeList tiers = doc.getElementsByTagName("tier");
         NodeList speakers = doc.getElementsByTagName("speaker");
         HashMap<String, String> speakerMap = new HashMap<String, String>();
@@ -64,16 +63,32 @@ public class TierChecker extends Checker implements CorpusFunction{
             String category = tier.getAttribute("category");
             String displayName = tier.getAttribute("display-name");
             String speakerName = tier.getAttribute("speaker");
-            int openingPar = displayName.indexOf("[");
-            int closingPar = displayName.indexOf("]");
-            String displayNameCategory = displayName.substring(openingPar+1, closingPar);
-            String displayNameSpeaker = displayName.substring(0, openingPar-1);
-            if(!category.equals(displayNameCategory) || !displayNameSpeaker.equals(speakerMap.get(speakerName))){
-                System.err.print("Category or speaker abbreviation and display name for tier do not match"
-                        + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id"));
-                stats.addWarning("tier-checker", "Tier mismatch "
-                        + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id"));
-            }
+            if(!displayName.isEmpty()){
+                int openingPar = displayName.indexOf("[");
+                int closingPar = displayName.indexOf("]");
+                String displayNameCategory = displayName.substring(openingPar+1, closingPar);
+                if(!speakerName.isEmpty()){
+                    String displayNameSpeaker = displayName.substring(0, openingPar-1);
+                    if(!category.equals(displayNameCategory) || !displayNameSpeaker.equals(speakerMap.get(speakerName))){
+                        System.err.println("Category or speaker abbreviation and display name for tier do not match"
+                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id") 
+                                + " in transcription of " + transcriptName);
+                        stats.addWarning("tier-checker", "Tier mismatch "
+                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
+                                + " in transcription of " + transcriptName);
+                    }
+                }
+                else{
+                    if(!category.equals(displayNameCategory)){
+                        System.err.println("Category and display name for tier do not match"
+                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
+                                + " in transcription of " + transcriptName);
+                        stats.addWarning("tier-checker", "Tier mismatch "
+                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
+                                + " in transcription of " + transcriptName);
+                    }
+                }
+            }    
         }
         return stats;
     }
@@ -85,7 +100,15 @@ public class TierChecker extends Checker implements CorpusFunction{
 
     @Override
     public Collection<Class> getIsUsableFor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            Class clSecond = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
+            IsUsableFor.add(cl);
+            IsUsableFor.add(clSecond);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(TierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return IsUsableFor;
     }
     
 }
