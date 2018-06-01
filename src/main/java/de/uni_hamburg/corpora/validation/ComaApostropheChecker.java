@@ -1,4 +1,3 @@
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -17,7 +16,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A class that checks whether or not the coma file contains an apostrophe ’.
- * If it does then this all apostrophes ’ are changed to apostrophes '.
+ * If it does then these all apostrophes ’ are changed to apostrophes '.
  */
 public class ComaApostropheChecker extends Checker implements CorpusFunction{
 
@@ -25,6 +24,11 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction{
     String comaFile = "";
     boolean apostrophe = false;
     
+    /**
+    * Default check function which calls the exceptionalCheck function so that the
+    * primal functionality of the feature can be implemented, and additionally 
+    * checks for parser configuration, SAXE and IO exceptions.
+    */   
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -40,7 +44,11 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction{
         }
         return stats;
     }
-
+    
+    /**
+    * One of the main functionalities of the feature; issues warnings if the coma file contains
+    * apostrophe ’and add that warning to the report which it returns.
+    */
     private Report exceptionalCheck(CorpusData cd)     // check whether there's any illegal apostrophes ’
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         Report stats = new Report();         // create a new report
@@ -54,7 +62,10 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction{
     }
 
     @Override
-    // fix apostrophes ’ with apostrophes '
+    /** 
+     * One of the main functionalities of the feature; fix apostrophes ’ with apostrophes '
+     * add them to the report which it returns in the end.
+     */
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         Report stats = new Report();   // create a new report
         if(apostrophe){                // flag points out if there are illegal apostrophes
@@ -65,7 +76,11 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction{
         }
         return stats;
     }
-
+    
+    /**
+    * Default function which determines for what type of files (basic transcription, 
+    * segmented transcription, coma etc.) this feature can be used.
+    */
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
@@ -77,7 +92,9 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction{
         return IsUsableFor;
     }
     
-    // execute function for checking and fixing the illegal apostrophes
+    /** 
+     * Execute function for calling check and fix functions if necessary.
+     */ 
     public Report execute(CorpusData cd, boolean fix) {  
         Report report = new Report();
         try {
