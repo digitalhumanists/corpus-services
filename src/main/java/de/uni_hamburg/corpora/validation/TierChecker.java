@@ -1,4 +1,3 @@
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -27,7 +26,12 @@ import org.xml.sax.SAXException;
 public class TierChecker extends Checker implements CorpusFunction{
     
     String tierLoc = "";
-            
+    
+    /**
+    * Default check function which calls the exceptionalCheck function so that the
+    * primal functionality of the feature can be implemented, and additionally 
+    * checks for parser configuration, SAXE and IO exceptions.
+    */   
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -42,6 +46,12 @@ public class TierChecker extends Checker implements CorpusFunction{
         return stats;
     }
     
+    /**
+    * Main functionality of the feature; checks if there is a mismatch between
+    * category, speaker abbreviation and display name for each tier. Issues warnings
+    * with respect to mismatches in tiers and add those warnings to the report.
+    * At last, it returns the report with all the warnings.
+    */
     private Report exceptionalCheck(CorpusData cd) 
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -91,11 +101,18 @@ public class TierChecker extends Checker implements CorpusFunction{
         return stats; // return all the warnings
     }
     
+    /**
+    * Fixing the errors in tiers is not supported yet.
+    */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    /**
+    * Default function which determines for what type of files (basic transcription, 
+    * segmented transcription, coma etc.) this feature can be used.
+    */
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
