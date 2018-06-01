@@ -1,4 +1,3 @@
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -23,13 +22,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * A class that checks out that all annotations are from the annotation specification file 
- * and that there are no annotations in the coma file not in the annotation specification file
+ * The class that checks out that all annotations are from the annotation specification file 
+ * and that there are no annotations in the coma file not in the annotation specification file.
  */
 
 public class TierCheckerWithAnnotation extends Checker implements CorpusFunction{
     String comaLoc = "";
-
+    
+    /**
+    * Default check function which calls the exceptionalCheck function so that the
+    * primal functionality of the feature can be implemented, and additionally 
+    * checks for parser configuration, SAXE and IO exceptions.
+    */   
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -45,7 +49,12 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
         }
         return stats;
     }
-
+    
+    /**
+    * Main functionality of the feature; compares the coma file with the corresponding
+    * annotation specification file whether or not there is a conflict regarding 
+    * the annotation tags that are used in the coma file.
+    */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -84,7 +93,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
         }
         
         // read the annotation specification file by giving file path, since we can't read files other than coma and exb yet
-        File fXmlFile = new File("Full path of annotation specification file");
+        File fXmlFile = new File("C:/Users/Ozzy/Desktop/AnnotationSpecDemoCorpus.xml");
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc2 = dBuilder.parse(fXmlFile);
@@ -107,12 +116,19 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
         
         return stats; // return the report with warnings
     }
-
+    
+    /**
+    * This feature does not have fix functionality yet.
+    */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    /**
+    * Default function which determines for what type of files (basic transcription, 
+    * segmented transcription, coma etc.) this feature can be used.
+    */
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
