@@ -27,7 +27,12 @@ import org.xml.sax.SAXException;
 public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
     
     String comaLoc = "";
-
+    
+    /**
+    * Default check function which calls the exceptionalCheck function so that the
+    * primal functionality of the feature can be implemented, and additionally 
+    * checks for parser configuration, SAXE and IO exceptions.
+    */   
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -43,7 +48,12 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
         }
         return stats;
     }
-
+    
+    /**
+    * Main functionality of the feature; checks the coma file whether or not 
+    * there are more than one segmentation algorithms used in the corpus. Issues 
+    * warnings and returns report which is composed of errors. 
+    */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -94,12 +104,19 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
         }
         return stats; // return the report with warnings
     }
-
+    
+    /**
+    * This feature does not have fix functionality yet.
+    */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
+    /**
+    * Default function which determines for what type of files (basic transcription, 
+    * segmented transcription, coma etc.) this feature can be used.
+    */
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
