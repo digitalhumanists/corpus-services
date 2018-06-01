@@ -1,4 +1,3 @@
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -28,7 +27,12 @@ import org.xml.sax.SAXException;
 public class ComaNameChecker extends Checker implements CorpusFunction{
     
     String comaLoc = "";
-
+    
+    /**
+    * Default check function which calls the exceptionalCheck function so that the
+    * primal functionality of the feature can be implemented, and additionally 
+    * checks for parser configuration, SAXE and IO exceptions.
+    */   
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -44,7 +48,13 @@ public class ComaNameChecker extends Checker implements CorpusFunction{
         }
         return stats;
     }
-
+    
+    /**
+    * Main functionality of the feature; issues warnings
+    * with respect to mismatches between basic and segmented names, 
+    * basic and segmented file names, plus their NSLinks for each communication 
+    * in the coma file and add those warnings to the report which it returns.
+    */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -111,12 +121,19 @@ public class ComaNameChecker extends Checker implements CorpusFunction{
         }
         return stats; // return the report with warnings
     }
-
+    
+    /**
+    * Fixing the conflicts in coma file with regards to this feature is not supported yet.
+    */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+    * Default function which determines for what type of files (basic transcription, 
+    * segmented transcription, coma etc.) this feature can be used.
+    */
     @Override
     public Collection<Class> getIsUsableFor() {
         try {
