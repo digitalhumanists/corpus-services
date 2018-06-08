@@ -57,7 +57,12 @@ public class TierChecker extends Checker implements CorpusFunction{
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        String transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
+        String transcriptName;
+        if(doc.getElementsByTagName("transcription-name").getLength()>0){   // check if transcript name exists for the exb file
+            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
+        }else{
+            transcriptName = "No Name Transcript";
+        }
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript
         NodeList speakers = doc.getElementsByTagName("speaker"); // get all speakers of the transcript 
         HashMap<String, String> speakerMap = new HashMap<String, String>(); // map for each speaker and its corresponding abbreviation
