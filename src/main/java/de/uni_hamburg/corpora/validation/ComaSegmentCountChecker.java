@@ -95,10 +95,10 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
         if(!algorithmNames.isEmpty()){
             algorithmName = algorithmNames.get(0);
         }
-        for(int i = 1; i < algorithmNames.size(); i++){ // check if come file contains different seg algorithms
+        for(int i = 1; i < algorithmNames.size(); i++){ // check if coma file contains different seg algorithms
             if(!algorithmName.equals(algorithmNames.get(i))){
-                System.err.println("Coma file contains different segmentation algorithms!");
-                stats.addWarning("coma-segment-count-checker", "More than one segmentation algorithm");
+                System.err.println("Coma file contains different segmentation algorithms: " + algorithmNames.get(i));
+                stats.addWarning("coma-segment-count-checker", "More than one segmentation algorithm: " + algorithmNames.get(i));
                 break;
             }
         }
