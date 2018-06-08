@@ -1,3 +1,4 @@
+
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -135,7 +136,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TierCheckerWithAnnotation.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }
