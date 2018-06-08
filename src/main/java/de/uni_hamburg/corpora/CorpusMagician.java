@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+import de.uni_hamburg.corpora.validation.FileCoverageChecker;
+import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -145,9 +143,9 @@ public class CorpusMagician {
         //allExistingCFs.add("ExbFileReferenceChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
         //allExistingCFs.add("ExbStructureChecker");
-        //allExistingCFs.add("FileCoverageChecker");
+        allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("XSLTChecker");
-        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
         allExistingCFs.add("RemoveAutoSaveExb");
@@ -155,8 +153,10 @@ public class CorpusMagician {
         allExistingCFs.add("TierChecker");
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("ComaApostropheChecker");
+        allExistingCFs.add("ComaApostropheCheckerFix");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
+        allExistingCFs.add("FilenameChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -225,8 +225,8 @@ public class CorpusMagician {
                     report.merge(runCorpusFunction(corpus, pd, true));
                     break;
                 case "comaaddtiersfromexbscorrector":
-                //cf = new ComaAddTiersFromExbsCorrector();
-                //rest .... usw.
+                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
+                    report.merge(runCorpusFunction(corpus, catfec, true));        
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
@@ -262,8 +262,12 @@ public class CorpusMagician {
                     break;
                 case "comaapostrophechecker":
                     ComaApostropheChecker cac = new ComaApostropheChecker();
-                    report.merge(runCorpusFunction(corpus, cac, true));
+                    report.merge(runCorpusFunction(corpus, cac));
                     break;    
+                case "comaapostrophecheckerfix":
+                    ComaApostropheChecker cacf = new ComaApostropheChecker();
+                    report.merge(runCorpusFunction(corpus, cacf, true));
+                    break;        
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
                     report.merge(runCorpusFunction(corpus, cscc));   
@@ -272,6 +276,14 @@ public class CorpusMagician {
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
                     report.merge(runCorpusFunction(corpus, tcwa));
                     break;
+                case "filenamechecker":
+                    FilenameChecker fnc = new FilenameChecker();
+                    report.merge(runCorpusFunction(corpus, fnc));
+                    break;    
+                case "filecoveragechecker":
+                    FileCoverageChecker fcc = new FileCoverageChecker();
+                    report.merge(runCorpusFunction(corpus, fcc));
+                    break;  
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }
