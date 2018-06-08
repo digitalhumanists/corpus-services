@@ -87,7 +87,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction{
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }

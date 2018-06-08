@@ -128,7 +128,7 @@ public class ComaNameChecker extends Checker implements CorpusFunction {
                                 + "for communication " + communicationName + ", id: " + communicationID + ".");
                     }
                 }
-            } else {  // issue a warning if no transcription found for the communication
+            } else {
                 System.err.println("No transcriptions found "
                         + "for communication " + communicationName + ", id: " + communicationID + ".");
                 stats.addWarning("coma-name-checker", "No transcript found to be compared "
@@ -158,7 +158,7 @@ public class ComaNameChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ComaNameChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }

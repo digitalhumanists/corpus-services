@@ -4,6 +4,7 @@ import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
@@ -157,6 +158,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("FilenameChecker");
+        allExistingCFs.add("ComaPIDLengthChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -267,6 +269,10 @@ public class CorpusMagician {
                 case "comaapostrophecheckerfix":
                     ComaApostropheChecker cacf = new ComaApostropheChecker();
                     report.merge(runCorpusFunction(corpus, cacf, true));
+                    break;    
+                case "comapidlengthchecker":
+                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                    report.merge(runCorpusFunction(corpus, cplc));
                     break;        
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
