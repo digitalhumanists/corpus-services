@@ -1,11 +1,16 @@
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
+import de.uni_hamburg.corpora.validation.ExbPatternChecker;
+import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -22,7 +27,6 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.nio.file.Paths;
-
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -58,10 +62,10 @@ public class CorpusMagician {
             //check if it's a filepath, we could just convert it to an url
             String urlstring = args[0];
             URL url;
-            if(urlstring.startsWith("file://")){
-                url = new URL(urlstring);    
+            if (urlstring.startsWith("file://")) {
+                url = new URL(urlstring);
             } else {
-                url = Paths.get(urlstring).toUri().toURL();    
+                url = Paths.get(urlstring).toUri().toURL();
             }
             CorpusMagician corpuma = new CorpusMagician();
             corpuma.initCorpusWithURL(url);
@@ -69,10 +73,10 @@ public class CorpusMagician {
             //also allow normal filepaths and convert them
             String reportstring = args[1];
             URL reportlocation;
-            if(reportstring.startsWith("file://")){
-                reportlocation = new URL(reportstring);    
+            if (reportstring.startsWith("file://")) {
+                reportlocation = new URL(reportstring);
             } else {
-                reportlocation = Paths.get(reportstring).toUri().toURL();    
+                reportlocation = Paths.get(reportstring).toUri().toURL();
             }
             //now add the functionsstrings to array
             //other args(2 and more) need to be a strings for the wanted corpus functions
@@ -141,9 +145,10 @@ public class CorpusMagician {
         this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("ComaNSLinksChecker");
-        //allExistingCFs.add("ExbFileReferenceChecker");
-        //allExistingCFs.add("ExbSegmentationChecker");
-        //allExistingCFs.add("ExbStructureChecker");
+        allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbPatternChecker");
+        allExistingCFs.add("ExbSegmentationChecker");
+        allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("XSLTChecker");
         allExistingCFs.add("ComaAddTiersFromExbsCorrector");
@@ -159,6 +164,7 @@ public class CorpusMagician {
         allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("ComaPIDLengthChecker");
+        allExistingCFs.add("CmdiChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -228,7 +234,7 @@ public class CorpusMagician {
                     break;
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
-                    report.merge(runCorpusFunction(corpus, catfec, true));        
+                    report.merge(runCorpusFunction(corpus, catfec, true));
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
@@ -238,11 +244,11 @@ public class CorpusMagician {
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     report.merge(runCorpusFunction(corpus, cnslc));
                     break;
-                case "removeautosaveexb":    
+                case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
                     report.merge(runCorpusFunction(corpus, rase));
                     break;
-                case "removeautosaveexbfix":    
+                case "removeautosaveexbfix":
                     rase = new RemoveAutoSaveExb();
                     report.merge(runCorpusFunction(corpus, rase, true));
                     break;
@@ -265,18 +271,18 @@ public class CorpusMagician {
                 case "comaapostrophechecker":
                     ComaApostropheChecker cac = new ComaApostropheChecker();
                     report.merge(runCorpusFunction(corpus, cac));
-                    break;    
+                    break;
                 case "comaapostrophecheckerfix":
                     ComaApostropheChecker cacf = new ComaApostropheChecker();
                     report.merge(runCorpusFunction(corpus, cacf, true));
-                    break;    
+                    break;
                 case "comapidlengthchecker":
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     report.merge(runCorpusFunction(corpus, cplc));
-                    break;        
+                    break;
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
-                    report.merge(runCorpusFunction(corpus, cscc));   
+                    report.merge(runCorpusFunction(corpus, cscc));
                     break;
                 case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
@@ -285,11 +291,31 @@ public class CorpusMagician {
                 case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
                     report.merge(runCorpusFunction(corpus, fnc));
-                    break;    
+                    break;
                 case "filecoveragechecker":
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     report.merge(runCorpusFunction(corpus, fcc));
-                    break;  
+                    break;
+                case "exbfilereferencechecker":
+                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
+                    report.merge(runCorpusFunction(corpus, efrc));
+                    break;
+                case "exbpatternchecker":
+                    ExbPatternChecker epc = new ExbPatternChecker();
+                    report.merge(runCorpusFunction(corpus, epc));
+                    break;
+                case "exbsegmentationchecker":
+                    ExbSegmentationChecker esg = new ExbSegmentationChecker();
+                    report.merge(runCorpusFunction(corpus, esg));
+                    break;
+                case "exbstructurechecker":
+                    ExbStructureChecker esc = new ExbStructureChecker();
+                    report.merge(runCorpusFunction(corpus, esc));
+                    break;
+                case "cmdichecker":
+                    CmdiChecker cmdi = new CmdiChecker();
+                    report.merge(runCorpusFunction(corpus, cmdi));
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
             }

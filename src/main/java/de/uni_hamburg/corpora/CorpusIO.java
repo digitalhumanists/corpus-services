@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
@@ -119,7 +114,10 @@ public class CorpusIO {
             return usd;
             //we can't read files other than coma and exb yet...
 
-        } else {
+        } else if(f.getName().endsWith("cmdi")){
+            CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi; 
+        }else {
             System.out.println(f.getName()+ " is not xml CorpusData");
             CorpusData cd = null;
             return cd;
