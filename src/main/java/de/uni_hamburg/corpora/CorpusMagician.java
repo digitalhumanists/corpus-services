@@ -300,10 +300,6 @@ public class CorpusMagician {
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
                     report.merge(runCorpusFunction(corpus, efrc));
                     break;
-                case "exbpatternchecker":
-                    ExbPatternChecker epc = new ExbPatternChecker();
-                    report.merge(runCorpusFunction(corpus, epc));
-                    break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker esg = new ExbSegmentationChecker();
                     report.merge(runCorpusFunction(corpus, esg));
