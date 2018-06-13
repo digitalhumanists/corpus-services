@@ -153,7 +153,10 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 }
             } else if (cl2.isInstance(cd)) {
                 List al = findAllAbsolutePathsComa(cd);
-                nameOfCorpusFolder = new File(cd.getURL().getFile()).getParent();
+                Path directory = Paths.get(cd.getURL().toURI());
+                System.out.println(directory);
+                //nameOfExbFolder = directory.getParent().getFileName().toString();
+                nameOfCorpusFolder = directory.getParent().getFileName().toString();
                 if (!al.isEmpty()) {
                     for (int i = 0; i < al.size(); i++) {
                         Object o = al.get(i);
@@ -166,6 +169,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         } else {
                             pabs = Paths.get(refurl);
                         }
+                        System.out.println(pabs);
+                        System.out.println(nameOfCorpusFolder);
                         pathRelative = trimFilePathBeforeDirectory(pabs, nameOfCorpusFolder);
                         if (pabs.isAbsolute()) {
                             if (!(pathRelative == null)) {
@@ -299,7 +304,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         XPath xp1;
         // in Coma: NSLinks and relPaths <NSLink>narrative/KBD_71_Fish_nar/KBD_71_Fish_nar_s.exs</NSLink>
         //  <relPath>narrative/KBD_71_Fish_nar/NG_6_1971_506-507_KBD_71_Fish_nar.pdf</relPath>
-        xp1 = XPath.newInstance("/Corpus/CorpusData/Communication/File/relPath | /Corpus/CorpusData/Communication/Transcription/NSLink");
+        xp1 = XPath.newInstance("/Corpus/CorpusData/Communication/File/relPath | /Corpus/CorpusData/Communication/File/absPath | /Corpus/CorpusData/Communication/Transcription/NSLink | /Corpus/CorpusData/Communication/Transcription/Description/Key[@Name=\"# EXB-SOURCE\"]");
         List allAbsolutePaths = xp1.selectNodes(doc);
         if (allAbsolutePaths.isEmpty()) {
             report.addWarning("RemoveAbsolutePaths", "no paths found in file " + cd.getURL().getFile());
