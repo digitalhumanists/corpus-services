@@ -224,6 +224,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                 }
                 Text reltext = (Text) reltexts.item(j);
                 String relpath = reltext.getWholeText();
+                // added this line so it compares Coma NSLinks in the correct format of the OS
+                // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn#t be the case anyway
+                relpath = relpath.replace('/', File.separatorChar);
                 RelPaths.add(relpath);
             }
         }
