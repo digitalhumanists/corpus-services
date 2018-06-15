@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -165,6 +166,7 @@ public class CorpusMagician {
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("ComaPIDLengthChecker");
         allExistingCFs.add("CmdiChecker");
+        allExistingCFs.add("NgexmaraldaCorpusChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -300,6 +302,10 @@ public class CorpusMagician {
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
                     report.merge(runCorpusFunction(corpus, efrc));
                     break;
+                case "exbpatternchecker":
+                    ExbPatternChecker epc = new ExbPatternChecker();
+                    report.merge(runCorpusFunction(corpus, epc));
+                    break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker esg = new ExbSegmentationChecker();
                     report.merge(runCorpusFunction(corpus, esg));
@@ -311,6 +317,10 @@ public class CorpusMagician {
                 case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
                     report.merge(runCorpusFunction(corpus, cmdi));
+                    break;
+                case "ngexmaraldacorpuschecker":
+                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
+                    report.merge(runCorpusFunction(corpus, ngex));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
