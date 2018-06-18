@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
@@ -23,6 +18,8 @@ import java.util.Stack;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
@@ -50,18 +47,18 @@ public class CorpusIO {
 
 
     /*
-    * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
-    *
+     * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
+     *
   
-    public abstract Collection getAllTranscripts();
+     public abstract Collection getAllTranscripts();
 
-    public abstract Collection getAllAudioFiles();
+     public abstract Collection getAllAudioFiles();
 
-    public abstract Collection getAllVideoFiles();
+     public abstract Collection getAllVideoFiles();
 
-    public abstract String getAudioLinkForTranscript();
+     public abstract String getAudioLinkForTranscript();
 
-    public abstract String getVideoLinkForTranscript();
+     public abstract String getVideoLinkForTranscript();
 
      */
     public void write(CorpusData cd, URL url) throws IOException {
@@ -78,12 +75,12 @@ public class CorpusIO {
         fos.close();
         System.out.println("Document written...");
     }
-    
+
     public void write(Document doc, URL url) throws IOException {
-       XMLOutputter xmOut = new XMLOutputter();
-       String unformattedCorpusData = xmOut.outputString(doc);
-       String prettyCorpusData = indent(unformattedCorpusData, "event");
-       write(prettyCorpusData, url);
+        XMLOutputter xmOut = new XMLOutputter();
+        String unformattedCorpusData = xmOut.outputString(doc);
+        String prettyCorpusData = indent(unformattedCorpusData, "event");
+        write(prettyCorpusData, url);
     }
 
     public void outappend(String a) {
@@ -111,16 +108,21 @@ public class CorpusIO {
             //bt.loadFile(f);
             return bt;
         } else if (f.getName().endsWith("coma")) {
-                ComaData cm = new ComaData(f.toURI().toURL());
-                //TODO
-                return cm;
-        } else if (f.getName().endsWith("exs")||f.getName().endsWith("xml")){
+            ComaData cm = new ComaData(f.toURI().toURL());
+            //TODO
+            return cm;
+        } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
+            AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
+            return as;
+        } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
             //we can't read files other than coma and exb yet...
-
+        } else if (f.getName().endsWith("cmdi")) {
+            CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi;
         } else {
-            System.out.println(f.getName()+ " is not xml CorpusData");
+            System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;
             return cd;
         }
@@ -162,8 +164,8 @@ public class CorpusIO {
                 for (File f : recursed) {
                     try {
                         CorpusData cd = toCorpusData(f);
-                        if(cd!=null){
-                        acdc.add(toCorpusData(f));
+                        if (cd != null) {
+                            acdc.add(toCorpusData(f));
                         }
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
@@ -181,7 +183,7 @@ public class CorpusIO {
                 File f = new File(url.getFile());
                 try {
                     CorpusData cd = toCorpusData(f);
-                        if(cd!=null){
+                    if (cd != null) {
                         acdc.add(toCorpusData(f));
                     }
                 } catch (MalformedURLException ex) {
@@ -193,13 +195,13 @@ public class CorpusIO {
                 }
                 cdc = (Collection) acdc;
                 return cdc;
-            
-        }
-    } else {
+
+            }
+        } else {
         //it's a datastream in the repo
-        //TODO later          
-        return null;
-    }
+            //TODO later          
+            return null;
+        }
     }
 
     /**
