@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
@@ -167,6 +168,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaPIDLengthChecker");
         allExistingCFs.add("CmdiChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
+        allExistingCFs.add("GenerateAnnotationPanel");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -321,6 +323,10 @@ public class CorpusMagician {
                 case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     report.merge(runCorpusFunction(corpus, ngex));
+                    break;
+                case "generateannotationpanel":
+                    GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
+                    report.merge(runCorpusFunction(corpus, gap));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
