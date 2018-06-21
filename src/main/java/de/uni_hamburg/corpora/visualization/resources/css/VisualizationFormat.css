@@ -1,0 +1,137 @@
+/* ************************************************** */
+/*                 styles for main document parts            */
+/* ************************************************** */
+
+@font-face {
+  font-family: 'CharisSIL';
+  src: url('https://corpora.uni-hamburg.de/webfonts/CharisSIL-4.114-web/web/CharisSIL-R.woff') format('woff'), /* Pretty Modern Browsers */
+       url('https://corpora.uni-hamburg.de/webfonts/CharisSIL-4.114-web/CharisSIL-R.ttf')  format('truetype'), /* Safari, Android, iOS */
+}
+
+body{
+    margin:0;
+    overflow:hidden;
+    font-family: 'Charis SIL', Arial, helvetica, sans-serif;
+}
+
+/* the header */
+div#head{
+    background-color:#40627C;
+    color:white;
+    font-size:12pt;
+    font-weight:bold;
+    padding:7px;
+    z-index:100;
+    position:absolute;
+    width:100%;
+    height:45px;
+    top:0;
+    left:0;
+}
+
+
+div#content{
+    position:absolute;
+    top:55px;
+    bottom:30px;
+    width:100%;
+}
+
+div#controls{
+    float:left;
+    /*min-width:300px;*/
+    /*width:20%;*/
+}
+
+div.sidebarcontrol{
+    padding:5px;
+    padding-top:20px;
+    float:left;
+    clear:left;
+    width:320px;
+}
+
+
+div#main{
+    /*padding-top: 20px;*/
+    /*padding-bottom: 200px;*/
+    border:2px solid #cfd6de;
+    /*margin:0 auto;*/
+    margin:20px 0px 10px 340px;
+    height: 97%;
+    /*height:800px;*/
+    /*width:75%;*/
+    /*float:right;*/
+    /*height:98%;*/
+    /*width:80%;*/
+    /*margin-left:300px;*/
+    /*clear: right;*/
+    /*min-width:1100px;*/
+}
+
+div#transcription{
+    overflow:auto;
+    /*min-width:1100px;*/
+    /*height:800px;*/
+    max-height:98%;
+}
+
+
+div#footer{
+    position:absolute;
+    height:35px;
+    bottom:0;
+    left:5px;
+    color:gray;
+    background-color:white;
+    border:1px solid gray;
+    text-align:center;
+    font-size:10pt;
+    margin-top:0px;
+    min-width:320px;
+
+}
+
+div#mediaplayer{
+}
+
+.collapse_box{
+    border:2px solid black;
+    padding:0;
+}
+.collapse_box .collapse_title{
+    background-color:#adc1d6;
+    font-weight:bold;
+    height:17px;
+    padding-left:5px;
+    padding-bottom:2px;
+}
+.collapse_box .collapse_content{
+    background-color:#e4e9f5;
+    padding:7px 5px 3px 5px;
+    margin:0;
+}
+
+
+
+span#corpus-title{
+    color:blue;
+}
+#head a{
+    text-decoration:none;
+    color:white;
+}
+#previous-doc{
+    font-size:10pt;
+}
+#next-doc{
+    font-size:10pt;
+}
+
+a.HeadLink{
+    font-family:Sans-Serif;
+    font-size:16pt;
+    font-style:normal;
+    font-weight:bold;
+    text-decoration:none
+}
