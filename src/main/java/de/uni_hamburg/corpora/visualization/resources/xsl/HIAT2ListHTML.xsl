@@ -220,13 +220,12 @@
         <xsl:template name="MAKE_WEB_SERVICE_INFO">
             <div class="sidebarcontrol">
                 <div class="collapse_box" id="tier_display">
-                        <p>
-                            Generated on <xsl:value-of select="current-dateTime()"/>
-                            with the <xsl:value-of select="$WEBSERVICE_NAME"/> service.
-                            <br/>
-                            Please contact the <a target="_blank" href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.
-                        </p>
-                    </div>
+                    <p>
+                        Generated on <xsl:value-of select="current-dateTime()"/>
+                        with the <xsl:value-of select="$WEBSERVICE_NAME"/> service.
+                        <br/>
+                        Please contact the <a target="_blank" href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.
+                    </p>
                 </div>
             </div>
         </xsl:template>
