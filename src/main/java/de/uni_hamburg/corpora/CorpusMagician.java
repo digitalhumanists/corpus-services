@@ -7,6 +7,7 @@ import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+import de.uni_hamburg.corpora.validation.ComaXsdChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
@@ -169,6 +170,7 @@ public class CorpusMagician {
         allExistingCFs.add("CmdiChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("GenerateAnnotationPanel");
+        allExistingCFs.add("ComaXsdChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -327,6 +329,10 @@ public class CorpusMagician {
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
                     report.merge(runCorpusFunction(corpus, gap));
+                    break;
+                case "comaxsdchecker":
+                    ComaXsdChecker cxsd = new ComaXsdChecker();
+                    report.merge(runCorpusFunction(corpus, cxsd));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
