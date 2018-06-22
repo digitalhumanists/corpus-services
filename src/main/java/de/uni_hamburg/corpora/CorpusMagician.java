@@ -148,7 +148,7 @@ public class CorpusMagician {
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
-        //allExistingCFs.add("ExbPatternChecker");
+        allExistingCFs.add("ExbPatternChecker");
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
@@ -304,10 +304,10 @@ public class CorpusMagician {
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
                     report.merge(runCorpusFunction(corpus, efrc));
                     break;
-                //case "exbpatternchecker":
-                    //ExbPatternChecker epc = new ExbPatternChecker();
-                    //report.merge(runCorpusFunction(corpus, epc));
-                    //break;
+                case "exbpatternchecker":
+                    ExbPatternChecker epc = new ExbPatternChecker();
+                    report.merge(runCorpusFunction(corpus, epc));
+                    break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker esg = new ExbSegmentationChecker();
                     report.merge(runCorpusFunction(corpus, esg));
