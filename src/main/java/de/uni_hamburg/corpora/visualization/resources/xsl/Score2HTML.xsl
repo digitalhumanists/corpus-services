@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml"
-    version="2.0">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction"
+    exclude-result-prefixes="#all" version="2.0">
     <xsl:output encoding="UTF-8" method="xml" omit-xml-declaration="yes"/>
 
 
@@ -75,13 +75,6 @@
 
     <!-- ******************************************************************************************************************************************** -->
 
-    <!-- ... and then specify those which are only valid for this kind of visualisation document -->
-
-    <!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
-    <!-- Is the VisualizationFormat still needed? -->
-    <xsl:variable name="CSS_PATH" as="xs:string" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')"/>
-    <xsl:variable name="CSS_PATH_SCORE" as="xs:string" select="'css/ScoreFormat.css'"/>
-
     <!-- ************************ -->
     <!--    Top level template   -->
     <!-- ************************ -->
@@ -89,13 +82,16 @@
     <xsl:template match="/">
         <html>
             <head>
-                <xsl:call-template name="HEAD_DATA"/>
-                <link rel="stylesheet" type="text/css" href="{$CSS_PATH_SCORE}"/>
-                <link rel="stylesheet" type="text/css" href="{$CSS_PATH}"/>
-                <style><xsl:value-of select="$STYLES"/></style>
-            <script type="text/javascript">
-                <xsl:comment>jsholder</xsl:comment>
-            </script>
+                <title><xsl:value-of select="concat($CORPUS_NAME, ': ', $TRANSCRIPTION_NAME)"/></title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+                <!-- placeholder for css, inserted later by Java -->
+                <style><hzsk-pi:include>/css/ScoreFormat.css</hzsk-pi:include></style>
+                <style><hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include></style>
+
+                <!-- placeholder for js script, inserted later by Java -->                
+                <script><hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include></script>
+                <script><hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include></script>
             </head>
             <body>
                 <xsl:call-template name="MAKE_TITLE"/>
@@ -302,7 +298,9 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
-                <xsl:value-of select="concat(format-number($TIMESTART, '#.##'), '-', format-number($TIMEEND, '#.##'))"/>
+                <xsl:if test="not(format-number($TIMESTART, '#.##') = 'NaN') and not(format-number($TIMEEND, '#.##') = 'NaN')">
+                    <xsl:value-of select="concat(format-number($TIMESTART, '#.##'), '-', format-number($TIMEEND, '#.##'))"/>
+                </xsl:if>
             </xsl:attribute>
 
             <xsl:apply-templates/>
@@ -314,21 +312,6 @@
     <!-- ************************** HTML Templates ***************************************** -->
     <!-- *********************************************************************************** -->
     <!-- *********************************************************************************** -->
-
-    <!-- Generates the HTML head information for this transcription document -->
-    <!-- i.e. the document title, the document encoding etc. -->
-    <xsl:template name="HEAD_DATA">
-        <title>
-            <xsl:value-of select="$CORPUS_NAME"/>
-            <xsl:text>: </xsl:text>
-            <xsl:value-of select="$TRANSCRIPTION_NAME"/>
-        </title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <script type="text/javascript" src="{$TOP_LEVEL_PATH}jsfunctions.js">
-            <xsl:text><![CDATA[
-			]]></xsl:text>
-        </script>
-    </xsl:template>
 
     <xsl:template name="MAKE_TITLE">
         <div id="head">
