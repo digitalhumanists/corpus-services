@@ -74,7 +74,16 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-                            <xsl:call-template name="HEAD_DATA"/>
+                            <title><xsl:value-of select="$CORPUS_NAME"/>: <xsl:value-of select="$TRANSCRIPTION_NAME"/></title>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+
+                            <!-- placeholder for css, inserted later by Java -->
+                            <style><hzsk-pi:include>/css/ListFormat.css</hzsk-pi:include></style>
+                            <style><hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include></style>
+
+                            <!-- placeholder for js script, inserted later by Java -->                
+                            <script><hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include></script>
+                            <script><hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include></script>
 			</head>
 			<body>
 				<xsl:call-template name="MAKE_TITLE"/>
@@ -169,24 +178,6 @@
 	<!-- ************************** HTML Templates ***************************************** -->
 	<!-- *********************************************************************************** -->
 	<!-- *********************************************************************************** -->
-
-	<!-- Generates the HTML head information for this transcription document -->
-	<!-- i.e. the document title, the document encoding etc. -->
-	<xsl:template name="HEAD_DATA">
-            <title>
-                <xsl:value-of select="$CORPUS_NAME"/>: <xsl:value-of select="$TRANSCRIPTION_NAME"/>
-            </title>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-            
-            <!-- placeholder for css, inserted later by Java -->
-            <style><hzsk-pi:include>/css/ListFormat.css</hzsk-pi:include></style>
-            <style><hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include></style>
-
-            <!-- placeholder for js script, inserted later by Java -->                
-            <script><hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include></script>
-            <script><hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include></script>
-            
-	</xsl:template>
 
 
 	<!-- makes the navigation bar displayed at the top of diverse documents -->
