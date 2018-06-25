@@ -6,6 +6,9 @@
 
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 
 /**
@@ -30,6 +33,8 @@ public abstract class AbstractVisualization {
     protected String EMAIL_ADDRESS = "corpora@uni-hamburg.de";
     protected String SERVICE_NAME = null;
     protected String HZSK_WEBSITE = "https://corpora.uni-hamburg.de/";
+    protected String RECORDING_PATH = null;
+    protected String RECORDING_TYPE = null;
     
     public AbstractVisualization(){
     
@@ -62,14 +67,14 @@ public abstract class AbstractVisualization {
 	 * @param  recordingType  type of the recording (e.g. wav, mp3, mpg, webm)
 	 * @return  
 	 */
-    public void addMedia(String recordingId, String recordingType){
+    public void setMedia(String recordingId, String recordingType){
         
-        /*
         String newMediaElem = ""; 
         
         recordingType = recordingType.toLowerCase();
         
         if(recordingType.matches("^(wav|mp3|ogg)$")){
+            
             newMediaElem = "<audio controls=\"controls\" data-tlid=\"media\">\n" +
                            "   <source src=\""+recordingId+"\" type=\"audio/"+recordingType+"\"/>\n" +
                            "</audio>";
@@ -80,9 +85,9 @@ public abstract class AbstractVisualization {
                            "   <source src=\""+recordingId+"\" type=\"video/"+recordingType+"\"/>\n" +
                            "</video>";
         }
-        */
-        //html = html.replaceAll("<div id=\"mediaplayer\".*?</div>", "<div id=\"mediaplayer\" class=\"sidebarcontrol\">"+newMediaElem+"</div>");
         
+        setHTML( Pattern.compile("<div id=\"mediaplayer\".*?</div>", Pattern.DOTALL).matcher(html).replaceAll("<div id=\"mediaplayer\" class=\"sidebarcontrol\">"+newMediaElem+"</div>") );
+                
     }
     
 }
