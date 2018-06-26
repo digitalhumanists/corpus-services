@@ -346,7 +346,7 @@
                 <div class="collapse_content">
                     <xsl:for-each-group select="//tier/@category" group-by=".">
                         <xsl:sort select="."/>
-                        <input style="margin-left:7px;" type="checkbox" name="category" value="{current-grouping-key()}" checked="checked" onclick="showHideTier(this,{current-grouping-key()}')">
+                        <input style="margin-left:7px;" type="checkbox" name="category" value="{current-grouping-key()}" checked="checked" onclick="showHideTier(this,'{current-grouping-key()}')">
                             <b><xsl:value-of select="current-grouping-key()"/></b>
                         </input>
                     </xsl:for-each-group>
