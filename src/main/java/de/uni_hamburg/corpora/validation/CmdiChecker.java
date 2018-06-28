@@ -105,6 +105,7 @@ public class CmdiChecker implements CommandLineable, StringChecker {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(data));
+        // I kind of check some elements in order they appear...
         NodeList rps = doc.getElementsByTagName("ResourceProxy");
         Report stats = new Report();
         boolean hasLandingPage = false;
@@ -222,6 +223,24 @@ public class CmdiChecker implements CommandLineable, StringChecker {
             Element ci = (Element)cis.item(i);
             checkCorpusInfo(ci, stats);
         }
+        cis = doc.getElementsByTagName("CommunicationInfo");
+        for (int i = 0; i < cis.getLength(); i++) {
+            Node cinode = cis.item(i);
+            if (cinode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element ci = (Element)cis.item(i);
+            checkCommunicationInfo(ci, stats);
+        }
+        NodeList sis = doc.getElementsByTagName("SpeakerInfo");
+        for (int i = 0; i < sis.getLength(); i++) {
+            Node sinode = sis.item(i);
+            if (sinode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element si = (Element)sis.item(i);
+            checkSpeakerInfo(si, stats);
+        }
         return stats;
     }
 
@@ -336,8 +355,67 @@ public class CmdiChecker implements CommandLineable, StringChecker {
                 stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
                         "Goog language data");
             }
+            childs = e.getElementsByTagName("ISO639");
+            for (int j = 0; j < childs.getLength(); j++) {
+                Element iso = (Element)childs.item(j);
+                checkISO639(iso, stats);
+            }
         }
     }
+
+    private void checkISO639(Element iso, Report stats) {
+        NodeList childs = iso.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("iso-639-3-code")) {
+                String code = e.getTextContent();
+                System.err.println("DEBUG: " + code);
+                if (code.matches("[a-zA-Z]{2,4}(-[a-zA-Z-]{2,})*")) {
+                   stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                            "Good ISO-639-code");
+                } else {
+                   stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                            "ISO-639-3 code is not known: "  +
+                            e.getTextContent());
+                }
+            }
+        }
+    }
+
+    private void checkCommunicationInfo(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("SubjectLanguages")) {
+                checkSubjectLanguages(e, stats);
+            }
+
+        }
+    }
+
+    private void checkSpeakerInfo(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("ActorLanguages")) {
+                checkSubjectLanguages(e, stats);
+            }
+
+        }
+    }
+
 
     public Report doMain(String[] args) {
         settings = new ValidatorSettings("CmdiChecker",
