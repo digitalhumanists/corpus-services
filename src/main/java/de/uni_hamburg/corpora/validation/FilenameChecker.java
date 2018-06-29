@@ -6,14 +6,13 @@
  * @author Tommi A Pirinen <tommi.antero.pirinen@uni-hamburg.de>
  * @author HZSK
  */
-
 package de.uni_hamburg.corpora.validation;
-
 
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,10 +53,10 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
     Pattern acceptable;
     Pattern unacceptable;
     ValidatorSettings settings;
-
+    ExmaErrorList errorList = new ExmaErrorList();
     final String FILENAME_CONVENTIONS = "filename-conventions";
     String fileLoc = "";
-    
+
     /**
      * Check for existence of files in a coma file.
      *
@@ -67,12 +66,11 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         Report stats = new Report();
         try {
             stats = oldExceptionalCheck(rootdir);
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             stats.addException(ioe, "Unknown reading error");
         }
         return stats;
     }
-
 
     private Report oldExceptionalCheck(File rootdir)
             throws IOException {
@@ -87,15 +85,15 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         boolean allesGut = true;
         if (!matchAccepting.matches()) {
             stats.addWarning(FILENAME_CONVENTIONS,
-                        filename + " does not follow "
-                        + "filename conventions for HZSK corpora");
+                    filename + " does not follow "
+                    + "filename conventions for HZSK corpora");
             allesGut = false;
         }
         Matcher matchUnaccepting = unacceptable.matcher(filename);
         if (matchUnaccepting.find()) {
             stats.addWarning(FILENAME_CONVENTIONS,
-                        filename + " contains " +
-                        "characters that may break in HZSK repository");
+                    filename + " contains "
+                    + "characters that may break in HZSK repository");
             allesGut = false;
         }
 
@@ -111,18 +109,18 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         }
         return stats;
     }
-    
+
     public Report doMain(String[] args) {
         settings = new ValidatorSettings("FileCoverageChecker",
-                "Checks Exmaralda .coma file against directory, to find " +
-                "undocumented files",
-                "If input is a directory, performs recursive check " +
-                "from that directory, otherwise checks input file");
+                "Checks Exmaralda .coma file against directory, to find "
+                + "undocumented files",
+                "If input is a directory, performs recursive check "
+                + "from that directory, otherwise checks input file");
         List<Option> patternOptions = new ArrayList<Option>();
         patternOptions.add(new Option("a", "accept", true, "add an acceptable "
-                    + "pattern"));
+                + "pattern"));
         patternOptions.add(new Option("d", "disallow", true, "add an illegal "
-                    + "pattern"));
+                + "pattern"));
         CommandLine cmd = settings.handleCommandLine(args, patternOptions);
         if (cmd == null) {
             System.exit(0);
@@ -158,10 +156,10 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
     }
 
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
-    * checks for parser configuration, SAXE and IO exceptions.
-    */   
+     * Default check function which calls the exceptionalCheck function so that
+     * the primal functionality of the feature can be implemented, and
+     * additionally checks for parser configuration, SAXE and IO exceptions.
+     */
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
@@ -178,12 +176,13 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         }
         return stats;
     }
-    
+
     /**
-    * Main functionality of the feature; checks if there is a file which is not named
-    * according to coma file. 
-    * @return true, if all files were found, false otherwise.
-    */
+     * Main functionality of the feature; checks if there is a file which is not
+     * named according to coma file.
+     *
+     * @return true, if all files were found, false otherwise.
+     */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         File f = new File(cd.getURL().toString());
@@ -192,15 +191,15 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         String[] path = new String[1];
         path[0] = fp.getPath().substring(6);
         settings = new ValidatorSettings("FileCoverageChecker",
-                "Checks Exmaralda .coma file against directory, to find " +
-                "undocumented files",
-                "If input is a directory, performs recursive check " +
-                "from that directory, otherwise checks input file");
+                "Checks Exmaralda .coma file against directory, to find "
+                + "undocumented files",
+                "If input is a directory, performs recursive check "
+                + "from that directory, otherwise checks input file");
         List<Option> patternOptions = new ArrayList<Option>();
         patternOptions.add(new Option("a", "accept", true, "add an acceptable "
-                    + "pattern"));
+                + "pattern"));
         patternOptions.add(new Option("d", "disallow", true, "add an illegal "
-                    + "pattern"));
+                + "pattern"));
         CommandLine cmd = settings.handleCommandLine(path, patternOptions);
         if (cmd == null) {
             System.exit(0);
@@ -219,20 +218,24 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
             System.out.println("Checking coma file against directory...");
         }
         Report stats = new Report();
-        
+
         Matcher matchAccepting = acceptable.matcher(filename);
         boolean allesGut = true;
         if (!matchAccepting.matches()) {
             stats.addWarning(FILENAME_CONVENTIONS,
-                        filename + " does not follow "
-                        + "filename conventions for HZSK corpora");
+                    filename + " does not follow "
+                    + "filename conventions for HZSK corpora");
+            errorList.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " does not follow "
+                    + "filename conventions for HZSK corpora");
             allesGut = false;
         }
         Matcher matchUnaccepting = unacceptable.matcher(filename);
         if (matchUnaccepting.find()) {
             stats.addWarning(FILENAME_CONVENTIONS,
-                        filename + " contains " +
-                        "characters that may break in HZSK repository");
+                    filename + " contains "
+                    + "characters that may break in HZSK repository");
+            errorList.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " contains "
+                    + "characters that may break in HZSK repository");
             allesGut = false;
         }
 
@@ -242,21 +245,22 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         }
         return stats;
     }
-    
+
     /**
-    * Fixing the errors in file names is not supported yet.
-    */
+     * Fixing the errors in file names is not supported yet.
+     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         report.addCritical(FILENAME_CONVENTIONS,
                 "File names which do not comply with conventions cannot be fixed automatically");
         return report;
     }
-    
+
     /**
-    * Default function which determines for what type of files (basic transcription, 
-    * segmented transcription, coma etc.) this feature can be used.
-    */
+     * Default function which determines for what type of files (basic
+     * transcription, segmented transcription, coma etc.) this feature can be
+     * used.
+     */
     @Override
     public Collection<Class> getIsUsableFor() {
         try {

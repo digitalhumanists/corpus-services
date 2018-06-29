@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import java.io.IOException;
 import java.io.File;
 import java.util.Hashtable;
@@ -39,7 +40,7 @@ public class ExbStructureChecker extends Checker implements CommandLineable, Cor
     BasicTranscription bt;
     File exbfile;
     ValidatorSettings settings;
-
+    ExmaErrorList errorList = new ExmaErrorList();
     final String EXB_STRUCTURE = "exb-structure";
 
     /**
@@ -180,24 +181,30 @@ public class ExbStructureChecker extends Checker implements CommandLineable, Cor
                     + "More than one transcription tier for one "
                     + "speaker. Tier: " + tierID, "Open in PartiturEditor, "
                     + "change tier type or merge tiers.");
+            errorList.addError(EXB_STRUCTURE, cd.getURL().getFile(), tierID, "", false, "Error: More than one transcription tier for one speaker.");
         }
         for (String tliID : temporalAnomalies) {
             stats.addCritical(EXB_STRUCTURE, exbName + ": "
                     + "Temporal anomaly at timeline item: " + tliID);
+            errorList.addError(EXB_STRUCTURE, cd.getURL().getFile(), "", tliID, false, "Error: Temporal anomaly at timeline item.");
         }
         for (String tierID : orphanedTranscriptionTiers) {
             stats.addCritical(EXB_STRUCTURE, exbName + ": "
                     + "Orphaned transcription tier:" + tierID);
+            errorList.addError(EXB_STRUCTURE, cd.getURL().getFile(), tierID, "", false, "Error: Orphaned transcription tier.");
         }
         for (String tierID : orphanedAnnotationTiers) {
             stats.addCritical(EXB_STRUCTURE, exbName + ": "
                     + "Orphaned annotation tier:" + tierID);
+            errorList.addError(EXB_STRUCTURE, cd.getURL().getFile(), tierID, "", false, "Error: Orphaned annotation tier.");
         }
         for (String tierID : annotationMismatches.keySet()) {
             String[] eventIDs = annotationMismatches.get(tierID);
             for (String eventID : eventIDs) {
                 stats.addCritical(EXB_STRUCTURE, exbName + ": "
                         + "Annotation mismatch: tier " + tierID
+                        + " event " + eventID);
+                errorList.addError(EXB_STRUCTURE, cd.getURL().getFile(), tierID, eventID, false, "Error: Annotation mismatch: tier " + tierID
                         + " event " + eventID);
             }
         }

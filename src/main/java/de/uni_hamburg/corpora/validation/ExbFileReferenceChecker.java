@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
@@ -50,6 +51,8 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     String exbName = "";
     
     File exbFile;
+    
+    ExmaErrorList errorList = new ExmaErrorList();
     
     /**
      * Check for referenced-files.
@@ -209,6 +212,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
                 reffilesMissing++;
                 stats.addCritical(EXB_REFS, exbName + ": "
                         + "File in referenced-file NOT found: " + url);
+                errorList.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
             } else {
                 reffilesFound++;
                 stats.addCorrect(EXB_REFS, exbName + ": "

@@ -22,14 +22,24 @@ import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.TierChecker;
 import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.nio.file.Paths;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -49,6 +59,8 @@ public class CorpusMagician {
     Collection<String> chosencorpusfunctions = new ArrayList();
     //the final Report
     Report report = new Report();
+    //the final Exmaralda error list
+    static ExmaErrorList exmaError = new ExmaErrorList();
 
     public CorpusMagician() {
     }
@@ -59,7 +71,7 @@ public class CorpusMagician {
     //this should work via commandline like that:
     //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
     //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParserConfigurationException, TransformerException {
         try {
             //first args needs to be the URL
             //check if it's a filepath, we could just convert it to an url
@@ -81,6 +93,7 @@ public class CorpusMagician {
             } else {
                 reportlocation = Paths.get(reportstring).toUri().toURL();
             }
+
             //now add the functionsstrings to array
             //other args(2 and more) need to be a strings for the wanted corpus functions
             ArrayList<String> corpusfunctionarraylist = new ArrayList();
@@ -103,6 +116,10 @@ public class CorpusMagician {
                 reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
                 cio.write(reportOutput, reportlocation);
             }
+            //create the error list file
+            String errorstring = new File(reportstring).getParent()+"\\errorlist.xml";
+            URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
+            exmaError.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -268,7 +285,7 @@ public class CorpusMagician {
                     break;
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
-                    report.merge(runCorpusFunction(corpus, tc));
+                    report.merge(runCorpusFunction(corpus, tc));                  
                     break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
