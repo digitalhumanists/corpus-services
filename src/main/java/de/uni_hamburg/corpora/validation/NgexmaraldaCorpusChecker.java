@@ -7,6 +7,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,7 +52,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     private String comafilename;
     private File comafile;
     private String comadirname;
-
+    ExmaErrorList errorList = new ExmaErrorList();
     final String NSLC = "nslc";
 
     public Report check() {
@@ -422,6 +423,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                     } catch (JexmaraldaException je) {
                         stats.addException(je, "ERRORR: tier with ID " + tierID
                                 + " is lost...");
+                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "ERROR: tier with ID " + tierID
+                                + " is lost...");
                         continue;
                     }
                     String displayName = tier.getDisplayName();
@@ -435,6 +438,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(NSLC,
                                 "Unrecognised tier name: "
                                 + tierID);
+                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
+                                + tierID);
                     }
                     if (tierTypes.containsKey(category)) {
                         if (!tierTypes.get(category).equals(tierType)) {
@@ -442,6 +447,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                     "Wrong tier type for: "
                                     + tierID, "Switch to annotation or "
                                     + " description tier");
+                            errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
+                                    + tierID);
                         } else {
                             stats.addCorrect(NSLC,
                                     "Correct tier type for: " + tierID);
@@ -451,10 +458,15 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
+                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
+                                + tierID + " should be annotation or "
+                                + "description");
                     }
                     if (!category.equals(tierID)) {
                         stats.addCritical(NSLC,
                                 "Tier ID should match category, "
+                                + "but " + tierID + " is not " + category);
+                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
                     }
                 } // for each tier
@@ -468,6 +480,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                     if (!found) {
                         stats.addCritical(
                                 "Missing required tier: "
+                                + entry.getKey() + ": " + entry.getValue());
+                        errorList.addError(NSLC, comadirname+relPath, "", "", false, "Missing required tier: "
                                 + entry.getKey() + ": " + entry.getValue());
                     }
                 }
@@ -489,7 +503,6 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
         }
     }
 
-    
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -516,13 +529,14 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     }
 
     /**
-     * Main feature of the class: Checks if the file names in the corpus comply with the coma file.
+     * Main feature of the class: Checks if the file names in the corpus comply
+     * with the coma file.
      */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, JDOMException {
         Report stats = new Report();
         comafilename = cd.getURL().getFile();
-        comadirname = comafilename.substring(0, comafilename.lastIndexOf("/")+1);
+        comadirname = comafilename.substring(0, comafilename.lastIndexOf("/") + 1);
         Document nganasanCorpus
                 = org.exmaralda.common.jdomutilities.IOUtilities.readDocumentFromLocalFile(comafilename);
         XPath xpCommunications = XPath.newInstance("//Communication");
