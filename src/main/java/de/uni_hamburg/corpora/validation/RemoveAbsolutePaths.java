@@ -8,6 +8,7 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
@@ -39,7 +40,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     Path pathRelative = null;
     String nameOfCorpusFolder;
     String nameOfExbFolder;
-
+    ExmaErrorList errorList = new ExmaErrorList();
+    
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         try {
@@ -64,6 +66,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         if (pabs.isAbsolute()) {
                             report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
+                            errorList.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, 
+                                    "absolute path info needs to be replaced in " + cd.getURL().getFile());
                         } else {
                             al.remove(o);
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
