@@ -1,4 +1,3 @@
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Corpus;
@@ -72,22 +71,22 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                 switch (lineParts[0].toUpperCase()) {
                     case "WARNING":
                         r.addWarning("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("tier-checker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     case "CRITICAL":
                         r.addCritical("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("tier-checker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     case "NOTE":
                         r.addNote("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
                         break;
                     case "MISSING":
                         r.addMissing("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("tier-checker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     default:
                         r.addCritical("XSLTChecker", "(Unrecognized report type) " + cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("tier-checker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                 }
 
                 i++;
