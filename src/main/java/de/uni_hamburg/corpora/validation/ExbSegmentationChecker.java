@@ -129,7 +129,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         Report stats = new Report();
         File f = new File(cd.getURL().toString());
-        filename = f.getAbsolutePath().substring(6);
+        filename = f.getPath().substring(6);
         bt = new BasicTranscription(filename);
 
         //EditErrorsDialog eed = new EditErrorsDialog(table.parent, false);
