@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -52,7 +52,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     
     File exbFile;
     
-    ExmaErrorList errorList = new ExmaErrorList();
+
     
     /**
      * Check for referenced-files.
@@ -212,7 +212,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
                 reffilesMissing++;
                 stats.addCritical(EXB_REFS, exbName + ": "
                         + "File in referenced-file NOT found: " + url);
-                errorList.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
+                exmaError.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
             } else {
                 reffilesFound++;
                 stats.addCorrect(EXB_REFS, exbName + ": "

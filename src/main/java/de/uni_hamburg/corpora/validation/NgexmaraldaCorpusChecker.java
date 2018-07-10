@@ -37,6 +37,7 @@ import org.jdom.JDOMException;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  * This is the check procedure for the Nganasan Corpus
@@ -52,7 +53,6 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     private String comafilename;
     private File comafile;
     private String comadirname;
-    ExmaErrorList errorList = new ExmaErrorList();
     final String NSLC = "nslc";
 
     public Report check() {
@@ -423,7 +423,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                     } catch (JexmaraldaException je) {
                         stats.addException(je, "ERRORR: tier with ID " + tierID
                                 + " is lost...");
-                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "ERROR: tier with ID " + tierID
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "ERROR: tier with ID " + tierID
                                 + " is lost...");
                         continue;
                     }
@@ -438,7 +438,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(NSLC,
                                 "Unrecognised tier name: "
                                 + tierID);
-                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
                                 + tierID);
                     }
                     if (tierTypes.containsKey(category)) {
@@ -447,7 +447,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                     "Wrong tier type for: "
                                     + tierID, "Switch to annotation or "
                                     + " description tier");
-                            errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
+                            exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
                                     + tierID);
                         } else {
                             stats.addCorrect(NSLC,
@@ -458,7 +458,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
-                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
                     }
@@ -466,7 +466,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(NSLC,
                                 "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
-                        errorList.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
                     }
                 } // for each tier
@@ -481,7 +481,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(
                                 "Missing required tier: "
                                 + entry.getKey() + ": " + entry.getValue());
-                        errorList.addError(NSLC, comadirname+relPath, "", "", false, "Missing required tier: "
+                        exmaError.addError(NSLC, comadirname+relPath, "", "", false, "Missing required tier: "
                                 + entry.getKey() + ": " + entry.getValue());
                     }
                 }

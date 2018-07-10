@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
@@ -29,6 +25,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  *
@@ -40,7 +37,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     Path pathRelative = null;
     String nameOfCorpusFolder;
     String nameOfExbFolder;
-    ExmaErrorList errorList = new ExmaErrorList();
+
     
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
@@ -66,7 +63,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         if (pabs.isAbsolute()) {
                             report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
-                            errorList.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, 
+                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, 
                                     "absolute path info needs to be replaced in " + cd.getURL().getFile());
                         } else {
                             al.remove(o);

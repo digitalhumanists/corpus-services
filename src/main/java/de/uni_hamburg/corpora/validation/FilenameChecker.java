@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.CommandLine;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -53,7 +53,7 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
     Pattern acceptable;
     Pattern unacceptable;
     ValidatorSettings settings;
-    ExmaErrorList errorList = new ExmaErrorList();
+
     final String FILENAME_CONVENTIONS = "filename-conventions";
     String fileLoc = "";
 
@@ -225,7 +225,7 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
             stats.addWarning(FILENAME_CONVENTIONS,
                     filename + " does not follow "
                     + "filename conventions for HZSK corpora");
-            errorList.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " does not follow "
+            exmaError.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " does not follow "
                     + "filename conventions for HZSK corpora");
             allesGut = false;
         }
@@ -234,7 +234,7 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
             stats.addWarning(FILENAME_CONVENTIONS,
                     filename + " contains "
                     + "characters that may break in HZSK repository");
-            errorList.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " contains "
+            exmaError.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " contains "
                     + "characters that may break in HZSK repository");
             allesGut = false;
         }
