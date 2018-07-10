@@ -60,7 +60,7 @@ public class CorpusMagician {
     //the final Report
     Report report = new Report();
     //the final Exmaralda error list
-    static ExmaErrorList exmaError = new ExmaErrorList();
+    public static ExmaErrorList exmaError = new ExmaErrorList();
 
     public CorpusMagician() {
     }
@@ -285,7 +285,7 @@ public class CorpusMagician {
                     break;
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
-                    report.merge(runCorpusFunction(corpus, tc));                  
+                    report.merge(runCorpusFunction(corpus, tc));
                     break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
