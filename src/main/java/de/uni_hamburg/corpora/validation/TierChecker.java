@@ -4,6 +4,7 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.ExmaErrorList;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.Collection;
@@ -27,7 +28,6 @@ import org.xml.sax.SAXException;
 public class TierChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
-    ExmaErrorList errorList = new ExmaErrorList();
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -95,7 +95,7 @@ public class TierChecker extends Checker implements CorpusFunction {
                         stats.addWarning("tier-checker", "Tier mismatch "
                                 + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                 + " in transcription of " + transcriptName);
-                        errorList.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Category abbreviation and display name for tier do not match"
+                        exmaError.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Category abbreviation and display name for tier do not match"
                                 + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                 + " in transcription of " + transcriptName);
                     }
@@ -108,7 +108,7 @@ public class TierChecker extends Checker implements CorpusFunction {
                             stats.addWarning("tier-checker", "Tier mismatch "
                                     + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            errorList.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier do not match"
+                            exmaError.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier do not match"
                                     + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
                         }
@@ -121,7 +121,7 @@ public class TierChecker extends Checker implements CorpusFunction {
                         stats.addWarning("tier-checker", "Tier mismatch "
                                 + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                 + " in transcription of " + transcriptName);
-                        errorList.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Category and display name for tier do not match"
+                        exmaError.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Category and display name for tier do not match"
                                 + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                 + " in transcription of " + transcriptName);
                     }
@@ -156,5 +156,5 @@ public class TierChecker extends Checker implements CorpusFunction {
         }
         return IsUsableFor;
     }
-
+    
 }

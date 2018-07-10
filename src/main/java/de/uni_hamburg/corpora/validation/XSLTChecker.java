@@ -1,3 +1,4 @@
+
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Corpus;
@@ -18,6 +19,7 @@ import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  *
@@ -25,7 +27,6 @@ import org.xml.sax.SAXException;
  */
 public class XSLTChecker extends Checker implements CorpusFunction {
 
-    ExmaErrorList errorList = new ExmaErrorList();
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -71,22 +72,22 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                 switch (lineParts[0].toUpperCase()) {
                     case "WARNING":
                         r.addWarning("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     case "CRITICAL":
                         r.addCritical("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     case "NOTE":
                         r.addNote("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
                         break;
                     case "MISSING":
                         r.addMissing("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     default:
                         r.addCritical("XSLTChecker", "(Unrecognized report type) " + cd.getURL().getFile() + ": " + lineParts[1]);
-                        errorList.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                 }
 
                 i++;

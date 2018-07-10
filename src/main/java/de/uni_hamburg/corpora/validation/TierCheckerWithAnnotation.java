@@ -3,6 +3,7 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.ExmaErrorList;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
@@ -35,7 +36,6 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
     ArrayList<String> annotations; // list for holding annotations of annotation spec file
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
-    ExmaErrorList errorList = new ExmaErrorList();
 
     /**
      * Add annotations to the corresponding array from coma and annotation
@@ -147,7 +147,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
                             + annotType + ") for " + name + " not specified!");
                     int index = cd.getURL().getFile().lastIndexOf("/");
                     String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";
-                    errorList.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation ("
+                    exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation ("
                             + annotType + ") for " + name + " not specified in the annotation specification file!");
                 }
             }
