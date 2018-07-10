@@ -15,6 +15,7 @@ import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
+import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
@@ -117,7 +118,7 @@ public class CorpusMagician {
                 cio.write(reportOutput, reportlocation);
             }
             //create the error list file
-            String errorstring = new File(reportstring).getParent()+"\\errorlist.xml";
+            String errorstring = new File(reportstring).getParent() + "\\errorlist.xml";
             URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
             exmaError.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
@@ -188,6 +189,7 @@ public class CorpusMagician {
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("ComaXsdChecker");
+        allExistingCFs.add("NgTierCheckerWithAnnotation");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -350,6 +352,10 @@ public class CorpusMagician {
                 case "comaxsdchecker":
                     ComaXsdChecker cxsd = new ComaXsdChecker();
                     report.merge(runCorpusFunction(corpus, cxsd));
+                    break;
+                case "ngtiercheckerwithannotation":
+                    NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
+                    report.merge(runCorpusFunction(corpus, ngtcwa));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String is not recognized");
