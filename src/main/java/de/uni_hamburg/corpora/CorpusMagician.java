@@ -8,6 +8,7 @@ import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ComaXsdChecker;
+import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
@@ -190,6 +191,7 @@ public class CorpusMagician {
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
+        allExistingCFs.add("ExbAnnotationPanelCheck");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -336,6 +338,10 @@ public class CorpusMagician {
                 case "exbstructurechecker":
                     ExbStructureChecker esc = new ExbStructureChecker();
                     report.merge(runCorpusFunction(corpus, esc));
+                    break;
+                case "exbannotationpanelcheck":
+                    ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
+                    report.merge(runCorpusFunction(corpus, eapc));
                     break;
                 case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
