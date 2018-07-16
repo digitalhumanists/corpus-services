@@ -132,6 +132,7 @@ public class CorpusIO {
     public Collection<File> getFileURLSRecursively(URL directoryURL) {
         Set<String> recursionBlackList = new HashSet<String>();
         recursionBlackList.add(".git");
+        recursionBlackList.add(".gitignore");
         Set<File> recursed = new HashSet<File>();
         Stack<File> dirs = new Stack();
         File d = new File(directoryURL.getFile());
@@ -149,6 +150,37 @@ public class CorpusIO {
             }
         }
         return recursed;
+    }
+
+    public ArrayList<URL> URLtoList(URL url) {
+        ArrayList<URL> alldata = new ArrayList();
+        if (isLocalFile(url)) {
+            //if the url points to a directory
+            if (new File(url.getFile()).isDirectory()) {
+                //we need to iterate    
+                //and add everything to the list
+                Collection<File> recursed = getFileURLSRecursively(url);
+                for (File f : recursed) {
+                    if (!f.isDirectory()) {
+                        try {
+                            alldata.add(f.toURI().toURL());
+                        } catch (MalformedURLException ex) {
+                            Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                return alldata;
+            } //if the url points to a file
+            else {
+                //we need to add just this file
+                alldata.add(url);
+                return alldata;
+            }
+        } else {
+            //it's a datastream in the repo
+            //TODO later          
+            return null;
+        }
     }
 
     public Collection<CorpusData> read(URL url) {
@@ -198,7 +230,7 @@ public class CorpusIO {
 
             }
         } else {
-        //it's a datastream in the repo
+            //it's a datastream in the repo
             //TODO later          
             return null;
         }
