@@ -100,6 +100,10 @@ public class CorpusMagician {
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
+        
+        Option help = new Option("h", "help", false, "display help");
+        fix.setRequired(false);
+        options.addOption(help);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -110,10 +114,13 @@ public class CorpusMagician {
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             formatter.printHelp("hzsk-corpus-services", options);
-
             System.exit(1);
         }
 
+        if (cmd.hasOption("h")){
+            // automatically generate the help statement
+            formatter.printHelp( "hzsk-corpus-services", options );
+        }
         /*
         String inputFilePath = cmd.getOptionValue("input");
         String outputFilePath = cmd.getOptionValue("output");
