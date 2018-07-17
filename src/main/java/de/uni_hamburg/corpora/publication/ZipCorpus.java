@@ -5,12 +5,18 @@
  */
 package de.uni_hamburg.corpora.publication;
 
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.Report;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -24,7 +30,7 @@ import java.util.zip.ZipOutputStream;
  *
  * @author fsnv625
  */
-public class ZipCorpus {
+public class ZipCorpus extends Publisher implements CorpusFunction {
 
     List<String> fileList;
     //folder
@@ -130,4 +136,26 @@ public class ZipCorpus {
     private String generateZipEntry(String file) {
         return file.substring(SOURCE_FOLDER.length() + 1, file.length());
     }
+
+    @Override
+    public Report publish(CorpusData cd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Class> getIsUsableFor() {
+         try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return IsUsableFor;
+    }
+
+    @Override
+    public Report doMain(String[] args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
