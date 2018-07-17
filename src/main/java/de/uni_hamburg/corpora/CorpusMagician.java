@@ -1,16 +1,28 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.CmdiChecker;
+import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
+import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
+
+import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
+import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
+import de.uni_hamburg.corpora.validation.ExbPatternChecker;
+import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+import de.uni_hamburg.corpora.validation.ExbStructureChecker;
+import de.uni_hamburg.corpora.validation.FileCoverageChecker;
+import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
+import de.uni_hamburg.corpora.validation.TierChecker;
+import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,9 +30,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.String;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.xml.sax.SAXException;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -37,10 +56,15 @@ public class CorpusMagician {
     //all functions there are in the code
     Collection<String> allExistingCFs;
     //all functions that should be run
-    Collection<String> chosencorpusfunctions = new ArrayList();
+    static Collection<String> chosencorpusfunctions = new ArrayList();
+    static Collection<CorpusFunction> corpusfunctions = new ArrayList();
     //the final Report
-    Report report = new Report();
-
+    static Report report = new Report();
+    //a list of all the available corpus data (no java objects, just URLs)
+    static ArrayList<URL> alldata = new ArrayList();
+    static CorpusIO cio = new CorpusIO();
+    static boolean fixing = false; 
+    
     public CorpusMagician() {
     }
 
@@ -51,21 +75,65 @@ public class CorpusMagician {
     //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
     //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
     public static void main(String[] args) {
+
+        //first args needs to be the URL
+        //check if it's a filepath, we could just convert it to an url
+        Options options = new Options();
+
+        Option input = new Option("i", "input", true, "input file path");
+        input.setRequired(false);
+        options.addOption(input);
+
+        Option output = new Option("o", "output", true, "output file");
+        output.setRequired(false);
+        options.addOption(output);
+
+        Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
+        // Set option c to take 1 to oo arguments
+        corpusfunction.setArgs(Option.UNLIMITED_VALUES);
+        options.addOption(corpusfunction);
+
+        Option speed = new Option("s", "speed", false, "faster but more heap space");
+        speed.setRequired(false);
+        options.addOption(speed);
+
+        Option fix = new Option("f", "fix", false, "fixes problems automatically");
+        fix.setRequired(false);
+        options.addOption(fix);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd = null;
+
         try {
-            //first args needs to be the URL
-            //check if it's a filepath, we could just convert it to an url
-            String urlstring = args[0];
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("hzsk-corpus-services", options);
+
+            System.exit(1);
+        }
+
+        /*
+        String inputFilePath = cmd.getOptionValue("input");
+        String outputFilePath = cmd.getOptionValue("output");
+        
+        System.out.println(inputFilePath);
+        System.out.println(outputFilePath);
+         */
+        try {
+            String urlstring = cmd.getOptionValue("input");
             URL url;
+            fixing = cmd.hasOption("f");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
                 url = Paths.get(urlstring).toUri().toURL();
             }
             CorpusMagician corpuma = new CorpusMagician();
-            corpuma.initCorpusWithURL(url);
             //now the place where Report should end up
             //also allow normal filepaths and convert them
-            String reportstring = args[1];
+            String reportstring = cmd.getOptionValue("output");
             URL reportlocation;
             if (reportstring.startsWith("file://")) {
                 reportlocation = new URL(reportstring);
@@ -73,18 +141,44 @@ public class CorpusMagician {
                 reportlocation = Paths.get(reportstring).toUri().toURL();
             }
             //now add the functionsstrings to array
-            //other args(2 and more) need to be a strings for the wanted corpus functions
-            ArrayList<String> corpusfunctionarraylist = new ArrayList();
-            //please put the args into it here
-            corpuma.setChosencorpusfunctions(corpusfunctionarraylist);
-            for (int i = 2; i < args.length; i++) {
+            String[] corpusfunctionarray = cmd.getOptionValues("c");
+            for (String cf : corpusfunctionarray) {
                 //corpuma.chosencorpusfunctions.add("test");
-                corpuma.chosencorpusfunctions.add(args[i]);
+                corpuma.chosencorpusfunctions.add(cf);
                 System.out.println(corpuma.chosencorpusfunctions.toString());
             }
-            Report report = corpuma.runChosencorpusfunctions();
+            corpusfunctions = corpusFunctionStrings2Classes();
+            //here is the heap space problem: everything is read all at one
+            //and kept in the heap space the whole time
+            if (cmd.hasOption("s")) {
+                corpuma.initCorpusWithURL(url);
+                //and here is another problem, all the corpusfiles are given as objects
+                report = corpuma.runChosencorpusfunctions();
+            } else {
+                //if we don't have so much heap space, we want things to be slower
+                //so we just save a string array lsit of all the available files/urls/datastreams
+                alldata = corpuma.createListofData(url);
+                for (URL allurl : alldata) {
+                    try {
+                        File f = new File(allurl.getFile());
+                        CorpusData cd;
+                        cd = cio.toCorpusData(f);
+                        if (cd != null) {
+                            if (fixing) {
+                                report.merge(runCorpusFunctions(cd, corpusfunctions, true));
+                            } else {
+                                report.merge(runCorpusFunctions(cd, corpusfunctions));
+                            }
+                        }
+                    } catch (SAXException ex) {
+                        Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (JexmaraldaException ex) {
+                        Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
             System.out.println(report.getFullReports());
-            CorpusIO cio = new CorpusIO();
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
                 reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics());
@@ -102,9 +196,9 @@ public class CorpusMagician {
 
     }
 
-    //Give it a path to a parameters file that tells you
-    //which functions with which parameters should be
-    //run on which files
+//Give it a path to a parameters file that tells you
+//which functions with which parameters should be
+//run on which files
     public void readConfig(URL url) {
         //this depends on how this file will be structured
     }
@@ -130,6 +224,13 @@ public class CorpusMagician {
         corpus = new Corpus(url);
     }
 
+    //creates a list of all the available data from an url (being a file oder directory)
+    public ArrayList<URL> createListofData(URL url) {
+        //add just that url if its a file
+        //adds the urls recursively if its a directory
+        return cio.URLtoList(url);
+    }
+
     //checks which functions exist in the code by checking for implementations of the corpus function interface
     //this shows that it doesn't work to just check for implementations of corpus functions
     //probably need to check for implementations of CorpusFunction?
@@ -139,17 +240,28 @@ public class CorpusMagician {
         this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("ComaNSLinksChecker");
-        //allExistingCFs.add("ExbFileReferenceChecker");
-        //allExistingCFs.add("ExbSegmentationChecker");
-        //allExistingCFs.add("ExbStructureChecker");
-        //allExistingCFs.add("FileCoverageChecker");
+        allExistingCFs.add("ExbFileReferenceChecker");
+        //allExistingCFs.add("ExbPatternChecker");
+        allExistingCFs.add("ExbSegmentationChecker");
+        allExistingCFs.add("ExbStructureChecker");
+        allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("XSLTChecker");
-        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("TierChecker");
+        allExistingCFs.add("ComaNameChecker");
+        allExistingCFs.add("ComaApostropheChecker");
+        allExistingCFs.add("ComaApostropheCheckerFix");
+        allExistingCFs.add("ComaSegmentCountChecker");
+        allExistingCFs.add("TierCheckerWithAnnotation");
+        allExistingCFs.add("FilenameChecker");
+        allExistingCFs.add("ComaPIDLengthChecker");
+        allExistingCFs.add("CmdiChecker");
+        allExistingCFs.add("NgexmaraldaCorpusChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -204,57 +316,115 @@ public class CorpusMagician {
         return chosencorpusfunctions;
     }
 
-    //TODO
-    //run the chosen functions on the chosen corpus
-    Report runChosencorpusfunctions() {
+    public static Collection<CorpusFunction> corpusFunctionStrings2Classes() {
         for (String function : chosencorpusfunctions) {
             switch (function.toLowerCase()) {
                 case "prettyprintdata":
                     PrettyPrintData pd = new PrettyPrintData();
-                    report.merge(runCorpusFunction(corpus, pd));
-                    break;
-                case "prettyprintdatafix":
-                    pd = new PrettyPrintData();
-                    report.merge(runCorpusFunction(corpus, pd, true));
+                    corpusfunctions.add(pd);
                     break;
                 case "comaaddtiersfromexbscorrector":
-                    //cf = new ComaAddTiersFromExbsCorrector();
-                    //rest .... usw.
+                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
+                    corpusfunctions.add(catfec);
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
-                    report.merge(runCorpusFunction(corpus, xc, false));
+                    corpusfunctions.add(xc);
                     break;
                 case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
-                    report.merge(runCorpusFunction(corpus, cnslc));
+                    corpusfunctions.add(cnslc);
                     break;
                 case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
-                    report.merge(runCorpusFunction(corpus, rase));
-                    break;
-                case "removeautosaveexbfix":
-                    rase = new RemoveAutoSaveExb();
-                    report.merge(runCorpusFunction(corpus, rase, true));
+                    corpusfunctions.add(rase);
                     break;
                 case "removeabsolutepaths":
                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
-                    report.merge(runCorpusFunction(corpus, rap));
-                    break;
-                case "removeabsolutepathsfix":
-                    rap = new RemoveAbsolutePaths();
-                    report.merge(runCorpusFunction(corpus, rap, true));
+                    corpusfunctions.add(rap);
                     break;
                 case "comaoverviewgeneration":
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
-                    report.merge(runCorpusFunction(corpus, cog));
+                    corpusfunctions.add(cog);
                     break;
                 case "comaoverviewgenerationfix":
                     cog = new ComaOverviewGeneration();
-                    report.merge(runCorpusFunction(corpus, cog, true));
+                    corpusfunctions.add(cog);
+                case "tierchecker":
+                    TierChecker tc = new TierChecker();
+                    corpusfunctions.add(tc);
+                    break;
+                case "comanamechecker":
+                    ComaNameChecker cnc = new ComaNameChecker();
+                    corpusfunctions.add(cnc);
+                    break;
+                case "comaapostrophechecker":
+                    ComaApostropheChecker cac = new ComaApostropheChecker();
+                    corpusfunctions.add(cac);
+                    break;
+                case "comaapostrophecheckerfix":
+                    ComaApostropheChecker cacf = new ComaApostropheChecker();
+                    corpusfunctions.add(cacf);
+                    break;
+                case "comapidlengthchecker":
+                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                    corpusfunctions.add(cplc);
+                    break;
+                case "comasegmentcountchecker":
+                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
+                    corpusfunctions.add(cscc);
+                    break;
+                case "tiercheckerwithannotation":
+                    TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
+                    corpusfunctions.add(tcwa);
+                    break;
+                case "filenamechecker":
+                    FilenameChecker fnc = new FilenameChecker();
+                    corpusfunctions.add(fnc);
+                    break;
+                case "filecoveragechecker":
+                    FileCoverageChecker fcc = new FileCoverageChecker();
+                    corpusfunctions.add(fcc);
+                    break;
+                case "exbfilereferencechecker":
+                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
+                    corpusfunctions.add(efrc);
+                    break;
+                //case "exbpatternchecker":
+                //ExbPatternChecker epc = new ExbPatternChecker();
+                //report.merge(runCorpusFunction(corpus, epc));
+                //break;
+                case "exbsegmentationchecker":
+                    ExbSegmentationChecker esg = new ExbSegmentationChecker();
+                    corpusfunctions.add(esg);
+                    break;
+                case "exbstructurechecker":
+                    ExbStructureChecker esc = new ExbStructureChecker();
+                    corpusfunctions.add(esc);
+                    break;
+                case "cmdichecker":
+                    CmdiChecker cmdi = new CmdiChecker();
+                    corpusfunctions.add(cmdi);
+                    break;
+                case "ngexmaraldacorpuschecker":
+                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
+                    corpusfunctions.add(ngex);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
+            }
+        }
+        return corpusfunctions;
+    }
+
+    //TODO
+    //run the chosen functions on the chosen corpus
+    Report runChosencorpusfunctions() {
+        for (CorpusFunction function : corpusfunctions) {
+            if (fixing){
+            report.merge(runCorpusFunction(corpus, function, true));    
+            }else{
+            report.merge(runCorpusFunction(corpus, function));
             }
         }
         return report;
@@ -344,7 +514,7 @@ public class CorpusMagician {
         return cf.execute(cd, fix);
     }
 
-    public Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc) {
+    public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
             Report newReport = (cf.execute(cd));
@@ -352,8 +522,19 @@ public class CorpusMagician {
         }
         return report;
     }
+    
+    public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc, boolean fix) {
+        Report report = new Report();
+        for (CorpusFunction cf : cfc) {
+            Report newReport = (cf.execute(cd, fix));
+            report.merge(newReport);
+        }
+        return report;
+    }
 
-    //TODO what was this for again....?
+    //TODO 
+    //to save individual corpusparameters in a file
+    //and maybe also save the functions todos there
     public void readParameters() {
 
     }
