@@ -29,15 +29,15 @@
         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Speaker</xsl:with-param>
         </xsl:call-template>
-        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
+        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Transcription</xsl:with-param>
-        </xsl:call-template>-->
-        <!--  <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>
+       <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Recording</xsl:with-param>
-        </xsl:call-template>-->
-        <!--    <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>
+       <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">AsocFile</xsl:with-param>
-        </xsl:call-template>-->
+        </xsl:call-template>
         <xsl:call-template name="GET_KEYS_LOC">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>
@@ -75,7 +75,7 @@
                     </td>
                     <td class="info">
                         <xsl:variable name="milliseconds">
-                            <xsl:value-of select="sum(//Recording/RecordingDuration)"/>
+                            <xsl:value-of select="sum(//Communication/Recording[1]/RecordingDuration)"/>
                         </xsl:variable>
                         <xsl:variable name="hours" select="floor($milliseconds div (1000 * 3600))"/>
                         <xsl:variable name="minutes" select="($milliseconds mod (1000 * 3600)) div (1000 * 60)"/>
@@ -120,36 +120,36 @@
                         </td>
                         <td>
                             <xsl:choose>
-                                <xsl:when test="$commElement/Recording/Media/NSLink[ends-with(text(), '.wav')]">
-                                    <xsl:choose>
-                                        <xsl:when test="$commElement/Recording/RecordingDuration/text()">
-                                            <xsl:variable name="milliseconds">
-                                                <xsl:value-of select="$commElement/Recording/RecordingDuration/text()"/>
-                                            </xsl:variable>
-                                            <xsl:variable name="hours" select="floor($milliseconds div (1000 * 3600))"/>
-                                            <xsl:variable name="minutes" select="($milliseconds mod (1000 * 3600)) div (1000 * 60)"/>
-                                            <xsl:variable name="seconds" select="(($milliseconds mod (1000 * 60)) div 1000)"/>
-                                            <xsl:value-of select="concat(format-number($hours, '#00'), ':', format-number($minutes, '00'), ':')"/>
-                                            <xsl:value-of select="format-number($seconds, '00', 'european')"/>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                    no duration added
-                                </xsl:otherwise>
-                                    </xsl:choose>
+                                <xsl:when test="not($commElement//Recording/Media/NSLink[ends-with(lower-case(text()), '.wav')])"
+                                    >
+                                    no wav
+                                </xsl:when>
+                                <xsl:when test="$commElement/Recording[1]/RecordingDuration/text()">
+                                    <xsl:variable name="milliseconds">
+                                        <xsl:value-of select="$commElement/Recording[1]/RecordingDuration[1]/text()"/>
+                                    </xsl:variable>
+                                    <xsl:variable name="hours" select="floor($milliseconds div (1000 * 3600))"/>
+                                    <xsl:variable name="minutes" select="($milliseconds mod (1000 * 3600)) div (1000 * 60)"/>
+                                    <xsl:variable name="seconds" select="(($milliseconds mod (1000 * 60)) div 1000)"/>
+                                    <xsl:value-of select="concat(format-number($hours, '#00'), ':', format-number($minutes, '00'), ':')"/>
+                                    <xsl:value-of select="format-number($seconds, '00', 'european')"/>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    no wav
+                                    no duration added
                                 </xsl:otherwise>
                             </xsl:choose>
-
                         </td>
                         <td>
                             <xsl:choose>
                                 <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'true'">
                                     <!--     and it need to be a wav file too-->
+                                    <xsl:attribute name="data-order">
+                                        <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:u']/text()"/>
+                                    </xsl:attribute>
                                     <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:u']/text()"/>
                                 </xsl:when>
-                                <xsl:otherwise>
+                                <xsl:otherwise> <xsl:attribute name="data-order"> <xsl:value-of select="0"/>
+                                    </xsl:attribute>
                                     no exs
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -158,9 +158,13 @@
                             <xsl:choose>
                                 <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'true'">
                                     <!--     and it need to be a wav file too-->
+                                    <xsl:attribute name="data-order">
+                                        <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:w']/text()"/>
+                                    </xsl:attribute>
                                     <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:w']/text()"/>
                                 </xsl:when>
-                                <xsl:otherwise>
+                                <xsl:otherwise> <xsl:attribute name="data-order"> <xsl:value-of select="0"/>
+                                    </xsl:attribute>
                                     no exs
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -185,23 +189,27 @@
                         <td>
                             <xsl:choose>
                                 <!-- TO DO -->
-                                <xsl:when test="$commElement/Description/Key[contains(lower-case(@Name), 'translation') and (contains(text(), '.') or contains(text(), '?'))]/text()"
+                                <xsl:when test="$commElement/Description/Key[contains(lower-case(@Name), 'translation') and (contains(text(), '.') or contains(text(), '?') or not(string(text())))]"
                                     >
-                                    no(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'translation')]/text()"/>)
+                                    no(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'translation')]" separator="|"
+                                    />)
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    yes(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'translation')]/text()"/>)
+                                    yes(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'translation')]" separator="|"
+                                    />)
                                 </xsl:otherwise>
                             </xsl:choose>
                         </td>
                         <td>
                             <xsl:choose>
-                                <xsl:when test="$commElement/Description/Key[contains(lower-case(@Name), 'annotation') and  (contains(text(), '.') or contains(text(), '?'))]/text()"
+                                <xsl:when test="$commElement/Description/Key[contains(lower-case(@Name), 'annotation') and (contains(text(), '.') or contains(text(), '?') or not(string(text())))]"
                                     >
-                                    no(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'annotation')]/text()"/>)
+                                    no(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'annotation')]" separator="|"
+                                    />)
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    yes(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'annotation')]/text()"/>)
+                                    yes(<xsl:value-of select="$commElement/Description/Key[contains(lower-case(@Name), 'annotation')]" separator="|"
+                                    />)
                                 </xsl:otherwise>
                             </xsl:choose>
                         </td>
@@ -256,9 +264,13 @@
                                 <xsl:choose>
                                     <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'true'">
                                         <!--     and it need to be a wav file too-->
+                                        <xsl:attribute name="data-order">
+                                            <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:u']/text()"/>
+                                        </xsl:attribute>
                                         <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:u']/text()"/>
                                     </xsl:when>
-                                    <xsl:otherwise>
+                                    <xsl:otherwise> <xsl:attribute name="data-order"> <xsl:value-of select="0"/>
+                                        </xsl:attribute>
                                         no exs
                                     </xsl:otherwise>
                                 </xsl:choose>
@@ -267,24 +279,26 @@
                                 <xsl:choose>
                                     <xsl:when test="$commElement/Transcription/Description/Key[@Name = 'segmented']/text() = 'true'">
                                         <!--     and it need to be a wav file too-->
+                                        <xsl:attribute name="data-order">
+                                            <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:w']/text()"/>
+                                        </xsl:attribute>
                                         <xsl:value-of select="$commElement/Transcription/Description/Key[@Name = '# HIAT:w']/text()"/>
                                     </xsl:when>
-                                    <xsl:otherwise>
+                                    <xsl:otherwise><xsl:attribute name="data-order"> <xsl:value-of select="0"/>
+                                        </xsl:attribute>
                                         no exs
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </td>
                             <td>
                                 <xsl:choose>
-
-                                    <xsl:when test="not($commElement/Recording[1]/Media/NSLink/ends-with(text(), '.wav'))"
+                                    <xsl:when test="not($commElement//Recording/Media/NSLink[ends-with(lower-case(text()), '.wav')])"
                                         >
                                         no wav
                                     </xsl:when>
-                                    <xsl:when test="$commElement/Recording/RecordingDuration/text()">
-
+                                    <xsl:when test="$commElement/Recording[1]/RecordingDuration/text()">
                                         <xsl:variable name="milliseconds">
-                                            <xsl:value-of select="$commElement/Recording/RecordingDuration/text()"/>
+                                            <xsl:value-of select="$commElement/Recording[1]/RecordingDuration[1]/text()"/>
                                         </xsl:variable>
                                         <xsl:variable name="hours" select="floor($milliseconds div (1000 * 3600))"/>
                                         <xsl:variable name="minutes" select="($milliseconds mod (1000 * 3600)) div (1000 * 60)"/>

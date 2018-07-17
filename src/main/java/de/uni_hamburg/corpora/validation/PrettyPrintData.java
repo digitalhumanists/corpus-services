@@ -87,12 +87,9 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         //compare the files
         // if no diff - all fine, nothing needs to be done
         //TODO error - to saveableString already pretty printed - need to change that        
-        if (cd.toUnformattedString().equals(prettyCorpusData)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return cd.toUnformattedString().equals(prettyCorpusData);
+            
+        
     }
     
 }
