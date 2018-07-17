@@ -124,7 +124,7 @@ public class CorpusMagician {
         try {
             String urlstring = cmd.getOptionValue("input");
             URL url;
-            fixing = !cmd.hasOption("f");
+            fixing = cmd.hasOption("f");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
