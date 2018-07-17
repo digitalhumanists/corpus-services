@@ -2,13 +2,13 @@ package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
-import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
+//import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 
-import de.uni_hamburg.corpora.validation.ComaNameChecker;
+//import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
-import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+//import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
@@ -19,8 +19,8 @@ import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
-import de.uni_hamburg.corpora.validation.TierChecker;
-import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
+//import de.uni_hamburg.corpora.validation.TierChecker;
+//import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.File;
 import java.io.IOException;
@@ -330,10 +330,10 @@ public class CorpusMagician {
                     PrettyPrintData pd = new PrettyPrintData();
                     corpusfunctions.add(pd);
                     break;
-                case "comaaddtiersfromexbscorrector":
+                /* case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
                     corpusfunctions.add(catfec);
-                    break;
+                    break; */
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
@@ -357,7 +357,7 @@ public class CorpusMagician {
                 case "comaoverviewgenerationfix":
                     cog = new ComaOverviewGeneration();
                     corpusfunctions.add(cog);
-                case "tierchecker":
+                /* case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
                     break;
@@ -416,7 +416,7 @@ public class CorpusMagician {
                 case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     corpusfunctions.add(ngex);
-                    break;
+                    break; */
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
