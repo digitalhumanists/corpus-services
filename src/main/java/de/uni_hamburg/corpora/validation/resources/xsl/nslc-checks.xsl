@@ -26,12 +26,12 @@
             <xsl:variable name="COM_NAME" select="@Name" as="xs:string"/>
             
             <!-- Check transcription name against communication name -->
-            <xsl:for-each select="*:Transcription[not(matches(*:Name, $COM_NAME))]">
+            <xsl:for-each select="*:Transcription[not(*:Name = $COM_NAME)]">
                 <xsl:value-of select="concat('CRITICAL;The transcription name ''', *:Name, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- Check transcription file name against communication name -->
-            <xsl:for-each select="*:Transcription[not(matches(*:Filename, concat($COM_NAME, '(\.exb|_s\.exs)')))]">
+            <xsl:for-each select="*:Transcription[not(matches(*:Filename, concat('^', $COM_NAME, '(\.exb|_s\.exs)$')))]">
                 <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
             </xsl:for-each>
             
@@ -41,7 +41,7 @@
             </xsl:for-each>
             
             <!-- Check recording name against communication name -->            
-            <xsl:for-each select="*:Recording[not(matches(*:Name, $COM_NAME))]">
+            <xsl:for-each select="*:Recording[not(*:Name = $COM_NAME)]">
                 <xsl:value-of select="concat('CRITICAL;The recording name ''', *:Name, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
             </xsl:for-each>
             
