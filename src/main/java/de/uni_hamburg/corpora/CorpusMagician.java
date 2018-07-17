@@ -91,7 +91,7 @@ public class CorpusMagician {
     //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
     //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParserConfigurationException, TransformerException {
 
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url
@@ -430,7 +430,7 @@ public class CorpusMagician {
                     break;
                 case "exbannotationpanelcheck":
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
-                    report.merge(runCorpusFunction(corpus, eapc));
+                    corpusfunctions.add(eapc);
                     break;
                 case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
@@ -442,15 +442,15 @@ public class CorpusMagician {
                     break;
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
-                    report.merge(runCorpusFunction(corpus, gap));
+                    corpusfunctions.add(gap);
                     break;
                 case "comaxsdchecker":
                     ComaXsdChecker cxsd = new ComaXsdChecker();
-                    report.merge(runCorpusFunction(corpus, cxsd));
+                    corpusfunctions.add(cxsd);
                     break;
                 case "ngtiercheckerwithannotation":
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
-                    report.merge(runCorpusFunction(corpus, ngtcwa));
+                    corpusfunctions.add(ngtcwa);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
