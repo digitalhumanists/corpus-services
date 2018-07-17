@@ -14,7 +14,7 @@ https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_
 
 # functions
 
-To see the currently available functions, check the Doxygen files.
+To see the currently available functions, check the method getAllExistingCFs() in the class src/main/java/de/uni_hamburg/corpora/CorpusMagician.java
 
 You can get a rough idea by listing java classes, e.g. `ls src/main/java/de/uni_hamburg/corpora/validation/` for validator tools.
 
@@ -23,36 +23,39 @@ You can get a rough idea by listing java classes, e.g. `ls src/main/java/de/uni_
 To use the validator for HZSK corpora, compile it using `mvn clean compile assembly:single`.
 (See https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven)
 
-# ATTENTION: THIS WILL BE DEPRECATED SOON AND NEEDS TO BE ADAPTED
 
 # Usage
 
-## All validation checks
+## Running Corpus Functions
 
-Use it on Linux or on Windows connecting to the server via ssh, because some Checks (FileCoverageChecker) don't work on windows yet.
 
 Add the generated .jar to the Folder /Korpora/HZSK and execute something like:
 
 ```
-java -jar hzsk-corpus-services-0.1-jar-with-dependencies.jar {corpusfoldername} > {corpusfoldername}/output_corpus-services.txt
+java -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.CorpusMagician -i E:\user\corpus -o E:\user\corpus\report-output.html -c function1 -c function2 -f
 ```
 
-{corpusfoldername} should be the name of the folder you want to validate. The class in the example runs different checks on the coma file in the specified corpus and on all the exbs and and other files.
+-i is the input, it should be the name of the folder or single corpus file you want to process. Functions can be run on a folder, a metadata file representing a list of files, or a single file. 
 
-Make sure to have only one coma file in your corpus folder.
+-o is the location, where the output will be found. Depending if you end the filenem with ".txt" or ".html" a simple text file or a sort- and filterable html table will be generated. At the same place an additional EXMARaLDA error list will be created. 
 
-Your output can be found in the corpus folder in output_corpus-services.txt
+-c are the corpus functions you want to run. See the method getAllExistingCFs() in the class src/main/java/de/uni_hamburg/corpora/CorpusMagician.java for all available function strings. 
 
-## Single corpus checks
+-f this flag is for fixing, if it exists, all possible functions will fix the data automatically (that means it changes the input data).
 
-There are other checks available too, check the doxygen documentation and change the command to the corresponding class.
+## Listing Checks 
 
-```
-java -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.validation.FilenameChecker {corpusfoldername} 
-```
+If you've some form of bash_completion installed you can get a neat list of validation checks by just typing this:
 
-Some checks may require exb or coma file paths instead of corpus directory. If you've some form of bash_completion installed you can get a neat list of check by just typing this:
 ```
 java -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.validation.
 ```
 and hitting tab twice.   
+
+## Help
+
+You can see the complete command line functionality by running
+
+```
+ java -cp  hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.CorpusMagician -h
+```
