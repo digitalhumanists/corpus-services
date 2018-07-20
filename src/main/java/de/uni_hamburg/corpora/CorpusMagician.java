@@ -18,6 +18,7 @@ import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
+import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -54,7 +55,6 @@ import org.apache.commons.cli.ParseException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
 
-
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
  * Corpus Function on a corpus in a main method.
@@ -79,7 +79,7 @@ public class CorpusMagician {
     //a list of all the available corpus data (no java objects, just URLs)
     static ArrayList<URL> alldata = new ArrayList();
     static CorpusIO cio = new CorpusIO();
-    static boolean fixing = false; 
+    static boolean fixing = false;
 
     public CorpusMagician() {
     }
@@ -90,7 +90,6 @@ public class CorpusMagician {
     //this should work via commandline like that:
     //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
     //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
-
     public static void main(String[] args) throws ParserConfigurationException, TransformerException {
 
         //first args needs to be the URL
@@ -132,11 +131,11 @@ public class CorpusMagician {
         }
 
         /*
-        String inputFilePath = cmd.getOptionValue("input");
-        String outputFilePath = cmd.getOptionValue("output");
+         String inputFilePath = cmd.getOptionValue("input");
+         String outputFilePath = cmd.getOptionValue("output");
         
-        System.out.println(inputFilePath);
-        System.out.println(outputFilePath);
+         System.out.println(inputFilePath);
+         System.out.println(outputFilePath);
          */
         try {
             String urlstring = cmd.getOptionValue("input");
@@ -376,6 +375,7 @@ public class CorpusMagician {
                 case "comaoverviewgenerationfix":
                     cog = new ComaOverviewGeneration();
                     corpusfunctions.add(cog);
+                    break;
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
@@ -452,6 +452,10 @@ public class CorpusMagician {
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
                     corpusfunctions.add(ngtcwa);
                     break;
+                case "iaafunctionality":
+                    IAAFunctionality iaa = new IAAFunctionality();
+                    corpusfunctions.add(iaa);
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
@@ -463,10 +467,10 @@ public class CorpusMagician {
     //run the chosen functions on the chosen corpus
     Report runChosencorpusfunctions() {
         for (CorpusFunction function : corpusfunctions) {
-            if (fixing){
-            report.merge(runCorpusFunction(corpus, function, true));    
-            }else{
-            report.merge(runCorpusFunction(corpus, function));
+            if (fixing) {
+                report.merge(runCorpusFunction(corpus, function, true));
+            } else {
+                report.merge(runCorpusFunction(corpus, function));
             }
         }
         return report;
@@ -559,17 +563,35 @@ public class CorpusMagician {
     public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
-            Report newReport = (cf.execute(cd));
-            report.merge(newReport);
+            for (Class cl : cf.getIsUsableFor()) {
+            //if the corpus files are an instance 
+                //of the class cl, run the function
+                {
+                    if (cl.isInstance(cd)) {
+                        Report newReport = (cf.execute(cd));
+                        report.merge(newReport);
+                    }
+
+                }
+            }
         }
         return report;
     }
-    
+
     public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc, boolean fix) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
-            Report newReport = (cf.execute(cd, fix));
-            report.merge(newReport);
+            for (Class cl : cf.getIsUsableFor()) {
+                //if the corpus files are an instance 
+                //of the class cl, run the function
+                {
+                    if (cl.isInstance(cd)) {
+                        Report newReport = (cf.execute(cd, fix));
+                        report.merge(newReport);
+                    }
+
+                }
+            }
         }
         return report;
     }
