@@ -8,14 +8,23 @@ package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.exmaralda.common.corpusbuild.FileIO;
+import org.exmaralda.common.corpusbuild.TEIMerger;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.ListTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
+import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 import org.exmaralda.partitureditor.jexmaralda.segment.SegmentedToListInfo;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.transform.XSLTransformException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -99,6 +108,45 @@ public class EXB2TEI {
         }
         
         return result;
+    }
+    
+     public void writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, String filename) throws SAXException,
+                                                                              FSMException,
+                                                                              XSLTransformException,
+                                                                              JDOMException,
+                                                                              IOException,
+                                                                              Exception {
+        writeMORPHEMEHIATISOTEIToFile(bt, filename, false, "/basic-transcription/basic-body/tier[@id = \"mb\"]");
+    }
+    
+    public void writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, 
+                                      String filename,
+                                      boolean includeFullText, String XPath2Morphemes) throws SAXException,
+                                                                              FSMException,
+                                                                              XSLTransformException,
+                                                                              JDOMException,
+                                                                              IOException,
+                                                                              Exception {
+        // added 13-12-2013
+        BasicTranscription copyBT = bt.makeCopy();
+        copyBT.normalize();        
+        System.out.println("started writing document...");
+        HIATSegmentation segmentation = new HIATSegmentation();
+        SegmentedTranscription st = segmentation.BasicToSegmented(copyBT);
+        System.out.println("Segmented transcription created");
+        String nameOfDeepSegmentation = "SpeakerContribution_Utterance_Word";
+        TEIMerger teiMerger = new TEIMerger(true);
+        Document stdoc = FileIO.readDocumentFromString(st.toXML());
+        Document teiDoc = teiMerger.SegmentedTranscriptionToTEITranscription(stdoc, 
+                nameOfDeepSegmentation, 
+                "SpeakerContribution_Event", 
+                true,
+                includeFullText);
+        System.out.println("Merged");
+//        generateWordIDs(teiDoc);
+//        setDocLanguage(teiDoc, language);
+        FileIO.writeDocumentToLocalFile(filename, teiDoc);
+        System.out.println("document written.");        
     }
     
 }
