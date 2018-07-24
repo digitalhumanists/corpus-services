@@ -64,6 +64,7 @@ public class CorpusMagician {
     static ArrayList<URL> alldata = new ArrayList();
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false; 
+    static CommandLine cmd = null;
     
     public CorpusMagician() {
     }
@@ -78,56 +79,7 @@ public class CorpusMagician {
 
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url
-        Options options = new Options();
-
-        Option input = new Option("i", "input", true, "input file path");
-        input.setRequired(false);
-        options.addOption(input);
-
-        Option output = new Option("o", "output", true, "output file");
-        output.setRequired(false);
-        options.addOption(output);
-
-        Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
-        // Set option c to take 1 to oo arguments
-        corpusfunction.setArgs(Option.UNLIMITED_VALUES);
-        options.addOption(corpusfunction);
-
-        Option speed = new Option("s", "speed", false, "faster but more heap space");
-        speed.setRequired(false);
-        options.addOption(speed);
-
-        Option fix = new Option("f", "fix", false, "fixes problems automatically");
-        fix.setRequired(false);
-        options.addOption(fix);
-        
-        Option help = new Option("h", "help", false, "display help");
-        fix.setRequired(false);
-        options.addOption(help);
-
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd = null;
-
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", options);
-            System.exit(1);
-        }
-
-        if (cmd.hasOption("h")){
-            // automatically generate the help statement
-            formatter.printHelp( "hzsk-corpus-services", options );
-        }
-        /*
-        String inputFilePath = cmd.getOptionValue("input");
-        String outputFilePath = cmd.getOptionValue("output");
-        
-        System.out.println(inputFilePath);
-        System.out.println(outputFilePath);
-         */
+        createCommandLineOptions(args);
         try {
             String urlstring = cmd.getOptionValue("input");
             URL url;
@@ -564,6 +516,59 @@ public class CorpusMagician {
 
     public Collection<String> getChosencorpusfunctions() {
         return chosencorpusfunctions;
+    }
+    
+    private static void createCommandLineOptions(String[] args) {
+        Options options = new Options();
+
+        Option input = new Option("i", "input", true, "input file path");
+        input.setRequired(false);
+        options.addOption(input);
+
+        Option output = new Option("o", "output", true, "output file");
+        output.setRequired(false);
+        options.addOption(output);
+
+        Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
+        // Set option c to take 1 to oo arguments
+        corpusfunction.setArgs(Option.UNLIMITED_VALUES);
+        options.addOption(corpusfunction);
+
+        Option speed = new Option("s", "speed", false, "faster but more heap space");
+        speed.setRequired(false);
+        options.addOption(speed);
+
+        Option fix = new Option("f", "fix", false, "fixes problems automatically");
+        fix.setRequired(false);
+        options.addOption(fix);
+        
+        Option help = new Option("h", "help", false, "display help");
+        fix.setRequired(false);
+        options.addOption(help);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("hzsk-corpus-services", options);
+            System.exit(1);
+        }
+
+        if (cmd.hasOption("h")){
+            // automatically generate the help statement
+            formatter.printHelp( "hzsk-corpus-services", options );
+        }
+        /*
+        String inputFilePath = cmd.getOptionValue("input");
+        String outputFilePath = cmd.getOptionValue("output");
+        
+        System.out.println(inputFilePath);
+        System.out.println(outputFilePath);
+         */
+        
     }
 
 }
