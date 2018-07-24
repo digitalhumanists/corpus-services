@@ -49,16 +49,24 @@ public class EXB2INELISOTEI {
             JDOMException,
             IOException,
             Exception {
-        // added 13-12-2013
+        // make a copy of the exb input
         BasicTranscription copyBT = bt.makeCopy();
+        //normalize the exb (!)
         copyBT.normalize();
         System.out.println("started writing document...");
+        //HIAT
         HIATSegmentation segmentation = new HIATSegmentation();
+        //create a segmented exs (would it be better to use the INEL FSM??
+        //Should probably a parameter instead of hard coded...
         SegmentedTranscription st = segmentation.BasicToSegmented(copyBT);
         System.out.println("Segmented transcription created");
+        //Deep segmentation - what would that be for INEL? Sentence?
         String nameOfDeepSegmentation = "SpeakerContribution_Utterance_Word";
+        //booelan is for ISO
         TEIMerger teiMerger = new TEIMerger(true);
+        //Document from segmented transcription
         Document stdoc = FileIO.readDocumentFromString(st.toXML());
+        //MAGIC
         Document teiDoc = teiMerger.SegmentedTranscriptionToTEITranscription(stdoc,
                 nameOfDeepSegmentation,
                 "SpeakerContribution_Event",
@@ -72,6 +80,7 @@ public class EXB2INELISOTEI {
     }
 
     // new 30-03-2016
+    //maybe needs to be adapted to morpheme ids - and changed for the IDs too 
     private void generateWordIDs(Document document) throws JDOMException {
         // added 30-03-2016
         HashSet<String> allExistingIDs = new HashSet<String>();
