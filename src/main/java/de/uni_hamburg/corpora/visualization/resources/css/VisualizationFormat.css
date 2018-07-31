@@ -5,7 +5,7 @@
 @font-face {
   font-family: 'CharisSIL';
   src: url('https://corpora.uni-hamburg.de/webfonts/CharisSIL-4.114-web/web/CharisSIL-R.woff') format('woff'), /* Pretty Modern Browsers */
-       url('https://corpora.uni-hamburg.de/webfonts/CharisSIL-4.114-web/CharisSIL-R.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('https://corpora.uni-hamburg.de/webfonts/CharisSIL-4.114-web/CharisSIL-R.ttf')  format('truetype') /* Safari, Android, iOS */
 }
 
 body{
