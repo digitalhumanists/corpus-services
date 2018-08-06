@@ -5,6 +5,9 @@
  */
 package de.uni_hamburg.corpora.conversion;
 
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -30,13 +33,16 @@ import org.jdom.transform.XSLTransformer;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.exmaralda.common.corpusbuild.TextFilter;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
  * @author fsnv625
  */
-public class EXB2INELISOTEI {
+public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
@@ -50,6 +56,8 @@ public class EXB2INELISOTEI {
     XSLTransformer transformer;
     XSLTransformer transformer2;
     XSLTransformer transformer3;
+    
+    Report report;
     
     public void writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, String filename) throws SAXException,
             FSMException,
@@ -200,6 +208,7 @@ public class EXB2INELISOTEI {
         
 
         Document teiDocument = null;
+        //do I still need this boolean?
         if (useNewStylesheets){
             StylesheetFactory ssf = new StylesheetFactory(true);
             String result =
@@ -209,8 +218,8 @@ public class EXB2INELISOTEI {
             teiDocument = transformer.transform(segmentedTranscription);            
         }
         
-        //FileIO.writeDocumentToLocalFile("C:\\Users\\Schmidt\\Desktop\\TEI\\intermediate1.xml", teiDocument);      
-        //System.out.println("STEP 1 completed.");
+        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate1.xml", teiDocument);      
+        System.out.println("STEP 1 completed.");
         
         Vector uElements = TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, includeFullText);
         
@@ -226,8 +235,8 @@ public class EXB2INELISOTEI {
         Element textNode = (Element)(xp.selectSingleNode(teiDocument));
         textNode.addContent(uElements);
 
-        //FileIO.writeDocumentToLocalFile("C:\\Users\\Schmidt\\Desktop\\TEI\\intermediate2.xml", teiDocument);
-        //System.out.println("STEP 2 completed.");
+        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate2.xml", teiDocument);
+        System.out.println("STEP 2 completed.");
 
         Document transformedDocument = null;
         if (useNewStylesheets){
@@ -242,8 +251,8 @@ public class EXB2INELISOTEI {
             textNode = (Element)(xp.selectSingleNode(transformedDocument));
         }
 
-        //FileIO.writeDocumentToLocalFile("C:\\Users\\Schmidt\\Desktop\\TEI\\intermediate3.xml", transformedDocument);
-        //System.out.println("STEP 3 completed.");
+        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate3.xml", transformedDocument);
+        System.out.println("STEP 3 completed.");
 
         // now take care of the events from tiers of type 'd'
         XPath xp2 = XPath.newInstance("//segmentation[@name='Event']/ats");
@@ -320,6 +329,7 @@ public class EXB2INELISOTEI {
             XPath xpx = XPath.newInstance(xpath);
             List tlis = xpx.selectNodes(segmentedTranscription);
             for (int pos=0; pos<tlis.size();pos++){
+                
                 timelineItems.put(((Element)(tlis.get(pos))).getAttributeValue("id"), pos);
             }
             
@@ -485,6 +495,45 @@ public class EXB2INELISOTEI {
         }
         
         return e1;
+    }
+
+    @Override
+    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
+        try {
+            //convert the file
+            //save the converted file
+            //TODO
+            //doesn't really make sense to have check only here
+            report = fix(cd);
+        } catch (JDOMException ex) {
+            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return report;
+    }
+
+    @Override
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+         //convert the file
+        //save the converted file
+        //cd needs to become a BasicTranscription bt
+        //Needs to be BasicTranscriptionData
+        //String for filename where it should be written
+        //better be a URL?
+        //writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, String filename);
+        return report;
+    }
+
+    @Override
+    public Collection<Class> getIsUsableFor() {
+         try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return IsUsableFor;
     }
 
 }
