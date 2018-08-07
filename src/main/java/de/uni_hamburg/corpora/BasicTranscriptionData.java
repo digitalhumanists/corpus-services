@@ -172,4 +172,8 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
        String unformattedCorpusData = xmOut.outputString(readbtasjdom);
        return unformattedCorpusData;
     }
+    
+    public BasicTranscription getEXMARaLDAbt(){
+        return bt;
+    }
 }

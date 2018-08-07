@@ -5,8 +5,10 @@
  */
 package de.uni_hamburg.corpora.conversion;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.HashSet;
@@ -20,7 +22,7 @@ import org.exmaralda.common.jdomutilities.IOUtilities;
 import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
-import org.exmaralda.partitureditor.jexmaralda.convert.StylesheetFactory;
+import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -29,7 +31,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.transform.XSLTransformException;
-import org.jdom.transform.XSLTransformer;
+//import org.jdom.transform.XSLTransformer;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
@@ -46,11 +48,16 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
+    
+    //only for testing, needs to be URL afterwards
+    String filename = "C:\\Users\\fsnv625\\Desktop\\TEI\\test.xml";
 
-    static String TEI_SKELETON_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl"; //Constants.BASICTRANSCRIPTION2TEISKELETONStylesheet;
-    static String SC_TO_TEI_U_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/SegmentChain2ISOTEIUtterance.xsl";
+    final String ISO_CONV = "inel iso tei";
+
+    static String TEI_SKELETON_STYLESHEET_ISO = "/de/uni_hamburg/corpora/conversion/resources/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl"; //Constants.BASICTRANSCRIPTION2TEISKELETONStylesheet;
+    static String SC_TO_TEI_U_STYLESHEET_ISO = "/de/uni_hamburg/corpora/conversion/resources/xsl/SegmentChain2ISOTEIUtterance.xsl";
     ; //Constants.SEGMENTCHAIN2TEIUTTERANCEStylesheet;
-    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/ISOTEICleanAndSort.xsl";
+    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/de/uni_hamburg/corpora/conversion/resources/xsl/ISOTEICleanAndSort.xsl";
     ; //Constants.TEICLEANANDSORTStylesheet;
 
      static String BODY_NODE = "//text";
@@ -60,24 +67,28 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     XSLTransformer transformer3;
 
     Report report;
+    
+    CorpusIO cio = new CorpusIO();
 
-    public void writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, String filename) throws SAXException,
+    public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException,
             FSMException,
             XSLTransformException,
             JDOMException,
             IOException,
             Exception {
-        writeMORPHEMEHIATISOTEIToFile(bt, filename, false, "/basic-transcription/basic-body/tier[@id = \"mb\"]");
+        return convertCD2MORPHEMEHIATISOTEI(cd, false, "/basic-transcription/basic-body/tier[@id = \"mb\"]");
     }
 
-    public void writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt,
-            String filename,
+    public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) throws SAXException,
             FSMException,
             XSLTransformException,
             JDOMException,
             IOException,
             Exception {
+        BasicTranscriptionData btd = (BasicTranscriptionData) cd;
+        BasicTranscription bt = btd.getEXMARaLDAbt();
+        System.out.println(bt.toString());
         // make a copy of the exb input
         BasicTranscription copyBT = bt.makeCopy();
         //normalize the exb (!)
@@ -103,6 +114,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         setDocLanguage(teiDoc, language);
         FileIO.writeDocumentToLocalFile(filename, teiDoc);
         System.out.println("document written.");
+        return report;
     }
 
     // new 30-03-2016
@@ -205,9 +217,13 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
         Document teiDocument = null;
 
-        StylesheetFactory ssf = new StylesheetFactory(true);
+        XSLTransformer xslt = new XSLTransformer();
+        //StylesheetFactory ssf = new StylesheetFactory(true);
+        //transform wants an xml as string object and xsl as String Object
+        String skelxsl = cio.readInternalResourceAsString(skeleton_stylesheet);
+        String segTrans = cio.CorpusData2String((CorpusData)segmentedTranscription);
         String result
-                = ssf.applyInternalStylesheetToString(skeleton_stylesheet, IOUtilities.documentToString(segmentedTranscription));
+                =  xslt.transform(segTrans, skelxsl);
         teiDocument = IOUtilities.readDocumentFromString(result);
 
         FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate1.xml", teiDocument);
@@ -228,7 +244,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
         Document transformedDocument = null;
         String result2
-                = ssf.applyInternalStylesheetToString(transform_stylesheet, IOUtilities.documentToString(teiDocument));
+                = xslt.transform(transform_stylesheet, IOUtilities.documentToString(teiDocument));
         transformedDocument = IOUtilities.readDocumentFromString(result2);
         //fix for issue #89
         textNode = (Element) (xp.selectSingleNode(transformedDocument));
@@ -269,7 +285,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //IOUtilities.writeDocumentToLocalFile("C:\\Dokumente und Einstellungen\\thomas\\Desktop\\Intermediate_TEI.xml", transformedDocument);
         Document finalDocument = null;
         String result3
-                = ssf.applyInternalStylesheetToString(sort_and_clean_stylesheet, IOUtilities.documentToString(transformedDocument));
+                = xslt.transform(sort_and_clean_stylesheet, IOUtilities.documentToString(transformedDocument));
         finalDocument = IOUtilities.readDocumentFromString(result3);
 
         return finalDocument;
@@ -500,7 +516,16 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //Needs to be BasicTranscriptionData
         //String for filename where it should be written
         //better be a URL?
-        //writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, String filename);
+        report = new Report();
+        try {
+            report = convertCD2MORPHEMEHIATISOTEI(cd);
+        } catch (XSLTransformException ex) {
+            report.addException(ex, "unknown XSLT error");
+        } catch (Exception ex) {
+             report.addException(ex, "unknown exception error");
+        }
+        
+        report.addCorrect(ISO_CONV, "ISO TEI conversion was successful");
         return report;
     }
 

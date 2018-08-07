@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
@@ -78,12 +81,12 @@ public class CorpusIO {
         fos.close();
         System.out.println("Document written...");
     }
-    
+
     public void write(Document doc, URL url) throws IOException {
-       XMLOutputter xmOut = new XMLOutputter();
-       String unformattedCorpusData = xmOut.outputString(doc);
-       String prettyCorpusData = indent(unformattedCorpusData, "event");
-       write(prettyCorpusData, url);
+        XMLOutputter xmOut = new XMLOutputter();
+        String unformattedCorpusData = xmOut.outputString(doc);
+        String prettyCorpusData = indent(unformattedCorpusData, "event");
+        write(prettyCorpusData, url);
     }
 
     public void outappend(String a) {
@@ -104,6 +107,20 @@ public class CorpusIO {
         return cd;
     }
 
+    public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
+        String xslstring = "";
+        SAXBuilder builder = new SAXBuilder();
+        java.io.InputStream is = getClass().getResourceAsStream(path2resource);
+        System.out.println(path2resource);
+        if (is == null) {
+            throw new IOException("Stylesheet not found!");
+        } else {
+            Document jdom = builder.build(is);
+            xslstring = TypeConverter.JdomDocument2String(jdom);
+        }
+        return xslstring;
+    }
+
     //TODO
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
         if (f.getName().endsWith("exb")) {
@@ -111,16 +128,16 @@ public class CorpusIO {
             //bt.loadFile(f);
             return bt;
         } else if (f.getName().endsWith("coma")) {
-                ComaData cm = new ComaData(f.toURI().toURL());
-                //TODO
-                return cm;
-        } else if (f.getName().endsWith("exs")||f.getName().endsWith("xml")){
+            ComaData cm = new ComaData(f.toURI().toURL());
+            //TODO
+            return cm;
+        } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
             //we can't read files other than coma and exb yet...
 
         } else {
-            System.out.println(f.getName()+ " is not xml CorpusData");
+            System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;
             return cd;
         }
@@ -162,8 +179,8 @@ public class CorpusIO {
                 for (File f : recursed) {
                     try {
                         CorpusData cd = toCorpusData(f);
-                        if(cd!=null){
-                        acdc.add(toCorpusData(f));
+                        if (cd != null) {
+                            acdc.add(toCorpusData(f));
                         }
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
@@ -181,7 +198,7 @@ public class CorpusIO {
                 File f = new File(url.getFile());
                 try {
                     CorpusData cd = toCorpusData(f);
-                        if(cd!=null){
+                    if (cd != null) {
                         acdc.add(toCorpusData(f));
                     }
                 } catch (MalformedURLException ex) {
@@ -193,13 +210,13 @@ public class CorpusIO {
                 }
                 cdc = (Collection) acdc;
                 return cdc;
-            
+
+            }
+        } else {
+            //it's a datastream in the repo
+            //TODO later          
+            return null;
         }
-    } else {
-        //it's a datastream in the repo
-        //TODO later          
-        return null;
-    }
     }
 
     /**
