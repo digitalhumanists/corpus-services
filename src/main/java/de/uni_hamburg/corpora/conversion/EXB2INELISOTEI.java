@@ -48,17 +48,19 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     String language = "en";
 
     static String TEI_SKELETON_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl"; //Constants.BASICTRANSCRIPTION2TEISKELETONStylesheet;
-    static String SC_TO_TEI_U_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/SegmentChain2ISOTEIUtterance.xsl";; //Constants.SEGMENTCHAIN2TEIUTTERANCEStylesheet;
-    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/ISOTEICleanAndSort.xsl";; //Constants.TEICLEANANDSORTStylesheet;
+    static String SC_TO_TEI_U_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/SegmentChain2ISOTEIUtterance.xsl";
+    ; //Constants.SEGMENTCHAIN2TEIUTTERANCEStylesheet;
+    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/main/java/de/uni_hamburg/corpora/conversion/resources/xsl/ISOTEICleanAndSort.xsl";
+    ; //Constants.TEICLEANANDSORTStylesheet;
 
      static String BODY_NODE = "//text";
-    
+
     XSLTransformer transformer;
     XSLTransformer transformer2;
     XSLTransformer transformer3;
-    
+
     Report report;
-    
+
     public void writeMORPHEMEHIATISOTEIToFile(BasicTranscription bt, String filename) throws SAXException,
             FSMException,
             XSLTransformException,
@@ -95,7 +97,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         Document teiDoc = SegmentedTranscriptionToTEITranscription(stdoc,
                 nameOfDeepSegmentation,
                 "SpeakerContribution_Event",
-                true,
                 includeFullText);
         System.out.println("Merged");
         generateWordIDs(teiDoc);
@@ -175,8 +176,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         System.out.println("Language of document set to " + language);
 
     }
-    
-            //Boolean for ISO!
+
+    //Boolean for ISO!
     /*
     public TEIMerger(boolean beISO) throws XSLTransformException{
         ISO = beISO;
@@ -190,66 +191,47 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         }
     }
     
-    */
-        
+     */
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
-                                                             String nameOfDeepSegmentation, 
-                                                             String nameOfFlatSegmentation,
-                                                             boolean useNewStylesheets,
-                                                             boolean includeFullText) throws XSLTransformException, JDOMException, Exception {
-        
+            String nameOfDeepSegmentation,
+            String nameOfFlatSegmentation,
+            boolean includeFullText) throws XSLTransformException, JDOMException, Exception {
 
-        
         String skeleton_stylesheet = TEI_SKELETON_STYLESHEET_ISO;
 
         String transform_stylesheet = SC_TO_TEI_U_STYLESHEET_ISO;
 
-        String sort_and_clean_stylesheet = SORT_AND_CLEAN_STYLESHEET_ISO;        
-        
+        String sort_and_clean_stylesheet = SORT_AND_CLEAN_STYLESHEET_ISO;
 
         Document teiDocument = null;
-        //do I still need this boolean?
-        if (useNewStylesheets){
-            StylesheetFactory ssf = new StylesheetFactory(true);
-            String result =
-                ssf.applyInternalStylesheetToString(skeleton_stylesheet, IOUtilities.documentToString(segmentedTranscription));
-            teiDocument = IOUtilities.readDocumentFromString(result);
-        } else {
-            teiDocument = transformer.transform(segmentedTranscription);            
-        }
-        
-        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate1.xml", teiDocument);      
+
+        StylesheetFactory ssf = new StylesheetFactory(true);
+        String result
+                = ssf.applyInternalStylesheetToString(skeleton_stylesheet, IOUtilities.documentToString(segmentedTranscription));
+        teiDocument = IOUtilities.readDocumentFromString(result);
+
+        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate1.xml", teiDocument);
         System.out.println("STEP 1 completed.");
-        
+
         Vector uElements = TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, includeFullText);
-        
 
         XPath xp = XPath.newInstance(BODY_NODE);
-        if (useNewStylesheets){
-            BODY_NODE = "//tei:body";
-            xp = XPath.newInstance(BODY_NODE);
-            xp.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
-        }
+        BODY_NODE = "//tei:body";
+        xp = XPath.newInstance(BODY_NODE);
+        xp.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
 
-
-        Element textNode = (Element)(xp.selectSingleNode(teiDocument));
+        Element textNode = (Element) (xp.selectSingleNode(teiDocument));
         textNode.addContent(uElements);
 
         FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate2.xml", teiDocument);
         System.out.println("STEP 2 completed.");
 
         Document transformedDocument = null;
-        if (useNewStylesheets){
-            StylesheetFactory ssf = new StylesheetFactory(true);
-            String result =
-                ssf.applyInternalStylesheetToString(transform_stylesheet, IOUtilities.documentToString(teiDocument));
-            transformedDocument = IOUtilities.readDocumentFromString(result);
-            //fix for issue #89
-            textNode = (Element)(xp.selectSingleNode(transformedDocument));
-        } else {
-            transformedDocument = transformer2.transform(teiDocument);
-            textNode = (Element)(xp.selectSingleNode(transformedDocument));
-        }
+        String result2
+                = ssf.applyInternalStylesheetToString(transform_stylesheet, IOUtilities.documentToString(teiDocument));
+        transformedDocument = IOUtilities.readDocumentFromString(result2);
+        //fix for issue #89
+        textNode = (Element) (xp.selectSingleNode(transformedDocument));
 
         FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate3.xml", transformedDocument);
         System.out.println("STEP 3 completed.");
@@ -257,86 +239,83 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         // now take care of the events from tiers of type 'd'
         XPath xp2 = XPath.newInstance("//segmentation[@name='Event']/ats");
         List events = xp2.selectNodes(segmentedTranscription);
-        for (int pos=0; pos<events.size(); pos++){
-            Element exmaraldaEvent = (Element)(events.get(pos));
+        for (int pos = 0; pos < events.size(); pos++) {
+            Element exmaraldaEvent = (Element) (events.get(pos));
             String category = exmaraldaEvent.getParentElement().getParentElement().getAttributeValue("category");
 
             String elementName = "event";
             if (category.equals("pause")) {
-                elementName ="pause";
+                elementName = "pause";
             }
-            
+
             Element teiEvent = new Element(elementName);
-            
+
             String speakerID = exmaraldaEvent.getParentElement().getParentElement().getAttributeValue("speaker");
-            if (speakerID!=null){
+            if (speakerID != null) {
                 teiEvent.setAttribute("who", speakerID);
             }
             teiEvent.setAttribute("start", exmaraldaEvent.getAttributeValue("s"));
             teiEvent.setAttribute("end", exmaraldaEvent.getAttributeValue("e"));
-            if (!category.equals("pause")){
+            if (!category.equals("pause")) {
                 teiEvent.setAttribute("desc", exmaraldaEvent.getText());
                 teiEvent.setAttribute("type", category);
             } else {
-                String duration = exmaraldaEvent.getText().replaceAll("\\(","").replaceAll("\\)","");
+                String duration = exmaraldaEvent.getText().replaceAll("\\(", "").replaceAll("\\)", "");
                 teiEvent.setAttribute("dur", duration);
             }
             textNode.addContent(teiEvent);
         }
 
         //IOUtilities.writeDocumentToLocalFile("C:\\Dokumente und Einstellungen\\thomas\\Desktop\\Intermediate_TEI.xml", transformedDocument);
-
-        
         Document finalDocument = null;
-        if (useNewStylesheets){
-            StylesheetFactory ssf = new StylesheetFactory(true);
-            String result =
-                ssf.applyInternalStylesheetToString(sort_and_clean_stylesheet, IOUtilities.documentToString(transformedDocument));
-            finalDocument = IOUtilities.readDocumentFromString(result);
-        } else {
-            finalDocument = transformer3.transform(transformedDocument);
-        }
-
+        String result3
+                = ssf.applyInternalStylesheetToString(sort_and_clean_stylesheet, IOUtilities.documentToString(transformedDocument));
+        finalDocument = IOUtilities.readDocumentFromString(result3);
 
         return finalDocument;
     }
-    
-    
-     public static Vector TEIMerge(Document segmentedTranscription, String nameOfDeepSegmentation, String nameOfFlatSegmentation) throws Exception{                
+
+    public static Vector TEIMerge(Document segmentedTranscription, String nameOfDeepSegmentation, String nameOfFlatSegmentation) throws Exception {
         return TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, false);
     }
-    /** this method will take the segmented transcription and, for each speaker contribution in the segmentation with
-     * the name 'nameOfDeepSegmentation' will add anchors from the segmentation with the name 'nameOfFlatSegmentation'
-     * such that the temporal information provided in the flat segmentation is completely represented as anchors 
-     * within the deep segmentation. The typical application scenario is to give this method a segmented HIAT transcription with
-     * nameOfDeepSegmentation = 'SpeakerContribution_Utterance_Word' 
-     * nameOfFlatSegmentation = 'SpeakerContribution_Event'
+
+    /**
+     * this method will take the segmented transcription and, for each speaker
+     * contribution in the segmentation with the name 'nameOfDeepSegmentation'
+     * will add anchors from the segmentation with the name
+     * 'nameOfFlatSegmentation' such that the temporal information provided in
+     * the flat segmentation is completely represented as anchors within the
+     * deep segmentation. The typical application scenario is to give this
+     * method a segmented HIAT transcription with nameOfDeepSegmentation =
+     * 'SpeakerContribution_Utterance_Word' nameOfFlatSegmentation =
+     * 'SpeakerContribution_Event'
+     *
      * @param segmentedTranscription
      * @param nameOfDeepSegmentation
      * @param nameOfFlatSegmentation
-     * @param includeFullText
-     * the method returns a vector of speaker-contribution elements with 'who' attributes
-     * @return  */
-    public static Vector TEIMerge(Document segmentedTranscription, 
-            String nameOfDeepSegmentation, 
+     * @param includeFullText the method returns a vector of
+     * speaker-contribution elements with 'who' attributes
+     * @return
+     */
+    public static Vector TEIMerge(Document segmentedTranscription,
+            String nameOfDeepSegmentation,
             String nameOfFlatSegmentation,
-            boolean includeFullText) throws Exception{                
+            boolean includeFullText) throws Exception {
         try {
-            
+
             // Make a map of the timeline
             Hashtable timelineItems = new Hashtable();
             String xpath = "//tli";
             XPath xpx = XPath.newInstance(xpath);
             List tlis = xpx.selectNodes(segmentedTranscription);
-            for (int pos=0; pos<tlis.size();pos++){
-                
-                timelineItems.put(((Element)(tlis.get(pos))).getAttributeValue("id"), pos);
+            for (int pos = 0; pos < tlis.size(); pos++) {
+
+                timelineItems.put(((Element) (tlis.get(pos))).getAttributeValue("id"), pos);
             }
-            
-            
+
             Vector returnValue = new Vector();
             XPath xp1 = XPath.newInstance("//segmentation[@name='" + nameOfDeepSegmentation + "']/ts");
-            List segmentChains = xp1.selectNodes(segmentedTranscription);        
+            List segmentChains = xp1.selectNodes(segmentedTranscription);
             // go through all top level segment chains
             for (Object segmentChain : segmentChains) {
                 Element sc = (Element) (segmentChain);
@@ -345,22 +324,21 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 String start = sc.getAttributeValue("s");
                 String end = sc.getAttributeValue("e");
                 String xpath2 = "//segmentation[@name='" + nameOfFlatSegmentation + "' and @tierref='" + tierref + "']"
-                        + "/ts[@s='" + start + "' and @e='" + end +"']";
+                        + "/ts[@s='" + start + "' and @e='" + end + "']";
                 XPath xp2 = XPath.newInstance(xpath2);
-                Element sc2 = (Element)(xp2.selectSingleNode(segmentedTranscription));                                               
-                if (sc2==null){
+                Element sc2 = (Element) (xp2.selectSingleNode(segmentedTranscription));
+                if (sc2 == null) {
                     //this means that no corresponding top level
                     //element was found in the second segmentation
                     //which should not happen
                     throw new Exception(tierref + " " + start + " " + end);
                 }
                 // this is where the magic happens
-                Element mergedElement = merge(sc,sc2);
-                
+                Element mergedElement = merge(sc, sc2);
 
                 // now take care of the corresponding annotations
-                int s = ((Integer)(timelineItems.get(start)));
-                int e = ((Integer)(timelineItems.get(end)));
+                int s = ((Integer) (timelineItems.get(start)));
+                int e = ((Integer) (timelineItems.get(end)));
                 String xpath5 = "//segmented-tier[@id='" + tierref + "']/annotation/ta";
                 XPath xp5 = XPath.newInstance(xpath5);
                 List annotations = xp5.selectNodes(segmentedTranscription);
@@ -368,132 +346,133 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     Element anno = (Element) (annotation1);
                     String aStart = anno.getAttributeValue("s");
                     String aEnd = anno.getAttributeValue("e");
-                    int as = ((Integer)(timelineItems.get(aStart)));
-                    int ae = ((Integer)(timelineItems.get(aEnd)));
-                    boolean annotationBelongsToThisElement = (as>=s && as<=e) || (ae>=s && ae<=e);
-                    if (annotationBelongsToThisElement){
+                    int as = ((Integer) (timelineItems.get(aStart)));
+                    int ae = ((Integer) (timelineItems.get(aEnd)));
+                    boolean annotationBelongsToThisElement = (as >= s && as <= e) || (ae >= s && ae <= e);
+                    if (annotationBelongsToThisElement) {
                         Element annotationsElement = mergedElement.getChild("annotations");
-                        if (annotationsElement==null){
+                        if (annotationsElement == null) {
                             annotationsElement = new Element("annotations");
                             mergedElement.addContent(annotationsElement);
                         }
                         Element annotation = new Element("annotation");
-                        annotation.setAttribute("start",aStart);
-                        annotation.setAttribute("end",aEnd);
-                        annotation.setAttribute("level",anno.getParentElement().getAttributeValue("name"));
+                        annotation.setAttribute("start", aStart);
+                        annotation.setAttribute("end", aEnd);
+                        annotation.setAttribute("level", anno.getParentElement().getAttributeValue("name"));
                         annotation.setAttribute("value", anno.getText());
                         annotationsElement.addContent(annotation);
                     }
-                    
+
                     //System.out.println(s + "/" + e + " **** " + as + "/" + ae);
                 }
-                
-                
+
                 //*****************************************
                 // NEW 25-04-2016
                 // include full text if Daniel J. wisheth thus
-                if (includeFullText){
+                if (includeFullText) {
                     Element annotation = new Element("annotation");
                     annotation.setAttribute("start", start);
                     annotation.setAttribute("end", end);
                     annotation.setAttribute("level", "full-text");
-                    
+
                     String fullText = "";
                     List l = XPath.selectNodes(sc2, "descendant::text()");
-                    for (Object o : l){
-                        Text text = (Text)o;
-                        fullText+=text.getText();
+                    for (Object o : l) {
+                        Text text = (Text) o;
+                        fullText += text.getText();
                     }
                     annotation.setAttribute("value", fullText);
-                    
+
                     Element annotationsElement = mergedElement.getChild("annotations");
-                    if (annotationsElement==null){
+                    if (annotationsElement == null) {
                         annotationsElement = new Element("annotations");
                         mergedElement.addContent(annotationsElement);
                     }
                     annotationsElement.addContent(annotation);
                 }
                 //*****************************************
-                
+
                 returnValue.addElement(mergedElement.detach());
             }
-            
+
             // issue #89 - Now the vector contains elements only from the 
             // segmentations passed as parameters
             // in particular, it seems that tiers of type 'd' (which end up as 
             // segmentation @name='Event' are lost
-            
             return returnValue;
         } catch (JDOMException ex) {
             ex.printStackTrace();
         }
         return null;
     }
-    
-    static Element merge(Element e1, Element e2){
-        
+
+    static Element merge(Element e1, Element e2) {
+
         Iterator i1 = e1.getDescendants();
         Vector pcData1 = new Vector();
-        while (i1.hasNext()){pcData1.addElement(i1.next());}
-        
+        while (i1.hasNext()) {
+            pcData1.addElement(i1.next());
+        }
+
         Iterator i2 = e2.getDescendants(new TextFilter());
         Vector pcData2 = new Vector();
-        while (i2.hasNext()){pcData2.addElement(i2.next());}
-                  
+        while (i2.hasNext()) {
+            pcData2.addElement(i2.next());
+        }
+
         int charBoundary = 0;
-        for (int pos=0; pos<pcData2.size()-1; pos++){
-            Text eventText = (Text)(pcData2.elementAt(pos));
+        for (int pos = 0; pos < pcData2.size() - 1; pos++) {
+            Text eventText = (Text) (pcData2.elementAt(pos));
             Element anchor = new Element("anchor");
             Element event = eventText.getParentElement();
             String start = event.getAttributeValue("e");
             anchor.setAttribute("synch", start);
 
-            charBoundary+= eventText.getText().length();
+            charBoundary += eventText.getText().length();
             // jetzt durch den anderen Baum laufen und den zugehoerigen Anker
             // an der richtigen Stelle einfuegen
             int charCount = 0;
-            for (int pos2=0; pos2<pcData1.size(); pos2++){
+            for (int pos2 = 0; pos2 < pcData1.size(); pos2++) {
                 Object o = pcData1.elementAt(pos2);
-                if (!(o instanceof Text)) continue;
-                Text segmentText = (Text)o;
-                int textLength = segmentText.getText().length();
-                if (charCount+textLength<charBoundary){
-                    charCount+=textLength;
+                if (!(o instanceof Text)) {
                     continue;
-                } else if (charCount+textLength==charBoundary){
+                }
+                Text segmentText = (Text) o;
+                int textLength = segmentText.getText().length();
+                if (charCount + textLength < charBoundary) {
+                    charCount += textLength;
+                    continue;
+                } else if (charCount + textLength == charBoundary) {
                     Element parent = segmentText.getParentElement();
                     int index = parent.indexOf(segmentText);
                     Element parentOfParent = parent.getParentElement();
                     int index2 = parentOfParent.indexOf(parent);
-                    parentOfParent.addContent(index2+1,anchor);
+                    parentOfParent.addContent(index2 + 1, anchor);
                     break;
                 }
                 // charCount+textLength>charBoundary
-                String leftPart = segmentText.getText().substring(0, charBoundary-charCount);
-                String rightPart = segmentText.getText().substring(charBoundary-charCount);
+                String leftPart = segmentText.getText().substring(0, charBoundary - charCount);
+                String rightPart = segmentText.getText().substring(charBoundary - charCount);
                 Text leftText = new Text(leftPart);
                 Text rightText = new Text(rightPart);
-
 
                 // neue Sachen muessen zweimal eingefuegt werden - einmal
                 // in den Vector, einmal in den Parent
                 // Sachen im Vector muessen den richtigen Parent bekommen
-                
-                
                 Element parent = segmentText.getParentElement();
                 parent.removeContent(segmentText);
                 parent.addContent(leftText);
                 parent.addContent(anchor);
                 parent.addContent(rightText);
-                
+
                 pcData1.remove(segmentText);
-                pcData1.add(pos2,rightText);
-                pcData1.add(pos2,anchor);
-                pcData1.add(pos2,leftText);
+                pcData1.add(pos2, rightText);
+                pcData1.add(pos2, anchor);
+                pcData1.add(pos2, leftText);
                 break;
             }
         }
-        
+
         return e1;
     }
 
@@ -515,7 +494,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-         //convert the file
+        //convert the file
         //save the converted file
         //cd needs to become a BasicTranscription bt
         //Needs to be BasicTranscriptionData
@@ -527,13 +506,13 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     @Override
     public Collection<Class> getIsUsableFor() {
-         try {
-            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    return IsUsableFor;
+        return IsUsableFor;
     }
 
 }
