@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -150,6 +151,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ZipCorpus");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -252,6 +254,10 @@ public class CorpusMagician {
                 case "comaoverviewgenerationfix":
                     cog = new ComaOverviewGeneration();
                     report.merge(runCorpusFunction(corpus, cog, true));
+                    break;
+                case "zipcorpus":
+                    ZipCorpus zc = new ZipCorpus();
+                    report.merge(runCorpusFunction(corpus, zc));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
