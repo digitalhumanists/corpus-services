@@ -10,6 +10,7 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -50,14 +51,14 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     String language = "en";
     
     //only for testing, needs to be URL afterwards
-    String filename = "C:\\Users\\fsnv625\\Desktop\\TEI\\test.xml";
+    String filename = "/home/anne/Schreibtisch/test.xml";
 
     final String ISO_CONV = "inel iso tei";
 
-    static String TEI_SKELETON_STYLESHEET_ISO = "/de/uni_hamburg/corpora/conversion/resources/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl"; //Constants.BASICTRANSCRIPTION2TEISKELETONStylesheet;
-    static String SC_TO_TEI_U_STYLESHEET_ISO = "/de/uni_hamburg/corpora/conversion/resources/xsl/SegmentChain2ISOTEIUtterance.xsl";
+    static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl"; //Constants.BASICTRANSCRIPTION2TEISKELETONStylesheet;
+    static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtterance.xsl";
     ; //Constants.SEGMENTCHAIN2TEIUTTERANCEStylesheet;
-    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/de/uni_hamburg/corpora/conversion/resources/xsl/ISOTEICleanAndSort.xsl";
+    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSort.xsl";
     ; //Constants.TEICLEANANDSORTStylesheet;
 
      static String BODY_NODE = "//text";
@@ -220,13 +221,15 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         XSLTransformer xslt = new XSLTransformer();
         //StylesheetFactory ssf = new StylesheetFactory(true);
         //transform wants an xml as string object and xsl as String Object
-        String skelxsl = cio.readInternalResourceAsString(skeleton_stylesheet);
-        String segTrans = cio.CorpusData2String((CorpusData)segmentedTranscription);
+        String skelxsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(skeleton_stylesheet));
+        //String skelxsl = cio.readInternalResourceAsString(skeleton_stylesheet);
+        System.out.println(skelxsl);
+        String segTrans = TypeConverter.JdomDocument2String(segmentedTranscription);
         String result
                 =  xslt.transform(segTrans, skelxsl);
         teiDocument = IOUtilities.readDocumentFromString(result);
 
-        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate1.xml", teiDocument);
+        FileIO.writeDocumentToLocalFile("/home/anne/Schreibtisch/TEI/intermediate1.xml", teiDocument);
         System.out.println("STEP 1 completed.");
 
         Vector uElements = TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, includeFullText);
@@ -239,7 +242,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         Element textNode = (Element) (xp.selectSingleNode(teiDocument));
         textNode.addContent(uElements);
 
-        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate2.xml", teiDocument);
+        FileIO.writeDocumentToLocalFile("/home/anne/Schreibtisch/TEI/intermediate2.xml", teiDocument);
         System.out.println("STEP 2 completed.");
 
         Document transformedDocument = null;
@@ -249,7 +252,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //fix for issue #89
         textNode = (Element) (xp.selectSingleNode(transformedDocument));
 
-        FileIO.writeDocumentToLocalFile("C:\\Users\\fsnv625\\Desktop\\TEI\\intermediate3.xml", transformedDocument);
+        FileIO.writeDocumentToLocalFile("/home/anne/Schreibtisch/TEI/intermediate3.xml", transformedDocument);
         System.out.println("STEP 3 completed.");
 
         // now take care of the events from tiers of type 'd'
