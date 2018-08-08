@@ -52,7 +52,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     //only for testing, needs to be URL afterwards
     //TODO
     String filename = "file:///home/anne/Schreibtisch/testisotei.xml";
-    
+
     //testing and debugigng stuff
     String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
     String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
@@ -165,13 +165,22 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //System.out.println(skeleton_stylesheet);
         String result
                 = xslt.transform(TypeConverter.JdomDocument2String(segmentedTranscription), skeleton_stylesheet);
+        //now we get a document of the first transformation, the iso tei skeleton
         teiDocument = TypeConverter.String2JdomDocument(result);
         //For testing only
         cio.write(teiDocument, new URL(intermediate1));
         System.out.println("STEP 1 completed.");
-
-        //???
-        //get the uElements
+        /*
+        * this method will take the segmented transcription and, for each speaker
+        * contribution in the segmentation with the name 'nameOfDeepSegmentation'
+        * will add anchors from the segmentation with the name
+        * 'nameOfFlatSegmentation' such that the temporal information provided in
+        * the flat segmentation is completely represented as anchors within the
+        * deep segmentation. The typical application scenario is to give this
+        * method a segmented HIAT transcription with nameOfDeepSegmentation =
+        * 'SpeakerContribution_Utterance_Word' nameOfFlatSegmentation =
+        * 'SpeakerContribution_Event'
+        */
         Vector uElements = TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, includeFullText);
 
         XPath xp = XPath.newInstance(BODY_NODE);
