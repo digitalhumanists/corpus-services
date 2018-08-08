@@ -210,23 +210,19 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             String nameOfFlatSegmentation,
             boolean includeFullText) throws XSLTransformException, JDOMException, Exception {
 
-        String skeleton_stylesheet = TEI_SKELETON_STYLESHEET_ISO;
+        String skeleton_stylesheet = cio.readInternalResourceAsString(TEI_SKELETON_STYLESHEET_ISO);
 
-        String transform_stylesheet = SC_TO_TEI_U_STYLESHEET_ISO;
+        String transform_stylesheet = cio.readInternalResourceAsString(SC_TO_TEI_U_STYLESHEET_ISO);
 
-        String sort_and_clean_stylesheet = SORT_AND_CLEAN_STYLESHEET_ISO;
+        String sort_and_clean_stylesheet = cio.readInternalResourceAsString(SORT_AND_CLEAN_STYLESHEET_ISO);
 
         Document teiDocument = null;
 
         XSLTransformer xslt = new XSLTransformer();
-        //StylesheetFactory ssf = new StylesheetFactory(true);
         //transform wants an xml as string object and xsl as String Object
-        String skelxsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(skeleton_stylesheet));
-        //String skelxsl = cio.readInternalResourceAsString(skeleton_stylesheet);
-        System.out.println(skelxsl);
-        String segTrans = TypeConverter.JdomDocument2String(segmentedTranscription);
+        System.out.println(skeleton_stylesheet);
         String result
-                =  xslt.transform(segTrans, skelxsl);
+                =  xslt.transform(TypeConverter.JdomDocument2String(segmentedTranscription), skeleton_stylesheet);
         teiDocument = IOUtilities.readDocumentFromString(result);
 
         FileIO.writeDocumentToLocalFile("/home/anne/Schreibtisch/TEI/intermediate1.xml", teiDocument);
@@ -247,7 +243,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
         Document transformedDocument = null;
         String result2
-                = xslt.transform(transform_stylesheet, IOUtilities.documentToString(teiDocument));
+                = xslt.transform(TypeConverter.JdomDocument2String(teiDocument), transform_stylesheet);
         transformedDocument = IOUtilities.readDocumentFromString(result2);
         //fix for issue #89
         textNode = (Element) (xp.selectSingleNode(transformedDocument));
@@ -288,7 +284,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //IOUtilities.writeDocumentToLocalFile("C:\\Dokumente und Einstellungen\\thomas\\Desktop\\Intermediate_TEI.xml", transformedDocument);
         Document finalDocument = null;
         String result3
-                = xslt.transform(sort_and_clean_stylesheet, IOUtilities.documentToString(transformedDocument));
+                = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), sort_and_clean_stylesheet);
         finalDocument = IOUtilities.readDocumentFromString(result3);
 
         return finalDocument;
