@@ -108,16 +108,11 @@ public class CorpusIO {
     }
 
     public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
-        String xslstring = "";
-        SAXBuilder builder = new SAXBuilder();
-        java.io.InputStream is = getClass().getResourceAsStream(path2resource);
+        String xslstring = TypeConverter.InputStream2String(getClass().getResourceAsStream(path2resource));
         System.out.println(path2resource);
-        if (is == null) {
+        if (xslstring == null) {
             throw new IOException("Stylesheet not found!");
-        } else {
-            Document jdom = builder.build(is);
-            xslstring = TypeConverter.JdomDocument2String(jdom);
-        }
+        } 
         return xslstring;
     }
 
