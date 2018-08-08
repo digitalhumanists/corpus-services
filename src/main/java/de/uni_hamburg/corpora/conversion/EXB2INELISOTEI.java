@@ -57,6 +57,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
     String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
     String intermediate3 = "file:///home/anne/Schreibtisch/TEI/intermediate3.xml";
+    String intermediate4 = "file:///home/anne/Schreibtisch/TEI/intermediate4.xml";
+    String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
 
     final String ISO_CONV = "inel iso tei";
 
@@ -196,6 +198,9 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         cio.write(teiDocument, new URL(intermediate2));
         System.out.println("STEP 2 completed.");
 
+        //SC_TO_TEI_U_STYLESHEET_ISO needs to be changed for morphemes maybe?
+        
+        
         Document transformedDocument = null;
         String result2
                 = xslt.transform(TypeConverter.JdomDocument2String(teiDocument), transform_stylesheet);
@@ -203,7 +208,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //fix for issue #89
         textNode = (Element) (xp.selectSingleNode(transformedDocument));
         //For testing only
-        cio.write(teiDocument, new URL(intermediate3));
+        cio.write(transformedDocument, new URL(intermediate3));
         System.out.println("STEP 3 completed.");
 
         // now take care of the events from tiers of type 'd'
@@ -235,13 +240,20 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             }
             textNode.addContent(teiEvent);
         }
-
+        
         //IOUtilities.writeDocumentToLocalFile("C:\\Dokumente und Einstellungen\\thomas\\Desktop\\Intermediate_TEI.xml", transformedDocument);
         Document finalDocument = null;
+        
+        //TODO for morpheme inel iso tei, sort and clean must be changed!
+        //and the generating of the ids
+        
+        cio.write(transformedDocument, new URL(intermediate4));
         String result3
                 = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), sort_and_clean_stylesheet);
         finalDocument = IOUtilities.readDocumentFromString(result3);
 
+        cio.write(finalDocument, new URL(intermediate5));
+        
         return finalDocument;
     }
 
