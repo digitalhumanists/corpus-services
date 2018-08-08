@@ -83,8 +83,9 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     CorpusIO cio = new CorpusIO();
 
     /*
-    * this method takes a CorpusData object converts it into ISO TEI and saves it TODO where
-    * and gives back a report if it worked
+    * this method takes a CorpusData object, converts it into ISO TEI and saves it 
+    * TODO where
+    * and gives back a report how it worked
      */
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException,
             FSMException,
@@ -537,8 +538,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         //convert the file
         //save the converted file
-        //cd needs to become a BasicTranscription bt
-        //Needs to be BasicTranscriptionData
         //String for filename where it should be written
         //better be a URL?
         report = new Report();
@@ -549,8 +548,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         } catch (Exception ex) {
             report.addException(ex, "unknown exception error");
         }
-
-        report.addCorrect(ISO_CONV, "ISO TEI conversion was successful");
+        report.addCorrect(ISO_CONV, "ISO TEI conversion of file " + cd.getURL().getFile() + " was successful");
         return report;
     }
 
