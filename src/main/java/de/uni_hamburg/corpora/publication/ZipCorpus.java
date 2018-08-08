@@ -40,8 +40,9 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     //get path of zip file corpus/resources/corpus.zip
     private static String OUTPUT_ZIP_FILE;
     private static Boolean AUDIO = false;
+    Report report = null;
 
-    ZipCorpus() {
+    public ZipCorpus() {
         fileList = new ArrayList<String>();
     }
 
@@ -57,7 +58,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      *
      * @param zipFile output ZIP file location
      */
-    public void zipIt(String zipFile, Boolean AUDIO) {
+    public Report zipIt(String zipFile, Boolean AUDIO) {
         if (AUDIO) {
             zipFile = SOURCE_FOLDER + File.separator + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
         } else {
@@ -95,8 +96,9 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
             System.out.println("Done");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            report.addException(ex, "Unknown IO exception");
         }
+    return report;
     }
 
     /**
@@ -104,17 +106,19 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      *
      * @param node file or directory
      */
-    public void generateFileList(File node) {
+    public Report generateFileList(File node) {
 
         //add file only
         if (node.isFile()) {
             if (AUDIO) {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf") || node.getName().endsWith(".mp3")) {
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
+                    report.addCorrect("zipfiles", node.getAbsoluteFile().toString() + "added to filelist");
                 }
             } else {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf")) {
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
+                    report.addCorrect("zipfiles", node.getAbsoluteFile().toString() + "added to filelist");
                 }
             }
         }
@@ -124,7 +128,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 generateFileList(new File(node, filename));
             }
         }
-
+    return report;
     }
 
     /**
@@ -139,7 +143,10 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
     @Override
     public Report publish(CorpusData cd) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Report report;
+        report = generateFileList(new File(SOURCE_FOLDER));
+        report = zipIt(OUTPUT_ZIP_FILE, AUDIO);
+        return report;
     }
 
     @Override
