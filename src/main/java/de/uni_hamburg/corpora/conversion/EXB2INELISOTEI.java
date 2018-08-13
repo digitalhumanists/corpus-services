@@ -59,8 +59,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     //locations of the used xsls
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
-    static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtterance.xsl";
-    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSort.xsl";
+    static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtteranceINEL.xsl";
+    static String SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSortINEL.xsl";
 
     static String BODY_NODE = "//text";
 
