@@ -17,7 +17,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 //TODO get rid of emxa imports in the future
-import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.common.jdomutilities.IOUtilities;
 import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
@@ -49,16 +48,12 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
 
-    //only for testing, needs to be URL afterwards
-    //TODO
-    String filename = "file:///home/anne/Schreibtisch/testisotei.xml";
-
     //testing and debugigng stuff
-    String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
-    String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
-    String intermediate3 = "file:///home/anne/Schreibtisch/TEI/intermediate3.xml";
-    String intermediate4 = "file:///home/anne/Schreibtisch/TEI/intermediate4.xml";
-    String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
+    String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
+    String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
+    String intermediate3 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate3.xml";
+    String intermediate4 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate4.xml";
+    String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";
 
     final String ISO_CONV = "inel iso tei";
 
@@ -85,8 +80,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     CorpusIO cio = new CorpusIO();
 
     /*
-    * this method takes a CorpusData object, converts it into ISO TEI and saves it 
-    * TODO where
+    * this method takes a CorpusData object, converts it into INBEL Morpheme ISO TEI and saves it 
+    * next to the CorpusData object
     * and gives back a report how it worked
      */
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException,
@@ -141,11 +136,11 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         generateWordIDs(teiDoc);
         //so is the language of the doc
         setDocLanguage(teiDoc, language);
-        //now the completed document is saved
-        //TODO where to save?
-        URL url = new URL(filename);
+        //now the completed document is saved next to cd
+        String filename = cd.getURL().getFile();
+        URL url = new URL("file://" + filename.substring(0,filename.indexOf(".")) + ".xml");
         cio.write(teiDoc, url);
-        //FileIO.writeDocumentToLocalFile(filename, teiDoc);
+
         System.out.println("document written.");
         return report;
     }
@@ -196,10 +191,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
         //For testing only
         cio.write(teiDocument, new URL(intermediate2));
-        System.out.println("STEP 2 completed.");
-
-        //SC_TO_TEI_U_STYLESHEET_ISO needs to be changed for morphemes maybe?
-        
+        System.out.println("STEP 2 completed.");        
         
         Document transformedDocument = null;
         String result2
@@ -248,6 +240,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //and the generating of the ids
         
         cio.write(transformedDocument, new URL(intermediate4));
+        //Here the annotations are taken care of
+        //this is important for the INEL morpheme segmentations
         String result3
                 = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), sort_and_clean_stylesheet);
         finalDocument = IOUtilities.readDocumentFromString(result3);
@@ -459,7 +453,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     }
 
     // new 30-03-2016
-    //maybe needs to be adapted to morpheme ids - and changed for the IDs too 
+    //this needs to be adapted to morpheme ids - and changed for the word IDs too 
+    //and we need to generate the spans for the morphemes somewhere too
     private void generateWordIDs(Document document) throws JDOMException {
         // added 30-03-2016
         HashSet<String> allExistingIDs = new HashSet<String>();
