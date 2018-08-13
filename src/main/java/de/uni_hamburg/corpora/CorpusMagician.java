@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
 import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
@@ -152,6 +153,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("EXB2INELISOTEI");
+        allExistingCFs.add("EXB2HIATISOTEI");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -258,6 +260,10 @@ public class CorpusMagician {
                 case "exb2inelisotei":
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
                     report.merge(runCorpusFunction(corpus, eiit));
+                    break;
+                case "exb2hiatisotei":
+                    EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
+                    report.merge(runCorpusFunction(corpus, ehit));
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
