@@ -132,8 +132,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 nameOfFlategmentation,
                 includeFullText);
         System.out.println("Merged");
-        //the word IDs are generated afterwards
-        generateWordIDs(teiDoc);
         //so is the language of the doc
         setDocLanguage(teiDoc, language);
         //now the completed document is saved next to cd
@@ -193,6 +191,12 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         cio.write(teiDocument, new URL(intermediate2));
         System.out.println("STEP 2 completed.");        
         
+        //TODO
+        //we need to keep the information which word is where on the timeline...
+        //and we don't have the IDs yet?
+        
+        
+        
         Document transformedDocument = null;
         String result2
                 = xslt.transform(TypeConverter.JdomDocument2String(teiDocument), transform_stylesheet);
@@ -233,15 +237,17 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             textNode.addContent(teiEvent);
         }
         
-        //IOUtilities.writeDocumentToLocalFile("C:\\Dokumente und Einstellungen\\thomas\\Desktop\\Intermediate_TEI.xml", transformedDocument);
-        Document finalDocument = null;
+
         
         //TODO for morpheme inel iso tei, sort and clean must be changed!
         //and the generating of the ids
-        
+        generateWordIDs(transformedDocument);
         cio.write(transformedDocument, new URL(intermediate4));
         //Here the annotations are taken care of
         //this is important for the INEL morpheme segmentations
+                //the word IDs are generated afterwards
+        //but for the INEL transformation, we would need them before the last step
+        Document finalDocument = null;
         String result3
                 = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), sort_and_clean_stylesheet);
         finalDocument = IOUtilities.readDocumentFromString(result3);
@@ -456,6 +462,57 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     //this needs to be adapted to morpheme ids - and changed for the word IDs too 
     //and we need to generate the spans for the morphemes somewhere too
     private void generateWordIDs(Document document) throws JDOMException {
+        // added 30-03-2016
+        HashSet<String> allExistingIDs = new HashSet<String>();
+        XPath idXPath = XPath.newInstance("//tei:*[@xml:id]");
+        idXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
+        idXPath.addNamespace(Namespace.XML_NAMESPACE);
+        List idElements = idXPath.selectNodes(document);
+        for (Object o : idElements) {
+            Element e = (Element) o;
+            allExistingIDs.add(e.getAttributeValue("id", Namespace.XML_NAMESPACE));
+        }
+
+        // changed 30-03-2016
+        XPath wordXPath = XPath.newInstance("//tei:w[not(@xml:id)]");
+        wordXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
+        wordXPath.addNamespace(Namespace.XML_NAMESPACE);
+
+        List words = wordXPath.selectNodes(document);
+        int count = 1;
+        for (Object o : words) {
+            Element word = (Element) o;
+            while (allExistingIDs.contains("w" + Integer.toString(count))) {
+                count++;
+            }
+
+            String wordID = "w" + Integer.toString(count);
+            allExistingIDs.add(wordID);
+            //System.out.println("*** " + wordID);
+            word.setAttribute("id", wordID, Namespace.XML_NAMESPACE);
+        }
+
+        // new 02-12-2014
+        XPath pcXPath = XPath.newInstance("//tei:pc[not(@xml:id)]");
+        pcXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
+        pcXPath.addNamespace(Namespace.XML_NAMESPACE);
+
+        List pcs = pcXPath.selectNodes(document);
+        count = 1;
+        for (Object o : pcs) {
+            Element pc = (Element) o;
+            while (allExistingIDs.contains("pc" + Integer.toString(count))) {
+                count++;
+            }
+
+            String pcID = "pc" + Integer.toString(count);
+            allExistingIDs.add(pcID);
+            //System.out.println("*** " + wordID);
+            pc.setAttribute("id", pcID, Namespace.XML_NAMESPACE);
+        }
+    }
+    
+     private void generateMorphIDs(Document document) throws JDOMException {
         // added 30-03-2016
         HashSet<String> allExistingIDs = new HashSet<String>();
         XPath idXPath = XPath.newInstance("//tei:*[@xml:id]");

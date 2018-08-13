@@ -46,6 +46,12 @@
 	<!-- 20-02-2017: added generic word (issue #57) -->
 	<xsl:template match="*:ts[@n='HIAT:w' or @n='cGAT:w' or @n='GEN:w']">
 		<xsl:element name="w" xmlns="http://www.tei-c.org/ns/1.0">
+			<xsl:attribute name="s">
+				<xsl:value-of select="@s"/>   
+			</xsl:attribute>
+			<xsl:attribute name="e">
+				<xsl:value-of select="@e"/>   
+			</xsl:attribute>
 			<xsl:apply-templates/>
 		</xsl:element>
 	</xsl:template>

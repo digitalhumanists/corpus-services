@@ -43,6 +43,32 @@
 		<xsl:param name="timeline-id"/>
 		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
 	</xsl:function>
+        
+    <!-- memorizes position of a word w in the timeline-->
+	<xsl:variable name="word-positions">
+		<positions>
+			<xsl:for-each select="//*:w">
+				<item>
+					<xsl:attribute name="id">
+						<xsl:value-of select="@xml:id"/>
+					</xsl:attribute>
+					<xsl:attribute name="positionstart">
+						<xsl:value-of select="@start"/>
+					</xsl:attribute>
+					<xsl:attribute name="positionend">
+						<xsl:value-of select="@end"/>
+					</xsl:attribute>
+				</item>
+			</xsl:for-each>
+		</positions>
+	</xsl:variable>
+
+	<!-- returns the word id for given annotation -->
+	<xsl:function name="tei:word-annotation" as="xs:integer">
+		<xsl:param name="timeline-id"/>
+		<!-- TODO here!!!! How do we get the word that matches the annotaiton? -->
+		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
+	</xsl:function>  
 
 	<!-- ***************************** -->
 
@@ -199,6 +225,9 @@
 	<xsl:template match="*:w[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end]" mode="grab_em">
 		<xsl:element name="w">
 			<!-- added 11-07-2018 -->
+                        <xsl:attribute name="xml:id">
+                         <xsl:value-of select="@xml:id" />
+                        </xsl:attribute>
 			<xsl:attribute name="type">uncertain</xsl:attribute>
 			<xsl:apply-templates select="@* | node()"/>
 		</xsl:element>
@@ -208,6 +237,9 @@
 	<xsl:template match="*:pc[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end]" mode="grab_em">
 		<xsl:element name="pc">
 			<!-- added 11-07-2018 -->
+                        <xsl:attribute name="xml:id">
+                         <xsl:value-of select="@xml:id" />
+                        </xsl:attribute>
 			<xsl:attribute name="type">uncertain</xsl:attribute>
 			<xsl:apply-templates select="@* | node()"/>
 		</xsl:element>
@@ -269,6 +301,9 @@
 
 	<xsl:template match="*:w">
 		<xsl:element name="w">
+                         <xsl:attribute name="xml:id">
+                         <xsl:value-of select="@xml:id" />
+                          </xsl:attribute>
 			<xsl:if test="following-sibling::*[1][self::*:repair]">
 				<xsl:attribute name="type">repair</xsl:attribute>
 			</xsl:if>
