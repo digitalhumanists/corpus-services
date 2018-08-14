@@ -15,6 +15,7 @@ import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,6 +26,8 @@ import java.util.logging.Logger;
 import java.lang.String;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -44,7 +47,9 @@ public class CorpusMagician {
     Collection<String> chosencorpusfunctions = new ArrayList();
     //the final Report
     Report report = new Report();
-
+    //the final Exmaralda error list
+    public static ExmaErrorList exmaError = new ExmaErrorList();
+    
     public CorpusMagician() {
     }
 
@@ -98,9 +103,18 @@ public class CorpusMagician {
                 reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
                 cio.write(reportOutput, reportlocation);
             }
+            //create the error list file
+            //needs to be OS independent
+            String errorstring = new File(reportstring).getParent()+ File.separator + "errorlist.xml";
+            URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
+            exmaError.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         }
 
