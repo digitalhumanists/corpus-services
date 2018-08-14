@@ -136,7 +136,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         setDocLanguage(teiDoc, language);
         //now the completed document is saved next to cd
         String filename = cd.getURL().getFile();
-        URL url = new URL("file://" + filename.substring(0,filename.indexOf(".")) + ".xml");
+        URL url = new URL("file://" + filename.substring(0,filename.lastIndexOf(".")) + ".xml");
         cio.write(teiDoc, url);
 
         System.out.println("document written.");
