@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -150,6 +151,8 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ComaApostropheChecker");
+
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -253,6 +256,14 @@ public class CorpusMagician {
                     cog = new ComaOverviewGeneration();
                     report.merge(runCorpusFunction(corpus, cog, true));
                     break;
+                case "comaapostrophechecker":
+                    ComaApostropheChecker cac = new ComaApostropheChecker();
+                    report.merge(runCorpusFunction(corpus, cac));
+                    break;    
+                case "comaapostrophecheckerfix":
+                    cac = new ComaApostropheChecker();
+                    report.merge(runCorpusFunction(corpus, cac, true));
+                    break;  
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
