@@ -8,6 +8,7 @@ package de.uni_hamburg.corpora.utilities;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -71,8 +72,19 @@ public class PrettyPrinter {
             // Return pretty print xml string
             StringWriter stringWriter = new StringWriter();
             transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
-
-            return stringWriter.toString();
+            String prettyXmlString = stringWriter.toString();
+            
+            /* insert some specific EXMARaLDA dialect styles */
+            
+            // insert a blank space at the end of empty elements
+            Pattern r1 = Pattern.compile("<([^>]+)([^>\\s])/>", Pattern.DOTALL);
+            prettyXmlString = r1.matcher(prettyXmlString).replaceAll("<$1$2 />");
+            
+            // insert explicit CDATA section for specific elements
+            Pattern r2 = Pattern.compile("<nts([^>]*)>([\\s]+)</nts>", Pattern.DOTALL);
+            prettyXmlString = r2.matcher(prettyXmlString).replaceAll("<nts$1><![CDATA[$2]]></nts>");
+                        
+            return prettyXmlString;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
