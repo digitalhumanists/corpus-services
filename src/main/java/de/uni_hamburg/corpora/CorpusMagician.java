@@ -9,6 +9,7 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
@@ -142,7 +143,7 @@ public class CorpusMagician {
         this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("ComaNSLinksChecker");
-        //allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbFileReferenceChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
         //allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
@@ -276,6 +277,10 @@ public class CorpusMagician {
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     report.merge(runCorpusFunction(corpus, fcc));
                     break;  
+                 case "exbfilereferencechecker":
+                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
+                    report.merge(runCorpusFunction(corpus, efrc));
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
