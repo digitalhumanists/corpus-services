@@ -12,11 +12,14 @@ https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/dev
 Additional info on the Corpus services can be found here:
 https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
 
-# functions
+# Functions
 
 To see the currently available functions, check the Doxygen files.
 
-You can get a rough idea by listing java classes, e.g. `ls src/main/java/de/uni_hamburg/corpora/validation/` for validator tools.
+The usable functions can be found here:
+
+src/main/java/de/uni_hamburg/corpora/CorpusMagician.java
+in the method getAllExistingCFs(), which returns a String Collection of all the available functions. 
 
 # Compilation
 
