@@ -47,8 +47,8 @@ public class CorpusMagician {
     Collection<String> chosencorpusfunctions = new ArrayList();
     //the final Report
     Report report = new Report();
-    //the EXMARaLDA error list
-    static ExmaErrorList exmaError = new ExmaErrorList();
+    //the final Exmaralda error list
+    public static ExmaErrorList exmaError = new ExmaErrorList();
     
     public CorpusMagician() {
     }
