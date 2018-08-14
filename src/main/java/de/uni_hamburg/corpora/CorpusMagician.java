@@ -1,21 +1,21 @@
 package de.uni_hamburg.corpora;
 
-import de.uni_hamburg.corpora.validation.CmdiChecker;
-import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
-//import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
+//import de.uni_hamburg.corpora.validation.CmdiChecker;
+//import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
+import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 
 //import de.uni_hamburg.corpora.validation.ComaNameChecker;
-import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
-//import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
+//import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
+import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
-import de.uni_hamburg.corpora.validation.ExbPatternChecker;
-import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
-import de.uni_hamburg.corpora.validation.ExbStructureChecker;
+//import de.uni_hamburg.corpora.validation.ExbPatternChecker;
+//import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+//import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
-import de.uni_hamburg.corpora.validation.FilenameChecker;
-import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
+//import de.uni_hamburg.corpora.validation.FilenameChecker;
+//import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -40,6 +40,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
+import java.util.Arrays;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -65,6 +68,8 @@ public class CorpusMagician {
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false; 
     static CommandLine cmd = null;
+	//the final Exmaralda error list
+    public static ExmaErrorList exmaError = new ExmaErrorList();
     
     public CorpusMagician() {
     }
@@ -147,9 +152,18 @@ public class CorpusMagician {
                 reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
                 cio.write(reportOutput, reportlocation);
             }
+            //create the error list file
+            //needs to be OS independent
+            String errorstring = new File(reportstring).getParent()+ File.separator + "errorlist.xml";
+            URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
+            exmaError.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -201,8 +215,8 @@ public class CorpusMagician {
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
         //allExistingCFs.add("ExbPatternChecker");
-        allExistingCFs.add("ExbSegmentationChecker");
-        allExistingCFs.add("ExbStructureChecker");
+        //allExistingCFs.add("ExbSegmentationChecker");
+        //allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("XSLTChecker");
         allExistingCFs.add("ComaAddTiersFromExbsCorrector");
@@ -211,16 +225,16 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
-        allExistingCFs.add("TierChecker");
-        allExistingCFs.add("ComaNameChecker");
+        //allExistingCFs.add("TierChecker");
+        //allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("ComaApostropheChecker");
-        allExistingCFs.add("ComaApostropheCheckerFix");
+        //allExistingCFs.add("ComaApostropheCheckerFix");
         allExistingCFs.add("ComaSegmentCountChecker");
-        allExistingCFs.add("TierCheckerWithAnnotation");
-        allExistingCFs.add("FilenameChecker");
-        allExistingCFs.add("ComaPIDLengthChecker");
-        allExistingCFs.add("CmdiChecker");
-        allExistingCFs.add("NgexmaraldaCorpusChecker");
+        //allExistingCFs.add("TierCheckerWithAnnotation");
+        //allExistingCFs.add("FilenameChecker");
+        //allExistingCFs.add("ComaPIDLengthChecker");
+        //allExistingCFs.add("CmdiChecker");
+        //allExistingCFs.add("NgexmaraldaCorpusChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -341,6 +355,18 @@ public class CorpusMagician {
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
                     break;
+                case "comaapostrophechecker":
+                    ComaApostropheChecker cac = new ComaApostropheChecker();
+                    report.merge(runCorpusFunction(corpus, cac));
+                    break;    
+                case "comaapostrophecheckerfix":
+                    cac = new ComaApostropheChecker();
+                    report.merge(runCorpusFunction(corpus, cac, true));
+                    break;  
+                 case "comasegmentcountchecker":
+                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
+                    report.merge(runCorpusFunction(corpus, cscc));   
+                    break;    
                 case "filecoveragechecker":
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     corpusfunctions.add(fcc);
