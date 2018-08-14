@@ -66,11 +66,11 @@ public class CorpusMagician {
     //a list of all the available corpus data (no java objects, just URLs)
     static ArrayList<URL> alldata = new ArrayList();
     static CorpusIO cio = new CorpusIO();
-    static boolean fixing = false; 
+    static boolean fixing = false;
     static CommandLine cmd = null;
-	//the final Exmaralda error list
+    //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
-    
+
     public CorpusMagician() {
     }
 
@@ -154,7 +154,7 @@ public class CorpusMagician {
             }
             //create the error list file
             //needs to be OS independent
-            String errorstring = new File(reportstring).getParent()+ File.separator + "errorlist.xml";
+            String errorstring = new File(reportstring).getParent() + File.separator + "errorlist.xml";
             URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
             exmaError.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
@@ -291,61 +291,63 @@ public class CorpusMagician {
 
     public static Collection<CorpusFunction> corpusFunctionStrings2Classes() {
         for (String function : chosencorpusfunctions) {
-            switch (function.toLowerCase()) {
-                case "prettyprintdata":
-                    PrettyPrintData pd = new PrettyPrintData();
-                    corpusfunctions.add(pd);
+            switch (function.toLowerCase()) {                
+                case "comaapostrophechecker":
+                    ComaApostropheChecker cac = new ComaApostropheChecker();
+                    corpusfunctions.add(cac);
                     break;
-                /* case "comaaddtiersfromexbscorrector":
-                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
-                    corpusfunctions.add(catfec);
-                    break; */
-                case "xsltchecker":
-                    XSLTChecker xc = new XSLTChecker();
-                    corpusfunctions.add(xc);
-                    break;
-                case "comanslinkschecker":
+                 case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     corpusfunctions.add(cnslc);
-                    break;
-                case "removeautosaveexb":
-                    RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
-                    corpusfunctions.add(rase);
-                    break;
-                case "removeabsolutepaths":
-                    RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
-                    corpusfunctions.add(rap);
                     break;
                 case "comaoverviewgeneration":
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
                     corpusfunctions.add(cog);
                     break;
-                case "comaoverviewgenerationfix":
-                    cog = new ComaOverviewGeneration();
-                    corpusfunctions.add(cog);
-                /* case "tierchecker":
+                case "comasegmentcountchecker":
+                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
+                    corpusfunctions.add(cscc);
+                    break;
+                case "exbfilereferencechecker":
+                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
+                    corpusfunctions.add(efrc);
+                    break;
+                case "filecoveragechecker":
+                    FileCoverageChecker fcc = new FileCoverageChecker();
+                    corpusfunctions.add(fcc);
+                    break;
+                case "prettyprintdata":
+                    PrettyPrintData pd = new PrettyPrintData();
+                    corpusfunctions.add(pd);
+                    break;
+                case "removeabsolutepaths":
+                    RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
+                    corpusfunctions.add(rap);
+                    break;
+                case "removeautosaveexb":
+                    RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
+                    corpusfunctions.add(rase);
+                    break;
+                case "xsltchecker":
+                    XSLTChecker xc = new XSLTChecker();
+                    corpusfunctions.add(xc);
+                    break;
+                /* 
+                case "comaaddtiersfromexbscorrector":
+                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
+                    corpusfunctions.add(catfec);
+                    break;
+                case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
                     break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
                     corpusfunctions.add(cnc);
-                    break;
-                case "comaapostrophechecker":
-                    ComaApostropheChecker cac = new ComaApostropheChecker();
-                    corpusfunctions.add(cac);
-                    break;
-                case "comaapostrophecheckerfix":
-                    ComaApostropheChecker cacf = new ComaApostropheChecker();
-                    corpusfunctions.add(cacf);
-                    break;
+                    break;               
                 case "comapidlengthchecker":
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
-                    break;
-                case "comasegmentcountchecker":
-                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
-                    corpusfunctions.add(cscc);
                     break;
                 case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
@@ -355,30 +357,10 @@ public class CorpusMagician {
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
                     break;
-                case "comaapostrophechecker":
-                    ComaApostropheChecker cac = new ComaApostropheChecker();
-                    report.merge(runCorpusFunction(corpus, cac));
-                    break;    
-                case "comaapostrophecheckerfix":
-                    cac = new ComaApostropheChecker();
-                    report.merge(runCorpusFunction(corpus, cac, true));
-                    break;  
-                 case "comasegmentcountchecker":
-                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
-                    report.merge(runCorpusFunction(corpus, cscc));   
-                    break;    
-                case "filecoveragechecker":
-                    FileCoverageChecker fcc = new FileCoverageChecker();
-                    corpusfunctions.add(fcc);
+                case "exbpatternchecker":
+                    ExbPatternChecker epc = new ExbPatternChecker();
+                    report.merge(runCorpusFunction(corpus, epc));
                     break;
-                case "exbfilereferencechecker":
-                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
-                    corpusfunctions.add(efrc);
-                    break;
-                //case "exbpatternchecker":
-                //ExbPatternChecker epc = new ExbPatternChecker();
-                //report.merge(runCorpusFunction(corpus, epc));
-                //break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker esg = new ExbSegmentationChecker();
                     corpusfunctions.add(esg);
@@ -406,10 +388,10 @@ public class CorpusMagician {
     //run the chosen functions on the chosen corpus
     Report runChosencorpusfunctions() {
         for (CorpusFunction function : corpusfunctions) {
-            if (fixing){
-            report.merge(runCorpusFunction(corpus, function, true));    
-            }else{
-            report.merge(runCorpusFunction(corpus, function));
+            if (fixing) {
+                report.merge(runCorpusFunction(corpus, function, true));
+            } else {
+                report.merge(runCorpusFunction(corpus, function));
             }
         }
         return report;
@@ -507,7 +489,7 @@ public class CorpusMagician {
         }
         return report;
     }
-    
+
     public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc, boolean fix) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
@@ -543,7 +525,7 @@ public class CorpusMagician {
     public Collection<String> getChosencorpusfunctions() {
         return chosencorpusfunctions;
     }
-    
+
     private static void createCommandLineOptions(String[] args) {
         Options options = new Options();
 
@@ -567,7 +549,7 @@ public class CorpusMagician {
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
-        
+
         Option help = new Option("h", "help", false, "display help");
         fix.setRequired(false);
         options.addOption(help);
@@ -583,9 +565,9 @@ public class CorpusMagician {
             System.exit(1);
         }
 
-        if (cmd.hasOption("h")){
+        if (cmd.hasOption("h")) {
             // automatically generate the help statement
-            formatter.printHelp( "hzsk-corpus-services", options );
+            formatter.printHelp("hzsk-corpus-services", options);
         }
         /*
         String inputFilePath = cmd.getOptionValue("input");
@@ -594,7 +576,7 @@ public class CorpusMagician {
         System.out.println(inputFilePath);
         System.out.println(outputFilePath);
          */
-        
+
     }
 
 }
