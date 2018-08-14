@@ -28,6 +28,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  *
@@ -64,6 +65,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         if (pabs.isAbsolute()) {
                             report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
+                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
                         } else {
                             al.remove(o);
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
@@ -80,6 +82,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         Path pabs = Paths.get(e.getText());
                         if (pabs.isAbsolute()) {
                             report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
+                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
                         } else {
                             al.remove(o);
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
@@ -143,6 +146,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 report.addCritical("RemoveAbsolutePaths",
                                         "relative path cannot be figured out for file "
                                         + cd.getURL().getFile() + " with path " + pabs.toString());
+                                exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path needs to be replaced manually");
                             }
                         } else {
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative in" + cd.getURL().getFile());
