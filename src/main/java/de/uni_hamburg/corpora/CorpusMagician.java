@@ -112,8 +112,16 @@ public class CorpusMagician {
                 System.out.println(corpuma.chosencorpusfunctions.toString());
             }
             corpusfunctions = corpusFunctionStrings2Classes();
+            
+            
+            
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
+            corpuma.initCorpusWithURL(url);
+            //and here is another problem, all the corpusfiles are given as objects
+            report = corpuma.runChosencorpusfunctions();
+            //this is a possible solution, but not working yet
+            /*
             if (cmd.hasOption("s")) {
                 corpuma.initCorpusWithURL(url);
                 //and here is another problem, all the corpusfiles are given as objects
@@ -142,6 +150,7 @@ public class CorpusMagician {
 
                 }
             }
+            */
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
@@ -211,25 +220,24 @@ public class CorpusMagician {
     public Collection<String> getAllExistingCFs() {
 
         this.allExistingCFs = new ArrayList<String>();
-        allExistingCFs.add("PrettyPrintData");
+        allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
+        allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("FileCoverageChecker");
+        allExistingCFs.add("PrettyPrintData");
+        allExistingCFs.add("RemoveAbsolutePaths");
+        allExistingCFs.add("RemoveAutoSaveExb");
+        allExistingCFs.add("XSLTChecker");
         //allExistingCFs.add("ExbPatternChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
-        //allExistingCFs.add("ExbStructureChecker");
-        allExistingCFs.add("FileCoverageChecker");
-        allExistingCFs.add("XSLTChecker");
-        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+        //allExistingCFs.add("ExbStructureChecker");       
+        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
-        allExistingCFs.add("RemoveAutoSaveExb");
-        allExistingCFs.add("RemoveAbsolutePaths");
-        allExistingCFs.add("ComaOverviewGeneration");
         //allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
-        allExistingCFs.add("ComaApostropheChecker");
-        //allExistingCFs.add("ComaApostropheCheckerFix");
-        allExistingCFs.add("ComaSegmentCountChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
         //allExistingCFs.add("FilenameChecker");
         //allExistingCFs.add("ComaPIDLengthChecker");
@@ -542,10 +550,12 @@ public class CorpusMagician {
         corpusfunction.setArgs(Option.UNLIMITED_VALUES);
         options.addOption(corpusfunction);
 
+        /*
         Option speed = new Option("s", "speed", false, "faster but more heap space");
         speed.setRequired(false);
         options.addOption(speed);
-
+        */
+        
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
