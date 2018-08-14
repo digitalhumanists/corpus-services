@@ -132,7 +132,7 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
         //now the completed document is saved
         //TODO save next to the old cd
         String filename = cd.getURL().getFile();
-        URL url = new URL("file://" + filename.substring(0,filename.indexOf(".")) + ".xml");
+        URL url = new URL("file://" + filename.substring(0,filename.lastIndexOf(".")) + ".xml");
         System.out.println(url.toString());
         cio.write(teiDoc, url);
         System.out.println("document written.");
