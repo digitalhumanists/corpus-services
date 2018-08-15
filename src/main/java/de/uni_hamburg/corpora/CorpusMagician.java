@@ -14,7 +14,7 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
-//import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.FilenameChecker;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
@@ -239,7 +239,7 @@ public class CorpusMagician {
         //allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
-        //allExistingCFs.add("FilenameChecker");
+        allExistingCFs.add("FilenameChecker");
         //allExistingCFs.add("ComaPIDLengthChecker");
         //allExistingCFs.add("CmdiChecker");
         //allExistingCFs.add("NgexmaraldaCorpusChecker");
@@ -340,6 +340,10 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+				case "filenamechecker":
+                    FilenameChecker fnc = new FilenameChecker();
+                    corpusfunctions.add(fnc);
+                    break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
@@ -360,10 +364,6 @@ public class CorpusMagician {
                 case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
                     corpusfunctions.add(tcwa);
-                    break;
-                case "filenamechecker":
-                    FilenameChecker fnc = new FilenameChecker();
-                    corpusfunctions.add(fnc);
                     break;
                 case "exbpatternchecker":
                     ExbPatternChecker epc = new ExbPatternChecker();
