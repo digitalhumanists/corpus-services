@@ -6,7 +6,7 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 
-//import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaNameChecker;
 //import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
@@ -237,7 +237,7 @@ public class CorpusMagician {
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
         //allExistingCFs.add("TierChecker");
-        //allExistingCFs.add("ComaNameChecker");
+        allExistingCFs.add("ComaNameChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
         //allExistingCFs.add("FilenameChecker");
         //allExistingCFs.add("ComaPIDLengthChecker");
@@ -340,6 +340,10 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+				case "comanamechecker":
+                    ComaNameChecker cnc = new ComaNameChecker();
+                    corpusfunctions.add(cnc);
+                    break;   
                 /* 
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
@@ -348,11 +352,7 @@ public class CorpusMagician {
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
-                    break;
-                case "comanamechecker":
-                    ComaNameChecker cnc = new ComaNameChecker();
-                    corpusfunctions.add(cnc);
-                    break;               
+                    break;             
                 case "comapidlengthchecker":
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
