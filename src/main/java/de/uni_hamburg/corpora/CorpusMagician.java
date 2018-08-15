@@ -5,7 +5,7 @@ package de.uni_hamburg.corpora;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
-
+import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 //import de.uni_hamburg.corpora.validation.ComaNameChecker;
 //import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -230,6 +230,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+		allExistingCFs.add("GenerateAnnotationPanel");
         //allExistingCFs.add("ExbPatternChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
         //allExistingCFs.add("ExbStructureChecker");       
@@ -339,6 +340,10 @@ public class CorpusMagician {
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
+                    break;
+                case "generateannotationpanel":
+                    GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
+                    corpusfunctions.add(gap);
                     break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
