@@ -22,6 +22,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  *
@@ -41,6 +42,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                 report.addCorrect("RemoveAutoSaveExb", "there is no autosave info left, nothing to do");
             } else {
                 report.addCritical("RemoveAutoSaveExb", "autosave info needs to be removed in " + cd.getURL().getFile());
+                exmaError.addError("RemoveAutoSaveExb", cd.getURL().getFile(), "", "", false, "autosave info needs to be removed");
             }
         } catch (JDOMException ex) {
             Logger.getLogger(RemoveAutoSaveExb.class.getName()).log(Level.SEVERE, null, ex);
