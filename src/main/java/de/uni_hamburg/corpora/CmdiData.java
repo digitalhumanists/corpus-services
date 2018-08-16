@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
@@ -12,13 +17,14 @@ import org.jdom.output.XMLOutputter;
 
 /**
  *
- * @author fsnv625
+ * @author Ozzy
  */
-class AnnotationSpecification implements CorpusData{
+public class CmdiData implements CorpusData{
+    
     Document jdom;
     URL url;
 
-    public AnnotationSpecification(URL url) {
+    public CmdiData(URL url) {
         try {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
