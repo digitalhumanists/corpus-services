@@ -341,7 +341,7 @@ public class CorpusMagician {
                     corpusfunctions.add(xc);
                     break;
 				case "ngtiercheckerwithannotation":
-                    TierCheckerWithAnnotation ngtcwa = new TierCheckerWithAnnotation();
+                    NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
                     corpusfunctions.add(ngtcwa);
                     break;
                 /* 
