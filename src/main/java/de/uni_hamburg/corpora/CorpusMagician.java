@@ -1,6 +1,6 @@
 package de.uni_hamburg.corpora;
 
-//import de.uni_hamburg.corpora.validation.CmdiChecker;
+import de.uni_hamburg.corpora.validation.CmdiChecker;
 //import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
@@ -241,7 +241,7 @@ public class CorpusMagician {
         //allExistingCFs.add("TierCheckerWithAnnotation");
         //allExistingCFs.add("FilenameChecker");
         //allExistingCFs.add("ComaPIDLengthChecker");
-        //allExistingCFs.add("CmdiChecker");
+        allExistingCFs.add("CmdiChecker");
         //allExistingCFs.add("NgexmaraldaCorpusChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
@@ -340,6 +340,10 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+				case "cmdichecker":
+                    CmdiChecker cmdi = new CmdiChecker();
+                    corpusfunctions.add(cmdi);
+                    break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
@@ -376,10 +380,6 @@ public class CorpusMagician {
                 case "exbstructurechecker":
                     ExbStructureChecker esc = new ExbStructureChecker();
                     corpusfunctions.add(esc);
-                    break;
-                case "cmdichecker":
-                    CmdiChecker cmdi = new CmdiChecker();
-                    corpusfunctions.add(cmdi);
                     break;
                 case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();

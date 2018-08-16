@@ -118,9 +118,9 @@ public class CorpusIO {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
             //we can't read files other than coma and exb yet...
-        /*  } else if (f.getName().endsWith("cmdi")) {
+		} else if (f.getName().endsWith("cmdi")) {
              CmdiData cmdi = new CmdiData(f.toURI().toURL());
-            return cmdi; */
+            return cmdi;
         } else {
             System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;
