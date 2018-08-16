@@ -15,7 +15,7 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 //import de.uni_hamburg.corpora.validation.FilenameChecker;
-//import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
+import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -242,7 +242,7 @@ public class CorpusMagician {
         //allExistingCFs.add("FilenameChecker");
         //allExistingCFs.add("ComaPIDLengthChecker");
         //allExistingCFs.add("CmdiChecker");
-        //allExistingCFs.add("NgexmaraldaCorpusChecker");
+        allExistingCFs.add("NgexmaraldaCorpusChecker");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
@@ -340,6 +340,10 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+				case "ngexmaraldacorpuschecker":
+                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
+                    corpusfunctions.add(ngex);
+                    break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
@@ -380,10 +384,6 @@ public class CorpusMagician {
                 case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
-                    break;
-                case "ngexmaraldacorpuschecker":
-                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
-                    corpusfunctions.add(ngex);
                     break; */
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
