@@ -24,11 +24,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * The class that checks out that all annotations are from the annotation
- * specification file and that there are no annotations in the coma file not in
- * the annotation specification file.
+ * The class that checks out that all annotations for Nganasan Corpus are from
+ * the annotation specification file and that there are no annotations in the
+ * coma file not in the annotation specification file.
  */
-public class TierCheckerWithAnnotation extends Checker implements CorpusFunction {
+public class NgTierCheckerWithAnnotation extends Checker implements CorpusFunction {
 
     String comaLoc = "";
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
@@ -49,40 +49,25 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             annotationsInComa = new HashMap<String, Collection<String>>();
             for (int i = 0; i < communications.getLength(); i++) { //iterate through communications
                 Element communication = (Element) communications.item(i);
-                NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication     
-                for (int j = 0; j < transcriptions.getLength(); j++) {   // iterate through transcriptions 
-                    Element transcription = (Element) transcriptions.item(j);
-                    //Element name = (Element) transcription.getElementsByTagName("Name").item(0); //get the name of the file that has the transcription
-                    String name = ((Element) transcription.getElementsByTagName("Name").item(0)).getTextContent(); //get the name of the file that has the transcription
-                    NodeList keys = transcription.getElementsByTagName("Key");  // get keys of current transcription
-                    boolean segmented = false;   // flag for distinguishing basic file from segmented file 
-                    for (int k = 0; k < keys.getLength(); k++) {  // look for the key with "segmented" attribute 
+                String name = communication.getAttribute("Name"); //get the name of the file that has the description
+                NodeList descriptions = communication.getElementsByTagName("Description"); // get descriptions of current communication     
+                for (int j = 0; j < descriptions.getLength(); j++) {   // iterate through descriptions 
+                    Element description = (Element) descriptions.item(j);
+                    NodeList keys = description.getElementsByTagName("Key");  // get keys of current description
+                    for (int k = 0; k < keys.getLength(); k++) {  // look for the key with "annotation" attribute 
                         Element key = (Element) keys.item(k);
-                        if (key.getAttribute("Name").equals("segmented")) {
-                            String seg = key.getTextContent();
-                            if (seg.equals("true")) // check if transcription is segmented or not
-                            {
-                                segmented = true;        // if segmented transcription then turn the flag true
-                            }
-                            break;
-                        }
-                    }
-                    if (segmented) { // get the names of the segmentation algorithms in the coma file
-                        for (int k = 0; k < keys.getLength(); k++) {  // look for the keys with algorithm 
-                            Element key = (Element) keys.item(k);
-                            if (key.getAttribute("Name").contains("Annotation type:")) {
-                                int colonIndex = key.getAttribute("Name").lastIndexOf(':');
-                                if (annotationsInComa.containsKey(name)) {
-                                    if (!annotationsInComa.get(name).contains(key.getAttribute("Name").substring(colonIndex + 2))) {
-                                        Collection<String> c = annotationsInComa.get(name);
-                                        c.add(key.getAttribute("Name").substring(colonIndex + 2));
-                                        annotationsInComa.put(name, c);
-                                    }
-                                } else {
-                                    Collection<String> c = new ArrayList<String>();
-                                    c.add(key.getAttribute("Name").substring(colonIndex + 2));
+                        if (key.getAttribute("Name").contains("Annotation")) {
+                            int spaceIndex = key.getAttribute("Name").lastIndexOf(' ');
+                            if (annotationsInComa.containsKey(name)) {
+                                if (!annotationsInComa.get(name).contains(key.getAttribute("Name").substring(spaceIndex + 1))) {
+                                    Collection<String> c = annotationsInComa.get(name);
+                                    c.add(key.getAttribute("Name").substring(spaceIndex + 1));
                                     annotationsInComa.put(name, c);
                                 }
+                            } else {
+                                Collection<String> c = new ArrayList<String>();
+                                c.add(key.getAttribute("Name").substring(spaceIndex + 1));
+                                annotationsInComa.put(name, c);
                             }
                         }
                     }
@@ -90,10 +75,10 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             }
         } else {
             annotations = new ArrayList<String>();
-            NodeList tags = doc.getElementsByTagName("tag"); // divide by tags
-            for (int i = 0; i < tags.getLength(); i++) { //iterate through tags
-                Element tag = (Element) tags.item(i);
-                annotations.add(tag.getAttribute("name"));
+            NodeList annotationSets = doc.getElementsByTagName("annotation-set"); // divide by tags
+            for (int i = 0; i < annotationSets.getLength(); i++) { //iterate through tags
+                Element annotationSet = (Element) annotationSets.item(i);
+                annotations.add(annotationSet.getAttribute("exmaralda-tier-category"));
             }
         }
     }
@@ -144,7 +129,21 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
                     stats.addWarning("tier-checker-with-annotation", "annotation error: annotation ("
                             + annotType + ") for " + name + " not specified!");
                     int index = cd.getURL().getFile().lastIndexOf("/");
-                    String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";
+                    String nameExtension = name.substring(name.lastIndexOf('_'));
+                    String filePath;
+                    switch (nameExtension) {
+                        case "_conv":
+                            filePath = cd.getURL().getFile().substring(0, index) + "/conversation/" + name + "/" + name + ".exb";
+                            break;
+                        case "_nar":
+                            filePath = cd.getURL().getFile().substring(0, index) + "/narrative/" + name + "/" + name + ".exb";
+                            break;
+                        case "_song":
+                            filePath = cd.getURL().getFile().substring(0, index) + "/songs/" + name + "/" + name + ".exb";
+                            break;
+                        default:
+                            filePath = cd.getURL().getFile().substring(0, index) + "/" + nameExtension.substring(1) + "/" + name + "/" + name + ".exb";
+                    }
                     exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation ("
                             + annotType + ") for " + name + " not specified in the annotation specification file!");
                 }
@@ -175,7 +174,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierCheckerWithAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NgTierCheckerWithAnnotation.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }
