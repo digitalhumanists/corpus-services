@@ -20,7 +20,7 @@ import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 //import de.uni_hamburg.corpora.validation.TierChecker;
-import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
+import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.File;
 import java.io.IOException;
@@ -238,7 +238,7 @@ public class CorpusMagician {
         //allExistingCFs.add("SchematronChecker");
         //allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
-        allExistingCFs.add("TierCheckerWithAnnotation");
+        allExistingCFs.add("NgTierCheckerWithAnnotation");
         //allExistingCFs.add("FilenameChecker");
         //allExistingCFs.add("ComaPIDLengthChecker");
         //allExistingCFs.add("CmdiChecker");
@@ -340,9 +340,9 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-				case "tiercheckerwithannotation":
-                    TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
-                    corpusfunctions.add(tcwa);
+				case "ngtiercheckerwithannotation":
+                    TierCheckerWithAnnotation ngtcwa = new TierCheckerWithAnnotation();
+                    corpusfunctions.add(ngtcwa);
                     break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
