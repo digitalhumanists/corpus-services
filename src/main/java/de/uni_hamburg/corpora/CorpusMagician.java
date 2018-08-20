@@ -1,7 +1,7 @@
 package de.uni_hamburg.corpora;
 
 //import de.uni_hamburg.corpora.validation.CmdiChecker;
-//import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
+import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
@@ -233,7 +233,7 @@ public class CorpusMagician {
         //allExistingCFs.add("ExbPatternChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
         //allExistingCFs.add("ExbStructureChecker");       
-        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
         //allExistingCFs.add("TierChecker");
@@ -340,11 +340,11 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-                /* 
-                case "comaaddtiersfromexbscorrector":
+				case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
                     corpusfunctions.add(catfec);
                     break;
+                /* 
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
