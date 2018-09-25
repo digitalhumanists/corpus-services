@@ -90,7 +90,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
     settings = new ValidatorSettings("ComaNSLinksChecker",
                 "Checks Exmaralda .coma file for NSLink references and relPaths that do not "
                 + "exist", "If input is a directory, performs recursive check "
-                + "from that directory, otherwise checks input file");   
+                + "from that directory, otherwise checks input file");
     }
 
     /**
@@ -107,8 +107,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         } catch (SAXException saxe) {
             stats.addException(saxe, comaLoc + ": Unknown parsing error");
         } catch (IOException ioe) {
+            ioe.printStackTrace();
             stats.addException(ioe, comaLoc + ": Unknown file reading error");
         } catch (URISyntaxException ex) {
+            ex.printStackTrace();
             stats.addException(ex, comaLoc + ": Unknown file reading error");
         }
         return stats;
@@ -150,7 +152,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     File dataFile = new File(urlAbsPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
-                    } 
+                    }
                 }
                 if (settings.getDataDirectory() != null) {
                     String dataPath
@@ -204,12 +206,11 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 }
                 if(cd.getURL() != null){
                     URL urlPath = cd.getURL();
-                    URL urlRelPath = new URL(urlPath , relpath.replace(File.separator, "/"));
-                    //System.out.println(urlPath + "##############");
+                    URL urlRelPath = new URL(urlPath , relpath.replace("\\", "/"));
                     File dataFile = new File(urlRelPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
-                    } 
+                    }
                 }
                 if (settings.getDataDirectory() != null) {
                     String dataPath
@@ -315,7 +316,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
     }
 
     @Override
-    public Report execute(Corpus c) {  
+    public Report execute(Corpus c) {
         for (CorpusData cd : c.getCorpusData()) {
             report.merge(check(cd));
         }
