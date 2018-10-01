@@ -54,7 +54,7 @@ public class CorpusMagician {
 
     //the whole corpus I want to run checks on
     Corpus corpus;
-    //one file I want to run a check on 
+    //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
     Collection<String> allExistingCFs;
@@ -78,8 +78,8 @@ public class CorpusMagician {
     //TODO we need a webservice for this functionality too
     //in the furture (for repo and external users)
     //this should work via commandline like that:
-    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
-    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
+    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder}
+    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run)
     public static void main(String[] args) {
 
         //first args needs to be the URL
@@ -112,9 +112,9 @@ public class CorpusMagician {
                 System.out.println(corpuma.chosencorpusfunctions.toString());
             }
             corpusfunctions = corpusFunctionStrings2Classes();
-            
-            
-            
+
+
+
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
@@ -232,7 +232,7 @@ public class CorpusMagician {
         allExistingCFs.add("XSLTChecker");
         //allExistingCFs.add("ExbPatternChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
-        //allExistingCFs.add("ExbStructureChecker");       
+        //allExistingCFs.add("ExbStructureChecker");
         //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
@@ -277,7 +277,7 @@ public class CorpusMagician {
     //TODO checks which functions can be run on specified data
     public Collection<CorpusFunction> getUsableFunctions(CorpusData cd) {
         //cf.IsUsableFor();
-        //some switch or if else statements for the possible java objects 
+        //some switch or if else statements for the possible java objects
         //and a list(?) which function can be apllied to what/which functions exist?
         Collection<CorpusFunction> usablecorpusfunctions = null;
         return usablecorpusfunctions;
@@ -299,7 +299,7 @@ public class CorpusMagician {
 
     public static Collection<CorpusFunction> corpusFunctionStrings2Classes() {
         for (String function : chosencorpusfunctions) {
-            switch (function.toLowerCase()) {                
+            switch (function.toLowerCase()) {
                 case "comaapostrophechecker":
                     ComaApostropheChecker cac = new ComaApostropheChecker();
                     corpusfunctions.add(cac);
@@ -340,7 +340,7 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-                /* 
+                /*
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
                     corpusfunctions.add(catfec);
@@ -352,7 +352,7 @@ public class CorpusMagician {
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
                     corpusfunctions.add(cnc);
-                    break;               
+                    break;
                 case "comapidlengthchecker":
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
@@ -406,7 +406,7 @@ public class CorpusMagician {
     }
 
     //run multiple functions on a corpus, that means all the files in the corpus
-    //the function can run on 
+    //the function can run on
     public Report runCorpusFunction(Corpus c, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
@@ -417,7 +417,7 @@ public class CorpusMagician {
     }
 
     //run multiple functions on the set corpus, that means all the files in the corpus
-    //the function can run on 
+    //the function can run on
     public Report runCorpusFunction(Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
@@ -428,14 +428,14 @@ public class CorpusMagician {
     }
 
     //run one function on a corpus, that means all the files in the corpus
-    //the funciton can run on 
+    //the funciton can run on
     public Report runCorpusFunction(Corpus c, CorpusFunction cf) {
         Report report = new Report();
         //find out on which objects this corpus function can run
-        //choose those from the corpus 
+        //choose those from the corpus
         //and run the checks on those files recursively
         for (Class cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
+            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
                 if (cl.isInstance(cd)) {
@@ -448,14 +448,14 @@ public class CorpusMagician {
     }
 
     //run one function on a corpus, that means all the files in the corpus
-    //the funciton can run on 
+    //the funciton can run on
     public Report runCorpusFunction(Corpus c, CorpusFunction cf, boolean fix) {
         Report report = new Report();
         //find out on which objects this corpus function can run
-        //choose those from the corpus 
+        //choose those from the corpus
         //and run the checks on those files recursively
         for (Class cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
+            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
                 if (cd != null && cl.isInstance(cd)) {
@@ -468,11 +468,11 @@ public class CorpusMagician {
     }
 
     //run one function on a corpus, that means all the files in the corpus
-    //the function can run on 
+    //the function can run on
     public Report runCorpusFunction(CorpusFunction cf) {
         Report report = new Report();
         //find out on which objects this corpus function can run
-        //choose those from the corpus 
+        //choose those from the corpus
         //and run the checks on those files recursively
         for (Class cl : cf.getIsUsableFor()) {
             Report newReport = runCorpusFunction(corpus, cf);
@@ -507,7 +507,7 @@ public class CorpusMagician {
         return report;
     }
 
-    //TODO 
+    //TODO
     //to save individual corpusparameters in a file
     //and maybe also save the functions todos there
     public void readParameters() {
@@ -538,16 +538,17 @@ public class CorpusMagician {
         Options options = new Options();
 
         Option input = new Option("i", "input", true, "input file path");
-        input.setRequired(false);
+        input.setRequired(true);
         options.addOption(input);
 
         Option output = new Option("o", "output", true, "output file");
-        output.setRequired(false);
+        output.setRequired(true);
         options.addOption(output);
 
         Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
         // Set option c to take 1 to oo arguments
         corpusfunction.setArgs(Option.UNLIMITED_VALUES);
+        corpusfunction.setRequired(true);
         options.addOption(corpusfunction);
 
         /*
@@ -555,7 +556,7 @@ public class CorpusMagician {
         speed.setRequired(false);
         options.addOption(speed);
         */
-        
+
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
@@ -582,7 +583,7 @@ public class CorpusMagician {
         /*
         String inputFilePath = cmd.getOptionValue("input");
         String outputFilePath = cmd.getOptionValue("output");
-        
+
         System.out.println(inputFilePath);
         System.out.println(outputFilePath);
          */
