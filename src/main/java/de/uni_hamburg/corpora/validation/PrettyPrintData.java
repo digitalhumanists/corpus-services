@@ -63,7 +63,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
 
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
             IsUsableFor.add(cl);

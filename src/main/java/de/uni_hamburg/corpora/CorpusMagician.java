@@ -59,12 +59,13 @@ public class CorpusMagician {
     //all functions there are in the code
     Collection<String> allExistingCFs;
     //all functions that should be run
-    static Collection<String> chosencorpusfunctions = new ArrayList();
-    static Collection<CorpusFunction> corpusfunctions = new ArrayList();
+    static Collection<String> chosencorpusfunctions = new ArrayList<String>();
+    static Collection<CorpusFunction> corpusfunctions = new
+        ArrayList<CorpusFunction>();
     //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
-    static ArrayList<URL> alldata = new ArrayList();
+    static ArrayList<URL> alldata = new ArrayList<URL>();
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
     static CommandLine cmd = null;
@@ -108,8 +109,8 @@ public class CorpusMagician {
             String[] corpusfunctionarray = cmd.getOptionValues("c");
             for (String cf : corpusfunctionarray) {
                 //corpuma.chosencorpusfunctions.add("test");
-                corpuma.chosencorpusfunctions.add(cf);
-                System.out.println(corpuma.chosencorpusfunctions.toString());
+                CorpusMagician.chosencorpusfunctions.add(cf);
+                System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             }
             corpusfunctions = corpusFunctionStrings2Classes();
 
@@ -165,7 +166,7 @@ public class CorpusMagician {
             //needs to be OS independent
             String errorstring = new File(reportstring).getParent() + File.separator + "errorlist.xml";
             URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
-            exmaError.createFullErrorList(errorlistlocation);
+            ExmaErrorList.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -434,7 +435,7 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class cl : cf.getIsUsableFor()) {
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
             for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
@@ -454,7 +455,7 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class cl : cf.getIsUsableFor()) {
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
             for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
@@ -474,7 +475,7 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class cl : cf.getIsUsableFor()) {
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
             Report newReport = runCorpusFunction(corpus, cf);
             report.merge(newReport);
         }
@@ -519,7 +520,7 @@ public class CorpusMagician {
     }
 
     public void setChosencorpusfunctions(Collection<String> chosencorpusfunctions) {
-        this.chosencorpusfunctions = chosencorpusfunctions;
+        CorpusMagician.chosencorpusfunctions = chosencorpusfunctions;
     }
 
     public Corpus getCorpus() {
