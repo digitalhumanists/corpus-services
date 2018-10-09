@@ -66,7 +66,8 @@
 	<!-- returns the word id for given annotation -->
 	<xsl:function name="tei:word-annotation" as="xs:integer">
 		<xsl:param name="timeline-id"/>
-		<!-- TODO here!!!! How do we get the word that matches the annotaiton? -->
+		<!-- TODO here!!!! How do we get the word that matches the annotation? -->
+                <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
 		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
 	</xsl:function>  
 
