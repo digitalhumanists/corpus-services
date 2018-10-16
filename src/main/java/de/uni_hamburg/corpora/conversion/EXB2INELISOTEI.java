@@ -61,6 +61,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
     static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtteranceINEL.xsl";
     static String SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSortINEL.xsl";
+    static String INEL_FSM = "/xsl/INEL_Segmentation_FSM.xml";
 
     static String BODY_NODE = "//text";
 
@@ -117,9 +118,10 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         System.out.println("started writing document...");
         //HIAT Segmentation 
         //TODO need to be a parameter in the future
+        //we need to give it the path to the custom INEL fsm for hte segmentation
         HIATSegmentation segmentation = new HIATSegmentation();
+        segmentation.utteranceFSM = INEL_FSM;
         //create a segmented exs 
-        //TODO(would it be better to use the INEL FSM?)
         SegmentedTranscription st = segmentation.BasicToSegmented(copyBT);
         System.out.println("Segmented transcription created");
 
