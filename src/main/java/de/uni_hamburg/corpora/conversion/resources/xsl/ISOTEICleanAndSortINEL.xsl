@@ -43,8 +43,8 @@
 		<xsl:param name="timeline-id"/>
 		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
 	</xsl:function>
-        
-    <!-- memorizes position of a word w in the timeline-->
+
+	<!-- memorizes position of a word w in the timeline 
 	<xsl:variable name="word-positions">
 		<positions>
 			<xsl:for-each select="//*:w">
@@ -58,18 +58,25 @@
 					<xsl:attribute name="positionend">
 						<xsl:value-of select="@end"/>
 					</xsl:attribute>
+					<xsl:attribute name="position">
+						<xsl:value-of select="count(preceding-sibling::*:w)"/>
+					</xsl:attribute>
 				</item>
 			</xsl:for-each>
 		</positions>
-	</xsl:variable>
+	</xsl:variable> -->
+
+	<!-- the word nodes -->
+	<xsl:variable name="words" select="//*:w"/>
 
 	<!-- returns the word id for given annotation -->
-	<xsl:function name="tei:word-annotation" as="xs:integer">
-		<xsl:param name="timeline-id"/>
-		<!-- TODO here!!!! How do we get the word that matches the annotation? -->
-                <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
-		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
-	</xsl:function>  
+	<xsl:function name="tei:word-annotation" as="xs:string">
+		<xsl:param name="annotationstart"/>
+		<xsl:param name="annotationend"/>
+		<!-- we use the annotation, find the start and the end and find the word with the same start and end -->
+		<!-- the case when there is no "normal" timeline id needs to be checked too -->
+		<xsl:value-of select="$words[@s = $annotationstart and @e = $annotationend]/@xml:id"/>
+	</xsl:function>
 
 	<!-- ***************************** -->
 
@@ -129,43 +136,49 @@
 				</xsl:attribute>
 				<xsl:apply-templates select="child::*[not(self::*:annotations)]"/>
 			</xsl:element>
-			<!-- this needs to be chnaged for INEL -->
+			<!-- this needs to be changed for INEL -->
 			<xsl:for-each-group select="*:annotations/*:annotation" group-by="@level">
 				<xsl:element name="spanGrp" xmlns="http://www.tei-c.org/ns/1.0">
 					<xsl:attribute name="type">
 						<xsl:value-of select="current-grouping-key()"/>
 					</xsl:attribute>
 					<xsl:for-each select="current-group()">
-						<xsl:if test="@level = 'mb'">
-							<xsl:element name="span">
-								<!-- this needs to be changed for INEL 
+						<xsl:choose>
+							<xsl:when test="@level = 'mb'">
+								<xsl:element name="span">
+									<!-- this needs to be changed for INEL 
                                                         and where to change the splitting of the morphemes?
                                                         -->
-								<xsl:attribute name="from">
-									<xsl:value-of select="$XPOINTER_HASH"/>
-									<xsl:value-of select="@start"/>
-								</xsl:attribute>
-								<xsl:attribute name="to">
-									<xsl:value-of select="$XPOINTER_HASH"/>
-									<xsl:value-of select="@end"/>
-								</xsl:attribute>
-								<xsl:value-of select="@value"/>
-							</xsl:element>
-						</xsl:if>
-						<xsl:element name="span">
-							<!-- this needs to be changed for INEL 
+									<xsl:attribute name="from">
+										<!-- <xsl:value-of select="$XPOINTER_HASH"/>
+									<xsl:value-of select="@start"/> -->
+										<xsl:value-of select="tei:word-annotation(@start, @end)"/>
+									</xsl:attribute>
+									<xsl:attribute name="to">
+										<!--<xsl:value-of select="$XPOINTER_HASH"/>
+									<xsl:value-of select="@end"/> -->
+										<xsl:value-of select="tei:word-annotation(@start, @end)"/>
+									</xsl:attribute>
+									<xsl:value-of select="@value"/>
+								</xsl:element>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:element name="span">
+									<!-- this needs to be changed for INEL 
                                                         and where to change the splitting of the morphemes?
                                                         -->
-							<xsl:attribute name="from">
-								<xsl:value-of select="$XPOINTER_HASH"/>
-								<xsl:value-of select="@start"/>
-							</xsl:attribute>
-							<xsl:attribute name="to">
-								<xsl:value-of select="$XPOINTER_HASH"/>
-								<xsl:value-of select="@end"/>
-							</xsl:attribute>
-							<xsl:value-of select="@value"/>
-						</xsl:element>
+									<xsl:attribute name="from">
+										<xsl:value-of select="$XPOINTER_HASH"/>
+										<xsl:value-of select="@start"/>
+									</xsl:attribute>
+									<xsl:attribute name="to">
+										<xsl:value-of select="$XPOINTER_HASH"/>
+										<xsl:value-of select="@end"/>
+									</xsl:attribute>
+									<xsl:value-of select="@value"/>
+								</xsl:element>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:for-each>
 				</xsl:element>
 			</xsl:for-each-group>
@@ -226,9 +239,9 @@
 	<xsl:template match="*:w[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end]" mode="grab_em">
 		<xsl:element name="w">
 			<!-- added 11-07-2018 -->
-                        <xsl:attribute name="xml:id">
-                         <xsl:value-of select="@xml:id" />
-                        </xsl:attribute>
+			<xsl:attribute name="xml:id">
+				<xsl:value-of select="@xml:id"/>
+			</xsl:attribute>
 			<xsl:attribute name="type">uncertain</xsl:attribute>
 			<xsl:apply-templates select="@* | node()"/>
 		</xsl:element>
@@ -238,9 +251,9 @@
 	<xsl:template match="*:pc[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end]" mode="grab_em">
 		<xsl:element name="pc">
 			<!-- added 11-07-2018 -->
-                        <xsl:attribute name="xml:id">
-                         <xsl:value-of select="@xml:id" />
-                        </xsl:attribute>
+			<xsl:attribute name="xml:id">
+				<xsl:value-of select="@xml:id"/>
+			</xsl:attribute>
 			<xsl:attribute name="type">uncertain</xsl:attribute>
 			<xsl:apply-templates select="@* | node()"/>
 		</xsl:element>
@@ -302,9 +315,9 @@
 
 	<xsl:template match="*:w">
 		<xsl:element name="w">
-                         <xsl:attribute name="xml:id">
-                         <xsl:value-of select="@xml:id" />
-                          </xsl:attribute>
+			<xsl:attribute name="xml:id">
+				<xsl:value-of select="@xml:id"/>
+			</xsl:attribute>
 			<xsl:if test="following-sibling::*[1][self::*:repair]">
 				<xsl:attribute name="type">repair</xsl:attribute>
 			</xsl:if>
