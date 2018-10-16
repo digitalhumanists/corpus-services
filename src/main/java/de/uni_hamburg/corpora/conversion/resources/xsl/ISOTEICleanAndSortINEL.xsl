@@ -75,7 +75,30 @@
 		<xsl:param name="annotationend"/>
 		<!-- we use the annotation, find the start and the end and find the word with the same start and end -->
 		<!-- the case when there is no "normal" timeline id needs to be checked too -->
-		<xsl:value-of select="$words[@s = $annotationstart and @e = $annotationend]/@xml:id"/>
+		<xsl:choose>
+			<xsl:when test="($words[@s = $annotationstart and @e = $annotationend]/@xml:id) != ''">
+				<xsl:value-of select="$words[@s = $annotationstart and @e = $annotationend]/@xml:id"/>
+			</xsl:when>
+			<!-- if we don't find a word there, look for just the start-->
+			<xsl:when test="($words[@s = $annotationstart]/@xml:id) != ''">
+				<xsl:value-of select="$words[@s = $annotationstart][1]/@xml:id"/>
+			</xsl:when>
+			<!-- if we don't find a word there, look for just the end-->
+			<xsl:when test="($words[@e = $annotationend]/@xml:id) != ''">
+				<xsl:value-of select="$words[@e = $annotationend][1]/@xml:id"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="'broken'"/>
+				<!-- the corresponding word cannot be found? --> </xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+        
+        <!-- splits concatenated morphemes to after INEL rules -->
+        <!-- the rules are: split at "-" and "." -->
+	<xsl:function name="tei:splitmorphemes" as="element()">
+		<xsl:param name="text"/>
+                
+		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
 	</xsl:function>
 
 	<!-- ***************************** -->
@@ -144,11 +167,10 @@
 					</xsl:attribute>
 					<xsl:for-each select="current-group()">
 						<xsl:choose>
-							<xsl:when test="@level = 'mb'">
+							<!-- here needs to be every tier that has word (or smaller) based annotations -->
+							<xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc', 'hn', 'ps', 'SeR', 'SyF', 'IST', 'BOR', 'BOR-Phon', 'BOR-Morph', 'CS')">
 								<xsl:element name="span">
-									<!-- this needs to be changed for INEL 
-                                                        and where to change the splitting of the morphemes?
-                                                        -->
+									<!-- this needs to be changed for INEL -->
 									<xsl:attribute name="from">
 										<!-- <xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@start"/> -->
@@ -159,14 +181,43 @@
 									<xsl:value-of select="@end"/> -->
 										<xsl:value-of select="tei:word-annotation(@start, @end)"/>
 									</xsl:attribute>
-									<xsl:value-of select="@value"/>
+									<!-- the further morpheme based segmentation and references here -->
+									<xsl:choose>
+										<xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc')">
+											<!-- this needs to be changed for INEL -->
+											<!-- !!! here we split the morphemes and correspond the matching annotations -->
+											<xsl:element name="span">
+
+												<xsl:attribute name="from">
+													<!-- <xsl:value-of select="$XPOINTER_HASH"/>
+									<xsl:value-of select="@start"/> -->
+													<xsl:value-of select="tei:word-annotation(@start, @end)"/>
+												</xsl:attribute>
+												<xsl:attribute name="to">
+													<!--<xsl:value-of select="$XPOINTER_HASH"/>
+									<xsl:value-of select="@end"/> -->
+													<xsl:value-of select="tei:word-annotation(@start, @end)"/>
+												</xsl:attribute>
+												<xsl:attribute name="id">
+													<!--<xsl:value-of select="$XPOINTER_HASH"/>
+									<xsl:value-of select="@end"/> -->
+													<xsl:value-of select="m"/>
+												</xsl:attribute>
+												<!-- the further morpheme based segmentation and references needs to be placed here -->
+												<xsl:value-of select="@value"/>
+											</xsl:element>
+										</xsl:when>
+										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr', 'mc')">
+											<!-- now the morphemes need to match the annotations -->
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="@value"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:element>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:element name="span">
-									<!-- this needs to be changed for INEL 
-                                                        and where to change the splitting of the morphemes?
-                                                        -->
 									<xsl:attribute name="from">
 										<xsl:value-of select="$XPOINTER_HASH"/>
 										<xsl:value-of select="@start"/>
