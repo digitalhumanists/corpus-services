@@ -287,6 +287,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
         allExistingCFs.add("ExbAnnotationPanelCheck");
+		allExistingCFs.add("IAAFunctionality");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
 //        for (Class c : classes) {
