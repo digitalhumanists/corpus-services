@@ -89,17 +89,17 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="'broken'"/>
-				<!-- the corresponding word cannot be found? --> </xsl:otherwise>
+				<!-- the corresponding word cannot be found? -->
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-        
-        <!-- splits concatenated morphemes to after INEL rules -->
-        <!-- the rules are: split at "-" and "." -->
-	<xsl:function name="tei:splitmorphemes" as="element()">
+
+	<!-- splits concatenated morphemes to after INEL rules -->
+	<!-- the rules are: split at "-" and "." -->
+	<!-- <xsl:function name="tei:splitmorphemes" as="element()">
 		<xsl:param name="text"/>
-                
-		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
-	</xsl:function>
+		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/> 
+	</xsl:function>-->
 
 	<!-- ***************************** -->
 
@@ -208,8 +208,7 @@
 											</xsl:element>
 										</xsl:when>
 										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr', 'mc')">
-											<!-- now the morphemes need to match the annotations -->
-										</xsl:when>
+											<!-- now the morphemes need to match the annotations --> </xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="@value"/>
 										</xsl:otherwise>
