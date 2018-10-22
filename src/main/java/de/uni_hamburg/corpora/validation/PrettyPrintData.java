@@ -50,6 +50,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         //save it instead of the old file
         CorpusIO cio = new CorpusIO();
         cio.write(prettyCorpusData, cd.getURL());
+        cd.updateUnformattedString(prettyCorpusData);
         report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was pretty printed and saved.");
         }
         else{
