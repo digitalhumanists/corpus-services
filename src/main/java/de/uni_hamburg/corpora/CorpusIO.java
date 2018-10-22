@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
@@ -24,6 +19,8 @@ import java.util.Stack;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
@@ -53,18 +50,18 @@ public class CorpusIO {
 
 
     /*
-    * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
-    *
-  
-    public abstract Collection getAllTranscripts();
+     * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
+     *
 
-    public abstract Collection getAllAudioFiles();
+     public abstract Collection getAllTranscripts();
 
-    public abstract Collection getAllVideoFiles();
+     public abstract Collection getAllAudioFiles();
 
-    public abstract String getAudioLinkForTranscript();
+     public abstract Collection getAllVideoFiles();
 
-    public abstract String getVideoLinkForTranscript();
+     public abstract String getAudioLinkForTranscript();
+
+     public abstract String getVideoLinkForTranscript();
 
      */
     public void write(CorpusData cd, URL url) throws IOException {
@@ -103,8 +100,26 @@ public class CorpusIO {
 
     //TODO
     public CorpusData readFile(URL url) {
-        CorpusData cd = null;
-        return cd;
+        if (url.getPath().endsWith("exb")) {
+            BasicTranscriptionData bt = new BasicTranscriptionData(url);
+            //bt.loadFile(f);
+            return bt;
+        } else if (url.getPath().endsWith("coma")) {
+            ComaData cm = new ComaData(url);
+            //TODO
+            return cm;
+        } else if (url.getPath().endsWith("exs") || url.getPath().endsWith("xml")) {
+            UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
+            return usd;
+            //we can't read files other than coma and exb yet...
+        /*  } else if (f.getName().endsWith("cmdi")) {
+             CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi; */
+        } else {
+            System.out.println(url + " is not xml CorpusData");
+            CorpusData cd = null;
+            return cd;
+        }
     }
 
     public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
@@ -126,11 +141,16 @@ public class CorpusIO {
             ComaData cm = new ComaData(f.toURI().toURL());
             //TODO
             return cm;
+        /* }  else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
+             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
+            return as; */
         } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
             //we can't read files other than coma and exb yet...
-
+        /*  } else if (f.getName().endsWith("cmdi")) {
+             CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi; */
         } else {
             System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;
@@ -142,6 +162,7 @@ public class CorpusIO {
     public Collection<File> getFileURLSRecursively(URL directoryURL) {
         Set<String> recursionBlackList = new HashSet<String>();
         recursionBlackList.add(".git");
+        recursionBlackList.add(".gitignore");
         Set<File> recursed = new HashSet<File>();
         Stack<File> dirs = new Stack();
         File d = new File(directoryURL.getFile());
@@ -161,6 +182,37 @@ public class CorpusIO {
         return recursed;
     }
 
+    public ArrayList<URL> URLtoList(URL url) {
+        ArrayList<URL> alldata = new ArrayList();
+        if (isLocalFile(url)) {
+            //if the url points to a directory
+            if (new File(url.getFile()).isDirectory()) {
+                //we need to iterate
+                //and add everything to the list
+                Collection<File> recursed = getFileURLSRecursively(url);
+                for (File f : recursed) {
+                    if (!f.isDirectory()) {
+                        try {
+                            alldata.add(f.toURI().toURL());
+                        } catch (MalformedURLException ex) {
+                            Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                return alldata;
+            } //if the url points to a file
+            else {
+                //we need to add just this file
+                alldata.add(url);
+                return alldata;
+            }
+        } else {
+            //it's a datastream in the repo
+            //TODO later
+            return null;
+        }
+    }
+
     public Collection<CorpusData> read(URL url) {
         Collection<CorpusData> cdc = new ArrayList();
         ArrayList<CorpusData> acdc;
@@ -168,7 +220,7 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (new File(url.getFile()).isDirectory()) {
-                //we need to iterate    
+                //we need to iterate
                 //and add everything to the cdc list
                 Collection<File> recursed = getFileURLSRecursively(url);
                 for (File f : recursed) {
@@ -209,7 +261,7 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later          
+            //TODO later
             return null;
         }
     }

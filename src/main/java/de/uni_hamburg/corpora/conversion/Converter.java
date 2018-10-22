@@ -42,7 +42,8 @@ public abstract class Converter implements CorpusFunction{
     ValidatorSettings settings;
     CorpusData cd;
     Report report;
-    Collection<Class> IsUsableFor = new ArrayList();
+    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
+            extends CorpusData>>();
 
     public Converter() {
     }
@@ -184,9 +185,10 @@ public abstract class Converter implements CorpusFunction{
         return report;
     }
 
-    public abstract Collection<Class> getIsUsableFor();
+    @Override
+    public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
     
-    public void setIsUsableFor(Collection<Class> cdc){
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
         for (Class cl : cdc){
         IsUsableFor.add(cl);
         }
