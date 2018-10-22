@@ -619,7 +619,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     }
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
@@ -627,6 +627,11 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
+    }
+
+    @Override
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

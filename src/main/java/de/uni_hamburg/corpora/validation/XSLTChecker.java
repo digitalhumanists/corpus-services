@@ -22,6 +22,8 @@ import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+
 
 /**
  *
@@ -73,18 +75,22 @@ public class XSLTChecker extends Checker implements CorpusFunction{
                 switch (lineParts[0].toUpperCase()) {
                     case "WARNING":
                         r.addWarning("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     case "CRITICAL":
                         r.addCritical("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     case "NOTE":                    
                         r.addNote("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
                         break;
                     case "MISSING": 
                         r.addMissing("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     default:
                         r.addCritical("XSLTChecker", "(Unrecognized report type) "+ cd.getURL().getFile() + ": " + lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                 }
                 
                 i++;
@@ -110,7 +116,7 @@ public class XSLTChecker extends Checker implements CorpusFunction{
     
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
             IsUsableFor.add(cl);            
