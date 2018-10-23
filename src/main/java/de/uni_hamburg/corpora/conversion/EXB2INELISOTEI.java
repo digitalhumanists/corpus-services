@@ -48,13 +48,14 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
 
-    //testing and debugigng stuff
+    //testing and debuging stuff
+    String intermediate0 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exs";
     String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
     String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
     String intermediate3 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate3.xml";
     String intermediate4 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate4.xml";
     String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";
-
+    
     final String ISO_CONV = "inel iso tei";
 
     //locations of the used xsls
@@ -124,7 +125,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //create a segmented exs 
         SegmentedTranscription st = segmentation.BasicToSegmented(copyBT);
         System.out.println("Segmented transcription created");
-
+        cio.write(st.toXML(), new URL(intermediate0)); 
         //Document from segmented transcription string
         Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
         //TODO paramter in the future for deep & flat segmentation name
