@@ -513,6 +513,25 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             //System.out.println("*** " + wordID);
             pc.setAttribute("id", pcID, Namespace.XML_NAMESPACE);
         }
+        
+        // we also need this for events/incidents
+        XPath incXPath = XPath.newInstance("//tei:event[not(@xml:id)]");
+        pcXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
+        pcXPath.addNamespace(Namespace.XML_NAMESPACE);
+
+        List incs = incXPath.selectNodes(document);
+        count = 1;
+        for (Object o : incs) {
+            Element pc = (Element) o;
+            while (allExistingIDs.contains("inc" + Integer.toString(count))) {
+                count++;
+            }
+
+            String incID = "inc" + Integer.toString(count);
+            allExistingIDs.add(incID);
+            //System.out.println("*** " + wordID);
+            pc.setAttribute("id", incID, Namespace.XML_NAMESPACE);
+        }
     }
     
      private void generateMorphIDs(Document document) throws JDOMException {
