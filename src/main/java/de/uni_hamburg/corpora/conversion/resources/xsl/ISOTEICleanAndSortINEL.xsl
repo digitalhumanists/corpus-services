@@ -69,27 +69,50 @@
 	<!-- the word nodes -->
 	<xsl:variable name="words" select="//*:w"/>
 
-	<!-- returns the word id for given annotation -->
-	<xsl:function name="tei:word-annotation" as="xs:string">
+	<!-- the event nodes -->
+	<xsl:variable name="events" select="//*:event"/>
+
+	<!-- returns the word id for given annotation start -->
+	<xsl:function name="tei:word-annotation-from" as="xs:string">
 		<xsl:param name="annotationstart"/>
+		<!-- we use the annotation, find the start and the end and find the word with the same start and end -->
+		<!-- the case when there is no "normal" timeline id needs to be checked too -->
+		<xsl:choose>
+			<xsl:when test="($words[@s = $annotationstart]/@xml:id) != ''">
+				<xsl:value-of select="$words[@s = $annotationstart]/@xml:id"/>
+			</xsl:when>
+			<!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
+			<xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
+				<xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
+				<xsl:message terminate="no">
+					<!-- Error message -->
+                                    there is mismatch of annotation in the exb file, that happens after the segmentation
+                                    - probably a missing whitespace after a word
+                                </xsl:message>
+				<xsl:value-of select="'broken'"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
+	<!-- returns the word id for given annotation end -->
+	<xsl:function name="tei:word-annotation-to" as="xs:string">
 		<xsl:param name="annotationend"/>
 		<!-- we use the annotation, find the start and the end and find the word with the same start and end -->
 		<!-- the case when there is no "normal" timeline id needs to be checked too -->
 		<xsl:choose>
-			<xsl:when test="($words[@s = $annotationstart and @e = $annotationend]/@xml:id) != ''">
-				<xsl:value-of select="$words[@s = $annotationstart and @e = $annotationend]/@xml:id"/>
-			</xsl:when>
-			<!-- if we don't find a word there, look for just the start-->
-			<xsl:when test="($words[@s = $annotationstart]/@xml:id) != ''">
-				<xsl:value-of select="$words[@s = $annotationstart][1]/@xml:id"/>
-			</xsl:when>
-			<!-- if we don't find a word there, look for just the end-->
 			<xsl:when test="($words[@e = $annotationend]/@xml:id) != ''">
-				<xsl:value-of select="$words[@e = $annotationend][1]/@xml:id"/>
+				<xsl:value-of select="$words[@e = $annotationend]/@xml:id"/>
 			</xsl:when>
+			<!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
+			<xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
+				<xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
+			</xsl:when>
+			<!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
 			<xsl:otherwise>
 				<xsl:value-of select="'broken'"/>
-				<!-- the corresponding word cannot be found? -->
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
@@ -123,6 +146,8 @@
 	<!-- events -->
 	<xsl:template match="*:event">
 		<xsl:element name="incident">
+			<!-- add an id for references -->
+			<xsl:attribute name="xml:id"/>
 			<xsl:copy-of select="@start"/>
 			<xsl:copy-of select="@end"/>
 			<xsl:copy-of select="@who"/>
@@ -174,38 +199,43 @@
 									<xsl:attribute name="from">
 										<!-- <xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@start"/> -->
-										<xsl:value-of select="tei:word-annotation(@start, @end)"/>
+										<xsl:value-of select="tei:word-annotation-from(@start)"/>
 									</xsl:attribute>
 									<xsl:attribute name="to">
 										<!--<xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@end"/> -->
-										<xsl:value-of select="tei:word-annotation(@start, @end)"/>
+										<xsl:value-of select="tei:word-annotation-to(@end)"/>
 									</xsl:attribute>
 									<!-- the further morpheme based segmentation and references here -->
 									<xsl:choose>
-										<xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc')">
+										<xsl:when test="@level = ('mb')">
 											<!-- this needs to be changed for INEL -->
 											<!-- !!! here we split the morphemes and correspond the matching annotations -->
-											<xsl:element name="span">
-
-												<xsl:attribute name="from">
-													<!-- <xsl:value-of select="$XPOINTER_HASH"/>
+											<xsl:for-each select="tokenize(text(), '.')">
+												<xsl:sequence select="."/>
+												<xsl:if test="not(position() eq last())">
+													<br/>
+												</xsl:if>
+												<xsl:element name="span">
+													<!--	<xsl:attribute name="from">
+														 <xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@start"/> -->
-													<xsl:value-of select="tei:word-annotation(@start, @end)"/>
-												</xsl:attribute>
-												<xsl:attribute name="to">
-													<!--<xsl:value-of select="$XPOINTER_HASH"/>
+													<!--<xsl:value-of select="tei:word-annotation-from(@start)"/> 
+													</xsl:attribute> -->
+													<!-- <xsl:attribute name="to">
+													<xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@end"/> -->
-													<xsl:value-of select="tei:word-annotation(@start, @end)"/>
-												</xsl:attribute>
-												<xsl:attribute name="id">
-													<!--<xsl:value-of select="$XPOINTER_HASH"/>
-									<xsl:value-of select="@end"/> -->
-													<xsl:value-of select="m"/>
-												</xsl:attribute>
-												<!-- the further morpheme based segmentation and references needs to be placed here -->
-												<xsl:value-of select="@value"/>
-											</xsl:element>
+													<!--	<xsl:value-of select="tei:word-annotation-to(@end)"/>
+													</xsl:attribute> -->
+													<!--  <xsl:attribute name="id">
+														<xsl:value-of select="$XPOINTER_HASH"/>
+									<xsl:value-of select="@end"/>
+														<xsl:value-of select="m"/>
+													</xsl:attribute>  -->
+													<!-- the further morpheme based segmentation and references needs to be placed here -->
+													<xsl:value-of select="."/>
+												</xsl:element>
+											</xsl:for-each>
 										</xsl:when>
 										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr', 'mc')">
 											<!-- now the morphemes need to match the annotations --> </xsl:when>

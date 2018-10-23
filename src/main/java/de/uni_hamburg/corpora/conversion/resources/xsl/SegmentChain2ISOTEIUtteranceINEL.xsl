@@ -131,6 +131,12 @@
 					<xsl:attribute name="desc">
 						<xsl:value-of select="text()"/>
 					</xsl:attribute>
+					<xsl:attribute name="s">
+						<xsl:value-of select="@s"/>
+					</xsl:attribute>
+					<xsl:attribute name="e">
+						<xsl:value-of select="@e"/>
+					</xsl:attribute>
 				</xsl:element>
 			</xsl:otherwise>
 		</xsl:choose>		
@@ -154,6 +160,12 @@
 				<xsl:element name="event" xmlns="http://www.tei-c.org/ns/1.0">
 					<xsl:attribute name="desc">
 						<xsl:value-of select="text()"/>
+					</xsl:attribute>
+					<xsl:attribute name="s">
+						<xsl:value-of select="@s"/>
+					</xsl:attribute>
+					<xsl:attribute name="e">
+						<xsl:value-of select="@e"/>
 					</xsl:attribute>
 				</xsl:element>
 			</xsl:otherwise>
