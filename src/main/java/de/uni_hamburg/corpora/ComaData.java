@@ -24,11 +24,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import org.jdom.Element;
-import org.jdom.xpath.XPath;
 
 /**
  *
@@ -41,14 +36,6 @@ public class ComaData implements Metadata, CorpusData {
     URL url;
     Document readcomaasjdom = new Document();
     String originalstring;
-
-    public String CORPUS_BASEDIRECTORY = "";
-    
-    public static String SEGMENTED_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='true']/NSLink";
-    public static String BASIC_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='false']/NSLink";
-    public static String ALL_FILE_XPATH = "//Transcription/NSLink";
-    
-    public ArrayList<URL> referencedCorpusDataURLs;
 
     public ComaData() {
     }

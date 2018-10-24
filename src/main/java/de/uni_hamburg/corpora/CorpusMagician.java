@@ -1,30 +1,23 @@
 package de.uni_hamburg.corpora;
 
-import de.uni_hamburg.corpora.validation.CmdiChecker;
-import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
+//import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
-import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
+//import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
-import de.uni_hamburg.corpora.validation.ComaXsdChecker;
-import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbPatternChecker;
-import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
-import de.uni_hamburg.corpora.validation.ExbStructureChecker;
+//import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+//import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
-import de.uni_hamburg.corpora.validation.FilenameChecker;
-import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
+//import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
-import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
-import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
+//import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
-import de.uni_hamburg.corpora.validation.TierChecker;
-import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.File;
 import java.io.IOException;
@@ -238,30 +231,23 @@ public class CorpusMagician {
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
         allExistingCFs.add("ExbPatternChecker");
-        allExistingCFs.add("ExbSegmentationChecker");
-        allExistingCFs.add("ExbStructureChecker");
+        //allExistingCFs.add("ExbSegmentationChecker");
+        //allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("XSLTChecker");
-        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
-        allExistingCFs.add("TierChecker");
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaApostropheCheckerFix");
         allExistingCFs.add("ComaSegmentCountChecker");
-        allExistingCFs.add("TierCheckerWithAnnotation");
-        allExistingCFs.add("FilenameChecker");
-        allExistingCFs.add("ComaPIDLengthChecker");
-        allExistingCFs.add("CmdiChecker");
-        allExistingCFs.add("NgexmaraldaCorpusChecker");
-        allExistingCFs.add("GenerateAnnotationPanel");
-        allExistingCFs.add("ComaXsdChecker");
-        allExistingCFs.add("NgTierCheckerWithAnnotation");
-        allExistingCFs.add("ExbAnnotationPanelCheck");
+        //allExistingCFs.add("FilenameChecker");
+        //allExistingCFs.add("ComaPIDLengthChecker");
+        //allExistingCFs.add("CmdiChecker");
+        //allExistingCFs.add("NgexmaraldaCorpusChecker");
 		allExistingCFs.add("IAAFunctionality");
 //        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
 //        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
@@ -348,10 +334,6 @@ public class CorpusMagician {
                     PrettyPrintData pd = new PrettyPrintData();
                     corpusfunctions.add(pd);
                     break;
-                case "comaaddtiersfromexbscorrector":
-                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
-                    corpusfunctions.add(catfec);
-                    break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
@@ -368,10 +350,6 @@ public class CorpusMagician {
                     cog = new ComaOverviewGeneration();
                     corpusfunctions.add(cog);
                     break;
-                case "tierchecker":
-                    TierChecker tc = new TierChecker();
-                    corpusfunctions.add(tc);
-                    break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
                     corpusfunctions.add(cnc);
@@ -380,54 +358,34 @@ public class CorpusMagician {
                     ComaApostropheChecker cacf = new ComaApostropheChecker();
                     corpusfunctions.add(cacf);
                     break;
-                case "comapidlengthchecker":
-                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
-                    corpusfunctions.add(cplc);
-                    break;
-                case "tiercheckerwithannotation":
-                    TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
-                    corpusfunctions.add(tcwa);
-                    break;
-                case "filenamechecker":
-                    FilenameChecker fnc = new FilenameChecker();
-                    corpusfunctions.add(fnc);
-                    break;
+                //case "comapidlengthchecker":
+                    //ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                    //corpusfunctions.add(cplc);
+                    //break;
+                //case "filenamechecker":
+                    //FilenameChecker fnc = new FilenameChecker();
+                    //corpusfunctions.add(fnc);
+                    //break;
                 //case "exbpatternchecker":
                 //ExbPatternChecker epc = new ExbPatternChecker();
                 //report.merge(runCorpusFunction(corpus, epc));
                 //break;
-                case "exbsegmentationchecker":
-                    ExbSegmentationChecker esg = new ExbSegmentationChecker();
-                    corpusfunctions.add(esg);
-                    break;
-                case "exbstructurechecker":
-                    ExbStructureChecker esc = new ExbStructureChecker();
-                    corpusfunctions.add(esc);
-                    break;
-                case "exbannotationpanelcheck":
-                    ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
-                    corpusfunctions.add(eapc);
-                    break;
-                case "cmdichecker":
-                    CmdiChecker cmdi = new CmdiChecker();
-                    corpusfunctions.add(cmdi);
-                    break;
-                case "ngexmaraldacorpuschecker":
-                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
-                    corpusfunctions.add(ngex);
-                    break;
-                case "generateannotationpanel":
-                    GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
-                    corpusfunctions.add(gap);
-                    break;
-                case "comaxsdchecker":
-                    ComaXsdChecker cxsd = new ComaXsdChecker();
-                    corpusfunctions.add(cxsd);
-                    break;
-                case "ngtiercheckerwithannotation":
-                    NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
-                    corpusfunctions.add(ngtcwa);
-                    break;
+                //case "exbsegmentationchecker":
+                    //ExbSegmentationChecker esg = new ExbSegmentationChecker();
+                    //corpusfunctions.add(esg);
+                    //break;
+                //case "exbstructurechecker":
+                    //ExbStructureChecker esc = new ExbStructureChecker();
+                    //corpusfunctions.add(esc);
+                    //break;
+                //case "cmdichecker":
+                    //CmdiChecker cmdi = new CmdiChecker();
+                    //corpusfunctions.add(cmdi);
+                    //break;
+                //case "ngexmaraldacorpuschecker":
+                    //NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
+                    //corpusfunctions.add(ngex);
+                    //break;
                 case "iaafunctionality":
                     IAAFunctionality iaa = new IAAFunctionality();
                     corpusfunctions.add(iaa);
