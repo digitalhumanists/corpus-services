@@ -38,6 +38,9 @@
 		</positions>
 	</xsl:variable>
 
+	<!-- annotations -->
+	<xsl:variable name="morphemes" select="//*:annotations/*:annotation"/>
+
 	<!-- returns the position number of the timeline item with the given id -->
 	<xsl:function name="tesla:timeline-position" as="xs:integer">
 		<xsl:param name="timeline-id"/>
@@ -185,52 +188,23 @@
 										<xsl:value-of select="tei:word-annotation-to(@end)"/>
 									</xsl:attribute>
 									<!-- the further morpheme based segmentation and references here -->
+									<!-- we need to throw an error message when the morpheme annotations aren't consistent -->
+									<!-- e.g. one dash more in one tier than the other -->
+									<xsl:if test="count(*:annotations/*:annotation[@level = 'mb' and @value != '']/tokenize(@value, '-'))"> </xsl:if>
 									<xsl:choose>
 										<xsl:when test="@level = ('mb')">
 											<!-- this needs to be changed for INEL -->
 											<!-- !!! here we split the morphemes and correspond the matching annotations -->
-											<xsl:variable name="mbValue" select="./@value"/>
-											<xsl:variable name="position">
-												<xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-')))+1"/>
-											</xsl:variable>
-											<xsl:variable name="tokenizedMb" select="tokenize($mbValue, '-')"/>
-											<xsl:for-each select="$tokenizedMb">
-												<xsl:variable name="realposition">
-													<xsl:value-of select="($position) + (position()-1)"/>
-												</xsl:variable>
-												<xsl:element name="span">
-													<xsl:attribute name="xml:id">
-														<xsl:value-of select="concat('m', $realposition)"/>
-													</xsl:attribute>
-													<xsl:value-of select="."/>
-												</xsl:element>
-												<!-- 
-													<xsl:attribute name="from">
-														 <xsl:value-of select="$XPOINTER_HASH"/>
-									<xsl:value-of select="@start"/> -->
-												<!--<xsl:value-of select="tei:word-annotation-from(@start)"/> 
-													</xsl:attribute> -->
-												<!-- <xsl:attribute name="to">
-													<xsl:value-of select="$XPOINTER_HASH"/>
-									<xsl:value-of select="@end"/> -->
-												<!--	<xsl:value-of select="tei:word-annotation-to(@end)"/>
-													</xsl:attribute> -->
-												<!--  <xsl:attribute name="id">
-														<xsl:value-of select="$XPOINTER_HASH"/>
-									<xsl:value-of select="@end"/>
-														<xsl:value-of select="m"/>
-													</xsl:attribute>  -->
-												<!-- the further morpheme based segmentation and references needs to be placed here -->
-											</xsl:for-each>
+											<xsl:call-template name="morph-segmentation"/>
 										</xsl:when>
-										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr', 'mc')">
-											<xsl:variable name="mAnnoValue" select="./@value"/>
-											<xsl:variable name="tokenizedmAnno" select="tokenize($mAnnoValue, '-')"/>
-											<xsl:for-each select="$tokenizedmAnno">
-												<xsl:element name="span">
-													<xsl:value-of select="."/>
-												</xsl:element>
-											</xsl:for-each>
+										<!-- the further morpheme based segmentation and references needs to be placed here -->
+										<!-- and then we fix the special case with the null morpheme - appended via .[xxx] -->
+										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr')">
+											<xsl:call-template name="morph-to-morph-anno"/>
+										</xsl:when>
+										<xsl:when test="@level = ('mc')">
+											<xsl:call-template name="morph-to-morph-mc"/>
+											<xsl:value-of select="@value"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="@value"/>
@@ -427,6 +401,128 @@
 			</xsl:attribute>
 			<xsl:apply-templates select="@*[not(name() = 'dur')] | node()"/>
 		</xsl:element>
+	</xsl:template>
+
+	<!-- matches morpheme annotation and finds errors -->
+	<xsl:template name="morph-to-morph-anno">
+		<xsl:variable name="morpheme-annotation-start" select="./@start"/>
+		<xsl:variable name="morpheme-annotation-end" select="./@end"/>
+		<xsl:variable name="annotation-name" select="./@level"/>
+		<xsl:variable name="annValue" select="./@value"/>
+		<xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
+		<!-- check if the splitting creates the same number of tokens in each tier/annotation -->
+		<xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
+			<xsl:message terminate="no">
+				the annotations with dashes in different tiers don't match
+				fix <xsl:value-of select="$annValue"/> vs  <xsl:value-of select="$mbValue"
+				/> at <xsl:value-of select="$morpheme-annotation-start"/> - <xsl:value-of select="$morpheme-annotation-end"/> in tier <xsl:value-of select="$annotation-name"/> </xsl:message>
+		</xsl:if>
+		<!-- this needs to be changed for INEL -->
+		<!-- !!! here we split the morphemes and correspond the matching annotations -->
+		<xsl:variable name="position">
+			<!-- need to use the correct mb node here -->
+			<xsl:value-of
+				select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-')) + 1)"
+			/>
+		</xsl:variable>
+		<xsl:variable name="tokenizedann" select="tokenize($annValue, '-')"/>
+		<xsl:for-each select="$tokenizedann">
+			<xsl:choose>
+				<xsl:when test="contains(., '.[')">
+					<xsl:variable name="notnullmorphem" select="substring-before(., '.[')"/>
+					<xsl:variable name="nullmorphem" select="substring-before((substring-after(., '.[')), ']')"/>
+					<xsl:variable name="realposition">
+						<xsl:value-of select="($position) + (position() - 1)"/>
+					</xsl:variable>
+					<!-- no null morpheme as always -->
+					<xsl:element name="span">
+						<xsl:attribute name="from">
+							<xsl:value-of select="concat('m', $realposition)"/>
+						</xsl:attribute>
+						<xsl:attribute name="to">
+							<xsl:value-of select="concat('m', $realposition)"/>
+						</xsl:attribute>
+						<xsl:value-of select="$notnullmorphem"/>
+					</xsl:element>
+					<!-- null morpheme doesn't get a m span at the moment -->
+					<xsl:element name="span">
+						<xsl:value-of select="$nullmorphem"/>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="realposition">
+						<xsl:value-of select="($position) + (position() - 1)"/>
+					</xsl:variable>
+					<xsl:element name="span">
+						<xsl:attribute name="from">
+							<xsl:value-of select="concat('m', $realposition)"/>
+						</xsl:attribute>
+						<xsl:attribute name="to">
+							<xsl:value-of select="concat('m', $realposition)"/>
+						</xsl:attribute>
+						<xsl:value-of select="."/>
+					</xsl:element>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:for-each>
+	</xsl:template>
+
+	<!-- we need to treat the mc tier differently!!! -->
+	<!-- hopefully we can adapt the data correctly iin the future and won't need this -->
+	<xsl:template name="morph-to-morph-mc">
+		<!--<xsl:variable name="morpheme-annotation-start" select="./@start"/>
+		<xsl:variable name="morpheme-annotation-end" select="./@end"/>
+		<xsl:variable name="annotation-name" select="./@level"/>
+		<xsl:variable name="annValue" select="./@value"/>
+		<xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
+		<!-\- check if the splitting creates the same number of tokens in each tier/annotation -\->
+		<xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
+			<xsl:message terminate="no">
+				the annotations with dashes in different tiers don't match
+				fix <xsl:value-of select="$annValue"/> vs  <xsl:value-of select="$mbValue"
+				/> at <xsl:value-of select="$morpheme-annotation-start"/> - <xsl:value-of select="$morpheme-annotation-end"/> in tier <xsl:value-of select="$annotation-name"/> </xsl:message>
+		</xsl:if>
+		<!-\- this needs to be changed for INEL -\->
+		<!-\- !!! here we split the morphemes and correspond the matching annotations -\->
+		<xsl:variable name="position">
+			<xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-')) + 1)"/>
+		</xsl:variable>
+		<xsl:variable name="tokenizedMb" select="tokenize($mbValue, '-')"/>
+		<xsl:for-each select="$tokenizedMb">
+			<xsl:variable name="realposition">
+				<xsl:value-of select="($position) + (position() - 1)"/>
+			</xsl:variable>
+			<xsl:element name="span">
+				<xsl:attribute name="from">
+					<xsl:value-of select="concat('m', $realposition)"/>
+				</xsl:attribute>
+				<xsl:attribute name="to">
+					<xsl:value-of select="concat('m', $realposition)"/>
+				</xsl:attribute>
+				<xsl:value-of select="."/>
+			</xsl:element>
+		</xsl:for-each>--> </xsl:template>
+
+	<!-- morph segmentation -->
+	<xsl:template name="morph-segmentation">
+		<xsl:variable name="mbValue" select="./@value"/>
+		<xsl:variable name="position">
+			<xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-'))) + 1"/>
+		</xsl:variable>
+		<xsl:variable name="tokenizedMb" select="tokenize($mbValue, '-')"/>
+		<xsl:for-each select="$tokenizedMb">
+			<xsl:variable name="realposition">
+				<xsl:value-of select="($position) + (position() - 1)"/>
+			</xsl:variable>
+			<xsl:element name="span">
+				<xsl:attribute name="xml:id">
+					<xsl:value-of select="concat('m', $realposition)"/>
+				</xsl:attribute>
+				<xsl:value-of select="."/>
+			</xsl:element>
+
+		</xsl:for-each>
 	</xsl:template>
 
 </xsl:stylesheet>
