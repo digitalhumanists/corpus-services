@@ -53,7 +53,6 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     File exbFile;
     
 
-    
     /**
      * Check for referenced-files.
      */
@@ -149,6 +148,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     * primal functionality of the feature can be implemented, and additionally 
     * checks for parser configuration, SAXE and IO exceptions.
     */   
+
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
@@ -169,6 +169,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     * Main feature of the class: Checks Exmaralda .exb file for file references, if
     * a referenced file does not exist, issues a warning.
     */  
+
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -201,7 +202,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             if (url.lastIndexOf("/") != -1) {
                 relfilename = url.substring(url.lastIndexOf("/"));
             }
-            
+
             String referencePath = exbFile.getParentFile().getCanonicalPath();
             String absPath = referencePath + File.separator + relfilename;
             File absFile = new File(absPath);
@@ -233,11 +234,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
     /**
-    * Default function which determines for what type of files (basic transcription, 
+    * Default function which determines for what type of files (basic transcription,
     * segmented transcription, coma etc.) this feature can be used.
     */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
@@ -248,3 +249,4 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
 }
+

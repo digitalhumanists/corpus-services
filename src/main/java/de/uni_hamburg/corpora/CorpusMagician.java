@@ -5,7 +5,6 @@ import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
-
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -54,6 +53,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
+import java.util.Arrays;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -65,22 +67,23 @@ public class CorpusMagician {
 
     //the whole corpus I want to run checks on
     Corpus corpus;
-    //one file I want to run a check on 
+    //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
     Collection<String> allExistingCFs;
     //all functions that should be run
-    static Collection<String> chosencorpusfunctions = new ArrayList();
-    static Collection<CorpusFunction> corpusfunctions = new ArrayList();
-
-    //the final Exmaralda error list
-    public static ExmaErrorList exmaError = new ExmaErrorList();
+    static Collection<String> chosencorpusfunctions = new ArrayList<String>();
+    static Collection<CorpusFunction> corpusfunctions = new
+        ArrayList<CorpusFunction>();
+    //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
-    static ArrayList<URL> alldata = new ArrayList();
+    static ArrayList<URL> alldata = new ArrayList<URL>();
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
-
+    static CommandLine cmd = null;
+    //the final Exmaralda error list
+    public static ExmaErrorList exmaError = new ExmaErrorList();
     public CorpusMagician() {
     }
 
@@ -88,55 +91,13 @@ public class CorpusMagician {
     //TODO we need a webservice for this functionality too
     //in the furture (for repo and external users)
     //this should work via commandline like that:
-    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder} 
-    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run) 
-    public static void main(String[] args) throws ParserConfigurationException, TransformerException {
+    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder}
+    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run)
+    public static void main(String[] args) {
 
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url
-        Options options = new Options();
-
-        Option input = new Option("i", "input", true, "input file path");
-        input.setRequired(false);
-        options.addOption(input);
-
-        Option output = new Option("o", "output", true, "output file");
-        output.setRequired(false);
-        options.addOption(output);
-
-        Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
-        // Set option c to take 1 to oo arguments
-        corpusfunction.setArgs(Option.UNLIMITED_VALUES);
-        options.addOption(corpusfunction);
-
-        Option speed = new Option("s", "speed", false, "faster but more heap space");
-        speed.setRequired(false);
-        options.addOption(speed);
-
-        Option fix = new Option("f", "fix", false, "fixes problems automatically");
-        fix.setRequired(false);
-        options.addOption(fix);
-
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd = null;
-
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", options);
-
-            System.exit(1);
-        }
-
-        /*
-         String inputFilePath = cmd.getOptionValue("input");
-         String outputFilePath = cmd.getOptionValue("output");
-        
-         System.out.println(inputFilePath);
-         System.out.println(outputFilePath);
-         */
+        createCommandLineOptions(args);
         try {
             String urlstring = cmd.getOptionValue("input");
             URL url;
@@ -161,12 +122,20 @@ public class CorpusMagician {
             String[] corpusfunctionarray = cmd.getOptionValues("c");
             for (String cf : corpusfunctionarray) {
                 //corpuma.chosencorpusfunctions.add("test");
-                corpuma.chosencorpusfunctions.add(cf);
-                System.out.println(corpuma.chosencorpusfunctions.toString());
+                CorpusMagician.chosencorpusfunctions.add(cf);
+                System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             }
             corpusfunctions = corpusFunctionStrings2Classes();
+
+
+
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
+            corpuma.initCorpusWithURL(url);
+            //and here is another problem, all the corpusfiles are given as objects
+            report = corpuma.runChosencorpusfunctions();
+            //this is a possible solution, but not working yet
+            /*
             if (cmd.hasOption("s")) {
                 corpuma.initCorpusWithURL(url);
                 //and here is another problem, all the corpusfiles are given as objects
@@ -195,6 +164,7 @@ public class CorpusMagician {
 
                 }
             }
+            */
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
@@ -206,12 +176,17 @@ public class CorpusMagician {
                 cio.write(reportOutput, reportlocation);
             }
             //create the error list file
-            String errorstring = new File(reportstring).getParent() + "\\errorlist.xml";
+            //needs to be OS independent
+            String errorstring = new File(reportstring).getParent() + File.separator + "errorlist.xml";
             URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
-            exmaError.createFullErrorList(errorlistlocation);
+            ExmaErrorList.createFullErrorList(errorlistlocation);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -259,8 +234,9 @@ public class CorpusMagician {
     public Collection<String> getAllExistingCFs() {
 
         this.allExistingCFs = new ArrayList<String>();
-        allExistingCFs.add("PrettyPrintData");
+        allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
+<<<<<<< HEAD
         allExistingCFs.add("ExbFileReferenceChecker");
         allExistingCFs.add("ExbPatternChecker");
         allExistingCFs.add("ExbSegmentationChecker");
@@ -322,7 +298,7 @@ public class CorpusMagician {
     //TODO checks which functions can be run on specified data
     public Collection<CorpusFunction> getUsableFunctions(CorpusData cd) {
         //cf.IsUsableFor();
-        //some switch or if else statements for the possible java objects 
+        //some switch or if else statements for the possible java objects
         //and a list(?) which function can be apllied to what/which functions exist?
         Collection<CorpusFunction> usablecorpusfunctions = null;
         return usablecorpusfunctions;
@@ -345,6 +321,30 @@ public class CorpusMagician {
     public static Collection<CorpusFunction> corpusFunctionStrings2Classes() {
         for (String function : chosencorpusfunctions) {
             switch (function.toLowerCase()) {
+                case "comaapostrophechecker":
+                    ComaApostropheChecker cac = new ComaApostropheChecker();
+                    corpusfunctions.add(cac);
+                    break;
+                 case "comanslinkschecker":
+                    ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
+                    corpusfunctions.add(cnslc);
+                    break;
+                case "comaoverviewgeneration":
+                    ComaOverviewGeneration cog = new ComaOverviewGeneration();
+                    corpusfunctions.add(cog);
+                    break;
+                case "comasegmentcountchecker":
+                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
+                    corpusfunctions.add(cscc);
+                    break;
+                case "exbfilereferencechecker":
+                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
+                    corpusfunctions.add(efrc);
+                    break;
+                case "filecoveragechecker":
+                    FileCoverageChecker fcc = new FileCoverageChecker();
+                    corpusfunctions.add(fcc);
+                    break;
                 case "prettyprintdata":
                     PrettyPrintData pd = new PrettyPrintData();
                     corpusfunctions.add(pd);
@@ -457,6 +457,10 @@ public class CorpusMagician {
                     IAAFunctionality iaa = new IAAFunctionality();
                     corpusfunctions.add(iaa);
                     break;
+                case "ngexmaraldacorpuschecker":
+                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
+                    corpusfunctions.add(ngex);
+                    break; */
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
@@ -478,7 +482,7 @@ public class CorpusMagician {
     }
 
     //run multiple functions on a corpus, that means all the files in the corpus
-    //the function can run on 
+    //the function can run on
     public Report runCorpusFunction(Corpus c, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
@@ -489,7 +493,7 @@ public class CorpusMagician {
     }
 
     //run multiple functions on the set corpus, that means all the files in the corpus
-    //the function can run on 
+    //the function can run on
     public Report runCorpusFunction(Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
@@ -500,14 +504,14 @@ public class CorpusMagician {
     }
 
     //run one function on a corpus, that means all the files in the corpus
-    //the funciton can run on 
+    //the funciton can run on
     public Report runCorpusFunction(Corpus c, CorpusFunction cf) {
         Report report = new Report();
         //find out on which objects this corpus function can run
-        //choose those from the corpus 
+        //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
+            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
                 if (cl.isInstance(cd)) {
@@ -520,14 +524,14 @@ public class CorpusMagician {
     }
 
     //run one function on a corpus, that means all the files in the corpus
-    //the funciton can run on 
+    //the funciton can run on
     public Report runCorpusFunction(Corpus c, CorpusFunction cf, boolean fix) {
         Report report = new Report();
         //find out on which objects this corpus function can run
-        //choose those from the corpus 
+        //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance 
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
+            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
                 if (cd != null && cl.isInstance(cd)) {
@@ -540,13 +544,13 @@ public class CorpusMagician {
     }
 
     //run one function on a corpus, that means all the files in the corpus
-    //the function can run on 
+    //the function can run on
     public Report runCorpusFunction(CorpusFunction cf) {
         Report report = new Report();
         //find out on which objects this corpus function can run
-        //choose those from the corpus 
+        //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class cl : cf.getIsUsableFor()) {
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
             Report newReport = runCorpusFunction(corpus, cf);
             report.merge(newReport);
         }
@@ -597,7 +601,16 @@ public class CorpusMagician {
         return report;
     }
 
-    //TODO 
+    public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc, boolean fix) {
+        Report report = new Report();
+        for (CorpusFunction cf : cfc) {
+            Report newReport = (cf.execute(cd, fix));
+            report.merge(newReport);
+        }
+        return report;
+    }
+
+    //TODO
     //to save individual corpusparameters in a file
     //and maybe also save the functions todos there
     public void readParameters() {
@@ -609,7 +622,7 @@ public class CorpusMagician {
     }
 
     public void setChosencorpusfunctions(Collection<String> chosencorpusfunctions) {
-        this.chosencorpusfunctions = chosencorpusfunctions;
+        CorpusMagician.chosencorpusfunctions = chosencorpusfunctions;
     }
 
     public Corpus getCorpus() {
@@ -622,6 +635,62 @@ public class CorpusMagician {
 
     public Collection<String> getChosencorpusfunctions() {
         return chosencorpusfunctions;
+    }
+
+    private static void createCommandLineOptions(String[] args) {
+        Options options = new Options();
+
+        Option input = new Option("i", "input", true, "input file path");
+        input.setRequired(true);
+        options.addOption(input);
+
+        Option output = new Option("o", "output", true, "output file");
+        output.setRequired(true);
+        options.addOption(output);
+
+        Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
+        // Set option c to take 1 to oo arguments
+        corpusfunction.setArgs(Option.UNLIMITED_VALUES);
+        corpusfunction.setRequired(true);
+        options.addOption(corpusfunction);
+
+        /*
+        Option speed = new Option("s", "speed", false, "faster but more heap space");
+        speed.setRequired(false);
+        options.addOption(speed);
+        */
+
+        Option fix = new Option("f", "fix", false, "fixes problems automatically");
+        fix.setRequired(false);
+        options.addOption(fix);
+
+        Option help = new Option("h", "help", false, "display help");
+        fix.setRequired(false);
+        options.addOption(help);
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp("hzsk-corpus-services", options);
+            System.exit(1);
+        }
+
+        if (cmd.hasOption("h")) {
+            // automatically generate the help statement
+            formatter.printHelp("hzsk-corpus-services", options);
+        }
+        /*
+        String inputFilePath = cmd.getOptionValue("input");
+        String outputFilePath = cmd.getOptionValue("output");
+
+        System.out.println(inputFilePath);
+        System.out.println(outputFilePath);
+         */
+
     }
 
 }

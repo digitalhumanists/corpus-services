@@ -94,8 +94,9 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
     }
 
     private boolean isUrlHandleOrHzsk(String url) {
-        if ((url.startsWith("http://hdl.handle.net/11022/"))
-                || (url.startsWith("https://corpora.uni-hamburg.de/repository/"))) {
+        if ((url.startsWith("http://hdl.handle.net/11022/")) ||
+                (url.startsWith("https://corpora.uni-hamburg.de/repository/")) ||
+                (url.startsWith("http://annis.corpora.uni-hamburg.de"))) {
             return true;
         } else {
             return false;
@@ -107,6 +108,18 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(data));
+        // I kind of check some elements in order they appear...
+        // check actual profile first
+        boolean communicationProfile = false;
+        boolean textProfile = false;
+        NodeList maybeProfiles = doc.getElementsByTagName("CommunicationProfile");
+        if (maybeProfiles.getLength() > 0) {
+            communicationProfile = true;
+        }
+        maybeProfiles = doc.getElementsByTagName("TextCorpusProfile");
+        if (maybeProfiles.getLength() > 0) {
+           textProfile = true;
+        }
         NodeList rps = doc.getElementsByTagName("ResourceProxy");
         Report stats = new Report();
         boolean hasLandingPage = false;
@@ -119,8 +132,14 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                 stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
                         + "Good resource type LandingPage");
             } else if (restype.getTextContent().equals("Resource")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
-                        + "Good resource type Resource");
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type Resource");
+            } else if (restype.getTextContent().equals("SearchPage")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type SearchPage");
+            } else if (restype.getTextContent().equals("SearchService")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type SearchService");
             } else {
                 stats.addWarning(CMDI_MISC, cmdiLoc + ": "
                         + "Unrecognised resource type "
@@ -196,19 +215,19 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                     stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
                             + "LegalOwner present");
                 } else {
-                    System.out.println("DEBUG: GeneralInfo/" + e.getTagName());
+                    //System.out.println("DEBUG: GeneralInfo/" + e.getTagName());
                     // pass
                 }
             }
-            if (!englishTitle) {
-                stats.addWarning(CMDI_MISC, cmdiLoc + ": "
-                        + "English title missing from General Info "
-                        + "(needed by FCS for example)");
+            if ((!englishTitle) && (!communicationProfile)) {
+                stats.addWarning(CMDI_MISC, cmdiLoc + ": " +
+                        "English title missing from General Info " +
+                        "(needed by FCS for example)");
             }
-            if (!englishDesc) {
-                stats.addWarning(CMDI_MISC, cmdiLoc + ": "
-                        + "English Description missing from General Info "
-                        + "(needed by FCS for example)");
+            if ((!englishDesc) && (!communicationProfile)) {
+                stats.addWarning(CMDI_MISC, cmdiLoc + ": " +
+                        "English Description missing from General Info " +
+                        "(needed by FCS for example)");
             }
             if (!pidFound) {
                 stats.addCritical(CMDI_MISC, cmdiLoc + ": "
@@ -223,6 +242,24 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             }
             Element ci = (Element) cis.item(i);
             checkCorpusInfo(ci, stats);
+        }
+        cis = doc.getElementsByTagName("CommunicationInfo");
+        for (int i = 0; i < cis.getLength(); i++) {
+            Node cinode = cis.item(i);
+            if (cinode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element ci = (Element)cis.item(i);
+            checkCommunicationInfo(ci, stats);
+        }
+        NodeList sis = doc.getElementsByTagName("SpeakerInfo");
+        for (int i = 0; i < sis.getLength(); i++) {
+            Node sinode = sis.item(i);
+            if (sinode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element si = (Element)sis.item(i);
+            checkSpeakerInfo(si, stats);
         }
         return stats;
     }
@@ -263,8 +300,8 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                     modality = true;
                 }
             } else {
-                //
-                System.out.println("DEBUG: CorpusInfo/" + e.getTagName());
+                // pass
+                //System.out.println("DEBUG: CorpusInfo/" + e.getTagName());
             }
         }
         if (!corpusType) {
@@ -323,20 +360,132 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             }
             Element e = (Element) n;
             NodeList childs = e.getElementsByTagName("LanguageName");
+            boolean langFound = false;
             boolean engFound = false;
             for (int j = 0; j < childs.getLength(); j++) {
-                Element lang = (Element) childs.item(j);
+                Element lang = (Element)childs.item(j);
+                langFound = true;
                 if (lang.getAttribute("xml:lang").equals("eng")) {
                     engFound = true;
                 }
             }
-            if (!engFound) {
-                stats.addCritical(CMDI_MISC, cmdiLoc + ": "
-                        + "Each subject language must have @xml:lang eng "
-                        + "filled in");
+            if (!langFound) {
+                stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                        "At least one Language Name is required...");
+            } else if (!engFound) {
+                stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                        "Each subject language must have a " +
+                        "<LanguageName @xml:lang='eng'>"  +
+                        "filled in");
             } else {
                 stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
                         + "Goog language data");
+            }
+            childs = e.getElementsByTagName("ISO639");
+            for (int j = 0; j < childs.getLength(); j++) {
+                Element iso = (Element)childs.item(j);
+                checkISO639(iso, stats);
+            }
+        }
+    }
+
+    private void checkISO639(Element iso, Report stats) {
+        NodeList childs = iso.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("iso-639-3-code")) {
+                String code = e.getTextContent();
+                if (code.matches("[a-zA-Z]{2,4}(-[a-zA-Z-]{2,})*")) {
+                   stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                            "Good ISO-639-code");
+                } else {
+                   stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                            "ISO-639-3 code is not known: "  +
+                            e.getTextContent());
+                }
+            }
+        }
+    }
+
+    private void checkCommunicationInfo(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("SubjectLanguages")) {
+                checkSubjectLanguages(e, stats);
+            }
+
+        }
+    }
+
+    private void checkSpeakerInfo(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("ActorLanguages")) {
+                checkSubjectLanguages(e, stats);
+            } else if (e.getTagName().equals("ActorPersonal")) {
+                checkActorPersonal(e, stats);
+            } else if (e.getTagName().equals("LocationHistory")) {
+                checkLocationHistory(e, stats);
+            }
+
+        }
+    }
+
+    private void checkActorPersonal(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("Birthday")) {
+                String code = e.getTextContent();
+                if (code.matches("[0-9]{4}(-[0-9][0-9]){0,2}")) {
+                   stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                            "Birthay found");
+                } else {
+                   stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                            "Birthday must be given in format YYYY-MM-DD or " +
+                            "YYYY: "  + e.getTextContent());
+                }
+            }
+        }
+    }
+
+    private void checkLocationHistory(Element ci, Report stats) {
+        NodeList childs = ci.getChildNodes();
+        for (int i = 0; i < childs.getLength(); i++) {
+            Node n = childs.item(i);
+            if (n.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Element e = (Element)n;
+            if (e.getTagName().equals("StartingYearOfCurrentResidence")) {
+                String code = e.getTextContent();
+                if (code.matches("[0-9]{4}")) {
+                   stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                            "Starting year of current residence found");
+                } else {
+                   stats.addCritical(CMDI_MISC, cmdiLoc + ": " +
+                            "Starting year of current residence must be in " +
+                            "format YYYY: "  +
+                            e.getTextContent());
+                }
             }
         }
     }
