@@ -262,7 +262,7 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
      * used.
      */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             Class clSecond = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
