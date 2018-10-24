@@ -130,7 +130,7 @@ public class CorpusIO {
             //TODO
             return cm;
         } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
-             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
+            AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
             return as; 
         } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
