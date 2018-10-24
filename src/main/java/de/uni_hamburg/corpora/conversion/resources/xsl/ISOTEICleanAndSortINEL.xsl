@@ -44,28 +44,6 @@
 		<xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
 	</xsl:function>
 
-	<!-- memorizes position of a word w in the timeline 
-	<xsl:variable name="word-positions">
-		<positions>
-			<xsl:for-each select="//*:w">
-				<item>
-					<xsl:attribute name="id">
-						<xsl:value-of select="@xml:id"/>
-					</xsl:attribute>
-					<xsl:attribute name="positionstart">
-						<xsl:value-of select="@start"/>
-					</xsl:attribute>
-					<xsl:attribute name="positionend">
-						<xsl:value-of select="@end"/>
-					</xsl:attribute>
-					<xsl:attribute name="position">
-						<xsl:value-of select="count(preceding-sibling::*:w)"/>
-					</xsl:attribute>
-				</item>
-			</xsl:for-each>
-		</positions>
-	</xsl:variable> -->
-
 	<!-- the word nodes -->
 	<xsl:variable name="words" select="//*:w"/>
 
@@ -211,34 +189,49 @@
 										<xsl:when test="@level = ('mb')">
 											<!-- this needs to be changed for INEL -->
 											<!-- !!! here we split the morphemes and correspond the matching annotations -->
-											<xsl:for-each select="tokenize(text(), '.')">
-												<xsl:sequence select="."/>
-												<xsl:if test="not(position() eq last())">
-													<br/>
-												</xsl:if>
+											<xsl:variable name="mbValue" select="./@value"/>
+											<xsl:variable name="position">
+												<xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-')))+1"/>
+											</xsl:variable>
+											<xsl:variable name="tokenizedMb" select="tokenize($mbValue, '-')"/>
+											<xsl:for-each select="$tokenizedMb">
+												<xsl:variable name="realposition">
+													<xsl:value-of select="($position) + (position()-1)"/>
+												</xsl:variable>
 												<xsl:element name="span">
-													<!--	<xsl:attribute name="from">
+													<xsl:attribute name="xml:id">
+														<xsl:value-of select="concat('m', $realposition)"/>
+													</xsl:attribute>
+													<xsl:value-of select="."/>
+												</xsl:element>
+												<!-- 
+													<xsl:attribute name="from">
 														 <xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@start"/> -->
-													<!--<xsl:value-of select="tei:word-annotation-from(@start)"/> 
+												<!--<xsl:value-of select="tei:word-annotation-from(@start)"/> 
 													</xsl:attribute> -->
-													<!-- <xsl:attribute name="to">
+												<!-- <xsl:attribute name="to">
 													<xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@end"/> -->
-													<!--	<xsl:value-of select="tei:word-annotation-to(@end)"/>
+												<!--	<xsl:value-of select="tei:word-annotation-to(@end)"/>
 													</xsl:attribute> -->
-													<!--  <xsl:attribute name="id">
+												<!--  <xsl:attribute name="id">
 														<xsl:value-of select="$XPOINTER_HASH"/>
 									<xsl:value-of select="@end"/>
 														<xsl:value-of select="m"/>
 													</xsl:attribute>  -->
-													<!-- the further morpheme based segmentation and references needs to be placed here -->
+												<!-- the further morpheme based segmentation and references needs to be placed here -->
+											</xsl:for-each>
+										</xsl:when>
+										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr', 'mc')">
+											<xsl:variable name="mAnnoValue" select="./@value"/>
+											<xsl:variable name="tokenizedmAnno" select="tokenize($mAnnoValue, '-')"/>
+											<xsl:for-each select="$tokenizedmAnno">
+												<xsl:element name="span">
 													<xsl:value-of select="."/>
 												</xsl:element>
 											</xsl:for-each>
 										</xsl:when>
-										<xsl:when test="@level = ('mp', 'ge', 'gg', 'gr', 'mc')">
-											<!-- now the morphemes need to match the annotations --> </xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="@value"/>
 										</xsl:otherwise>
