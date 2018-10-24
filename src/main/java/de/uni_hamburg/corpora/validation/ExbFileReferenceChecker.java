@@ -48,11 +48,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     final String EXB_REFS = "exb-referenced-file";
 
     String exbName = "";
-    
-    File exbFile;
-    
 
-    
+    File exbFile;
+
+
+
     /**
      * Check for referenced-files.
      */
@@ -108,7 +108,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
                 reffilesMissing++;
                 stats.addCritical(EXB_REFS, exbName + ": "
                         + "File in referenced-file NOT found: " + url);
-                 exmaError.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
+                 exmaError.addError(EXB_REFS, f.getName(), "", "", false, "Error: File in referenced-file NOT found: " + url);
             } else {
                 reffilesFound++;
                 stats.addCorrect(EXB_REFS, exbName + ": "
@@ -146,9 +146,9 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
 
     /**
     * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
+    * primal functionality of the feature can be implemented, and additionally
     * checks for parser configuration, SAXE and IO exceptions.
-    */   
+    */
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
@@ -168,7 +168,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     /**
     * Main feature of the class: Checks Exmaralda .exb file for file references, if
     * a referenced file does not exist, issues a warning.
-    */  
+    */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -201,7 +201,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             if (url.lastIndexOf("/") != -1) {
                 relfilename = url.substring(url.lastIndexOf("/"));
             }
-            
+
             String referencePath = exbFile.getParentFile().getCanonicalPath();
             String absPath = referencePath + File.separator + relfilename;
             File absFile = new File(absPath);
@@ -233,11 +233,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
     /**
-    * Default function which determines for what type of files (basic transcription, 
+    * Default function which determines for what type of files (basic transcription,
     * segmented transcription, coma etc.) this feature can be used.
     */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
