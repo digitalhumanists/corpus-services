@@ -236,7 +236,6 @@ public class CorpusMagician {
         this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
-<<<<<<< HEAD
         allExistingCFs.add("ExbFileReferenceChecker");
         allExistingCFs.add("ExbPatternChecker");
         allExistingCFs.add("ExbSegmentationChecker");
@@ -357,10 +356,6 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-                case "comanslinkschecker":
-                    ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
-                    corpusfunctions.add(cnslc);
-                    break;
                 case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
                     corpusfunctions.add(rase);
@@ -368,10 +363,6 @@ public class CorpusMagician {
                 case "removeabsolutepaths":
                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
                     corpusfunctions.add(rap);
-                    break;
-                case "comaoverviewgeneration":
-                    ComaOverviewGeneration cog = new ComaOverviewGeneration();
-                    corpusfunctions.add(cog);
                     break;
                 case "comaoverviewgenerationfix":
                     cog = new ComaOverviewGeneration();
@@ -385,10 +376,6 @@ public class CorpusMagician {
                     ComaNameChecker cnc = new ComaNameChecker();
                     corpusfunctions.add(cnc);
                     break;
-                case "comaapostrophechecker":
-                    ComaApostropheChecker cac = new ComaApostropheChecker();
-                    corpusfunctions.add(cac);
-                    break;
                 case "comaapostrophecheckerfix":
                     ComaApostropheChecker cacf = new ComaApostropheChecker();
                     corpusfunctions.add(cacf);
@@ -397,10 +384,6 @@ public class CorpusMagician {
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
-                case "comasegmentcountchecker":
-                    ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
-                    corpusfunctions.add(cscc);
-                    break;
                 case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
                     corpusfunctions.add(tcwa);
@@ -408,14 +391,6 @@ public class CorpusMagician {
                 case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
-                    break;
-                case "filecoveragechecker":
-                    FileCoverageChecker fcc = new FileCoverageChecker();
-                    corpusfunctions.add(fcc);
-                    break;
-                case "exbfilereferencechecker":
-                    ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
-                    corpusfunctions.add(efrc);
                     break;
                 //case "exbpatternchecker":
                 //ExbPatternChecker epc = new ExbPatternChecker();
@@ -457,10 +432,6 @@ public class CorpusMagician {
                     IAAFunctionality iaa = new IAAFunctionality();
                     corpusfunctions.add(iaa);
                     break;
-                case "ngexmaraldacorpuschecker":
-                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
-                    corpusfunctions.add(ngex);
-                    break; */
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
@@ -574,24 +545,6 @@ public class CorpusMagician {
                 {
                     if (cl.isInstance(cd)) {
                         Report newReport = (cf.execute(cd));
-                        report.merge(newReport);
-                    }
-
-                }
-            }
-        }
-        return report;
-    }
-
-    public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc, boolean fix) {
-        Report report = new Report();
-        for (CorpusFunction cf : cfc) {
-            for (Class cl : cf.getIsUsableFor()) {
-                //if the corpus files are an instance 
-                //of the class cl, run the function
-                {
-                    if (cl.isInstance(cd)) {
-                        Report newReport = (cf.execute(cd, fix));
                         report.merge(newReport);
                     }
 
