@@ -63,8 +63,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         if (pabs.isAbsolute()) {
                             report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
-                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, 
-                                    "absolute path info needs to be replaced in " + cd.getURL().getFile());
+                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
                         } else {
                             al.remove(o);
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
@@ -81,6 +80,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         Path pabs = Paths.get(e.getText());
                         if (pabs.isAbsolute()) {
                             report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
+                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
                         } else {
                             al.remove(o);
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
@@ -144,6 +144,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 report.addCritical("RemoveAbsolutePaths",
                                         "relative path cannot be figured out for file "
                                         + cd.getURL().getFile() + " with path " + pabs.toString());
+                                exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path needs to be replaced manually");
                             }
                         } else {
                             report.addCorrect("RemoveAbsolutePaths", "path is already relative in" + cd.getURL().getFile());
@@ -276,7 +277,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);

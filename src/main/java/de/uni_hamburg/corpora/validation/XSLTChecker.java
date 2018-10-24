@@ -21,6 +21,7 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
+
 /**
  *
  * @author Daniel Jettka, daniel.jettka@uni-hamburg.de
@@ -111,7 +112,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);

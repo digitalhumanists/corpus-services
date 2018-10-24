@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" exclude-result-prefixes="exmaralda" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:output encoding="UTF-8" method="html" omit-xml-declaration="yes"/>
 
@@ -16,11 +16,11 @@
 	<!-- ************************ -->
 	<xsl:param name="TRANSCRIPTION_ID" required="no" as="xs:string?"/>
 	<xsl:param name="COMMUNICATION_ID" required="no" as="xs:string?"/>
-        <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
-        <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '\.')[last()]" as="xs:string?" required="no"/>
-        <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
-        <xsl:param name="WEBSERVICE_NAME" select="'HIATListHTML'" as="xs:string?" required="no"/>
-        <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
+    <xsl:param name="RECORDING_PATH" select="(for $type in ($SUPPORTED_VIDEO_TYPES, $SUPPORTED_AUDIO_TYPES) return //referenced-file/@url[ends-with(lower-case(.), $type)])[1]" as="xs:string?" required="no"/>
+    <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '[\.\\/]')[last()]" as="xs:string?" required="no"/>
+    <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
+    <xsl:param name="WEBSERVICE_NAME" select="'HIATListHTML'" as="xs:string?" required="no"/>
+    <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
 	<xsl:param name="LABEL" required="no" as="xs:string?"/>
 
 
@@ -46,24 +46,23 @@
 		<xsl:value-of select="concat('https://corpora.uni-hamburg.de/drupal/de/islandora/object/', $TRANSCRIPTION_ID, '/datastream')"/>
 	</xsl:variable>-->
 
+	<xsl:variable name="SUPPORTED_VIDEO_TYPES" select="('webm', 'mpeg', 'mpg')" as="xs:string+"/><!-- sorted by favourited format -->
+	<xsl:variable name="SUPPORTED_AUDIO_TYPES" select="('mp3', 'ogg', 'wav')" as="xs:string+"/><!-- sorted by favourited format -->
+
 	<xsl:variable name="DATASTREAM_VIDEO" select="$RECORDING_PATH"/>
 
 	<xsl:variable name="DATASTREAM_AUDIO" select="$RECORDING_PATH"/>
 
-        <!-- whether or not the transcription contains video -->
-        <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('webm', 'mpeg', 'mpg')"/>
+    <!-- whether or not the transcription contains video -->
+	<xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_VIDEO_TYPES"/>
 
-        <!-- whether or not the transcription contains video -->
-        <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('wav', 'ogg', 'mp3')"/>
+    <!-- whether or not the transcription contains video -->
+	<xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_AUDIO_TYPES"/>
 
         <!-- ******************************************************************************************************************************************** -->
 
 	<!-- ... and then specify those which are only valid for this kind of visualisation document -->
 
-	<!-- the path to the CSS stylesheet to be used with this HTML visualisation -->
-        <!-- Is the VisualizationFormat still needed? -->
-        <xsl:variable name="CSS_PATH" select="css/VisualizationFormat.css" as="xs:string"/>
-	<xsl:variable name="CSS_PATH_LIST" select="css/ListFormat.css"/>
 
 	<!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
 	<xsl:variable name="DOCUMENT_SUFFIX" select="'u'" as="xs:string"/>
@@ -75,9 +74,16 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-				<xsl:call-template name="HEAD_DATA"/>
-				<!-- <xsl:call-template name="CSS_STYLES"/> -->
-                            <link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>
+                            <title><xsl:value-of select="$CORPUS_NAME"/>: <xsl:value-of select="$TRANSCRIPTION_NAME"/></title>
+                            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+
+                            <!-- placeholder for css, inserted later by Java -->
+                            <style><hzsk-pi:include>/css/ListFormat.css</hzsk-pi:include></style>
+                            <style><hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include></style>
+
+                            <!-- placeholder for js script, inserted later by Java -->                
+                            <script><hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include></script>
+                            <script><hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include></script>
 			</head>
 			<body>
 				<xsl:call-template name="MAKE_TITLE"/>
@@ -173,27 +179,6 @@
 	<!-- *********************************************************************************** -->
 	<!-- *********************************************************************************** -->
 
-	<!-- Generates the HTML head information for this transcription document -->
-	<!-- i.e. the document title, the document encoding etc. -->
-	<xsl:template name="HEAD_DATA">
-		<title>
-			<xsl:value-of select="$CORPUS_NAME"/>: <xsl:value-of select="$TRANSCRIPTION_NAME"/>
-		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-		<script type="text/javascript" src="{$TOP_LEVEL_PATH}jsfunctions.js"></script>
-
-		<!-- placeholder for js script, inserted by Java -->
-		<script type="text/javascript">
-			<xsl:comment>jsholder</xsl:comment>
-		</script>
-	</xsl:template>
-
-	<!-- makes a reference to a CSS stylesheet -->
-<!--	<xsl:template name="CSS_STYLES">
-		<link rel="stylesheet" type="text/css" href="{$CSS_PATH}"/>
-		<link rel="stylesheet" type="text/css" href="{$CSS_PATH_LIST}"/>
-	</xsl:template>-->
-
 
 	<!-- makes the navigation bar displayed at the top of diverse documents -->
 	<!-- This part used to be much more complex, now it was very much simplified -Niko -->
@@ -211,12 +196,12 @@
 			<xsl:choose>
 				<xsl:when test="$HAS_VIDEO">
 					<video controls="controls" width="320" height="240" data-tlid="media">
-						<source src="{$DATASTREAM_VIDEO}" type="video/webm"/>
+						<source src="{$DATASTREAM_VIDEO}" type="video/{$RECORDING_TYPE}"/>
 					</video>
 				</xsl:when>
 				<xsl:when test="$HAS_AUDIO">
 					<audio controls="controls" data-tlid="media">
-						<source src="{$DATASTREAM_AUDIO}" type="audio/ogg"/>
+						<source src="{$DATASTREAM_AUDIO}" type="audio/{$RECORDING_TYPE}"/>
 					</audio>
 				</xsl:when>
 			</xsl:choose>
@@ -226,14 +211,12 @@
         <xsl:template name="MAKE_WEB_SERVICE_INFO">
             <div class="sidebarcontrol">
                 <div class="collapse_box" id="tier_display">
-                    <div class="collapse_title"> Web service information </div>
-                    <div class="collapse_content" style="width:310;">
-                        <p>
-                            Generated on <xsl:value-of select="current-dateTime()"/>
-                            with <xsl:value-of select="$WEBSERVICE_NAME"/>.
-                        </p>
-                        <p>Please contact the <a href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.</p>
-                    </div>
+                    <p>
+                        Generated on <xsl:value-of select="current-dateTime()"/>
+                        with the <xsl:value-of select="$WEBSERVICE_NAME"/> service.
+                        <br/>
+                        Please contact the <a target="_blank" href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.
+                    </p>
                 </div>
             </div>
         </xsl:template>

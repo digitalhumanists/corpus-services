@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.transform.TransformerException;
 import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.partitureditor.interlinearText.HTMLParameters;
@@ -152,6 +154,23 @@ public class ScoreHTML extends AbstractVisualization {
             result = xt.transform(xml, xsl);
 
             // insert JavaScript for highlighting
+            // replace JS/CSS placeholders from XSLT output
+            try{                
+                Pattern regex = Pattern.compile("(<hzsk\\-pi:include( xmlns:hzsk\\-pi=\"https://corpora\\.uni\\-hamburg\\.de/hzsk/xmlns/processing\\-instruction\")?>([^<]+)</hzsk\\-pi:include>)", Pattern.DOTALL);
+                Matcher m = regex.matcher(result);
+                StringBuffer sb = new StringBuffer();
+                while (m.find()) {
+                    String insertion = TypeConverter.InputStream2String(getClass().getResourceAsStream(m.group(3)));
+                    m.appendReplacement(sb, m.group(0).replaceFirst(Pattern.quote(m.group(1)), insertion));
+                }
+                m.appendTail(sb);
+                result = sb.toString();
+            } catch(Exception e){
+                setHTML("Custom Exception for inserting JS/CSS into result: " + e.getLocalizedMessage() + "\n" + result);
+                return;
+            }
+            
+            
             String js = TypeConverter.InputStream2String(getClass().getResourceAsStream(JS_HIGHLIGHTING_PATH));
             result = result.replace("<!--jsholder-->", js);
 
