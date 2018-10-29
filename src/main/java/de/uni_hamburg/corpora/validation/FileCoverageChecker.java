@@ -83,6 +83,16 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     String comaLoc = "";
 
     final String COMA_FILECOVERAGE = "coma-filecoverage";
+    final List<String> whitelist;
+
+    public FileCoverageChecker() {
+        // these are acceptable
+        whitelist = new ArrayList<String>();
+        whitelist.add(".git");
+        whitelist.add(".gitignore");
+        whitelist.add("README");
+        whitelist.add("Thumbs.db");
+    }
 
     /**
      * Check for existence of files in a coma file.
@@ -121,7 +131,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (f.getName().equals(".git")) {
+                    if (whitelist.contains(f.getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -145,7 +155,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (f.getName().equals(".git")) {
+                    if (whitelist.contains(f.getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -169,7 +179,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (f.getName().equals(".git")) {
+                    if (whitelist.contains(f.getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -345,7 +355,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File a : files) {
-                            if (a.getName().equals(".git")) {
+                            if (whitelist.contains(a.getName())) {
                                 continue;
                             } else if (a.isDirectory()) {
                                 dirs.add(a);
@@ -369,7 +379,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File b : files) {
-                            if (b.getName().equals(".git")) {
+                            if (whitelist.contains(b.getName())) {
                                 continue;
                             } else if (b.isDirectory()) {
                                 dirs.add(b);
@@ -393,7 +403,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File c : files) {
-                            if (c.getName().equals(".git")) {
+                            if (whitelist.contains(c.getName())) {
                                 continue;
                             } else if (c.isDirectory()) {
                                 dirs.add(c);
