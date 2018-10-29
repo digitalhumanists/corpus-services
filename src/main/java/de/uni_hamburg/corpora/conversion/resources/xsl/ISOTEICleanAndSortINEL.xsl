@@ -70,8 +70,8 @@
 				<!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
 				<xsl:message terminate="no">
 					<!-- Error message -->
-                                    there is mismatch of annotation in the exb file, that happens after the segmentation
-                                    - probably a missing whitespace after a word
+                                    there is mismatch of annotation in the exb file that happens after the segmentation:
+                                    probably a missing whitespace after a word
                                 </xsl:message>
 				<xsl:value-of select="'broken'"/>
 			</xsl:otherwise>
@@ -290,7 +290,8 @@
 				<xsl:value-of select="@xml:id"/>
 			</xsl:attribute>
 			<xsl:attribute name="type">uncertain</xsl:attribute>
-			<xsl:apply-templates select="@* | node()"/>
+			<!--<xsl:apply-templates select="@* | node()"/> -->
+                        <xsl:apply-templates select="node()"/>
 		</xsl:element>
 	</xsl:template>
 
