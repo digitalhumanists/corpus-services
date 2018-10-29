@@ -100,9 +100,9 @@ public class XSLTChecker extends Checker implements CorpusFunction{
 
 
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(ListHTML.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown tranformation configuration error");
         } catch (TransformerException ex) {
-            Logger.getLogger(ListHTML.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown tranformation error");
         }
         
         return r;
@@ -127,7 +127,7 @@ public class XSLTChecker extends Checker implements CorpusFunction{
             //Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
             //IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
     return IsUsableFor;
     }
