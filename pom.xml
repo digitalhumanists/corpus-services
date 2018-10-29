@@ -78,7 +78,7 @@
                 <directory>src/main/java/de/uni_hamburg/corpora/conversion/resources</directory>
             </resource>
             <resource>
-                <directory>src/test/java/de/uni_hamburg/corpora/resoruces</directory>
+                <directory>src/test/java/de/uni_hamburg/corpora/resources</directory>
             </resource>
         </resources>
     </build>
