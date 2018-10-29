@@ -94,13 +94,13 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb file");
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         } catch (JDOMException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown reading error");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown URI syntax error");
         } catch (MalformedURLException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown malformed URL error");
         }
         return report;
     }
@@ -269,11 +269,11 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                 report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb file");
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         } catch (JDOMException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown reading error");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(RemoveAbsolutePaths.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown URI syntax error");
         }
         return report;
     }
@@ -286,7 +286,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
             Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "usable class not found error");
         }
         return IsUsableFor;
     }
