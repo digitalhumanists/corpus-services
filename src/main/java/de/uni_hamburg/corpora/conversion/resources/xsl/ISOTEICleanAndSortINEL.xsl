@@ -68,7 +68,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
-				<xsl:message terminate="no">
+				<xsl:message terminate="yes">
 					<!-- Error message -->
                                     there is mismatch of annotation in the exb file that happens after the segmentation:
                                     probably a missing whitespace after a word
@@ -413,7 +413,7 @@
 		<xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
 		<!-- check if the splitting creates the same number of tokens in each tier/annotation -->
 		<xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
-			<xsl:message terminate="no">
+			<xsl:message terminate="yes">
 				the annotations with dashes in different tiers don't match
 				fix <xsl:value-of select="$annValue"/> vs  <xsl:value-of select="$mbValue"
 				/> at <xsl:value-of select="$morpheme-annotation-start"/> - <xsl:value-of select="$morpheme-annotation-end"/> in tier <xsl:value-of select="$annotation-name"/> </xsl:message>
