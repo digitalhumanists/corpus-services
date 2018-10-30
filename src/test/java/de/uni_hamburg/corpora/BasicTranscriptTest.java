@@ -34,7 +34,8 @@ public class BasicTranscriptTest {
     @Test
     public void readWriteBT() {
         try {
-            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resoruces/example.exb";
+            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/Beckhams/Beckhams.exb";
+            String newExbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/outxample.exb";
             String exbString = new
                 String(Files.readAllBytes(Paths.get(exbFilename)), "UTF-8");
             File exbFile = new File(exbFilename);
@@ -45,9 +46,12 @@ public class BasicTranscriptTest {
             assertNotNull(prettyXML);
             // could be assertThat()
             assertFalse(prettyXML.equals(exbString));
-            PrintWriter exbOut = new PrintWriter("outxample.exb");
+            PrintWriter exbOut = new PrintWriter("src/test/java/de/uni_hamburg/corpora/resources/example/outxample.exb");
             exbOut.print(prettyXML);
             exbOut.close();
+            File newExbFile = new File(newExbFilename);
+            //remove the created file after the tests
+            newExbFile.delete();
         } catch (UnsupportedEncodingException uee) {
             uee.printStackTrace();
             fail("Unexpected exception " + uee);

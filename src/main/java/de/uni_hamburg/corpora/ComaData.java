@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //don't know if this is the correct Coma class in Exmaralda yet...
@@ -33,6 +35,7 @@ public class ComaData implements Metadata, CorpusData {
     //private Coma coma;
     URL url;
     Document readcomaasjdom = new Document();
+    String originalstring;
 
     public ComaData() {
     }
@@ -43,6 +46,8 @@ public class ComaData implements Metadata, CorpusData {
             SAXBuilder builder = new SAXBuilder();
             readcomaasjdom = builder.build(url);
             File f = new File(url.toURI());
+           originalstring = new
+                String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
             //loadFile(f);
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
@@ -84,9 +89,11 @@ public class ComaData implements Metadata, CorpusData {
 
     @Override
     public String toUnformattedString() {
-        XMLOutputter xmOut = new XMLOutputter();
-        String unformattedCorpusData = xmOut.outputString(readcomaasjdom);
-        return unformattedCorpusData;
+        return originalstring;
     }
 
+    @Override
+    public void updateUnformattedString(String newUnformattedString) {
+        originalstring = newUnformattedString;
+    }
 }
