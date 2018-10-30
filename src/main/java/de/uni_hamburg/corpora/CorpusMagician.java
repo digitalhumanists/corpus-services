@@ -1,7 +1,7 @@
 package de.uni_hamburg.corpora;
 
-//import de.uni_hamburg.corpora.validation.CmdiChecker;
-//import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
+import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
+import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
@@ -237,7 +237,12 @@ public class CorpusMagician {
         //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
-        //allExistingCFs.add("TierChecker");
+        allExistingCFs.add("RemoveAutoSaveExb");
+        allExistingCFs.add("RemoveAbsolutePaths");
+        allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("EXB2INELISOTEI");
+        allExistingCFs.add("EXB2HIATISOTEI");
+	//allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
         //allExistingCFs.add("FilenameChecker");
@@ -341,6 +346,34 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+                case "xsltcheckerinel":
+                    XSLTChecker xci = new XSLTChecker();
+                    xci.setXSLresource("/xsl/inel-checks.xsl");
+                    corpusfunctions.add(xci);
+                    break;
+                case "exb2inelisotei":
+                    EXB2INELISOTEI eiit = new EXB2INELISOTEI();
+                    corpusfunctions.add(eiit);
+                    break;
+                case "exb2inelisoteisel":
+                    EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
+                    eiitsel.setLanguage("sel");
+                    corpusfunctions.add(eiitsel);
+                    break;
+                case "exb2inelisoteidlg":
+                    EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
+                    eiitdlg.setLanguage("dlg");
+                    corpusfunctions.add(eiitdlg);
+                    break;
+                case "exb2inelisoteixas":
+                    EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
+                    eiitxas.setLanguage("xas");
+                    corpusfunctions.add(eiitxas);
+                    break;
+                case "exb2hiatisotei":
+                    EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
+                   corpusfunctions.add(ehit);
+                    break;
                 /*
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
@@ -382,10 +415,10 @@ public class CorpusMagician {
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
-                case "ngexmaraldacorpuschecker":
+ 				case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     corpusfunctions.add(ngex);
-                    break; */
+                    break; */              
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
