@@ -49,17 +49,16 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     //TODO - how to get the language for INEL?
-    String language = "sel";
+    String language = "en";
 
     //testing and debuging stuff
-    String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
+    /* String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
     String intermediate0 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exs";
     String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
     String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
     String intermediate3 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate3.xml";
     String intermediate4 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate4.xml";
-    String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";
-
+    String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";*/
     final String ISO_CONV = "inel iso tei";
 
     //locations of the used xsls
@@ -105,14 +104,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             //we create a BasicTranscription form the CorpusData
             BasicTranscriptionData btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
-            //System.out.println(bt.toString());
-            // make a copy of the exb input
-            BasicTranscription copyBT = bt.makeCopy();
-            cio.write(copyBT.toXML(), new URL(intermediatee));
             //normalize the exb (!)
-            copyBT.normalize();
-            //relativize the links
-            //copyBT.relativizeLinks((cd.getURL()).getFile());
+            bt.normalize();
             System.out.println((cd.getURL()).getFile());
             System.out.println("started writing document...");
             //HIAT Segmentation
@@ -121,9 +114,9 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             HIATSegmentation segmentation = new HIATSegmentation();
             segmentation.utteranceFSM = INEL_FSM;
             //create a segmented exs
-            SegmentedTranscription st = segmentation.BasicToSegmented(copyBT);
+            SegmentedTranscription st = segmentation.BasicToSegmented(bt);
             System.out.println("Segmented transcription created");
-            cio.write(st.toXML(), new URL(intermediate0));
+            //cio.write(st.toXML(), new URL(intermediate0));
             //Document from segmented transcription string
             Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
             //TODO paramter in the future for deep & flat segmentation name
@@ -132,34 +125,33 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     nameOfDeepSegmentation,
                     nameOfFlategmentation,
                     includeFullText);
-            if(teiDoc != null){
-                        System.out.println("Merged");
-            //so is the language of the doc
-            setDocLanguage(teiDoc, language);
-            //now the completed document is saved next to cd
-            String filename = cd.getURL().getFile();
-            URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + ".xml");
-            cio.write(teiDoc, url);
+            if (teiDoc != null) {
+                System.out.println("Merged");
+                //so is the language of the doc
+                setDocLanguage(teiDoc, language);
+                //now the completed document is saved next to cd
+                String filename = cd.getURL().getFile();
+                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + ".xml");
+                cio.write(teiDoc, url);
 
-            System.out.println("document written.");  
-            report.addCorrect(ISO_CONV, "ISO TEI conversion of file " + cd.getURL().getFile() + " was successful");
+                System.out.println("document written.");
+                report.addCorrect(ISO_CONV, cd.getURL().getFile(), "ISO TEI conversion of file was successful");
             }
 
-
         } catch (SAXException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown exception error");
+            report.addExceptionFile(ISO_CONV, ex, cd.getURL().toString(), "Unknown exception error");
         } catch (FSMException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown finite state machine error");
+            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown finite state machine error");
         } catch (MalformedURLException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown file URL reading error");
+            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file URL reading error");
         } catch (JDOMException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown file reading error");
+            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown file reading error");
-        } catch (TerminationException ex) { 
-            report.addException(ex, cd.getURL() + ": Terminated because of XSL message - check structure of input file");
-        } catch (TransformerException ex) { 
-            report.addException(ex, cd.getURL() + ": XSL transformer error");
+            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file reading error");
+        } catch (TerminationException ex) {
+            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Terminated because of XSL message - check structure of input file");
+        } catch (TransformerException ex) {
+            report.addException(ISO_CONV, ex, cd.getURL().toString(), "XSL transformer error");
         }
         return report;
     }
@@ -187,7 +179,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             //now we get a document of the first transformation, the iso tei skeleton
             teiDocument = TypeConverter.String2JdomDocument(result);
             //For testing only
-            cio.write(teiDocument, new URL(intermediate1));
+            //cio.write(teiDocument, new URL(intermediate1));
             System.out.println("STEP 1 completed.");
             /*
             * this method will take the segmented transcription and, for each speaker
@@ -211,12 +203,9 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             textNode.addContent(uElements);
             if (teiDocument != null) {
                 //For testing only
-                cio.write(teiDocument, new URL(intermediate2));
+                //cio.write(teiDocument, new URL(intermediate2));
                 System.out.println("STEP 2 completed.");
 
-                //TODO
-                //we need to keep the information which word is where on the timeline...
-                //and we don't have the IDs yet?
                 Document transformedDocument = null;
                 String result2
                         = xslt.transform(TypeConverter.JdomDocument2String(teiDocument), transform_stylesheet);
@@ -225,7 +214,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     //fix for issue #89
                     textNode = (Element) (xp.selectSingleNode(transformedDocument));
                     //For testing only
-                    cio.write(transformedDocument, new URL(intermediate3));
+                    //cio.write(transformedDocument, new URL(intermediate3));
                     System.out.println("STEP 3 completed.");
 
                     // now take care of the events from tiers of type 'd'
@@ -258,22 +247,21 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                         textNode.addContent(teiEvent);
                     }
 
-                    //TODO for morpheme inel iso tei, sort and clean must be changed!
+                    //for morpheme inel iso tei, sort and clean must be changed
                     //and the generating of the ids
                     generateWordIDs(transformedDocument);
                     if (transformedDocument != null) {
-                        cio.write(transformedDocument, new URL(intermediate4));
+                        //cio.write(transformedDocument, new URL(intermediate4));
                         //Here the annotations are taken care of
                         //this is important for the INEL morpheme segmentations
-                        //the word IDs are generated afterwards
-                        //but for the INEL transformation, we would need them before the last step
+                        //for the INEL transformation, the word IDs are generated earlier
                         String result3
                                 = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), sort_and_clean_stylesheet);
-                        if(result3 != null){
-                        finalDocument = IOUtilities.readDocumentFromString(result3);
-                        if (finalDocument != null) {
-                            cio.write(finalDocument, new URL(intermediate5));
-                        }
+                        if (result3 != null) {
+                            finalDocument = IOUtilities.readDocumentFromString(result3);
+                            if (finalDocument != null) {
+                                //cio.write(finalDocument, new URL(intermediate5));
+                            }
                         }
                     }
                 }
@@ -486,8 +474,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         return e1;
     }
 
-    // new 30-03-2016
-    //this needs to be adapted to morpheme ids - and changed for the word IDs too 
+    //new 30-03-2016
+    //this needed to be adapted to morpheme ids - and changed for the word IDs too 
     //and we need to generate the spans for the morphemes somewhere too
     private void generateWordIDs(Document document) throws JDOMException {
         // added 30-03-2016
@@ -559,57 +547,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         }
     }
 
-    private void generateMorphIDs(Document document) throws JDOMException {
-        // added 30-03-2016
-        HashSet<String> allExistingIDs = new HashSet<String>();
-        XPath idXPath = XPath.newInstance("//tei:*[@xml:id]");
-        idXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
-        idXPath.addNamespace(Namespace.XML_NAMESPACE);
-        List idElements = idXPath.selectNodes(document);
-        for (Object o : idElements) {
-            Element e = (Element) o;
-            allExistingIDs.add(e.getAttributeValue("id", Namespace.XML_NAMESPACE));
-        }
-
-        // changed 30-03-2016
-        XPath wordXPath = XPath.newInstance("//tei:w[not(@xml:id)]");
-        wordXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
-        wordXPath.addNamespace(Namespace.XML_NAMESPACE);
-
-        List words = wordXPath.selectNodes(document);
-        int count = 1;
-        for (Object o : words) {
-            Element word = (Element) o;
-            while (allExistingIDs.contains("w" + Integer.toString(count))) {
-                count++;
-            }
-
-            String wordID = "w" + Integer.toString(count);
-            allExistingIDs.add(wordID);
-            //System.out.println("*** " + wordID);
-            word.setAttribute("id", wordID, Namespace.XML_NAMESPACE);
-        }
-
-        // new 02-12-2014
-        XPath pcXPath = XPath.newInstance("//tei:pc[not(@xml:id)]");
-        pcXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
-        pcXPath.addNamespace(Namespace.XML_NAMESPACE);
-
-        List pcs = pcXPath.selectNodes(document);
-        count = 1;
-        for (Object o : pcs) {
-            Element pc = (Element) o;
-            while (allExistingIDs.contains("pc" + Integer.toString(count))) {
-                count++;
-            }
-
-            String pcID = "pc" + Integer.toString(count);
-            allExistingIDs.add(pcID);
-            //System.out.println("*** " + wordID);
-            pc.setAttribute("id", pcID, Namespace.XML_NAMESPACE);
-        }
-    }
-
+    //TODO
     private void setDocLanguage(Document teiDoc, String language) throws JDOMException {
         // /TEI/text[1]/@*[namespace-uri()='http://www.w3.org/XML/1998/namespace' and local-name()='lang']
         XPath xpathToLangAttribute = XPath.newInstance("//tei:text/@xml:lang");
@@ -627,6 +565,10 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         }
         System.out.println("Language of document set to " + language);
 
+    }
+
+    public void setLanguage(String lang) {
+        language = lang;
     }
 
     @Override
