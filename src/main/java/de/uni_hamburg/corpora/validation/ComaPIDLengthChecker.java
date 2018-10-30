@@ -256,7 +256,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
     * segmented transcription, coma etc.) this feature can be used.
     */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
