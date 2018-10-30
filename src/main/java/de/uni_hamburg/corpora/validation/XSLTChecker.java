@@ -24,12 +24,13 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
-
 /**
  *
  * @author Daniel Jettka, daniel.jettka@uni-hamburg.de
  */
-public class XSLTChecker extends Checker implements CorpusFunction{
+public class XSLTChecker extends Checker implements CorpusFunction {
+
+    String xslresource = "/xsl/nslc-checks.xsl";
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -48,30 +49,30 @@ public class XSLTChecker extends Checker implements CorpusFunction{
 
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        
+
         Report r = new Report();
-        
-        try{
+
+        try {
 
             // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/nslc-checks.xsl"));
+            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslresource));
 
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
-        
+
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
 
             //read lines and add to Report
             Scanner scanner = new Scanner(result);
-            
+
             int i = 1;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                
+
                 //split line by ;
                 String[] lineParts = line.split(";");
-                
+
                 switch (lineParts[0].toUpperCase()) {
                     case "WARNING":
                         r.addWarning("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
@@ -81,54 +82,56 @@ public class XSLTChecker extends Checker implements CorpusFunction{
                         r.addCritical("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
                         exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
-                    case "NOTE":                    
+                    case "NOTE":
                         r.addNote("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
                         break;
-                    case "MISSING": 
+                    case "MISSING":
                         r.addMissing("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
                         exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                         break;
                     default:
-                        r.addCritical("XSLTChecker", "(Unrecognized report type) "+ cd.getURL().getFile() + ": " + lineParts[1]);
+                        r.addCritical("XSLTChecker", "(Unrecognized report type) " + cd.getURL().getFile() + ": " + lineParts[1]);
                         exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
                 }
-                
+
                 i++;
             }
 
             scanner.close();
-
 
         } catch (TransformerConfigurationException ex) {
             report.addException(ex, "unknown tranformation configuration error");
         } catch (TransformerException ex) {
             report.addException(ex, "unknown tranformation error");
         }
-        
+
         return r;
-        
+
     }
 
     @Override
     public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    public void setXSLresource(String s) {
+        xslresource = s;
+    }
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
-            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
-            IsUsableFor.add(cl);            
-            Class cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");   
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            IsUsableFor.add(cl);
+            Class cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl1);
-            Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
-            IsUsableFor.add(cl2);
+            //Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
+            //IsUsableFor.add(cl2);
             //Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
             //IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "unknown class not found error");
         }
-    return IsUsableFor;
+        return IsUsableFor;
     }
 }

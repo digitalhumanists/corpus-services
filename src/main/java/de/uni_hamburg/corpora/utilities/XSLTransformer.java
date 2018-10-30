@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.utilities;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.Controller;
 import net.sf.saxon.event.ReceiverOptions;
 import net.sf.saxon.expr.instruct.TerminationException;
+import net.sf.saxon.jaxp.TransformerImpl;
 import net.sf.saxon.serialize.MessageWarner;
 import net.sf.saxon.serialize.XMLEmitter;
 import net.sf.saxon.trans.XPathException;
@@ -37,7 +39,6 @@ public class XSLTransformer {
     private Transformer transformer;
     private String transformerFactoryImpl = "net.sf.saxon.TransformerFactoryImpl";
     private Map<String, Object> parameters = new HashMap<>();
-
     /**
      * Class constructor.
      */
@@ -79,26 +80,26 @@ public class XSLTransformer {
      * @return the result of the XSLT transformation as String object
      */
     public String transform(StreamSource xmlSource, StreamSource xslSource) throws TransformerConfigurationException, TransformerException, TerminationException {
-        try {
+
         String result = null;
+        try {
+            transformer = tranformerFactory.newTransformer(xslSource);
+            // set the parameters for XSLT transformation
+            for (Map.Entry<String, Object> param : parameters.entrySet()) {
+                transformer.setParameter(param.getKey(), param.getValue());
+            }
+            //transform and fetch result
+            StringWriter resultWriter = new StringWriter();
+            transformer.transform(xmlSource, new StreamResult(resultWriter));
+            result = resultWriter.toString();
 
-        transformer = tranformerFactory.newTransformer(xslSource);
-        // set the parameters for XSLT transformation
-        for (Map.Entry<String, Object> param : parameters.entrySet()) {
-            transformer.setParameter(param.getKey(), param.getValue());
+        } catch (TransformerException e) {
+            System.out.println("Message: " + e.getLocalizedMessage());
+            //throw e;
+            //throw new TerminationException(e.getLocalizedMessage());
         }
-        transformer = routeMessages(transformer);
-        //transform and fetch result
-        StringWriter resultWriter = new StringWriter();
-        transformer.transform(xmlSource, new StreamResult(resultWriter));
-        result = resultWriter.toString();
-
+        
         return result;
-        }
-        catch (TransformerException e) {
-        System.out.println("Message: " + e.getMessage());
-        throw e;
-    }
     }
 
     /**
@@ -166,34 +167,6 @@ public class XSLTransformer {
         return transformerFactoryImpl;
     }
 
-    private Transformer routeMessages(Transformer transformer) {
-        if (transformer instanceof net.sf.saxon.jaxp.TransformerImpl) {
-            net.sf.saxon.jaxp.TransformerImpl saxon = (net.sf.saxon.jaxp.TransformerImpl) transformer;
-            Controller controller = saxon.getUnderlyingController();
-            controller.setErrorListener(new ErrorListener() {
 
-                @Override
-                public void warning(TransformerException exception)
-                        throws TransformerException {
-                    System.out.println(exception.getLocalizedMessage());
-                    throw(exception);
-                }
-
-                @Override
-                public void fatalError(TransformerException exception)
-                        throws TransformerException {
-                    warning(exception);
-                }
-
-                @Override
-                public void error(TransformerException exception)
-                        throws TransformerException {
-                    warning(exception);
-                }
-            });
-            controller.setMessageEmitter(new MessageWarner());
-        }
-        return transformer;
-    }
 
 }
