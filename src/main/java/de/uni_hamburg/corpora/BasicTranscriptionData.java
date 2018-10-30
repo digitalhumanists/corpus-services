@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -42,6 +43,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     private BasicTranscription bt;
     URL url;
     Document readbtasjdom = new Document();
+    String originalstring;
 
     public BasicTranscriptionData() {
     }
@@ -53,6 +55,8 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             readbtasjdom = builder.build(url);
             File f = new File(url.toURI());
             loadFile(f);
+            originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
+
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -71,10 +75,15 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
      * emits a harmless message to stdout.
      */
     public void loadFile(File f) throws SAXException, JexmaraldaException, MalformedURLException {
-        bt = new BasicTranscription(f.getAbsolutePath());
+        //we want to read the BasicTranscription as it is without resolving the paths!
+        //bt = new BasicTranscription(f.getAbsolutePath());
+        org.exmaralda.partitureditor.jexmaralda.sax.BasicTranscriptionSaxReader reader = new org.exmaralda.partitureditor.jexmaralda.sax.BasicTranscriptionSaxReader();
+        BasicTranscription t = new BasicTranscription();
+        t = reader.readFromFile(f.getAbsolutePath());
+        bt = t;
         url = f.toURI().toURL();
     }
-    
+
     public void updateReadbtasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
         String xmlString = bt.toXML();
         SAXBuilder builder = new SAXBuilder();
@@ -156,11 +165,11 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     public URL getURL() {
         return url;
     }
-    
+
     public Document getReadbtasjdom() {
         return readbtasjdom;
     }
-    
+
     public Document setReadbtasjdom(Document doc) {
         readbtasjdom = doc;
         return readbtasjdom;
@@ -168,8 +177,15 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
 
     @Override
     public String toUnformattedString() {
-       XMLOutputter xmOut = new XMLOutputter();
-       String unformattedCorpusData = xmOut.outputString(readbtasjdom);
-       return unformattedCorpusData;
+        return originalstring;
+    }
+
+    @Override
+    public void updateUnformattedString(String newUnformattedString) {
+        originalstring = newUnformattedString;
+    }
+
+    public BasicTranscription getEXMARaLDAbt() {
+        return bt;
     }
 }

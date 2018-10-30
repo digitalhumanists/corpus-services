@@ -139,7 +139,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             }
         }
         if (settings.getBaseDirectory() != null) {
-            Stack<File> dirs = new Stack();
+            Stack<File> dirs = new Stack<File>();
             dirs.add(settings.getBaseDirectory());
             String prefix = settings.getBaseDirectory().getCanonicalPath();
             while (!dirs.empty()) {
@@ -163,7 +163,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             }
         }
         if (allFilesPaths.size() == 0) {
-            Stack<File> dirs = new Stack();
+            Stack<File> dirs = new Stack<File>();
             dirs.add(referenceFile);
             String prefix = referencePath;
             while (!dirs.empty()) {
@@ -284,12 +284,12 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
     }
-    
+
     /**
     * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
+    * primal functionality of the feature can be implemented, and additionally
     * checks for parser configuration, SAXE and IO exceptions.
-    */   
+    */
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
@@ -306,7 +306,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         }
         return stats;
     }
-    
+
     /**
     * Main functionality of the feature: checks whether files are both in coma file
     * and file system.
@@ -474,8 +474,8 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         }
         return stats;
     }
-    
-        
+
+
     /**
     * Fix to this issue is not supported yet.
     */
@@ -485,13 +485,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                 "File names which do not comply with conventions cannot be fixed automatically");
         return report;
     }
-    
+
     /**
-    * Default function which determines for what type of files (basic transcription, 
+    * Default function which determines for what type of files (basic transcription,
     * segmented transcription, coma etc.) this feature can be used.
     */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);

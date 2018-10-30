@@ -182,6 +182,15 @@ public class Report {
         stat.add(new ReportItem(ReportItem.Severity.CORRECT,
                     description));
     }
+    
+    /**
+     * Add note for correctly formatted data in named statistics bucket with filenamre
+     */
+    public void addCorrect(String statId, String filename, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem (ReportItem.Severity.CORRECT, filename, 
+                    description));
+    }
 
     /**
      * Add note for correctly formatted data in named statistics bucket.
@@ -243,6 +252,17 @@ public class Report {
     public void addException(String statId, Throwable e, String description,
             String extrablah) {
         addException(statId, e, description + "\n\t" + extrablah);
+    }
+    
+    
+    /**
+     * An exception where we know which file was the cause
+     */
+    public void addExceptionFile(String statId, Throwable e, String filename,
+            String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
+                    e, filename, description));
     }
 
     /**
