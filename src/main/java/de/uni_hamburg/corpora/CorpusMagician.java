@@ -351,9 +351,24 @@ public class CorpusMagician {
                     xci.setXSLresource("/xsl/inel-checks.xsl");
                     corpusfunctions.add(xci);
                     break;
-                 case "exb2inelisotei":
+                case "exb2inelisotei":
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
                     corpusfunctions.add(eiit);
+                    break;
+                case "exb2inelisoteisel":
+                    EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
+                    eiitsel.setLanguage("sel");
+                    corpusfunctions.add(eiitsel);
+                    break;
+                case "exb2inelisoteidlg":
+                    EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
+                    eiitdlg.setLanguage("dlg");
+                    corpusfunctions.add(eiitdlg);
+                    break;
+                case "exb2inelisoteixas":
+                    EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
+                    eiitxas.setLanguage("xas");
+                    corpusfunctions.add(eiitxas);
                     break;
                 case "exb2hiatisotei":
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
