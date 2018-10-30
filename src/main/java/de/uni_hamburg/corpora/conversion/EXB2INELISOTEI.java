@@ -31,7 +31,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
-import org.jdom.transform.XSLTransformException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
@@ -41,7 +40,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import net.sf.saxon.expr.instruct.TerminationException;
 import org.exmaralda.common.corpusbuild.TextFilter;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
@@ -158,15 +156,10 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, cd.getURL() + ": Unknown file reading error");
         } catch (IOException ex) {
             report.addException(ex, cd.getURL() + ": Unknown file reading error");
-        } catch (TerminationException ex) {
-            report.addException(ex, cd.getURL() + ": XSLT messages error: ");
-        } catch (TransformerConfigurationException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown XSLT configuration error");
-        } catch (TransformerException ex) {
-            report.addException(ex, cd.getURL() + ": Unknown XSLT error");
-        } catch (Exception ex) {
-            report.addException(ex, cd.getURL() + ": no corresponding top level\n" +
-                "element was found in the second segmentation");
+        } catch (TerminationException ex) { 
+            report.addException(ex, cd.getURL() + ": Terminated because of XSL message - check structure of input file");
+        } catch (TransformerException ex) { 
+            report.addException(ex, cd.getURL() + ": XSL transformer error");
         }
         return report;
     }
@@ -174,7 +167,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
             String nameOfDeepSegmentation,
             String nameOfFlatSegmentation,
-            boolean includeFullText) throws JDOMException, IOException, TransformerConfigurationException, TransformerException, TerminationException, Exception {
+            boolean includeFullText) throws JDOMException, IOException, TransformerConfigurationException, TransformerException, TerminationException {
 
         Document finalDocument = null;
         String skeleton_stylesheet = cio.readInternalResourceAsString(TEI_SKELETON_STYLESHEET_ISO);
@@ -290,7 +283,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         return finalDocument;
     }
 
-    public static Vector TEIMerge(Document segmentedTranscription, String nameOfDeepSegmentation, String nameOfFlatSegmentation) throws Exception {
+    public static Vector TEIMerge(Document segmentedTranscription, String nameOfDeepSegmentation, String nameOfFlatSegmentation) {
         return TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, false);
     }
 
@@ -315,7 +308,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     public static Vector TEIMerge(Document segmentedTranscription,
             String nameOfDeepSegmentation,
             String nameOfFlatSegmentation,
-            boolean includeFullText) throws Exception {
+            boolean includeFullText) {
         try {
 
             // Make a map of the timeline
@@ -416,6 +409,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             // segmentation @name='Event' are lost
             return returnValue;
         } catch (JDOMException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
@@ -651,11 +646,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //String for filename where it should be written
         //better be a URL?
         report = new Report();
-        try {
-            report = convertCD2MORPHEMEHIATISOTEI(cd);
-        } catch (Exception ex) {
-            report.addException(ex, "Unknown exception error");
-        }
+        report = convertCD2MORPHEMEHIATISOTEI(cd);
         return report;
     }
 
