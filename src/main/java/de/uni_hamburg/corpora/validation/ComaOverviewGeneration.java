@@ -131,7 +131,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         Class cl1;   
         try {
             cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");
