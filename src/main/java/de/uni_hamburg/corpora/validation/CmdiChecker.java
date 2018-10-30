@@ -62,8 +62,9 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
     }
 
     private boolean isUrlHandleOrHzsk(String url) {
-        if ((url.startsWith("http://hdl.handle.net/11022/"))
-                || (url.startsWith("https://corpora.uni-hamburg.de/repository/"))) {
+        if ((url.startsWith("http://hdl.handle.net/11022/")) ||
+                (url.startsWith("https://corpora.uni-hamburg.de/repository/")) ||
+                (url.startsWith("http://annis.corpora.uni-hamburg.de"))) {
             return true;
         } else {
             return false;
@@ -87,8 +88,14 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                 stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
                         + "Good resource type LandingPage");
             } else if (restype.getTextContent().equals("Resource")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
-                        + "Good resource type Resource");
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type Resource");
+            } else if (restype.getTextContent().equals("SearchPage")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type SearchPage");
+            } else if (restype.getTextContent().equals("SearchService")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type SearchService");
             } else {
                 stats.addWarning(CMDI_MISC, cmdiLoc + ": "
                         + "Unrecognised resource type "

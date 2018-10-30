@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -42,7 +43,8 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     private BasicTranscription bt;
     URL url;
     Document readbtasjdom = new Document();
-
+    String originalstring;
+    
     public BasicTranscriptionData() {
     }
 
@@ -53,6 +55,9 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             readbtasjdom = builder.build(url);
             File f = new File(url.toURI());
             loadFile(f);
+            originalstring = new
+                String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
+            
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -168,8 +173,11 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
 
     @Override
     public String toUnformattedString() {
-       XMLOutputter xmOut = new XMLOutputter();
-       String unformattedCorpusData = xmOut.outputString(readbtasjdom);
-       return unformattedCorpusData;
+       return originalstring;
+    }
+    
+    @Override
+    public void updateUnformattedString(String newUnformattedString) {
+        originalstring = newUnformattedString;
     }
 }
