@@ -392,7 +392,7 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
      * used.
      */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.CmdiData");
             IsUsableFor.add(cl);
