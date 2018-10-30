@@ -1,0 +1,2464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (c) http://www.rrz.uni-hamburg.de/exmaralda -->
+<basic-transcription Id="CIDIDDB981607-20E6-2338-A89D-18020F278479">
+   <head>
+      <meta-information>
+         <project-name>Nganasan</project-name>
+         <transcription-name>KES-PED_080718_Dialog_conv</transcription-name>
+         <referenced-file url="KES-PED_080718_Dialog_conv.wav"/>
+         <referenced-file url="KES-PED_080718_Dialog_conv.mp3"/>
+         <ud-meta-information/>
+         <comment/>
+         <transcription-convention/>
+      </meta-information>
+      <speakertable>
+         <speaker id="SPK0">
+            <abbreviation>PED</abbreviation>
+            <sex value="f"/>
+            <languages-used/>
+            <l1/>
+            <l2/>
+            <ud-speaker-information/>
+            <comment/>
+         </speaker>
+         <speaker id="SPK1">
+            <abbreviation>KES</abbreviation>
+            <sex value="f"/>
+            <languages-used/>
+            <l1/>
+            <l2/>
+            <ud-speaker-information/>
+            <comment/>
+         </speaker>
+         <speaker id="SPK2">
+            <abbreviation>BM</abbreviation>
+            <sex value="f"/>
+            <languages-used/>
+            <l1/>
+            <l2/>
+            <ud-speaker-information/>
+            <comment/>
+         </speaker>
+      </speakertable>
+   </head>
+   <basic-body>
+      <common-timeline>
+         <tli id="T0" time="3.0132733448060076"/>
+         <tli id="T1" time="5.8532168069461825"/>
+         <tli id="T2"/>
+         <tli id="T3"/>
+         <tli id="T4" time="5.919882146433041"/>
+         <tli id="T5" time="9.426479003441802"/>
+         <tli id="T6"/>
+         <tli id="T7"/>
+         <tli id="T8"/>
+         <tli id="T9"/>
+         <tli id="T10" time="14.679707755006259"/>
+         <tli id="T11" time="18.59962971683354"/>
+         <tli id="T12"/>
+         <tli id="T13"/>
+         <tli id="T14"/>
+         <tli id="T15"/>
+         <tli id="T16"/>
+         <tli id="T17"/>
+         <tli id="T18" time="18.959622550062576"/>
+         <tli id="T19" time="24.579510668804755"/>
+         <tli id="T20"/>
+         <tli id="T21"/>
+         <tli id="T22"/>
+         <tli id="T23"/>
+         <tli id="T24"/>
+         <tli id="T25" time="28.992756142834793"/>
+         <tli id="T26" time="32.706015552252815"/>
+         <tli id="T27"/>
+         <tli id="T28"/>
+         <tli id="T29"/>
+         <tli id="T30"/>
+         <tli id="T31"/>
+         <tli id="T32" time="33.885992061170214"/>
+         <tli id="T33" time="37.99924350750939"/>
+         <tli id="T34"/>
+         <tli id="T35"/>
+         <tli id="T36"/>
+         <tli id="T37"/>
+         <tli id="T38" time="38.43256821417397"/>
+         <tli id="T39" time="41.46584116082604"/>
+         <tli id="T40" time="43.512467083072586"/>
+         <tli id="T41"/>
+         <tli id="T42" time="50.792322155037546"/>
+         <tli id="T43" time="52.645618592772216"/>
+         <tli id="T44"/>
+         <tli id="T45" time="53.55893374374218"/>
+         <tli id="T46" time="56.43220987562577"/>
+         <tli id="T47"/>
+         <tli id="T48"/>
+         <tli id="T49" time="56.49887521511264"/>
+         <tli id="T50" time="58.09884336279725"/>
+         <tli id="T51"/>
+         <tli id="T52" time="62.37875815785357"/>
+         <tli id="T53" time="65.7520243358886"/>
+         <tli id="T54"/>
+         <tli id="T55"/>
+         <tli id="T56"/>
+         <tli id="T57" time="71.42524472622027"/>
+         <tli id="T58" time="73.08521167944306"/>
+         <tli id="T59"/>
+         <tli id="T60" time="73.27854116395494"/>
+         <tli id="T61" time="74.73851209871714"/>
+         <tli id="T62"/>
+         <tli id="T63" time="75.62516111389236"/>
+         <tli id="T64" time="77.42512528003755"/>
+         <tli id="T65" time="85.83162458933042"/>
+         <tli id="T66" time="88.39157362562578"/>
+         <tli id="T67"/>
+         <tli id="T68"/>
+         <tli id="T69" time="97.21806457368585"/>
+         <tli id="T70" time="98.44470682024405"/>
+         <tli id="T71" time="98.95802993429287"/>
+         <tli id="T72" time="101.18465227315394"/>
+         <tli id="T73"/>
+         <tli id="T74"/>
+         <tli id="T75" time="101.43798056320401"/>
+         <tli id="T76" time="102.08463435622653"/>
+         <tli id="T77" time="103.44460728175845"/>
+         <tli id="T78" time="104.1779260161139"/>
+         <tli id="T79" time="106.11788739518147"/>
+         <tli id="T80"/>
+         <tli id="T81"/>
+         <tli id="T82" time="106.21788540441176"/>
+         <tli id="T83" time="114.95771141113893"/>
+         <tli id="T84"/>
+         <tli id="T85"/>
+         <tli id="T86"/>
+         <tli id="T87"/>
+         <tli id="T88" time="115.02437675062579"/>
+         <tli id="T89" time="116.22435286138922"/>
+         <tli id="T90"/>
+         <tli id="T91" time="116.35101700641427"/>
+         <tli id="T92" time="124.31752507509385"/>
+         <tli id="T93"/>
+         <tli id="T94"/>
+         <tli id="T95"/>
+         <tli id="T96"/>
+         <tli id="T97"/>
+         <tli id="T98"/>
+         <tli id="T99"/>
+         <tli id="T100"/>
+         <tli id="T101"/>
+         <tli id="T102"/>
+         <tli id="T103"/>
+         <tli id="T104"/>
+         <tli id="T105"/>
+         <tli id="T106"/>
+      </common-timeline>
+      <tier category="ref"
+            display-name="ref"
+            id="ref"
+            speaker="SPK1"
+            type="a">
+         <event end="T4" start="T0">KES-PED_080718_Dialog_conv.001</event>
+         <event end="T10" start="T4">KES-PED_080718_Dialog_conv.002</event>
+         <event end="T18" start="T10">KES-PED_080718_Dialog_conv.003</event>
+         <event end="T25" start="T18">KES-PED_080718_Dialog_conv.004</event>
+         <event end="T32" start="T25">KES-PED_080718_Dialog_conv.005</event>
+         <event end="T38" start="T32">KES-PED_080718_Dialog_conv.006</event>
+         <event end="T39" start="T38">KES-PED_080718_Dialog_conv.007</event>
+         <event end="T42" start="T39">KES-PED_080718_Dialog_conv.008</event>
+         <event end="T45" start="T42">KES-PED_080718_Dialog_conv.009</event>
+         <event end="T49" start="T45">KES-PED_080718_Dialog_conv.010</event>
+         <event end="T52" start="T49">KES-PED_080718_Dialog_conv.011</event>
+         <event end="T57" start="T52">KES-PED_080718_Dialog_conv.012</event>
+         <event end="T60" start="T57">KES-PED_080718_Dialog_conv.013</event>
+         <event end="T63" start="T60">KES-PED_080718_Dialog_conv.014</event>
+         <event end="T65" start="T63">KES-PED_080718_Dialog_conv.015</event>
+         <event end="T69" start="T65">KES-PED_080718_Dialog_conv.016</event>
+         <event end="T71" start="T69">KES-PED_080718_Dialog_conv.017</event>
+         <event end="T75" start="T71">KES-PED_080718_Dialog_conv.018</event>
+         <event end="T76" start="T75">KES-PED_080718_Dialog_conv.019</event>
+         <event end="T78" start="T76">KES-PED_080718_Dialog_conv.020</event>
+         <event end="T82" start="T78">KES-PED_080718_Dialog_conv.021</event>
+         <event end="T88" start="T82">KES-PED_080718_Dialog_conv.022</event>
+         <event end="T91" start="T88">KES-PED_080718_Dialog_conv.023</event>
+         <event end="T105" start="T91">KES-PED_080718_Dialog_conv.024</event>
+      </tier>
+      <tier category="st"
+            display-name="st"
+            id="st"
+            speaker="SPK2"
+            type="a">
+         <event end="T4" start="T0">ЕС: Талу кӱӡи͡aтудя ӈонəиɁ ӈойбəудюəм.</event>
+         <event end="T10" start="T4">ЕД: əə, тə ситі дялы ися конаɁа</event>
+         <event end="T18" start="T10">ЕС: тыминя маадя мунуӈу серыəбсянə дялы маа ниӈын хулииɁ.</event>
+         <event end="T25" start="T18">ЕД. силя, ниндым, тə тəнə тагəбтəə имидяку ися.</event>
+         <event end="T32" start="T25">тəнə тагəбтəə имидяку ися, ниӈыӈ хуулиɁ əхы.</event>
+         <event end="T38" start="T32">ЕС. сыляӡəу маадя мунуӈу Толикəмə нибяхуӡə хулиɁ.</event>
+         <event end="T39" start="T38">ЕД: əбəй.</event>
+         <event end="T42" start="T39">ЕС: куниа делитісиə əку.</event>
+         <event end="T45" start="T42">ЕД: …. нимті ливи.</event>
+         <event end="T49" start="T45">ЕС: тə мəнə мəнəраанə конысуӡəм.</event>
+         <event end="T52" start="T49">ЕД: ӈонəраату ӈуəлы ӈуəɁ.</event>
+         <event end="T57" start="T52">ЕС: тəириə бəрəбамбуɁ, соревнований исюӡə ибаху.</event>
+         <event end="T60" start="T57">ЕД: мааӈуна исюə əбəй.</event>
+         <event end="T63" start="T60">ЕС: маа ниӈыӈ ӈомтӱɁ.</event>
+         <event end="T65" start="T63">ЕД: сəмунтə мəнəгəчаɁаӈ.</event>
+         <event end="T69" start="T65">ЕД: дёу ӈоймə мяядя дярыӈы </event>
+         <event end="T71" start="T69">ЕД: əлыгаку ныыкӱ</event>
+         <event end="T75" start="T71">Ес: мануə тыминыриаи тəисюə тə.</event>
+         <event end="T76" start="T75">ЕД: əə</event>
+         <event end="T78" start="T76">ЕС, əə, тəиӈутудюə.</event>
+         <event end="T82" start="T78">ЕС: Ӈуəмты матəны нихӱнi ӈуəɁ.</event>
+         <event end="T88" start="T82">ЕД: əə, матəнунту, мы разговариваем, ты слышишь?</event>
+         <event end="T91" start="T88">Маша: я не слушаю.</event>
+         <event end="T105" start="T91">ЕС: я говорю Маша тə что знает (непонятно), Маша то наверно всё знает как свой</event>
+      </tier>
+      <tier category="ts"
+            display-name="BM [ts]"
+            id="TIE1"
+            speaker="SPK2"
+            type="d">
+         <event end="T45" start="T43"/>
+         <event end="T91" start="T88">ja nʼe slušaʼju. </event>
+      </tier>
+      <tier category="ts"
+            display-name="PED [ts]"
+            id="TIE0"
+            speaker="SPK0"
+            type="d">
+         <event end="T10" start="T4">əə, tə sʼiti dʼalɨ isʼa konaɁa. </event>
+         <event end="T25" start="T18">sɨlʼiɁi͡a, nʼindɨm, tə tənə tagəbtəə imidʼaku isʼa. </event>
+         <event end="T32" start="T25">tənə tagəbtəə imidʼaku isʼa, nʼiŋɨŋ huulʼiɁ əhɨ. </event>
+         <event end="T39" start="T38">əbəj. </event>
+         <event end="T45" start="T42">(…) nʼimti lʼivi. </event>
+         <event end="T52" start="T49">ŋonəraatu ŋuəlɨ ŋuəɁ. </event>
+         <event end="T60" start="T57">maaŋuna isʼüə əbəj. </event>
+         <event end="T65" start="T63">səmumtə mənəgətʼaɁaŋ. </event>
+         <event end="T69" start="T65">dʼou ŋojmə maadʼa dʼarɨŋɨ. </event>
+         <event end="T71" start="T69">əlɨgaku nɨɨkü. </event>
+         <event end="T76" start="T75">əə. </event>
+         <event end="T88" start="T82">əə, matənuntu, mɨ razgovarivaʼem, tɨ slɨšišʼ. </event>
+      </tier>
+      <tier category="ts"
+            display-name="KES [ts]"
+            id="ts"
+            speaker="SPK1"
+            type="d">
+         <event end="T4" start="T0">Talu küði͡atudʼa ŋonəiɁ ŋojbəudʼüəm. </event>
+         <event end="T18" start="T10">tɨmini͡a maadʼa munuŋu sʼerɨəbsʼanə dʼalɨ maa nʼiŋɨŋ hulʼiɁ. </event>
+         <event end="T38" start="T32">sɨlʼi͡aðəu maadʼa munuŋu Tolʼikəmə nʼibi͡ahuðə hulʼiɁ. </event>
+         <event end="T42" start="T39">kuniɁi͡a dʼelʼitisʼiə əku. </event>
+         <event end="T45" start="T43"/>
+         <event end="T49" start="T45">tə mənə mənəraanə konɨsuðəm. </event>
+         <event end="T57" start="T52">təiriə barəbambuɁ, sorʼevnovanʼij isʼüðə ibahu. </event>
+         <event end="T63" start="T60">maa nʼiŋɨŋ ŋomtüɁ. </event>
+         <event end="T75" start="T71">manuə tɨminɨri͡ai təisʼüə tə. </event>
+         <event end="T78" start="T76">əə, təiŋutudʼüə. </event>
+         <event end="T82" start="T78">Ŋuəmtɨ matənɨ nʼihüni ŋuəɁ. </event>
+         <event end="T105" start="T91">ja govorʼju Maša tə čto znaet (nʼeponjatno), Maša to naverno vsʼo znaʼet kak svoj. </event>
+      </tier>
+      <tier category="tx"
+            display-name="tx"
+            id="tx"
+            speaker="SPK1"
+            type="t">
+         <event end="T1" start="T0">Talu </event>
+         <event end="T2" start="T1">küði͡atudʼa </event>
+         <event end="T3" start="T2">ŋonəiɁ </event>
+         <event end="T4" start="T3">ŋojbəudʼüəm. </event>
+         <event end="T5" start="T4">əə, </event>
+         <event end="T6" start="T5">tə </event>
+         <event end="T7" start="T6">sʼiti </event>
+         <event end="T8" start="T7">dʼalɨ </event>
+         <event end="T9" start="T8">isʼa </event>
+         <event end="T10" start="T9">konaɁa. </event>
+         <event end="T11" start="T10">tɨmini͡a </event>
+         <event end="T12" start="T11">maadʼa </event>
+         <event end="T13" start="T12">munuŋu </event>
+         <event end="T14" start="T13">sʼerɨəbsʼanə </event>
+         <event end="T15" start="T14">dʼalɨ </event>
+         <event end="T16" start="T15">maa </event>
+         <event end="T17" start="T16">nʼiŋɨŋ </event>
+         <event end="T18" start="T17">hulʼiɁ. </event>
+         <event end="T19" start="T18">sɨlʼiɁi͡a, </event>
+         <event end="T20" start="T19">nʼindɨm, </event>
+         <event end="T21" start="T20">tə </event>
+         <event end="T22" start="T21">tənə </event>
+         <event end="T23" start="T22">tagəbtəə </event>
+         <event end="T24" start="T23">imidʼaku </event>
+         <event end="T25" start="T24">isʼa. </event>
+         <event end="T26" start="T25">tənə </event>
+         <event end="T27" start="T26">tagəbtəə </event>
+         <event end="T28" start="T27">imidʼaku </event>
+         <event end="T29" start="T28">isʼa, </event>
+         <event end="T30" start="T29">nʼiŋɨŋ </event>
+         <event end="T31" start="T30">huulʼiɁ </event>
+         <event end="T32" start="T31">əhɨ. </event>
+         <event end="T33" start="T32">sɨlʼi͡aðəu </event>
+         <event end="T34" start="T33">maadʼa </event>
+         <event end="T35" start="T34">munuŋu </event>
+         <event end="T36" start="T35">Tolʼikəmə </event>
+         <event end="T37" start="T36">nʼibi͡ahuðə </event>
+         <event end="T38" start="T37">hulʼiɁ. </event>
+         <event end="T39" start="T38">əbəj. </event>
+         <event end="T40" start="T39">kuniɁi͡a </event>
+         <event end="T41" start="T40">dʼelʼitisʼiə </event>
+         <event end="T42" start="T41">əku. </event>
+         <event end="T43" start="T42">nʼimti </event>
+         <event end="T45" start="T43">lʼivi. </event>
+         <event end="T46" start="T45">tə </event>
+         <event end="T47" start="T46">mənə </event>
+         <event end="T48" start="T47">mənəraanə </event>
+         <event end="T49" start="T48">konɨsuðəm. </event>
+         <event end="T50" start="T49">ŋonəraatu </event>
+         <event end="T51" start="T50">ŋuəlɨ </event>
+         <event end="T52" start="T51">ŋuəɁ. </event>
+         <event end="T53" start="T52">təiriə </event>
+         <event end="T54" start="T53">barəbambuɁ, </event>
+         <event end="T55" start="T54">sorʼevnovanʼij </event>
+         <event end="T56" start="T55">isʼüðə </event>
+         <event end="T57" start="T56">ibahu. </event>
+         <event end="T58" start="T57">maaŋuna </event>
+         <event end="T59" start="T58">isʼüə </event>
+         <event end="T60" start="T59">əbəj. </event>
+         <event end="T61" start="T60">maa </event>
+         <event end="T62" start="T61">nʼiŋɨŋ </event>
+         <event end="T63" start="T62">ŋomtüɁ. </event>
+         <event end="T64" start="T63">səmumtə </event>
+         <event end="T65" start="T64">mənəgətʼaɁaŋ. </event>
+         <event end="T66" start="T65">dʼou </event>
+         <event end="T67" start="T66">ŋojmə </event>
+         <event end="T68" start="T67">maadʼa </event>
+         <event end="T69" start="T68">dʼarɨŋɨ. </event>
+         <event end="T70" start="T69">əlɨgaku </event>
+         <event end="T71" start="T70">nɨɨkü. </event>
+         <event end="T72" start="T71">manuə </event>
+         <event end="T73" start="T72">tɨminɨri͡ai </event>
+         <event end="T74" start="T73">təisʼüə </event>
+         <event end="T75" start="T74">tə. </event>
+         <event end="T76" start="T75">əə. </event>
+         <event end="T77" start="T76">əə, </event>
+         <event end="T78" start="T77">təiŋutudʼüə. </event>
+         <event end="T79" start="T78">Ŋuəmtɨ </event>
+         <event end="T80" start="T79">matənɨ </event>
+         <event end="T81" start="T80">nʼihüni </event>
+         <event end="T82" start="T81">ŋuəɁ. </event>
+         <event end="T83" start="T82">əə, </event>
+         <event end="T84" start="T83">matənuntu, </event>
+         <event end="T85" start="T84">mɨ </event>
+         <event end="T86" start="T85">razgovarivaʼem, </event>
+         <event end="T87" start="T86">tɨ </event>
+         <event end="T88" start="T87">slɨšišʼ. </event>
+         <event end="T89" start="T88">ja </event>
+         <event end="T90" start="T89">nʼe </event>
+         <event end="T91" start="T90">slušaʼju. </event>
+         <event end="T92" start="T91">ja </event>
+         <event end="T93" start="T92">govorʼju </event>
+         <event end="T94" start="T93">Maša </event>
+         <event end="T95" start="T94">tə </event>
+         <event end="T96" start="T95">čto </event>
+         <event end="T97" start="T96">znaet </event>
+         <event end="T98" start="T97">(nʼeponjatno), </event>
+         <event end="T99" start="T98">Maša </event>
+         <event end="T100" start="T99">to </event>
+         <event end="T101" start="T100">naverno </event>
+         <event end="T102" start="T101">vsʼo </event>
+         <event end="T103" start="T102">znaʼet </event>
+         <event end="T104" start="T103">kak </event>
+         <event end="T105" start="T104">svoj. </event>
+      </tier>
+      <tier category="mb"
+            display-name="mb"
+            id="mb"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">talu</event>
+         <event end="T2" start="T1">küði͡a-tu-dʼa</event>
+         <event end="T3" start="T2">ŋonəi-Ɂ</event>
+         <event end="T4" start="T3">ŋojbəu-dʼüə-m</event>
+         <event end="T5" start="T4">əə</event>
+         <event end="T6" start="T5">tə</event>
+         <event end="T7" start="T6">sʼiti</event>
+         <event end="T8" start="T7">dʼalɨ</event>
+         <event end="T9" start="T8">i-sʼa</event>
+         <event end="T10" start="T9">kona-Ɂa</event>
+         <event end="T11" start="T10">tɨmini͡a</event>
+         <event end="T12" start="T11">maadʼa</event>
+         <event end="T13" start="T12">munu-ŋu</event>
+         <event end="T14" start="T13">sʼerɨə-bsʼan-ə</event>
+         <event end="T15" start="T14">dʼalɨ</event>
+         <event end="T16" start="T15">maa</event>
+         <event end="T17" start="T16">nʼi-ŋɨ-ŋ</event>
+         <event end="T18" start="T17">hu-lʼi-Ɂ</event>
+         <event end="T19" start="T18">sɨlʼiɁi͡a</event>
+         <event end="T20" start="T19">nʼi-ndɨ-m</event>
+         <event end="T21" start="T20">tə</event>
+         <event end="T22" start="T21">tənə</event>
+         <event end="T23" start="T22">tagə-btə-ə</event>
+         <event end="T24" start="T23">imidʼa-ku</event>
+         <event end="T25" start="T24">i-sʼa</event>
+         <event end="T26" start="T25">tənə</event>
+         <event end="T27" start="T26">tagə-btə-ə</event>
+         <event end="T28" start="T27">imidʼa-ku</event>
+         <event end="T29" start="T28">i-sʼa</event>
+         <event end="T30" start="T29">nʼi-ŋɨ-ŋ</event>
+         <event end="T31" start="T30">huu-lʼi-Ɂ</event>
+         <event end="T32" start="T31">əhɨ</event>
+         <event end="T33" start="T32">sɨlʼi͡aðə-u</event>
+         <event end="T34" start="T33">maadʼa</event>
+         <event end="T35" start="T34">munu-ŋu</event>
+         <event end="T36" start="T35">Tolʼikə-mə</event>
+         <event end="T37" start="T36">nʼi-bi͡ahu-ðə</event>
+         <event end="T38" start="T37">hu-lʼi-Ɂ</event>
+         <event end="T39" start="T38">əbəj</event>
+         <event end="T40" start="T39">kuniɁi͡a</event>
+         <event end="T41" start="T40">dʼelʼi-ti-sʼiə</event>
+         <event end="T42" start="T41">əku</event>
+         <event end="T43" start="T42">nʼim-ti</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45">tə</event>
+         <event end="T47" start="T46">mənə</event>
+         <event end="T48" start="T47">mənə-raa-nə</event>
+         <event end="T49" start="T48">konɨ-suðə-m</event>
+         <event end="T50" start="T49">ŋonə-raa-tu</event>
+         <event end="T51" start="T50">ŋuəlɨ</event>
+         <event end="T52" start="T51">ŋuə-Ɂ</event>
+         <event end="T53" start="T52">təir-iə</event>
+         <event end="T54" start="T53">barə-bambu-Ɂ</event>
+         <event end="T55" start="T54">sorʼevnovanʼij</event>
+         <event end="T56" start="T55">i-sʼüðə</event>
+         <event end="T57" start="T56">i-bahu</event>
+         <event end="T58" start="T57">maaŋuna</event>
+         <event end="T59" start="T58">i-sʼüə</event>
+         <event end="T60" start="T59">əbəj</event>
+         <event end="T61" start="T60">maa</event>
+         <event end="T62" start="T61">nʼi-ŋɨ-ŋ</event>
+         <event end="T63" start="T62">ŋomtü-Ɂ</event>
+         <event end="T64" start="T63">səmu-mtə</event>
+         <event end="T65" start="T64">mənəgə-tʼa-Ɂa-ŋ</event>
+         <event end="T66" start="T65">dʼou</event>
+         <event end="T67" start="T66">ŋoj-mə</event>
+         <event end="T68" start="T67">maadʼa</event>
+         <event end="T69" start="T68">dʼarɨ-ŋɨ</event>
+         <event end="T70" start="T69">əlɨgaku</event>
+         <event end="T71" start="T70">nɨɨ-kü</event>
+         <event end="T72" start="T71">manu-ə</event>
+         <event end="T73" start="T72">tɨminɨ-ri͡ai</event>
+         <event end="T74" start="T73">təi-sʼüə</event>
+         <event end="T75" start="T74">tə</event>
+         <event end="T76" start="T75">əə</event>
+         <event end="T77" start="T76">əə</event>
+         <event end="T78" start="T77">təi-ŋutu-dʼüə</event>
+         <event end="T79" start="T78">ŋuəmtɨ</event>
+         <event end="T80" start="T79">ma-tənɨ</event>
+         <event end="T81" start="T80">nʼi-hü-ni</event>
+         <event end="T82" start="T81">ŋuə-Ɂ</event>
+         <event end="T83" start="T82">əə</event>
+         <event end="T84" start="T83">ma-tənu-ntu</event>
+         <event end="T85" start="T84">mɨ</event>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86">tɨ</event>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92">govorju</event>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94">tə</event>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101">vsʼo</event>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="mp"
+            display-name="mp"
+            id="mp"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">talu</event>
+         <event end="T2" start="T1">küti͡a-ntu-dʼa</event>
+         <event end="T3" start="T2">ŋonəə-Ɂ</event>
+         <event end="T4" start="T3">ŋojbəu-suə-m</event>
+         <event end="T5" start="T4">əə</event>
+         <event end="T6" start="T5">tə</event>
+         <event end="T7" start="T6">sʼiti</event>
+         <event end="T8" start="T7">dʼalɨ</event>
+         <event end="T9" start="T8">ij-sa</event>
+         <event end="T10" start="T9">konɨ-Ɂə</event>
+         <event end="T11" start="T10">tɨmini͡a</event>
+         <event end="T12" start="T11">maadʼa</event>
+         <event end="T13" start="T12">munu-ŋu</event>
+         <event end="T14" start="T13">sʼerɨə-bsan-ə-</event>
+         <event end="T15" start="T14">dʼalɨ-</event>
+         <event end="T16" start="T15">maa</event>
+         <event end="T17" start="T16">nʼi-ŋu-ŋ</event>
+         <event end="T18" start="T17">huj-ru-Ɂ</event>
+         <event end="T19" start="T18">sɨlʼiɁi͡a</event>
+         <event end="T20" start="T19">nʼi-ntu-m</event>
+         <event end="T21" start="T20">tə</event>
+         <event end="T22" start="T21">tənə-</event>
+         <event end="T23" start="T22">takə-btə-ə</event>
+         <event end="T24" start="T23">imidʼi-Ɂku</event>
+         <event end="T25" start="T24">ij-sa</event>
+         <event end="T26" start="T25">tənə-</event>
+         <event end="T27" start="T26">takə-btə-ə</event>
+         <event end="T28" start="T27">imidʼi-Ɂku</event>
+         <event end="T29" start="T28">ij-sa</event>
+         <event end="T30" start="T29">nʼi-ŋu-ŋ</event>
+         <event end="T31" start="T30">huur-ru-Ɂ</event>
+         <event end="T32" start="T31">əhɨ</event>
+         <event end="T33" start="T32">sɨlʼiatə-əu</event>
+         <event end="T34" start="T33">maadʼa</event>
+         <event end="T35" start="T34">munu-ŋu</event>
+         <event end="T36" start="T35">Tolʼikə-mə</event>
+         <event end="T37" start="T36">nʼi-haŋhu-tə</event>
+         <event end="T38" start="T37">huj-ru-Ɂ</event>
+         <event end="T39" start="T38">əbəj</event>
+         <event end="T40" start="T39">kuniɁi͡a</event>
+         <event end="T41" start="T40">dʼelʼi-tu-suə</event>
+         <event end="T42" start="T41">əku</event>
+         <event end="T43" start="T42">nʼim-tu</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45">tə</event>
+         <event end="T47" start="T46">mənə</event>
+         <event end="T48" start="T47">mənə-raa-nə</event>
+         <event end="T49" start="T48">konɨ-Ɂsutə-m</event>
+         <event end="T50" start="T49">ŋonə-raa-ntu</event>
+         <event end="T51" start="T50">ŋuəlɨ</event>
+         <event end="T52" start="T51">ij-Ɂ</event>
+         <event end="T53" start="T52">təir-ntuə</event>
+         <event end="T54" start="T53">barə-haŋhu-Ɂ</event>
+         <event end="T55" start="T54">sorʼevnovanʼij</event>
+         <event end="T56" start="T55">ij-Ɂsutə</event>
+         <event end="T57" start="T56">ij-haŋhu</event>
+         <event end="T58" start="T57">maaŋuna</event>
+         <event end="T59" start="T58">ij-suə</event>
+         <event end="T60" start="T59">əbəj</event>
+         <event end="T61" start="T60">maa</event>
+         <event end="T62" start="T61">nʼi-ŋu-ŋ</event>
+         <event end="T63" start="T62">ŋomtə--Ɂ</event>
+         <event end="T64" start="T63">səmu-mtə</event>
+         <event end="T65" start="T64">mənəgəj-ntə-Ɂə-ŋ</event>
+         <event end="T66" start="T65">dʼou</event>
+         <event end="T67" start="T66">ŋoj-mə</event>
+         <event end="T68" start="T67">maadʼa</event>
+         <event end="T69" start="T68">dʼari-ŋu</event>
+         <event end="T70" start="T69">əlɨgaku</event>
+         <event end="T71" start="T70">nɨ-Ɂku</event>
+         <event end="T72" start="T71">manu-ə</event>
+         <event end="T73" start="T72">tɨmini͡a-raa</event>
+         <event end="T74" start="T73">təij-suə</event>
+         <event end="T75" start="T74">tə</event>
+         <event end="T76" start="T75">əə</event>
+         <event end="T77" start="T76">əə</event>
+         <event end="T78" start="T77">təij-ŋutu-suə</event>
+         <event end="T79" start="T78">ŋuəmtɨ</event>
+         <event end="T80" start="T79">mat-ntənu</event>
+         <event end="T81" start="T80">nʼi-hu-ni</event>
+         <event end="T82" start="T81">ij-Ɂ</event>
+         <event end="T83" start="T82">əə</event>
+         <event end="T84" start="T83">mat-ntənu-ntu</event>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94">tə</event>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101">vsʼo</event>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="ge"
+            display-name="ge"
+            id="ge"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">tomorrow</event>
+         <event end="T2" start="T1">get.up-NMLZIPF-ALL</event>
+         <event end="T3" start="T2">another.one-ADV</event>
+         <event end="T4" start="T3">work-PST-1SG.S</event>
+         <event end="T5" start="T4">HES</event>
+         <event end="T6" start="T5">well</event>
+         <event end="T7" start="T6">two.[NOM.SG]</event>
+         <event end="T8" start="T7">day.[NOM.SG]</event>
+         <event end="T9" start="T8">be-INF</event>
+         <event end="T10" start="T9">go-PF.[3SG.S]</event>
+         <event end="T11" start="T10">now</event>
+         <event end="T12" start="T11">why</event>
+         <event end="T13" start="T12">say-INTER.[3SG.S]</event>
+         <event end="T14" start="T13">celebrate.wedding-ACTN-EP.[GEN.SG]</event>
+         <event end="T15" start="T14">day.[ACC.SG]</event>
+         <event end="T16" start="T15">what.[NOM.SG]</event>
+         <event end="T17" start="T16">NEG-INTER-2SG.S</event>
+         <event end="T18" start="T17">call-PASS-CNG</event>
+         <event end="T19" start="T18">I.do.not.know</event>
+         <event end="T20" start="T19">NEG-PRS-1SG.S</event>
+         <event end="T21" start="T20">well</event>
+         <event end="T22" start="T21">you.SG.[ACC.SG]</event>
+         <event end="T23" start="T22">rear-SRLAT-ADJZ.[NOM.SG]</event>
+         <event end="T24" start="T23">grandmother-DIM</event>
+         <event end="T25" start="T24">be-INF</event>
+         <event end="T26" start="T25">you.SG.[ACC.SG]</event>
+         <event end="T27" start="T26">rear-SRLAT-ADJZ.[NOM.SG]</event>
+         <event end="T28" start="T27">grandmother-DIM</event>
+         <event end="T29" start="T28">be-INF</event>
+         <event end="T30" start="T29">NEG-INTER-2SG.S</event>
+         <event end="T31" start="T30">look.for-PASS-CNG</event>
+         <event end="T32" start="T31">perhaps</event>
+         <event end="T33" start="T32">I.do.not.know-EXCL</event>
+         <event end="T34" start="T33">why</event>
+         <event end="T35" start="T34">say-INTER.[3SG.S]</event>
+         <event end="T36" start="T35">Tolik-NOM.SG.1SG</event>
+         <event end="T37" start="T36">NEG-NAR-3SG.R</event>
+         <event end="T38" start="T37">call-PASS-CNG</event>
+         <event end="T39" start="T38">oh</event>
+         <event end="T40" start="T39">how</event>
+         <event end="T41" start="T40">noise-VBLZ-PST.[3SG.S]</event>
+         <event end="T42" start="T41">probably</event>
+         <event end="T43" start="T42">name-NOM.SG.3SG</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45">well</event>
+         <event end="T47" start="T46">I.[NOM.SG]</event>
+         <event end="T48" start="T47">I-LIM-OBL.1SG</event>
+         <event end="T49" start="T48">go-FUT-1SG.S</event>
+         <event end="T50" start="T49">self-LIM-OBL.3SG</event>
+         <event end="T51" start="T50">why.not.[3SG.S]</event>
+         <event end="T52" start="T51">be-CNG</event>
+         <event end="T53" start="T52">fly-PTCP.PRS.[ACC.SG]</event>
+         <event end="T54" start="T53">wait-NAR-3PL.S</event>
+         <event end="T55" start="T54">competition</event>
+         <event end="T56" start="T55">be-FUT.[3SG.S]</event>
+         <event end="T57" start="T56">be-NAR.[3SG.S]</event>
+         <event end="T58" start="T57">what.for.[NOM.SG]</event>
+         <event end="T59" start="T58">be-PST.[3SG.S]</event>
+         <event end="T60" start="T59">oh</event>
+         <event end="T61" start="T60">what.[NOM.SG]</event>
+         <event end="T62" start="T61">NEG-INTER-2SG.S</event>
+         <event end="T63" start="T62">sit.[STAT]-CNG</event>
+         <event end="T64" start="T63">cap-ACC.SG.2SG</event>
+         <event end="T65" start="T64">fall-IPFV-PF-2SG.S</event>
+         <event end="T66" start="T65">oh</event>
+         <event end="T67" start="T66">leg-NOM.SG.1SG</event>
+         <event end="T68" start="T67">why</event>
+         <event end="T69" start="T68">ache-INTER.[3SG.S]</event>
+         <event end="T70" start="T69">small.[NOM.SG]</event>
+         <event end="T71" start="T70">woman-DIM</event>
+         <event end="T72" start="T71">earlier-ADJZ.[NOM.SG]</event>
+         <event end="T73" start="T72">now-LIM</event>
+         <event end="T74" start="T73">be.available-PST.[3SG.S]</event>
+         <event end="T75" start="T74">well</event>
+         <event end="T76" start="T75">HES</event>
+         <event end="T77" start="T76">HES</event>
+         <event end="T78" start="T77">be.available-DEF-PST.[3SG.S]</event>
+         <event end="T79" start="T78">Nguomty</event>
+         <event end="T80" start="T79">tent-LOC.SG</event>
+         <event end="T81" start="T80">NEG-INTER.PST-1DU.R</event>
+         <event end="T82" start="T81">be-CNG</event>
+         <event end="T83" start="T82">HES</event>
+         <event end="T84" start="T83">tent-LOC.SG-OBL.3SG</event>
+         <event end="T85" start="T84">we</event>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94">well</event>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101">that's.all</event>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="gr"
+            display-name="gr"
+            id="gr"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">завтра</event>
+         <event end="T2" start="T1">встать-NMLZIPF-ALL</event>
+         <event end="T3" start="T2">еще.один-ADV</event>
+         <event end="T4" start="T3">работать-PST-1SG.S</event>
+         <event end="T5" start="T4">HES</event>
+         <event end="T6" start="T5">ну</event>
+         <event end="T7" start="T6">два.[NOM.SG]</event>
+         <event end="T8" start="T7">день.[NOM.SG]</event>
+         <event end="T9" start="T8">быть-INF</event>
+         <event end="T10" start="T9">пойти-PF.[3SG.S]</event>
+         <event end="T11" start="T10">теперь</event>
+         <event end="T12" start="T11">почему</event>
+         <event end="T13" start="T12">говорить-INTER.[3SG.S]</event>
+         <event end="T14" start="T13">праздновать.свадьбу-ACTN-EP.[GEN.SG]</event>
+         <event end="T15" start="T14">день.[ACC.SG]</event>
+         <event end="T16" start="T15">что.[NOM.SG]</event>
+         <event end="T17" start="T16">NEG-INTER-2SG.S</event>
+         <event end="T18" start="T17">звать-PASS-CNG</event>
+         <event end="T19" start="T18">не.знаю</event>
+         <event end="T20" start="T19">NEG-PRS-1SG.S</event>
+         <event end="T21" start="T20">ну</event>
+         <event end="T22" start="T21">ты.[ACC.SG]</event>
+         <event end="T23" start="T22">зад-SRLAT-ADJZ.[NOM.SG]</event>
+         <event end="T24" start="T23">бабушка-DIM</event>
+         <event end="T25" start="T24">быть-INF</event>
+         <event end="T26" start="T25">ты.[ACC.SG]</event>
+         <event end="T27" start="T26">зад-SRLAT-ADJZ.[NOM.SG]</event>
+         <event end="T28" start="T27">бабушка-DIM</event>
+         <event end="T29" start="T28">быть-INF</event>
+         <event end="T30" start="T29">NEG-INTER-2SG.S</event>
+         <event end="T31" start="T30">искать-PASS-CNG</event>
+         <event end="T32" start="T31">разве</event>
+         <event end="T33" start="T32">не.знаю-EXCL</event>
+         <event end="T34" start="T33">почему</event>
+         <event end="T35" start="T34">говорить-INTER.[3SG.S]</event>
+         <event end="T36" start="T35">Толик-NOM.SG.1SG</event>
+         <event end="T37" start="T36">NEG-NAR-3SG.R</event>
+         <event end="T38" start="T37">звать-PASS-CNG</event>
+         <event end="T39" start="T38">ох</event>
+         <event end="T40" start="T39">как</event>
+         <event end="T41" start="T40">шум-VBLZ-PST.[3SG.S]</event>
+         <event end="T42" start="T41">наверное</event>
+         <event end="T43" start="T42">имя-NOM.SG.3SG</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45">ну</event>
+         <event end="T47" start="T46">я.[NOM.SG]</event>
+         <event end="T48" start="T47">я-LIM-OBL.1SG</event>
+         <event end="T49" start="T48">пойти-FUT-1SG.S</event>
+         <event end="T50" start="T49">сам-LIM-OBL.3SG</event>
+         <event end="T51" start="T50">как.не.[3SG.S]</event>
+         <event end="T52" start="T51">быть-CNG</event>
+         <event end="T53" start="T52">летать-PTCP.PRS.[ACC.SG]</event>
+         <event end="T54" start="T53">ждать-NAR-3PL.S</event>
+         <event end="T55" start="T54">соревнование</event>
+         <event end="T56" start="T55">быть-FUT.[3SG.S]</event>
+         <event end="T57" start="T56">быть-NAR.[3SG.S]</event>
+         <event end="T58" start="T57">что.такое.[NOM.SG]</event>
+         <event end="T59" start="T58">быть-PST.[3SG.S]</event>
+         <event end="T60" start="T59">ох</event>
+         <event end="T61" start="T60">что.[NOM.SG]</event>
+         <event end="T62" start="T61">NEG-INTER-2SG.S</event>
+         <event end="T63" start="T62">сесть.[STAT]-CNG</event>
+         <event end="T64" start="T63">шапка-ACC.SG.2SG</event>
+         <event end="T65" start="T64">упасть-IPFV-PF-2SG.S</event>
+         <event end="T66" start="T65">оу</event>
+         <event end="T67" start="T66">нога-NOM.SG.1SG</event>
+         <event end="T68" start="T67">почему</event>
+         <event end="T69" start="T68">болеть-INTER.[3SG.S]</event>
+         <event end="T70" start="T69">маленький.[NOM.SG]</event>
+         <event end="T71" start="T70">женщина-DIM</event>
+         <event end="T72" start="T71">раньше-ADJZ.[NOM.SG]</event>
+         <event end="T73" start="T72">теперь-LIM</event>
+         <event end="T74" start="T73">иметься-PST.[3SG.S]</event>
+         <event end="T75" start="T74">ну</event>
+         <event end="T76" start="T75">HES</event>
+         <event end="T77" start="T76">HES</event>
+         <event end="T78" start="T77">иметься-DEF-PST.[3SG.S]</event>
+         <event end="T79" start="T78">Нгуомты</event>
+         <event end="T80" start="T79">чум-LOC.SG</event>
+         <event end="T81" start="T80">NEG-INTER.PST-1DU.R</event>
+         <event end="T82" start="T81">быть-CNG</event>
+         <event end="T83" start="T82">HES</event>
+         <event end="T84" start="T83">чум-LOC.SG-OBL.3SG</event>
+         <event end="T85" start="T84">мы</event>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94">ну</event>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101">всё</event>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="mc"
+            display-name="mc"
+            id="mc"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">adv</event>
+         <event end="T2" start="T1">v-v&gt;n-nom:case</event>
+         <event end="T3" start="T2">adj-adj&gt;adv</event>
+         <event end="T4" start="T3">v-v:tense-v:pn</event>
+         <event end="T5" start="T4">hes</event>
+         <event end="T6" start="T5">interj</event>
+         <event end="T7" start="T6">num-nom:case</event>
+         <event end="T8" start="T7">n-nom:case</event>
+         <event end="T9" start="T8">v-v:ninfl</event>
+         <event end="T10" start="T9">v-v:tense-v:pn</event>
+         <event end="T11" start="T10">adv</event>
+         <event end="T12" start="T11">qadv</event>
+         <event end="T13" start="T12">v-v:mood-v:pn</event>
+         <event end="T14" start="T13">v-v&gt;n-infl:ins-nom:case</event>
+         <event end="T15" start="T14">n-nom:case</event>
+         <event end="T16" start="T15">qpro-nom:case</event>
+         <event end="T17" start="T16">v-v:mood-v:pn</event>
+         <event end="T18" start="T17">v-v&gt;v-v:ninfl</event>
+         <event end="T19" start="T18">ptcl</event>
+         <event end="T20" start="T19">v-v:tense-v:pn</event>
+         <event end="T21" start="T20">interj</event>
+         <event end="T22" start="T21">pro-nom:case</event>
+         <event end="T23" start="T22">advn-adj&gt;adj-nom&gt;adj-nom:case</event>
+         <event end="T24" start="T23">n-nom&gt;nom</event>
+         <event end="T25" start="T24">v-v:ninfl</event>
+         <event end="T26" start="T25">pro-nom:case</event>
+         <event end="T27" start="T26">advn-adj&gt;adj-nom&gt;adj-nom:case</event>
+         <event end="T28" start="T27">n-nom&gt;nom</event>
+         <event end="T29" start="T28">v-v:ninfl</event>
+         <event end="T30" start="T29">v-v:mood-v:pn</event>
+         <event end="T31" start="T30">v-v&gt;v-v:ninfl</event>
+         <event end="T32" start="T31">ptcl</event>
+         <event end="T33" start="T32">ptcl-cl</event>
+         <event end="T34" start="T33">qadv</event>
+         <event end="T35" start="T34">v-v:mood-v:pn</event>
+         <event end="T36" start="T35">propr-nom:case-poss</event>
+         <event end="T37" start="T36">v-v:mood-v:pn</event>
+         <event end="T38" start="T37">v-v&gt;v-v:ninfl</event>
+         <event end="T39" start="T38">interj</event>
+         <event end="T40" start="T39">qadv</event>
+         <event end="T41" start="T40">n-n&gt;v-v:tense-v:pn</event>
+         <event end="T42" start="T41">ptcl</event>
+         <event end="T43" start="T42">n-nom:case-poss</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45">interj</event>
+         <event end="T47" start="T46">pro-nom:case</event>
+         <event end="T48" start="T47">pro-cl-infl:poss</event>
+         <event end="T49" start="T48">v-v:tense-v:pn</event>
+         <event end="T50" start="T49">pro-cl-infl:poss</event>
+         <event end="T51" start="T50">v-v:pn</event>
+         <event end="T52" start="T51">v-v:ninfl</event>
+         <event end="T53" start="T52">v-v&gt;adj-nom:case</event>
+         <event end="T54" start="T53">v-v:mood-v:pn</event>
+         <event end="T55" start="T54">n</event>
+         <event end="T56" start="T55">v-v:tense-v:pn</event>
+         <event end="T57" start="T56">v-v:mood-v:pn</event>
+         <event end="T58" start="T57">qpro-nom:case</event>
+         <event end="T59" start="T58">v-v:tense-v:pn</event>
+         <event end="T60" start="T59">interj</event>
+         <event end="T61" start="T60">qpro-nom:case</event>
+         <event end="T62" start="T61">v-v:mood-v:pn</event>
+         <event end="T63" start="T62">v-v&gt;v-v:ninfl</event>
+         <event end="T64" start="T63">n-nom:case-poss</event>
+         <event end="T65" start="T64">v-v&gt;v-v:tense-v:pn</event>
+         <event end="T66" start="T65">interj</event>
+         <event end="T67" start="T66">n-nom:case-poss</event>
+         <event end="T68" start="T67">qadv</event>
+         <event end="T69" start="T68">v-v:mood-v:pn</event>
+         <event end="T70" start="T69">adj-nom:case</event>
+         <event end="T71" start="T70">n-nom&gt;nom</event>
+         <event end="T72" start="T71">adv-nom&gt;adj-nom:case</event>
+         <event end="T73" start="T72">adv-cl</event>
+         <event end="T74" start="T73">v-v:tense-v:pn</event>
+         <event end="T75" start="T74">interj</event>
+         <event end="T76" start="T75">hes</event>
+         <event end="T77" start="T76">hes</event>
+         <event end="T78" start="T77">v-cl-v:tense-v:pn</event>
+         <event end="T79" start="T78">propr</event>
+         <event end="T80" start="T79">n-nom:case</event>
+         <event end="T81" start="T80">v-v:mood-v:pn</event>
+         <event end="T82" start="T81">v-v:ninfl</event>
+         <event end="T83" start="T82">hes</event>
+         <event end="T84" start="T83">n-nom:case-infl:poss</event>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94">interj</event>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101">ptcl</event>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="ps"
+            display-name="ps"
+            id="ps"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">ADV</event>
+         <event end="T2" start="T1">ADV</event>
+         <event end="T3" start="T2">ADV</event>
+         <event end="T4" start="T3">V</event>
+         <event end="T5" start="T4">PTCL</event>
+         <event end="T6" start="T5">PTCL</event>
+         <event end="T7" start="T6">QUANT</event>
+         <event end="T8" start="T7">N</event>
+         <event end="T9" start="T8">V</event>
+         <event end="T10" start="T9">AUX</event>
+         <event end="T11" start="T10">ADV</event>
+         <event end="T12" start="T11">QUE</event>
+         <event end="T13" start="T12">V</event>
+         <event end="T14" start="T13">N</event>
+         <event end="T15" start="T14">N</event>
+         <event end="T16" start="T15">QUE</event>
+         <event end="T17" start="T16">AUX.NEG</event>
+         <event end="T18" start="T17">V</event>
+         <event end="T19" start="T18">PTCL.NEG</event>
+         <event end="T20" start="T19">AUX.NEG</event>
+         <event end="T21" start="T20">PTCL</event>
+         <event end="T22" start="T21">PRONP</event>
+         <event end="T23" start="T22">ADJ</event>
+         <event end="T24" start="T23">N</event>
+         <event end="T25" start="T24">V</event>
+         <event end="T26" start="T25">PRONP</event>
+         <event end="T27" start="T26">ADJ</event>
+         <event end="T28" start="T27">N</event>
+         <event end="T29" start="T28">V</event>
+         <event end="T30" start="T29">AUX.NEG</event>
+         <event end="T31" start="T30">V</event>
+         <event end="T32" start="T31">PTCL</event>
+         <event end="T33" start="T32">PTCL.NEG</event>
+         <event end="T34" start="T33">QUE</event>
+         <event end="T35" start="T34">V</event>
+         <event end="T36" start="T35">NPR</event>
+         <event end="T37" start="T36">AUX.NEG</event>
+         <event end="T38" start="T37">V</event>
+         <event end="T39" start="T38">PTCL</event>
+         <event end="T40" start="T39">QUE</event>
+         <event end="T41" start="T40">V</event>
+         <event end="T42" start="T41">PTCL</event>
+         <event end="T43" start="T42">N</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45">PTCL</event>
+         <event end="T47" start="T46">PRONP</event>
+         <event end="T48" start="T47">PRONP</event>
+         <event end="T49" start="T48">V</event>
+         <event end="T50" start="T49">INDF</event>
+         <event end="T51" start="T50">AUX</event>
+         <event end="T52" start="T51">V</event>
+         <event end="T53" start="T52">N</event>
+         <event end="T54" start="T53">V</event>
+         <event end="T55" start="T54">N</event>
+         <event end="T56" start="T55">V</event>
+         <event end="T57" start="T56">COP</event>
+         <event end="T58" start="T57">QUE</event>
+         <event end="T59" start="T58">V</event>
+         <event end="T60" start="T59">PTCL</event>
+         <event end="T61" start="T60">QUE</event>
+         <event end="T62" start="T61">AUX.NEG</event>
+         <event end="T63" start="T62">V</event>
+         <event end="T64" start="T63">N</event>
+         <event end="T65" start="T64">V</event>
+         <event end="T66" start="T65">PTCL</event>
+         <event end="T67" start="T66">N</event>
+         <event end="T68" start="T67">QUE</event>
+         <event end="T69" start="T68">V</event>
+         <event end="T70" start="T69">ADJ</event>
+         <event end="T71" start="T70">N</event>
+         <event end="T72" start="T71">ADJ</event>
+         <event end="T73" start="T72">ADV</event>
+         <event end="T74" start="T73">V.EX</event>
+         <event end="T75" start="T74">PTCL</event>
+         <event end="T76" start="T75">PTCL</event>
+         <event end="T77" start="T76">PTCL</event>
+         <event end="T78" start="T77">V.EX</event>
+         <event end="T79" start="T78">NPR</event>
+         <event end="T80" start="T79">N</event>
+         <event end="T81" start="T80">AUX.NEG</event>
+         <event end="T82" start="T81">V</event>
+         <event end="T83" start="T82">PTCL</event>
+         <event end="T84" start="T83">N</event>
+         <event end="T85" start="T84">PRONP</event>
+         <event end="T86" start="T85">V</event>
+         <event end="T87" start="T86">PRONP</event>
+         <event end="T88" start="T87">V</event>
+         <event end="T89" start="T88">PRONP</event>
+         <event end="T90" start="T89">PTCL</event>
+         <event end="T91" start="T90">V</event>
+         <event end="T92" start="T91">PRONP</event>
+         <event end="T93" start="T92">V</event>
+         <event end="T94" start="T93">NPR</event>
+         <event end="T95" start="T94">PTCL</event>
+         <event end="T96" start="T95">QUE</event>
+         <event end="T97" start="T96">V</event>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98">NPR</event>
+         <event end="T100" start="T99">PTCL</event>
+         <event end="T101" start="T100">ADV</event>
+         <event end="T102" start="T101">QUANT</event>
+         <event end="T103" start="T102">V</event>
+         <event end="T104" start="T103">PTCL</event>
+         <event end="T105" start="T104">ADJ</event>
+      </tier>
+      <tier category="SyF"
+            display-name="SyF"
+            id="SyF"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0"/>
+         <event end="T2" start="T1"/>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3">0.1.h:S v:pred</event>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T7" start="T6"/>
+         <event end="T8" start="T7">0.3:S</event>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9">v:pred</event>
+         <event end="T11" start="T10"/>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12">0.3.h:S v:pred</event>
+         <event end="T14" start="T13"/>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16">0.2.h:S v:pred</event>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19">0.1.h:S v:pred</event>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21"/>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23"/>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25">pro.h:S</event>
+         <event end="T27" start="T26"/>
+         <event end="T28" start="T27"/>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29">v:pred</event>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34">0.3.h:S v:pred</event>
+         <event end="T36" start="T35">np.h:S</event>
+         <event end="T37" start="T36">v:pred</event>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40">0.3.h:S v:pred</event>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42"/>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46">pro.h:S</event>
+         <event end="T48" start="T47">pro.h:S</event>
+         <event end="T49" start="T48">v:pred</event>
+         <event end="T50" start="T49">pro.h:S</event>
+         <event end="T51" start="T50">v:pred</event>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52">np:O</event>
+         <event end="T54" start="T53">0.3.h:S v:pred</event>
+         <event end="T55" start="T54">np:S</event>
+         <event end="T56" start="T55">v:pred</event>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57">np:S</event>
+         <event end="T59" start="T58">v:pred</event>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61">0.2.h:S v:pred</event>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63">np:O</event>
+         <event end="T65" start="T64">0.2.h:S v:pred</event>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66">np:S</event>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68">v:pred</event>
+         <event end="T70" start="T69"/>
+         <event end="T71" start="T70">0.3.h:S n:pred</event>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73">0.3:S v:pred</event>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77">0.3:S v:pred</event>
+         <event end="T79" start="T78"/>
+         <event end="T80" start="T79"/>
+         <event end="T81" start="T80">0.1.h:S v:pred</event>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83"/>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94"/>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101"/>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="SeR"
+            display-name="SeR"
+            id="SeR"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">adv:Time</event>
+         <event end="T2" start="T1">adv:Time</event>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3">0.1.h:A</event>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T7" start="T6"/>
+         <event end="T8" start="T7"/>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9"/>
+         <event end="T11" start="T10">adv:Time</event>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12">0.3.h:A</event>
+         <event end="T14" start="T13">np:Poss</event>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16">0.2.h:P</event>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19"/>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21">pro.h:P</event>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23"/>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25">pro.h:P</event>
+         <event end="T27" start="T26"/>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29"/>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34">0.3.h:A</event>
+         <event end="T36" start="T35">np.h:P</event>
+         <event end="T37" start="T36"/>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40">0.3.h:A</event>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42"/>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46">pro.h:A</event>
+         <event end="T48" start="T47">pro.h:A</event>
+         <event end="T49" start="T48"/>
+         <event end="T50" start="T49">pro.h:A</event>
+         <event end="T51" start="T50"/>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52">np:P</event>
+         <event end="T54" start="T53">0.3.h:A</event>
+         <event end="T55" start="T54"/>
+         <event end="T56" start="T55"/>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57"/>
+         <event end="T59" start="T58"/>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61">0.2.h:A</event>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63">np:P 0.2.h:Poss</event>
+         <event end="T65" start="T64">0.2.h:A</event>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66">np:E</event>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68"/>
+         <event end="T70" start="T69"/>
+         <event end="T71" start="T70">0.3.h:Th</event>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73"/>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77"/>
+         <event end="T79" start="T78">np.h:Poss</event>
+         <event end="T80" start="T79">np:L</event>
+         <event end="T81" start="T80">0.1.h:A</event>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83">np:L 0.3.h:Poss</event>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94"/>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101"/>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="IST"
+            display-name="IST"
+            id="IST"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0">giv-active-sit</event>
+         <event end="T2" start="T1"/>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3">giv-active-sit_0</event>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T8" start="T6">giv-active-sit</event>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9"/>
+         <event end="T11" start="T10">giv-active-sit</event>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12">quot-S</event>
+         <event end="T14" start="T13">new</event>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16">giv-active-sit_0</event>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19">giv-active-sit_0</event>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21">giv-active-sit</event>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23">accs</event>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25">giv-active-sit</event>
+         <event end="T27" start="T26"/>
+         <event end="T28" start="T27">giv-active</event>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29">giv-active_0</event>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34">quot-S_0</event>
+         <event end="T36" start="T35">new</event>
+         <event end="T37" start="T36"/>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40">giv-active_0</event>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42">accs</event>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46">giv-active-sit</event>
+         <event end="T48" start="T47"/>
+         <event end="T49" start="T48"/>
+         <event end="T50" start="T49">giv-active-sit</event>
+         <event end="T51" start="T50"/>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52">new</event>
+         <event end="T54" start="T53">accs</event>
+         <event end="T55" start="T54"/>
+         <event end="T56" start="T55"/>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57"/>
+         <event end="T59" start="T58"/>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61">giv-active-sit_0</event>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63">new</event>
+         <event end="T65" start="T64">giv-active-sit_0</event>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66">accs</event>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68"/>
+         <event end="T71" start="T69">giv-inactive</event>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73"/>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77"/>
+         <event end="T80" start="T78">new</event>
+         <event end="T81" start="T80"/>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83">giv-active</event>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94"/>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101"/>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="BOR"
+            display-name="BOR"
+            id="BOR"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0"/>
+         <event end="T2" start="T1"/>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3"/>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T7" start="T6"/>
+         <event end="T8" start="T7"/>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9"/>
+         <event end="T11" start="T10"/>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12"/>
+         <event end="T14" start="T13"/>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16"/>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19"/>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21"/>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23"/>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25"/>
+         <event end="T27" start="T26"/>
+         <event end="T28" start="T27"/>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29"/>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34"/>
+         <event end="T36" start="T35"/>
+         <event end="T37" start="T36"/>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40"/>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42"/>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46"/>
+         <event end="T48" start="T47"/>
+         <event end="T49" start="T48"/>
+         <event end="T50" start="T49"/>
+         <event end="T51" start="T50"/>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52"/>
+         <event end="T54" start="T53"/>
+         <event end="T55" start="T54">RUS</event>
+         <event end="T56" start="T55"/>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57"/>
+         <event end="T59" start="T58"/>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61"/>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63"/>
+         <event end="T65" start="T64"/>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66"/>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68"/>
+         <event end="T70" start="T69"/>
+         <event end="T71" start="T70"/>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73"/>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77"/>
+         <event end="T79" start="T78"/>
+         <event end="T80" start="T79"/>
+         <event end="T81" start="T80"/>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83"/>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94"/>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101"/>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="BOR-Phon"
+            display-name="BOR-Phon"
+            id="BOR-Phon"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0"/>
+         <event end="T2" start="T1"/>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3"/>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T7" start="T6"/>
+         <event end="T8" start="T7"/>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9"/>
+         <event end="T11" start="T10"/>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12"/>
+         <event end="T14" start="T13"/>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16"/>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19"/>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21"/>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23"/>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25"/>
+         <event end="T27" start="T26"/>
+         <event end="T28" start="T27"/>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29"/>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34"/>
+         <event end="T36" start="T35"/>
+         <event end="T37" start="T36"/>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40"/>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42"/>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46"/>
+         <event end="T48" start="T47"/>
+         <event end="T49" start="T48"/>
+         <event end="T50" start="T49"/>
+         <event end="T51" start="T50"/>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52"/>
+         <event end="T54" start="T53"/>
+         <event end="T55" start="T54"/>
+         <event end="T56" start="T55"/>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57"/>
+         <event end="T59" start="T58"/>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61"/>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63"/>
+         <event end="T65" start="T64"/>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66"/>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68"/>
+         <event end="T70" start="T69"/>
+         <event end="T71" start="T70"/>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73"/>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77"/>
+         <event end="T79" start="T78"/>
+         <event end="T80" start="T79"/>
+         <event end="T81" start="T80"/>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83"/>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94"/>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101"/>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="BOR-Morph"
+            display-name="BOR-Morph"
+            id="BOR-Morph"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0"/>
+         <event end="T2" start="T1"/>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3"/>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T7" start="T6"/>
+         <event end="T8" start="T7"/>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9"/>
+         <event end="T11" start="T10"/>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12"/>
+         <event end="T14" start="T13"/>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16"/>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19"/>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21"/>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23"/>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25"/>
+         <event end="T27" start="T26"/>
+         <event end="T28" start="T27"/>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29"/>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34"/>
+         <event end="T36" start="T35"/>
+         <event end="T37" start="T36"/>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40"/>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42"/>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46"/>
+         <event end="T48" start="T47"/>
+         <event end="T49" start="T48"/>
+         <event end="T50" start="T49"/>
+         <event end="T51" start="T50"/>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52"/>
+         <event end="T54" start="T53"/>
+         <event end="T55" start="T54"/>
+         <event end="T56" start="T55"/>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57"/>
+         <event end="T59" start="T58"/>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61"/>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63"/>
+         <event end="T65" start="T64"/>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66"/>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68"/>
+         <event end="T70" start="T69"/>
+         <event end="T71" start="T70"/>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73"/>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77"/>
+         <event end="T79" start="T78"/>
+         <event end="T80" start="T79"/>
+         <event end="T81" start="T80"/>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83"/>
+         <event end="T85" start="T84"/>
+         <event end="T86" start="T85"/>
+         <event end="T87" start="T86"/>
+         <event end="T88" start="T87"/>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T92" start="T91"/>
+         <event end="T93" start="T92"/>
+         <event end="T94" start="T93"/>
+         <event end="T95" start="T94"/>
+         <event end="T96" start="T95"/>
+         <event end="T97" start="T96"/>
+         <event end="T98" start="T97"/>
+         <event end="T99" start="T98"/>
+         <event end="T100" start="T99"/>
+         <event end="T101" start="T100"/>
+         <event end="T102" start="T101"/>
+         <event end="T103" start="T102"/>
+         <event end="T104" start="T103"/>
+         <event end="T105" start="T104"/>
+      </tier>
+      <tier category="CS"
+            display-name="CS"
+            id="CS"
+            speaker="SPK1"
+            type="a">
+         <event end="T1" start="T0"/>
+         <event end="T2" start="T1"/>
+         <event end="T3" start="T2"/>
+         <event end="T4" start="T3"/>
+         <event end="T5" start="T4"/>
+         <event end="T6" start="T5"/>
+         <event end="T7" start="T6"/>
+         <event end="T8" start="T7"/>
+         <event end="T9" start="T8"/>
+         <event end="T10" start="T9"/>
+         <event end="T11" start="T10"/>
+         <event end="T12" start="T11"/>
+         <event end="T13" start="T12"/>
+         <event end="T14" start="T13"/>
+         <event end="T15" start="T14"/>
+         <event end="T16" start="T15"/>
+         <event end="T17" start="T16"/>
+         <event end="T18" start="T17"/>
+         <event end="T19" start="T18"/>
+         <event end="T20" start="T19"/>
+         <event end="T21" start="T20"/>
+         <event end="T22" start="T21"/>
+         <event end="T23" start="T22"/>
+         <event end="T24" start="T23"/>
+         <event end="T25" start="T24"/>
+         <event end="T26" start="T25"/>
+         <event end="T27" start="T26"/>
+         <event end="T28" start="T27"/>
+         <event end="T29" start="T28"/>
+         <event end="T30" start="T29"/>
+         <event end="T31" start="T30"/>
+         <event end="T32" start="T31"/>
+         <event end="T33" start="T32"/>
+         <event end="T34" start="T33"/>
+         <event end="T35" start="T34"/>
+         <event end="T36" start="T35"/>
+         <event end="T37" start="T36"/>
+         <event end="T38" start="T37"/>
+         <event end="T39" start="T38"/>
+         <event end="T40" start="T39"/>
+         <event end="T41" start="T40"/>
+         <event end="T42" start="T41"/>
+         <event end="T43" start="T42"/>
+         <event end="T45" start="T43"/>
+         <event end="T46" start="T45"/>
+         <event end="T47" start="T46"/>
+         <event end="T48" start="T47"/>
+         <event end="T49" start="T48"/>
+         <event end="T50" start="T49"/>
+         <event end="T51" start="T50"/>
+         <event end="T52" start="T51"/>
+         <event end="T53" start="T52"/>
+         <event end="T54" start="T53"/>
+         <event end="T55" start="T54"/>
+         <event end="T56" start="T55"/>
+         <event end="T57" start="T56"/>
+         <event end="T58" start="T57"/>
+         <event end="T59" start="T58"/>
+         <event end="T60" start="T59"/>
+         <event end="T61" start="T60"/>
+         <event end="T62" start="T61"/>
+         <event end="T63" start="T62"/>
+         <event end="T64" start="T63"/>
+         <event end="T65" start="T64"/>
+         <event end="T66" start="T65"/>
+         <event end="T67" start="T66"/>
+         <event end="T68" start="T67"/>
+         <event end="T69" start="T68"/>
+         <event end="T70" start="T69"/>
+         <event end="T71" start="T70"/>
+         <event end="T72" start="T71"/>
+         <event end="T73" start="T72"/>
+         <event end="T74" start="T73"/>
+         <event end="T75" start="T74"/>
+         <event end="T76" start="T75"/>
+         <event end="T77" start="T76"/>
+         <event end="T78" start="T77"/>
+         <event end="T79" start="T78"/>
+         <event end="T80" start="T79"/>
+         <event end="T81" start="T80"/>
+         <event end="T82" start="T81"/>
+         <event end="T83" start="T82"/>
+         <event end="T84" start="T83"/>
+         <event end="T88" start="T84">{code switch}</event>
+         <event end="T89" start="T88"/>
+         <event end="T90" start="T89"/>
+         <event end="T91" start="T90"/>
+         <event end="T105" start="T91">{code switch}</event>
+      </tier>
+      <tier category="fr"
+            display-name="fr"
+            id="fr"
+            speaker="SPK1"
+            type="a">
+         <event end="T4" start="T0">Вчера утром опять работала.</event>
+         <event end="T10" start="T4">а, два дня уже стало.</event>
+         <event end="T18" start="T10">сегодня что говорят свадьба, тебя что лы не звалию</event>
+         <event end="T25" start="T18">не знаю, нет, а тебя пробабушку.</event>
+         <event end="T32" start="T25">тебя, прабабушка  не зовут.</event>
+         <event end="T38" start="T32">не знаю, почему говорят Толика внука моего не хотят звать.</event>
+         <event end="T39" start="T38"/>
+         <event end="T42" start="T39">шумел наверно.</event>
+         <event end="T45" start="T42">тебя то называли.</event>
+         <event end="T49" start="T45">но я сама пойдую.</event>
+         <event end="T52" start="T49">сама конечно.</event>
+         <event end="T57" start="T52">вертолёт ждут говорят, соревнования говорят будут.</event>
+         <event end="T60" start="T57">ох, кто мы были.</event>
+         <event end="T63" start="T60">почему не сидишь?</event>
+         <event end="T65" start="T63">шапку уронила.</event>
+         <event end="T69" start="T65">оу, почему нога болит? </event>
+         <event end="T71" start="T69">маленькая женщина.</event>
+         <event end="T75" start="T71">сейчас только была же.</event>
+         <event end="T76" start="T75">Да.</event>
+         <event end="T78" start="T76">да, была же.</event>
+         <event end="T82" start="T78">у Нгуомты дома были же.</event>
+         <event end="T88" start="T82">Да, в доме мы разговариваем, ты слишишь?</event>
+         <event end="T91" start="T88">Я не слушаю.</event>
+         <event end="T105" start="T91">я говорю Маша тə что знает (непонятно), Маша то наверно всё знает как свой. </event>
+      </tier>
+      <tier category="fr_ed"
+            display-name="fr_ed"
+            id="fr_ed"
+            speaker="SPK1"
+            type="a">
+         <event end="T4" start="T0"/>
+         <event end="T10" start="T4"/>
+         <event end="T18" start="T10"/>
+         <event end="T25" start="T18"/>
+         <event end="T32" start="T25"/>
+         <event end="T38" start="T32"/>
+         <event end="T39" start="T38"/>
+         <event end="T42" start="T39"/>
+         <event end="T45" start="T42"/>
+         <event end="T49" start="T45"/>
+         <event end="T52" start="T49"/>
+         <event end="T57" start="T52"/>
+         <event end="T60" start="T57"/>
+         <event end="T63" start="T60"/>
+         <event end="T65" start="T63"/>
+         <event end="T69" start="T65"/>
+         <event end="T71" start="T69"/>
+         <event end="T75" start="T71"/>
+         <event end="T76" start="T75"/>
+         <event end="T78" start="T76"/>
+         <event end="T82" start="T78"/>
+         <event end="T88" start="T82"/>
+         <event end="T91" start="T88"/>
+         <event end="T105" start="T91"/>
+      </tier>
+      <tier category="fe"
+            display-name="fe"
+            id="fe"
+            speaker="SPK1"
+            type="a">
+         <event end="T4" start="T0">Yesterday in the morning I got up, I have been working.</event>
+         <event end="T10" start="T4">Ah, well, it has been two days. </event>
+         <event end="T18" start="T10">Now why does she say there will be a wedding that day, why haven't you been called for it? </event>
+         <event end="T25" start="T18">I don't know, no, but you will be a grandmother.</event>
+         <event end="T32" start="T25">You, they won't call you a grandmother.</event>
+         <event end="T38" start="T32">I don't know, because they say that Tolik, my grandchild, won't be calling.</event>
+         <event end="T39" start="T38">Oh.</event>
+         <event end="T42" start="T39">It's been noisy, probably.</event>
+         <event end="T45" start="T42">... you called then.</event>
+         <event end="T49" start="T45">Well, I will go then.</event>
+         <event end="T52" start="T49">Same for me, why not.</event>
+         <event end="T57" start="T52">They are waiting for the helicopter, they say, it will be a competition.</event>
+         <event end="T60" start="T57">Oh, what have we been for.</event>
+         <event end="T63" start="T60">Why don't you sit down?</event>
+         <event end="T65" start="T63">Your capp falls down.</event>
+         <event end="T69" start="T65">Oh, why do my legs hurt?</event>
+         <event end="T71" start="T69">It's a little woman.</event>
+         <event end="T75" start="T71">Earlier it has been the same.</event>
+         <event end="T76" start="T75">Yes.</event>
+         <event end="T78" start="T76">Yes, it has been [like that].</event>
+         <event end="T82" start="T78">In the Nguomty tebt we haven't been.</event>
+         <event end="T88" start="T82">Yes, in the tent we were talking, do you hear?I don't </event>
+         <event end="T91" start="T88">I am not listening.</event>
+         <event end="T105" start="T91">I say, Masha, she knows, Masha probably knows how it is like.</event>
+      </tier>
+      <tier category="nt"
+            display-name="nt"
+            id="nt"
+            speaker="SPK1"
+            type="d">
+         <event end="T4" start="T0"/>
+         <event end="T10" start="T4"/>
+         <event end="T18" start="T10"/>
+         <event end="T25" start="T18">?</event>
+         <event end="T32" start="T25"/>
+         <event end="T38" start="T32"/>
+         <event end="T39" start="T38"/>
+         <event end="T42" start="T39"/>
+         <event end="T45" start="T42"/>
+         <event end="T49" start="T45"/>
+         <event end="T52" start="T49"/>
+         <event end="T57" start="T52"/>
+         <event end="T60" start="T57"/>
+         <event end="T63" start="T60"/>
+         <event end="T65" start="T63"/>
+         <event end="T69" start="T65"/>
+         <event end="T71" start="T69"/>
+         <event end="T75" start="T71"/>
+         <event end="T76" start="T75"/>
+         <event end="T78" start="T76"/>
+         <event end="T82" start="T78"/>
+         <event end="T88" start="T82"/>
+         <event end="T91" start="T88"/>
+         <event end="T105" start="T91"/>
+      </tier>
+   </basic-body>
+   <tierformat-table>
+      <timeline-item-format absolute-time-format="time"
+                            miliseconds-digits="1"
+                            show-every-nth-absolute="1"
+                            show-every-nth-numbering="1"/>
+      <tier-format tierref="TIE0">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">#R00G99B00</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="EMPTY">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">white</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">2</property>
+         <property name="font-name">Charis</property>
+      </tier-format>
+      <tier-format tierref="SyF">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="gr">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="go">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="nto">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">brown</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ps">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="mp">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="st">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Bold</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="CS">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ge">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="srl">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">red</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="mc">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="BOR-Morph">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="mb">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ltr">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">red</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="src">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">red</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ROW-LABEL">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Bold</property>
+         <property name="font-color">blue</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Times New Roman</property>
+      </tier-format>
+      <tier-format tierref="lto">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">red</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="fr">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">#RccG00B00</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="fo">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ltg">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">red</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="SeR">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="IST">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="BOR-Typ">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="#">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="fg">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="SUB-ROW-LABEL">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Right</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">8</property>
+         <property name="font-name">Times New Roman</property>
+      </tier-format>
+      <tier-format tierref="fe">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">blue</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="stl">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Bold</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="BOR">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ref">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="BOR-Phon">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="EMPTY-EDITOR">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">white</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">lightGray</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">2</property>
+         <property name="font-name">Charis</property>
+      </tier-format>
+      <tier-format tierref="fr_ed">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">#RccG00B00</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="nt">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="tx">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">#R00G00B99</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="ts">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">#R00G99B33</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="COLUMN-LABEL">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">blue</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis</property>
+      </tier-format>
+      <tier-format tierref="TIE4">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="TIE3">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="TIE2">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">black</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+      <tier-format tierref="TIE1">
+         <property name="row-height-calculation">Generous</property>
+         <property name="fixed-row-height">10</property>
+         <property name="font-face">Plain</property>
+         <property name="font-color">#R00G99B00</property>
+         <property name="chunk-border-style">solid</property>
+         <property name="bg-color">white</property>
+         <property name="text-alignment">Left</property>
+         <property name="chunk-border-color">#R00G00B00</property>
+         <property name="chunk-border"/>
+         <property name="font-size">12</property>
+         <property name="font-name">Charis SIL</property>
+      </tier-format>
+   </tierformat-table>
+</basic-transcription>
