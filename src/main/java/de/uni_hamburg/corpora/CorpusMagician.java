@@ -346,6 +346,11 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+                case "xsltcheckerinel":
+                    XSLTChecker xci = new XSLTChecker();
+                    xci.setXSLresource("/xsl/inel-checks.xsl");
+                    corpusfunctions.add(xci);
+                    break;
                  case "exb2inelisotei":
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
                     corpusfunctions.add(eiit);

@@ -190,7 +190,6 @@
 									<!-- the further morpheme based segmentation and references here -->
 									<!-- we need to throw an error message when the morpheme annotations aren't consistent -->
 									<!-- e.g. one dash more in one tier than the other -->
-									<xsl:if test="count(*:annotations/*:annotation[@level = 'mb' and @value != '']/tokenize(@value, '-'))"> </xsl:if>
 									<xsl:choose>
 										<xsl:when test="@level = ('mb')">
 											<!-- this needs to be changed for INEL -->
