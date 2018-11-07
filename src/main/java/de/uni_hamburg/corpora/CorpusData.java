@@ -18,5 +18,8 @@ public interface CorpusData {
     public String toSaveableString();
 
     public String toUnformattedString();
+    
+    //needed if there were changes to the file so they are represented in the object too
+    public void updateUnformattedString(String newUnformattedString);
 
 }

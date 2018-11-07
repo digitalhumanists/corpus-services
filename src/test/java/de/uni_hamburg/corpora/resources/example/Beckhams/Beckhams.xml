@@ -1,0 +1,2029 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0"
+     xmlns:tei="http://www.tei-c.org/ns/1.0"
+     xmlns:tesla="http://www.exmaralda.org"
+     xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title/>
+         </titleStmt>
+         <publicationStmt>
+            <authority><!--Fill me in--></authority>
+            <availability>
+               <licence target="someurl"/>
+               <p><!--Fill me in--></p>
+            </availability>
+            <distributor><!--Fill me in--></distributor>
+            <address>
+               <addrLine><!--Fill me in--></addrLine>
+            </address>
+         </publicationStmt>
+         <sourceDesc>
+            <recordingStmt>
+               <recording type="video">
+                  <media mimeType="audio/xxx"
+                         url="file:/E:/Anne/exmaralda-demo-corpus/Beckhams/Beckhams.mp3"/>
+                  <media mimeType="audio/xxx"
+                         url="file:/E:/Anne/exmaralda-demo-corpus/Beckhams/Beckhams.wav"/>
+                  <media mimeType="video/xxx"
+                         url="file:/E:/Anne/exmaralda-demo-corpus/Beckhams/Beckhams.mpg"/>
+                  <media mimeType="video/xxx"
+                         url="file:/E:/Anne/exmaralda-demo-corpus/Beckhams/Beckhams.webm"/>
+                  <broadcast>
+                     <ab><!--Fill me in--></ab>
+                  </broadcast>
+                  <equipment>
+                     <ab><!--Fill me in--></ab>
+                     <ab><!--Fill me in--></ab>
+                  </equipment>
+               </recording>
+            </recordingStmt>
+         </sourceDesc>
+      </fileDesc>
+      <profileDesc>
+         <particDesc>
+            <person n="PAR" sex="1" xml:id="SPK0">
+               <persName>
+                  <abbr>PAR</abbr>
+               </persName>
+            </person>
+            <person n="VIC" sex="2" xml:id="SPK1">
+               <persName>
+                  <abbr>VIC</abbr>
+               </persName>
+            </person>
+            <person n="DAV" sex="1" xml:id="SPK2">
+               <persName>
+                  <abbr>DAV</abbr>
+               </persName>
+            </person>
+         </particDesc>
+         <settingDesc>
+            <place><!--Fill me in--></place>
+            <setting>
+               <activity><!--Fill me in--></activity>
+            </setting>
+         </settingDesc>
+      </profileDesc>
+      <encodingDesc>
+         <appInfo>
+            <application ident="EXMARaLDA" version="1.6.1">
+               <label>EXMARaLDA Partitur-Editor</label>
+               <desc>Transcription Tool providing a TEI Export</desc>
+            </application>
+         </appInfo>
+         <transcriptionDesc ident="HIAT" version="2004">
+            <desc><!--Fill me in--></desc>
+            <label><!--Fill me in--></label>
+         </transcriptionDesc>
+      </encodingDesc>
+      <revisionDesc>
+         <change when="2018-10-08T12:56:12.91+02:00">Created by XSL transformation from an EXMARaLDA basic transcription</change>
+      </revisionDesc>
+   </teiHeader>
+   <text xml:lang="en">
+      <timeline unit="s">
+         <when xml:id="T0"/>
+         <when interval="2.1866329681774834" since="T0" xml:id="T1"/>
+         <when interval="2.4399623974175575" since="T0" xml:id="T2"/>
+         <when interval="2.706624954512373" since="T0" xml:id="T3"/>
+         <when interval="3.746608927182151" since="T0" xml:id="T4"/>
+         <when interval="4.713260696650855" since="T0" xml:id="T5"/>
+         <when interval="5.0732551487288555" since="T0" xml:id="T6"/>
+         <when interval="7.586549749347489" since="T0" xml:id="T7"/>
+         <when interval="8.533201827034082" since="T0" xml:id="T8"/>
+         <when interval="11.366491496166491" since="T0" xml:id="T9"/>
+         <when interval="13.919785480349345" since="T0" xml:id="T10"/>
+         <when interval="15.479761439354013" since="T0" xml:id="T11"/>
+         <when interval="16.566411359515385" since="T0" xml:id="T12"/>
+         <when interval="17.859724761425237" since="T0" xml:id="T13"/>
+         <when interval="20.799679453395573" since="T0" xml:id="T14"/>
+         <when interval="21.32633800365783" since="T0" xml:id="T15"/>
+         <when interval="23.8996316796228" since="T0" xml:id="T16"/>
+         <when interval="29.192883437954876" since="T0" xml:id="T17"/>
+         <when interval="30.475523307812296" since="T0" xml:id="T18"/>
+         <when interval="31.90592430921571" since="T0" xml:id="T19"/>
+         <when interval="33.459484351471914" since="T0" xml:id="T20"/>
+         <when interval="35.67945013928625" since="T0" xml:id="T21"/>
+         <when interval="37.35942424898358" since="T0" xml:id="T22"/>
+         <when interval="38.42763359312005" since="T0" xml:id="T23"/>
+         <when interval="41.39269542504267" since="T0" xml:id="T24"/>
+         <when interval="42.352680630584" since="T0" xml:id="T25"/>
+         <when interval="46.60594841624631" since="T0" xml:id="T26"/>
+         <when interval="47.505934546441296" since="T0" xml:id="T27"/>
+         <when interval="51.00116062896764" since="T0" xml:id="T28"/>
+         <when interval="52.15252960381845" since="T0" xml:id="T29"/>
+         <when interval="53.97916811991794" since="T0" xml:id="T30"/>
+         <when interval="56.28579923878808" since="T0" xml:id="T31"/>
+         <when interval="59.19908767504894" since="T0" xml:id="T32"/>
+         <when interval="59.7924118645849" since="T0" xml:id="T33"/>
+         <when interval="60.61239922765146" since="T0" xml:id="T34"/>
+         <when interval="61.36572095144431" since="T0" xml:id="T35"/>
+         <when interval="62.619034969789936" since="T0" xml:id="T36"/>
+         <when interval="63.13902695612483" since="T0" xml:id="T37"/>
+         <when interval="65.96565006132987" since="T0" xml:id="T38"/>
+         <when interval="66.26564543806154" since="T0" xml:id="T39"/>
+         <when interval="67.53185508185396" since="T0" xml:id="T40"/>
+         <when interval="68.5256106094401" since="T0" xml:id="T41"/>
+         <when interval="69.05226915970235" since="T0" xml:id="T42"/>
+         <when interval="69.35893110036139" since="T0" xml:id="T43"/>
+         <when interval="69.61226052960147" since="T0" xml:id="T44"/>
+         <when interval="71.01890551827661" since="T0" xml:id="T45"/>
+         <when interval="73.41220196820258" since="T0" xml:id="T46"/>
+         <when interval="74.39218686552601" since="T0" xml:id="T47"/>
+         <when interval="77.31214186571425" since="T0" xml:id="T48"/>
+         <when interval="79.55877390923807" since="T0" xml:id="T49"/>
+         <when interval="80.19209748233826" since="T0" xml:id="T50"/>
+         <when interval="81.54540995959444" since="T0" xml:id="T51"/>
+         <when interval="81.85375414850432" since="T0" xml:id="T52"/>
+         <when interval="83.01205402361593" since="T0" xml:id="T53"/>
+         <when interval="83.23871719714651" since="T0" xml:id="T54"/>
+         <when interval="85.10535509681021" since="T0" xml:id="T55"/>
+         <when interval="87.27198837320559" since="T0" xml:id="T56"/>
+         <when interval="87.91864251838838" since="T0" xml:id="T57"/>
+         <when interval="90.7319350515108" since="T0" xml:id="T58"/>
+         <when interval="93.20824440215493" since="T0" xml:id="T59"/>
+         <when interval="96.67851007472518" since="T0" xml:id="T60"/>
+         <when interval="97.67182809990338" since="T0" xml:id="T61"/>
+         <when interval="98.51181515475206" since="T0" xml:id="T62"/>
+         <when interval="101.30161995968729" since="T0" xml:id="T63"/>
+         <when interval="102.7784160682691" since="T0" xml:id="T64"/>
+         <when interval="104.5517220729496" since="T0" xml:id="T65"/>
+         <when interval="106.13836428766375" since="T0" xml:id="T66"/>
+         <when interval="107.02501729000402" since="T0" xml:id="T67"/>
+         <when interval="109.63164378560583" since="T0" xml:id="T68"/>
+         <when interval="113.77157998450284" since="T0" xml:id="T69"/>
+         <when interval="114.37823730189355" since="T0" xml:id="T70"/>
+         <when interval="115.08084919465172" since="T0" xml:id="T71"/>
+         <when interval="118.91150077250539" since="T0" xml:id="T72"/>
+         <when interval="119.68702248379489" since="T0" xml:id="T73"/>
+         <when interval="122.0381192544421" since="T0" xml:id="T74"/>
+         <when interval="123.0714366631845" since="T0" xml:id="T75"/>
+         <when interval="124.9180748710661" since="T0" xml:id="T76"/>
+         <when interval="126.39805206294233" since="T0" xml:id="T77"/>
+         <when interval="129.69800120699065" since="T0" xml:id="T78"/>
+         <when interval="134.37792908400468" since="T0" xml:id="T79"/>
+         <when interval="136.27123323937784" since="T0" xml:id="T80"/>
+         <when interval="137.31121721204764" since="T0" xml:id="T81"/>
+         <when interval="139.53118299986198" since="T0" xml:id="T82"/>
+         <when xml:id="T83"/>
+         <when interval="139.9778427829958" since="T0" xml:id="T84"/>
+         <when interval="140.9844939360287" since="T0" xml:id="T85"/>
+         <when interval="141.778557219448" since="T0" xml:id="T86"/>
+         <when interval="142.4044720525586" since="T0" xml:id="T87"/>
+         <when interval="142.6978008653629" since="T0" xml:id="T88"/>
+         <when interval="146.9777349067347" since="T0" xml:id="T89"/>
+         <when interval="147.97105293191288" since="T0" xml:id="T90"/>
+         <when interval="152.89063857386276" since="T0" xml:id="T91"/>
+         <when interval="154.74428188212116" since="T0" xml:id="T92"/>
+         <when interval="158.2908938914822" since="T0" xml:id="T93"/>
+         <when interval="160.6862712357286" since="T0" xml:id="T94"/>
+         <when interval="165.46411667733273" since="T0" xml:id="T95"/>
+         <when interval="167.13742422310273" since="T0" xml:id="T96"/>
+         <when interval="169.3173906273528" since="T0" xml:id="T97"/>
+         <when interval="170.63737028497212" since="T0" xml:id="T98"/>
+         <when interval="170.95736535348593" since="T0" xml:id="T99"/>
+         <when interval="173.50399277374143" since="T0" xml:id="T100"/>
+         <when interval="177.20393575343195" since="T0" xml:id="T101"/>
+         <when interval="177.84392589045953" since="T0" xml:id="T102"/>
+         <when interval="179.670564406559" since="T0" xml:id="T103"/>
+         <when interval="180.61054992031822" since="T0" xml:id="T104"/>
+         <when interval="181.65720045691538" since="T0" xml:id="T105"/>
+         <when interval="182.33052341357975" since="T0" xml:id="T106"/>
+         <when interval="182.59141437012374" since="T0" xml:id="T107"/>
+         <when interval="183.20384328806531" since="T0" xml:id="T108"/>
+         <when interval="183.77716778581916" since="T0" xml:id="T109"/>
+         <when interval="186.26379613072834" since="T0" xml:id="T110"/>
+         <when interval="186.98378503488428" since="T0" xml:id="T111"/>
+         <when interval="190.57706299173694" since="T0" xml:id="T112"/>
+         <when interval="190.78372647348542" since="T0" xml:id="T113"/>
+         <when interval="191.010389647016" since="T0" xml:id="T114"/>
+         <when interval="193.3303538937409" since="T0" xml:id="T115"/>
+         <when interval="193.79701336865682" since="T0" xml:id="T116"/>
+         <when interval="194.3436716107012" since="T0" xml:id="T117"/>
+         <when interval="196.10364448752696" since="T0" xml:id="T118"/>
+         <when interval="200.45024416817245" since="T0" xml:id="T119"/>
+         <when interval="201.9502210518308" since="T0" xml:id="T120"/>
+         <when interval="206.16348945392886" since="T0" xml:id="T121"/>
+         <when interval="208.5901187234917" since="T0" xml:id="T122"/>
+         <when interval="209.423439214413" since="T0" xml:id="T123"/>
+         <when interval="212.04339883786952" since="T0" xml:id="T124"/>
+         <when interval="216.05667032214652" since="T0" xml:id="T125"/>
+         <when interval="217.75664412362596" since="T0" xml:id="T126"/>
+         <when interval="218.36330144101663" since="T0" xml:id="T127"/>
+         <when interval="219.92327740002133" since="T0" xml:id="T128"/>
+         <when interval="221.20325767407644" since="T0" xml:id="T129"/>
+         <when interval="225.1231972633702" since="T0" xml:id="T130"/>
+         <when interval="227.99648631606684" since="T0" xml:id="T131"/>
+         <when interval="230.3176962344605" since="T0" xml:id="T132"/>
+         <when interval="232.0830900035449" since="T0" xml:id="T133"/>
+         <when interval="235.31637350831954" since="T0" xml:id="T134"/>
+         <when interval="238.09633066603297" since="T0" xml:id="T135"/>
+         <when interval="239.43631001543443" since="T0" xml:id="T136"/>
+         <when interval="240.33629614562943" since="T0" xml:id="T137"/>
+         <when interval="240.68517097740667" since="T0" xml:id="T138"/>
+         <when interval="242.70292633984593" since="T0" xml:id="T139"/>
+         <when interval="244.9295586915876" since="T0" xml:id="T140"/>
+         <when interval="245.8562110774921" since="T0" xml:id="T141"/>
+         <when interval="246.7295309519776" since="T0" xml:id="T142"/>
+         <when interval="248.18950845207172" since="T0" xml:id="T143"/>
+         <when interval="249.02282894299304" since="T0" xml:id="T144"/>
+         <when interval="250.41614080381342" since="T0" xml:id="T145"/>
+         <when interval="251.12279658011468" since="T0" xml:id="T146"/>
+         <when interval="251.82945235641594" since="T0" xml:id="T147"/>
+         <when interval="253.11609919439843" since="T0" xml:id="T148"/>
+         <when interval="254.35704361170696" since="T0" xml:id="T149"/>
+         <when interval="255.23606652330224" since="T0" xml:id="T150"/>
+         <when interval="256.3160498795362" since="T0" xml:id="T151"/>
+         <when interval="258.5693484869874" since="T0" xml:id="T152"/>
+         <when interval="259.1775209325434" since="T0" xml:id="T153"/>
+         <when interval="260.055992242791" since="T0" xml:id="T154"/>
+         <when interval="260.7559814551649" since="T0" xml:id="T155"/>
+         <when interval="261.15597529080713" since="T0" xml:id="T156"/>
+         <when xml:id="T157"/>
+         <when interval="262.17595957169476" since="T0" xml:id="T158"/>
+         <when interval="265.691" since="T0" xml:id="T159"/>
+      </timeline>
+      <body>
+         <annotationBlock end="T9" start="T0" who="SPK0" xml:id="au1">
+            <u xml:id="u1">
+               <seg subtype="declarative" type="utterance" xml:id="seg0">
+                  <w xml:id="w1">And</w>
+                  <w xml:id="w2">what</w>
+                  <w xml:id="w3">it</w>
+                  <w xml:id="w4">comes</w>
+                  <w xml:id="w5">to</w>
+                  <w xml:id="w6">is</w>
+                  <w xml:id="w7">your</w>
+                  <w xml:id="w8">determination</w>
+                  <anchor synch="T1"/>
+                  <w xml:id="w9">at</w>
+                  <anchor synch="T2"/>
+                  <w xml:id="w10">all</w>
+                  <anchor synch="T3"/>
+                  <w xml:id="w11">cost</w>
+                  <w xml:id="w12">to</w>
+                  <w xml:id="w13">actually</w>
+                  <anchor synch="T4"/>
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w14">succeed</w>
+               </seg>
+               <anchor synch="T5"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg1">
+                  <w xml:id="w15">I</w>
+                  <w xml:id="w16">mean</w>
+                  <anchor synch="T6"/>
+                  <w xml:id="w17">is</w>
+                  <w xml:id="w18">that</w>
+                  <w type="repair" xml:id="w19">a</w>
+                  <w xml:id="w20">sort</w>
+                  <w xml:id="w21">of</w>
+                  <w xml:id="w22">a</w>
+                  <w xml:id="w23">message</w>
+                  <w xml:id="w24">that</w>
+                  <w xml:id="w25">you</w>
+                  <w xml:id="w26">hope</w>
+                  <w xml:id="w27">comes</w>
+                  <w xml:id="w28">across</w>
+                  <w xml:id="w29">to</w>
+                  <anchor synch="T7"/>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w30">to</w>
+                  <w xml:id="w31">kids</w>
+               </seg>
+               <anchor synch="T8"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg2">
+                  <w xml:id="w32">Because</w>
+                  <w xml:id="w33">a</w>
+                  <w xml:id="w34">lot</w>
+                  <w xml:id="w35">of</w>
+                  <w xml:id="w36">kids</w>
+                  <w xml:id="w37">think</w>
+                  <w xml:id="w38">that</w>
+                  <w xml:id="w39">people</w>
+                  <w xml:id="w40">just</w>
+                  <w xml:id="w41">become</w>
+                  <w xml:id="w42">famous</w>
+                  <w xml:id="w43">over</w>
+                  <w xml:id="w44">night</w>
+                  <pc xml:id="pc1">,</pc>
+                  <w xml:id="w45">don't</w>
+                  <w xml:id="w46">they</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T3" start="T2" who="SPK1" xml:id="au20">
+            <u xml:id="u20">
+               <seg subtype="modeless" type="utterance" xml:id="seg37">
+                  <w xml:id="w47">Yeah</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T6" start="T5" who="SPK1" xml:id="au21">
+            <u xml:id="u21">
+               <seg subtype="modeless" type="utterance" xml:id="seg38">
+                  <w xml:id="w48">Mhm</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T23" start="T9" who="SPK1" xml:id="au22">
+            <u xml:id="u22">
+               <seg subtype="declarative" type="utterance" xml:id="seg39">
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w49">Yeah</w>
+                  <pc xml:id="pc2">,</pc>
+                  <w xml:id="w50">I</w>
+                  <w xml:id="w51">think</w>
+                  <w xml:id="w52">that</w>
+                  <w xml:id="w53">people</w>
+                  <w xml:id="w54">don't</w>
+                  <w xml:id="w55">realise</w>
+                  <w xml:id="w56">that</w>
+                  <anchor synch="T10"/>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w57">it's</w>
+                  <w xml:id="w58">all</w>
+                  <w xml:id="w59">about</w>
+                  <w xml:id="w60">hard</w>
+                  <w xml:id="w61">work</w>
+               </seg>
+               <anchor synch="T11"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg40">
+                  <w xml:id="w62">I</w>
+                  <w xml:id="w63">mean</w>
+                  <w xml:id="w64">I</w>
+                  <w xml:id="w65">worked</w>
+                  <w xml:id="w66">hard</w>
+                  <w type="repair" xml:id="w67">when</w>
+                  <anchor synch="T12"/>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w68">when</w>
+                  <w xml:id="w69">I</w>
+                  <w xml:id="w70">was</w>
+                  <w xml:id="w71">at</w>
+                  <w xml:id="w72">school</w>
+               </seg>
+               <anchor synch="T13"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg41">
+                  <w xml:id="w73">I've</w>
+                  <w xml:id="w74">always</w>
+                  <w xml:id="w75">had</w>
+                  <w xml:id="w76">it</w>
+                  <w xml:id="w77">in</w>
+                  <w xml:id="w78">my</w>
+                  <w xml:id="w79">personality</w>
+                  <w xml:id="w80">to</w>
+                  <w xml:id="w81">want</w>
+                  <w xml:id="w82">to</w>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T14"/>
+                  <w xml:id="w83">succeed</w>
+               </seg>
+               <anchor synch="T15"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg42">
+                  <w xml:id="w84">You</w>
+                  <w xml:id="w85">know</w>
+                  <pc xml:id="pc3">,</pc>
+                  <w xml:id="w86">even</w>
+                  <w xml:id="w87">when</w>
+                  <w xml:id="w88">it</w>
+                  <w xml:id="w89">was</w>
+                  <pc xml:id="pc4">,</pc>
+                  <w xml:id="w90">you</w>
+                  <w xml:id="w91">know</w>
+                  <pc xml:id="pc5">,</pc>
+                  <w xml:id="w92">I</w>
+                  <w xml:id="w93">wanna</w>
+                  <w xml:id="w94">do</w>
+                  <w xml:id="w95">my</w>
+                  <w xml:id="w96">homework</w>
+                  <w xml:id="w97">right</w>
+               </seg>
+               <anchor synch="T16"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg43">
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w98">Ehm</w>
+                  <pause dur="PT0.6S"/>
+                  <w xml:id="w99">but</w>
+                  <w xml:id="w100">yeah</w>
+                  <pc xml:id="pc6">,</pc>
+                  <w xml:id="w101">I</w>
+                  <w xml:id="w102">mean</w>
+                  <pc xml:id="pc7">,</pc>
+                  <w xml:id="w103">I'm</w>
+                  <w xml:id="w104">one</w>
+                  <w xml:id="w105">of</w>
+                  <w xml:id="w106">these</w>
+                  <w xml:id="w107">people</w>
+                  <pc xml:id="pc8">,</pc>
+                  <w xml:id="w108">you</w>
+                  <w xml:id="w109">know</w>
+                  <pc xml:id="pc9">,</pc>
+                  <w xml:id="w110">when</w>
+                  <w xml:id="w111">someone</w>
+                  <w xml:id="w112">kicks</w>
+                  <w xml:id="w113">me</w>
+                  <pc xml:id="pc10">,</pc>
+                  <w xml:id="w114">you</w>
+                  <w xml:id="w115">know</w>
+                  <pc xml:id="pc11">,</pc>
+                  <w xml:id="w116">I</w>
+                  <anchor synch="T17"/>
+                  <w xml:id="w117">try</w>
+                  <w xml:id="w118">hard</w>
+                  <w xml:id="w119">to</w>
+                  <w xml:id="w120">get</w>
+                  <w xml:id="w121">up</w>
+                  <w xml:id="w122">again</w>
+                  <pc xml:id="pc12">,</pc>
+                  <anchor synch="T18"/>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w123">because</w>
+                  <w xml:id="w124">I</w>
+                  <w xml:id="w125">know</w>
+                  <w xml:id="w126">what</w>
+                  <w xml:id="w127">I</w>
+                  <w xml:id="w128">wanna</w>
+                  <w xml:id="w129">do</w>
+               </seg>
+               <anchor synch="T19"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg44">
+                  <w xml:id="w130">I</w>
+                  <w xml:id="w131">love</w>
+                  <w xml:id="w132">what</w>
+                  <w xml:id="w133">I</w>
+                  <w xml:id="w134">do</w>
+                  <w xml:id="w135">at</w>
+                  <w xml:id="w136">the</w>
+                  <w xml:id="w137">end</w>
+                  <w xml:id="w138">of</w>
+                  <w xml:id="w139">the</w>
+                  <w xml:id="w140">day</w>
+               </seg>
+               <anchor synch="T20"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg45">
+                  <w xml:id="w141">I</w>
+                  <w xml:id="w142">know</w>
+                  <w xml:id="w143">that</w>
+                  <w xml:id="w144">I'm</w>
+                  <w xml:id="w145">putting</w>
+                  <w xml:id="w146">myself</w>
+                  <w xml:id="w147">up</w>
+                  <w xml:id="w148">for</w>
+                  <w xml:id="w149">criticism</w>
+                  <anchor synch="T21"/>
+                  <w xml:id="w150">and</w>
+                  <w xml:id="w151">I'm</w>
+                  <w xml:id="w152">very</w>
+                  <w xml:id="w153">much</w>
+                  <w xml:id="w154">aware</w>
+                  <w xml:id="w155">of</w>
+                  <w xml:id="w156">that</w>
+                  <pc xml:id="pc13">,</pc>
+                  <anchor synch="T22"/>
+                  <w xml:id="w157">but</w>
+                  <w xml:id="w158">I</w>
+                  <w xml:id="w159">love</w>
+                  <w xml:id="w160">what</w>
+                  <w xml:id="w161">I</w>
+                  <w xml:id="w162">do</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T33" start="T23" who="SPK0" xml:id="au2">
+            <u xml:id="u2">
+               <seg subtype="declarative" type="utterance" xml:id="seg3">
+                  <w xml:id="w163">And</w>
+                  <w type="repair" xml:id="w164">when</w>
+                  <w xml:id="w165">and</w>
+                  <w xml:id="w166">the</w>
+                  <w xml:id="w167">other</w>
+                  <w xml:id="w168">thing</w>
+                  <w xml:id="w169">that</w>
+                  <w xml:id="w170">comes</w>
+                  <w xml:id="w171">to</w>
+                  <w xml:id="w172">in</w>
+                  <w xml:id="w173">the</w>
+                  <w xml:id="w174">book</w>
+                  <pc xml:id="pc14">,</pc>
+                  <w xml:id="w175">too</w>
+                  <pc xml:id="pc15">,</pc>
+                  <anchor synch="T24"/>
+                  <w type="repair" xml:id="w176">is</w>
+                  <w xml:id="w177">is</w>
+                  <w type="repair" xml:id="w178">the</w>
+                  <anchor synch="T25"/>
+                  <w xml:id="w179">the</w>
+                  <w xml:id="w180">deep</w>
+                  <pc xml:id="pc16">,</pc>
+                  <w xml:id="w181">affectionate</w>
+                  <w xml:id="w182">love</w>
+                  <w xml:id="w183">that</w>
+                  <w type="repair" xml:id="w184">yo</w>
+                  <w xml:id="w185">that</w>
+                  <w xml:id="w186">the</w>
+                  <w xml:id="w187">two</w>
+                  <w xml:id="w188">of</w>
+                  <w xml:id="w189">you</w>
+                  <w xml:id="w190">have</w>
+                  <w xml:id="w191">for</w>
+                  <w xml:id="w192">each</w>
+                  <w xml:id="w193">other</w>
+                  <w xml:id="w194">and</w>
+                  <w xml:id="w195">the</w>
+                  <w xml:id="w196">way</w>
+                  <w xml:id="w197">that</w>
+                  <w xml:id="w198">you</w>
+                  <w xml:id="w199">are</w>
+                  <w xml:id="w200">very</w>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T26"/>
+                  <w xml:id="w201">family</w>
+                  <w xml:id="w202">centered</w>
+               </seg>
+               <anchor synch="T27"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg4">
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w203">But</w>
+                  <w xml:id="w204">when</w>
+                  <w xml:id="w205">you</w>
+                  <w xml:id="w206">first</w>
+                  <w xml:id="w207">met</w>
+                  <w xml:id="w208">him</w>
+                  <w xml:id="w209">when</w>
+                  <w xml:id="w210">you</w>
+                  <w xml:id="w211">first</w>
+                  <w xml:id="w212">met</w>
+                  <pc xml:id="pc17">,</pc>
+                  <w xml:id="w213">the</w>
+                  <w type="repair" xml:id="w214">two</w>
+                  <w xml:id="w215">yes</w>
+                  <pc xml:id="pc18">,</pc>
+                  <w xml:id="w216">the</w>
+                  <w xml:id="w217">two</w>
+                  <w xml:id="w218">of</w>
+                  <w xml:id="w219">you</w>
+                  <pc xml:id="pc19">,</pc>
+                  <anchor synch="T28"/>
+                  <w xml:id="w220">I</w>
+                  <w xml:id="w221">mean</w>
+                  <w xml:id="w222">was</w>
+                  <w xml:id="w223">it</w>
+                  <w xml:id="w224">like</w>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T29"/>
+                  <w xml:id="w225">bow</w>
+                  <pc xml:id="pc20">,</pc>
+                  <w xml:id="w226">wham</w>
+                  <pc xml:id="pc21">,</pc>
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w227">smack</w>
+               </seg>
+               <anchor synch="T30"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg5">
+                  <w xml:id="w228">I</w>
+                  <w xml:id="w229">mean</w>
+                  <w xml:id="w230">did</w>
+                  <w xml:id="w231">you</w>
+                  <w xml:id="w232">think</w>
+                  <pc xml:id="pc22">:</pc>
+                  <pc xml:id="pc23">"</pc>
+                  <w xml:id="w233">Good</w>
+                  <w xml:id="w234">God</w>
+                  <w type="repair" xml:id="w235">this</w>
+                  <w xml:id="w236">this</w>
+                  <w xml:id="w237">is</w>
+                  <w xml:id="w238">the</w>
+                  <w xml:id="w239">guy</w>
+                  <pc xml:id="pc24">,</pc>
+                  <anchor synch="T31"/>
+                  <w xml:id="w240">this</w>
+                  <w xml:id="w241">is</w>
+                  <w xml:id="w242">the</w>
+                  <w xml:id="w243">girl</w>
+                  <w xml:id="w244">I'm</w>
+                  <w xml:id="w245">gonna</w>
+                  <w xml:id="w246">get</w>
+                  <w xml:id="w247">married</w>
+                  <w xml:id="w248">to</w>
+                  <w xml:id="w249">and</w>
+                  <w xml:id="w250">live</w>
+                  <w xml:id="w251">the</w>
+                  <w xml:id="w252">rest</w>
+                  <w xml:id="w253">of</w>
+                  <w xml:id="w254">my</w>
+                  <w xml:id="w255">life</w>
+                  <w xml:id="w256">with</w>
+                  <pc xml:id="pc25">"</pc>
+                  <anchor synch="T32"/>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w257">David</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T36" start="T33" who="SPK2" xml:id="au35">
+            <u xml:id="u35">
+               <seg subtype="declarative" type="utterance" xml:id="seg79">
+                  <w xml:id="w258">I</w>
+                  <w xml:id="w259">felt</w>
+                  <w xml:id="w260">that</w>
+                  <pc xml:id="pc26">,</pc>
+                  <w xml:id="w261">yeah</w>
+               </seg>
+               <anchor synch="T34"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg80">
+                  <w xml:id="w262">Definitely</w>
+               </seg>
+               <anchor synch="T35"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg81">
+                  <w xml:id="w263">You</w>
+                  <w xml:id="w264">did</w>
+                  <w xml:id="w265">I</w>
+                  <w xml:id="w266">hope</w>
+                  <pc xml:id="pc27">,</pc>
+                  <w xml:id="w267">didn't</w>
+                  <w xml:id="w268">you</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T35" start="T34" who="SPK0" xml:id="au3">
+            <u xml:id="u3">
+               <seg subtype="interrogative" type="utterance" xml:id="seg6">
+                  <w xml:id="w269">Did</w>
+                  <w xml:id="w270">you</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T38" start="T36" who="SPK1" xml:id="au23">
+            <u xml:id="u23">
+               <seg subtype="declarative" type="utterance" xml:id="seg46">
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w271">Yeah</w>
+               </seg>
+               <anchor synch="T37"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg47">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <incident end="T38" start="T37">
+            <desc>((laughter)) </desc>
+         </incident>
+         <annotationBlock end="T40" start="T37" who="SPK0" xml:id="au4">
+            <u xml:id="u4">
+               <seg subtype="interrogative" type="utterance" xml:id="seg7">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T38"/>
+                  <w xml:id="w272">Was</w>
+                  <anchor synch="T39"/>
+                  <w xml:id="w273">it</w>
+                  <w xml:id="w274">really</w>
+                  <w xml:id="w275">like</w>
+                  <w xml:id="w276">that</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T48" start="T37" who="SPK2" xml:id="au36">
+            <u xml:id="u36">
+               <seg subtype="declarative" type="utterance" xml:id="seg82">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T38"/>
+                  <w xml:id="w277">Yeah</w>
+               </seg>
+               <anchor synch="T39"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg83">
+                  <w xml:id="w278">Yeah</w>
+                  <pc xml:id="pc28">,</pc>
+                  <w xml:id="w279">yeah</w>
+                  <pc xml:id="pc29">,</pc>
+                  <w xml:id="w280">I</w>
+                  <w type="repair" xml:id="w281">was</w>
+                  <w xml:id="w282">I</w>
+                  <w type="repair" xml:id="w283">was</w>
+                  <anchor synch="T40"/>
+                  <w xml:id="w284">it</w>
+                  <w xml:id="w285">was</w>
+                  <w xml:id="w286">definitely</w>
+               </seg>
+               <anchor synch="T41"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg84">
+                  <w xml:id="w287">As</w>
+                  <w xml:id="w288">soon</w>
+                  <w xml:id="w289">as</w>
+                  <anchor synch="T42"/>
+                  <w xml:id="w290">I</w>
+                  <w xml:id="w291">see</w>
+                  <anchor synch="T43"/>
+                  <w xml:id="w292">her</w>
+               </seg>
+               <anchor synch="T44"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg85">
+                  <w xml:id="w293">You</w>
+                  <w xml:id="w294">know</w>
+                  <pc xml:id="pc30">,</pc>
+                  <w xml:id="w295">I</w>
+                  <w xml:id="w296">didn't</w>
+                  <w xml:id="w297">even</w>
+                  <w xml:id="w298">have</w>
+                  <w xml:id="w299">to</w>
+                  <w xml:id="w300">meet</w>
+                  <w xml:id="w301">her</w>
+               </seg>
+               <anchor synch="T45"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg86">
+                  <w xml:id="w302">I</w>
+                  <w xml:id="w303">seen</w>
+                  <w xml:id="w304">her</w>
+                  <w xml:id="w305">on</w>
+                  <w xml:id="w306">the</w>
+                  <w xml:id="w307">telly</w>
+                  <w xml:id="w308">and</w>
+                  <w xml:id="w309">I</w>
+                  <w xml:id="w310">just</w>
+                  <w xml:id="w311">wanted</w>
+                  <w xml:id="w312">to</w>
+                  <w xml:id="w313">meet</w>
+                  <w xml:id="w314">her</w>
+               </seg>
+               <anchor synch="T46"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg87">
+                  <w xml:id="w315">You</w>
+                  <w xml:id="w316">know</w>
+                  <pc xml:id="pc31">,</pc>
+                  <w xml:id="w317">I</w>
+                  <w xml:id="w318">just</w>
+                  <w xml:id="w319">fancied</w>
+                  <w xml:id="w320">her</w>
+               </seg>
+               <anchor synch="T47"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg88">
+                  <pause dur="PT0.9S"/>
+                  <w xml:id="w321">So</w>
+                  <pc xml:id="pc32">,</pc>
+                  <w xml:id="w322">it</w>
+                  <w xml:id="w323">was</w>
+                  <w xml:id="w324">just</w>
+                  <w xml:id="w325">a</w>
+                  <w xml:id="w326">case</w>
+                  <w xml:id="w327">of</w>
+                  <w xml:id="w328">getting</w>
+                  <w xml:id="w329">together</w>
+                  <w xml:id="w330">then</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T41" start="T40" who="SPK1" xml:id="au24">
+            <u xml:id="u24">
+               <seg subtype="not_classified" type="utterance" xml:id="seg48">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T43" start="T42" who="SPK1" xml:id="au25">
+            <u xml:id="u25">
+               <seg subtype="not_classified" type="utterance" xml:id="seg49">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T51" start="T48" who="SPK0" xml:id="au5">
+            <u xml:id="u5">
+               <seg subtype="declarative" type="utterance" xml:id="seg8">
+                  <w xml:id="w331">And</w>
+                  <w xml:id="w332">you</w>
+                  <w xml:id="w333">obviously</w>
+                  <w xml:id="w334">weren't</w>
+                  <w xml:id="w335">disappointed</w>
+                  <w xml:id="w336">when</w>
+                  <w xml:id="w337">you</w>
+                  <w xml:id="w338">got</w>
+                  <w xml:id="w339">to<anchor synch="T49"/>gether</w>
+               </seg>
+               <anchor synch="T50"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg9">
+                  <w xml:id="w340">Ah</w>
+                  <pc xml:id="pc33">,</pc>
+                  <w xml:id="w341">similar</w>
+                  <w xml:id="w342">for</w>
+                  <w xml:id="w343">you</w>
+                  <pc xml:id="pc34">,</pc>
+                  <w xml:id="w344">Victoria</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T50" start="T49" who="SPK2" xml:id="au37">
+            <u xml:id="u37">
+               <seg subtype="declarative" type="utterance" xml:id="seg89">
+                  <w xml:id="w345">Definitely</w>
+                  <w xml:id="w346">not</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T53" start="T51" who="SPK1" xml:id="au26">
+            <u xml:id="u26">
+               <seg subtype="declarative" type="utterance" xml:id="seg50">
+                  <w xml:id="w347">Yeah</w>
+               </seg>
+               <anchor synch="T52"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg51">
+                  <pause dur="PT1.2S"/>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T55" start="T53" who="SPK2" xml:id="au38">
+            <u xml:id="u38">
+               <seg subtype="interrogative" type="utterance" xml:id="seg90">
+                  <w xml:id="w348">What</w>
+               </seg>
+               <anchor synch="T54"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg91">
+                  <w xml:id="w349">Disappointed</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <incident end="T55" start="T54">
+            <desc>((laughter)) </desc>
+         </incident>
+         <annotationBlock end="T63" start="T54" who="SPK1" xml:id="au27">
+            <u xml:id="u27">
+               <seg subtype="declarative" type="utterance" xml:id="seg52">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T55"/>
+                  <w xml:id="w350">No</w>
+                  <pc xml:id="pc35">,</pc>
+                  <w xml:id="w351">I</w>
+                  <w xml:id="w352">mean</w>
+                  <pc xml:id="pc36">,</pc>
+                  <w xml:id="w353">I</w>
+                  <w xml:id="w354">knew</w>
+                  <w xml:id="w355">as</w>
+                  <w xml:id="w356">soon</w>
+                  <w xml:id="w357">as</w>
+                  <w xml:id="w358">I</w>
+                  <w xml:id="w359">met</w>
+                  <w xml:id="w360">him</w>
+               </seg>
+               <anchor synch="T56"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg53">
+                  <w xml:id="w361">I</w>
+                  <w xml:id="w362">mean</w>
+                  <pc xml:id="pc37">,</pc>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T57"/>
+                  <w type="repair" xml:id="w363">the</w>
+                  <w xml:id="w364">one</w>
+                  <w xml:id="w365">of</w>
+                  <w xml:id="w366">the</w>
+                  <w xml:id="w367">most</w>
+                  <w xml:id="w368">attractive</w>
+                  <w xml:id="w369">things</w>
+                  <w xml:id="w370">I</w>
+                  <w xml:id="w371">found</w>
+                  <w xml:id="w372">with</w>
+                  <w xml:id="w373">David</w>
+                  <w xml:id="w374">is</w>
+                  <w xml:id="w375">that</w>
+                  <anchor synch="T58"/>
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w376">he</w>
+                  <w xml:id="w377">shared</w>
+                  <w xml:id="w378">the</w>
+                  <w xml:id="w379">same</w>
+                  <w xml:id="w380">sort</w>
+                  <w xml:id="w381">of</w>
+                  <w xml:id="w382">family</w>
+                  <w xml:id="w383">values</w>
+                  <w xml:id="w384">as</w>
+                  <w xml:id="w385">me</w>
+               </seg>
+               <anchor synch="T59"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg54">
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w386">You</w>
+                  <w xml:id="w387">know</w>
+                  <w xml:id="w388">he</w>
+                  <w xml:id="w389">was</w>
+                  <w xml:id="w390">sitting</w>
+                  <w xml:id="w391">there</w>
+                  <w xml:id="w392">with</w>
+                  <w xml:id="w393">his</w>
+                  <w xml:id="w394">family</w>
+                  <w type="repair" xml:id="w395">and</w>
+                  <w xml:id="w396">and</w>
+                  <w xml:id="w397">I</w>
+                  <w xml:id="w398">really</w>
+                  <w xml:id="w399">liked</w>
+                  <w xml:id="w400">that</w>
+               </seg>
+               <anchor synch="T60"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg55">
+                  <w xml:id="w401">And</w>
+                  <w xml:id="w402">he</w>
+                  <w xml:id="w403">is</w>
+                  <w xml:id="w404">a</w>
+                  <w xml:id="w405">very</w>
+                  <w xml:id="w406">kind</w>
+                  <anchor synch="T61"/>
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w407">person</w>
+               </seg>
+               <anchor synch="T62"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg56">
+                  <w xml:id="w408">And</w>
+                  <w type="repair" xml:id="w409">we</w>
+                  <w xml:id="w410">we</w>
+                  <w xml:id="w411">are</w>
+                  <w xml:id="w412">really</w>
+                  <w xml:id="w413">good</w>
+                  <w xml:id="w414">friends</w>
+                  <pc xml:id="pc38">,</pc>
+                  <w xml:id="w415">on</w>
+                  <w xml:id="w416">top</w>
+                  <w xml:id="w417">of</w>
+                  <w xml:id="w418">everything</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T71" start="T63" who="SPK0" xml:id="au6">
+            <u xml:id="u6">
+               <seg subtype="interrogative" type="utterance" xml:id="seg10">
+                  <w type="repair" xml:id="w419">W</w>
+                  <w type="repair" xml:id="w420">do</w>
+                  <w xml:id="w421">what's</w>
+                  <w xml:id="w422">been</w>
+                  <w xml:id="w423">the</w>
+                  <w xml:id="w424">lowest</w>
+               </seg>
+               <anchor synch="T64"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg11">
+                  <w xml:id="w425">That's</w>
+                  <w type="repair" xml:id="w426">the</w>
+                  <w xml:id="w427">the</w>
+                  <w xml:id="w428">nice</w>
+                  <w xml:id="w429">part</w>
+                  <w xml:id="w430">of</w>
+                  <w xml:id="w431">the</w>
+                  <w xml:id="w432">marriage</w>
+               </seg>
+               <anchor synch="T65"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg12">
+                  <w xml:id="w433">What's</w>
+                  <w xml:id="w434">been</w>
+                  <w xml:id="w435">the</w>
+                  <w xml:id="w436">lowest</w>
+                  <w xml:id="w437">part</w>
+                  <anchor synch="T66"/>
+                  <w xml:id="w438">of</w>
+                  <w type="repair" xml:id="w439">the</w>
+                  <w xml:id="w440">of</w>
+                  <w xml:id="w441">the</w>
+                  <w xml:id="w442">marriage</w>
+               </seg>
+               <anchor synch="T67"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg13">
+                  <w xml:id="w443">There</w>
+                  <w xml:id="w444">is</w>
+                  <w type="repair" xml:id="w445">a</w>
+                  <w xml:id="w446">there</w>
+                  <w xml:id="w447">is</w>
+                  <w xml:id="w448">a</w>
+                  <w xml:id="w449">piece</w>
+                  <w xml:id="w450">in</w>
+                  <w xml:id="w451">the</w>
+                  <w xml:id="w452">book</w>
+                  <pc xml:id="pc39">,</pc>
+                  <w xml:id="w453">which</w>
+                  <w xml:id="w454">is</w>
+                  <w type="repair" xml:id="w455">quite</w>
+                  <w xml:id="w456">quite</w>
+                  <w xml:id="w457">moving</w>
+                  <w xml:id="w458">actually</w>
+               </seg>
+               <anchor synch="T68"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg14">
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w459">And</w>
+                  <w type="repair" xml:id="w460">it's</w>
+                  <w xml:id="w461">it's</w>
+                  <w xml:id="w462">about</w>
+                  <w xml:id="w463">when</w>
+                  <w type="repair" xml:id="w464">the</w>
+                  <w xml:id="w465">the</w>
+                  <w xml:id="w466">media</w>
+                  <w xml:id="w467">accused</w>
+                  <w xml:id="w468">David</w>
+                  <w xml:id="w469">of</w>
+                  <w xml:id="w470">having</w>
+                  <w xml:id="w471">an</w>
+                  <w xml:id="w472">affair</w>
+               </seg>
+               <anchor synch="T69"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg15">
+                  <pause dur="PT0.6S"/>
+                  <anchor synch="T70"/>
+                  <w xml:id="w473">Tell</w>
+                  <w xml:id="w474">us</w>
+                  <w xml:id="w475">about</w>
+                  <w xml:id="w476">that</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T86" start="T71" who="SPK1" xml:id="au28">
+            <u xml:id="u28">
+               <seg subtype="declarative" type="utterance" xml:id="seg57">
+                  <w xml:id="w477">That</w>
+                  <w xml:id="w478">was</w>
+                  <w xml:id="w479">probably</w>
+                  <w xml:id="w480">one</w>
+                  <w xml:id="w481">of</w>
+                  <w xml:id="w482">the</w>
+                  <w xml:id="w483">most</w>
+                  <w xml:id="w484">difficult</w>
+                  <w xml:id="w485">things</w>
+                  <w xml:id="w486">to</w>
+                  <w xml:id="w487">actually</w>
+                  <w xml:id="w488">write</w>
+                  <anchor synch="T72"/>
+                  <w xml:id="w489">in</w>
+                  <w xml:id="w490">the</w>
+                  <w xml:id="w491">book</w>
+               </seg>
+               <anchor synch="T73"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg58">
+                  <w xml:id="w492">Obviously</w>
+                  <pc xml:id="pc40">,</pc>
+                  <w xml:id="w493">it's</w>
+                  <w xml:id="w494">lovely</w>
+                  <w xml:id="w495">writing</w>
+                  <w xml:id="w496">all</w>
+                  <w xml:id="w497">the</w>
+                  <w xml:id="w498">nice</w>
+                  <w xml:id="w499">things</w>
+                  <w xml:id="w500">that've</w>
+                  <w xml:id="w501">happened</w>
+                  <anchor synch="T74"/>
+                  <w xml:id="w502">but</w>
+                  <w xml:id="w503">that</w>
+                  <w xml:id="w504">was</w>
+                  <w xml:id="w505">very</w>
+                  <w xml:id="w506">difficult</w>
+               </seg>
+               <anchor synch="T75"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg59">
+                  <w xml:id="w507">I</w>
+                  <w xml:id="w508">mean</w>
+                  <w xml:id="w509">it</w>
+                  <w xml:id="w510">was</w>
+                  <w xml:id="w511">really</w>
+                  <w xml:id="w512">a</w>
+                  <w xml:id="w513">traumatic</w>
+                  <w xml:id="w514">time</w>
+                  <w type="repair" xml:id="w515">for</w>
+                  <anchor synch="T76"/>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w516">for</w>
+                  <w xml:id="w517">both</w>
+                  <w xml:id="w518">of</w>
+                  <w xml:id="w519">us</w>
+               </seg>
+               <anchor synch="T77"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg60">
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w520">Ehm</w>
+                  <pc xml:id="pc41">,</pc>
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w521">you</w>
+                  <w xml:id="w522">know</w>
+                  <pc xml:id="pc42">,</pc>
+                  <w xml:id="w523">I</w>
+                  <w xml:id="w524">was</w>
+                  <w xml:id="w525">pregnant</w>
+                  <w xml:id="w526">at</w>
+                  <w xml:id="w527">the</w>
+                  <w xml:id="w528">time</w>
+               </seg>
+               <anchor synch="T78"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg61">
+                  <w xml:id="w529">And</w>
+                  <w xml:id="w530">I</w>
+                  <w xml:id="w531">think</w>
+                  <w xml:id="w532">that</w>
+                  <w xml:id="w533">a</w>
+                  <w xml:id="w534">few</w>
+                  <w xml:id="w535">girls</w>
+                  <w xml:id="w536">wanted</w>
+                  <w xml:id="w537">to</w>
+                  <w xml:id="w538">launch</w>
+                  <w xml:id="w539">a</w>
+                  <w xml:id="w540">modelling</w>
+                  <w xml:id="w541">career</w>
+                  <pc xml:id="pc43">,</pc>
+                  <w xml:id="w542">so</w>
+                  <w xml:id="w543">decided</w>
+                  <w xml:id="w544">to</w>
+                  <w xml:id="w545">drag</w>
+                  <anchor synch="T79"/>
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w546">David's</w>
+                  <w xml:id="w547">name</w>
+                  <w xml:id="w548">into</w>
+                  <w xml:id="w549">that</w>
+               </seg>
+               <anchor synch="T80"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg62">
+                  <w xml:id="w550">And</w>
+                  <pc xml:id="pc44">,</pc>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T81"/>
+                  <w xml:id="w551">you</w>
+                  <w xml:id="w552">know</w>
+                  <w xml:id="w553">I</w>
+                  <w xml:id="w554">think</w>
+                  <w xml:id="w555">that</w>
+                  <w xml:id="w556">you</w>
+                  <w xml:id="w557">took</w>
+                  <w xml:id="w558">it</w>
+                  <w xml:id="w559">too</w>
+                  <w xml:id="w560">cool</w>
+                  <pc xml:id="pc45">,</pc>
+                  <w xml:id="w561">didn't</w>
+                  <w xml:id="w562">you</w>
+               </seg>
+               <anchor synch="T82"/>
+               <seg subtype="interrupted" type="utterance" xml:id="seg63">
+                  <w xml:id="w563">Eh</w>
+                  <anchor synch="T84"/>
+                  <w xml:id="w564">a</w>
+                  <w xml:id="w565">couple</w>
+                  <w xml:id="w566">of</w>
+                  <w xml:id="w567">the</w>
+                  <w xml:id="w568">cases</w>
+                  <pc xml:id="pc46">,</pc>
+                  <anchor synch="T85"/>
+                  <w xml:id="w569">but</w>
+                  <w xml:id="w570">it</w>
+                  <w xml:id="w571">was</w>
+                  <w xml:id="w572">really</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T84" start="T82" who="SPK2" xml:id="au39">
+            <u xml:id="u39">
+               <seg subtype="declarative" type="utterance" xml:id="seg92">
+                  <w xml:id="w573">Hm</w>
+               </seg>
+               <anchor synch="T83"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg93">
+                  <incident>
+                     <desc>nodding</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T87" start="T84" who="SPK0" xml:id="au7">
+            <u xml:id="u7">
+               <seg subtype="modeless" type="utterance" xml:id="seg16">
+                  <w xml:id="w574">Hm</w>
+               </seg>
+               <anchor synch="T85"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg17">
+                  <w xml:id="w575">It</w>
+                  <w xml:id="w576">wasn't</w>
+                  <w xml:id="w577">true</w>
+                  <pc xml:id="pc47">,</pc>
+                  <anchor synch="T86"/>
+                  <w xml:id="w578">the</w>
+                  <w xml:id="w579">story</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T88" start="T87" who="SPK2" xml:id="au40">
+            <u xml:id="u40">
+               <seg subtype="declarative" type="utterance" xml:id="seg94">
+                  <w xml:id="w580">No</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T89" start="T88" who="SPK0" xml:id="au8">
+            <u xml:id="u8">
+               <seg subtype="declarative" type="utterance" xml:id="seg18">
+                  <w xml:id="w581">But</w>
+                  <w xml:id="w582">nonetheless</w>
+                  <pc xml:id="pc48">,</pc>
+                  <w xml:id="w583">it</w>
+                  <w type="repair" xml:id="w584">was</w>
+                  <w xml:id="w585">it</w>
+                  <w xml:id="w586">was</w>
+                  <w xml:id="w587">in</w>
+                  <w xml:id="w588">the</w>
+                  <w xml:id="w589">papers</w>
+                  <pc xml:id="pc49">,</pc>
+                  <w xml:id="w590">it</w>
+                  <w xml:id="w591">was</w>
+                  <w xml:id="w592">printed</w>
+                  <w type="repair" xml:id="w593">and</w>
+                  <w xml:id="w594">and</w>
+                  <w xml:id="w595">it</w>
+                  <w xml:id="w596">affected</w>
+                  <w xml:id="w597">your</w>
+                  <w xml:id="w598">relationship</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T101" start="T89" who="SPK1" xml:id="au29">
+            <u xml:id="u29">
+               <seg subtype="declarative" type="utterance" xml:id="seg64">
+                  <w xml:id="w599">It</w>
+                  <w xml:id="w600">did</w>
+                  <w xml:id="w601">for</w>
+                  <w xml:id="w602">a</w>
+                  <w xml:id="w603">while</w>
+               </seg>
+               <anchor synch="T90"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg65">
+                  <w xml:id="w604">I</w>
+                  <w xml:id="w605">mean</w>
+                  <w xml:id="w606">as</w>
+                  <w xml:id="w607">much</w>
+                  <w xml:id="w608">as</w>
+                  <w xml:id="w609">you</w>
+                  <w xml:id="w610">can</w>
+                  <w xml:id="w611">trust</w>
+                  <w xml:id="w612">someone</w>
+                  <w xml:id="w613">and</w>
+                  <w xml:id="w614">someone</w>
+                  <w xml:id="w615">can</w>
+                  <w xml:id="w616">say</w>
+                  <pc xml:id="pc50">"</pc>
+                  <w xml:id="w617">Honestly</w>
+                  <pc xml:id="pc51">,</pc>
+                  <w xml:id="w618">I</w>
+                  <w xml:id="w619">haven't</w>
+                  <w xml:id="w620">done</w>
+                  <w xml:id="w621">this</w>
+                  <w xml:id="w622">I</w>
+                  <w xml:id="w623">don't</w>
+                  <w xml:id="w624">know</w>
+                  <w xml:id="w625">this</w>
+                  <w xml:id="w626">person</w>
+                  <pc xml:id="pc52">"</pc>
+                  <pc xml:id="pc53">,</pc>
+                  <anchor synch="T91"/>
+                  <w xml:id="w627">as</w>
+                  <w xml:id="w628">much</w>
+                  <w xml:id="w629">as</w>
+                  <w xml:id="w630">you</w>
+                  <w xml:id="w631">want</w>
+                  <w xml:id="w632">to</w>
+                  <w xml:id="w633">believe</w>
+                  <w xml:id="w634">that</w>
+                  <w xml:id="w635">person</w>
+                  <anchor synch="T92"/>
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w636">they've</w>
+                  <w xml:id="w637">still</w>
+                  <w xml:id="w638">put</w>
+                  <w xml:id="w639">that</w>
+                  <w xml:id="w640">element</w>
+                  <w xml:id="w641">to</w>
+                  <w xml:id="w642">doubt</w>
+                  <w xml:id="w643">in</w>
+                  <w xml:id="w644">your</w>
+                  <w xml:id="w645">mind</w>
+               </seg>
+               <anchor synch="T93"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg66">
+                  <w xml:id="w646">You</w>
+                  <w xml:id="w647">know</w>
+                  <pc xml:id="pc54">,</pc>
+                  <w xml:id="w648">people</w>
+                  <w xml:id="w649">can</w>
+                  <w xml:id="w650">say</w>
+                  <w xml:id="w651">what</w>
+                  <w xml:id="w652">they</w>
+                  <w xml:id="w653">want</w>
+                  <w xml:id="w654">about</w>
+                  <w xml:id="w655">me</w>
+               </seg>
+               <anchor synch="T94"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg67">
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w656">Ehm</w>
+                  <pc xml:id="pc55">,</pc>
+                  <w xml:id="w657">but</w>
+                  <w xml:id="w658">David</w>
+                  <w xml:id="w659">is</w>
+                  <w xml:id="w660">the</w>
+                  <w xml:id="w661">one</w>
+                  <w xml:id="w662">person</w>
+                  <w xml:id="w663">and</w>
+                  <w xml:id="w664">Brooklyn</w>
+                  <pause dur="PT0.5S"/>
+                  <anchor synch="T95"/>
+                  <w xml:id="w665">that</w>
+                  <incident>
+                     <desc>stockt</desc>
+                  </incident>
+                  <w xml:id="w666">is</w>
+                  <w xml:id="w667">mine</w>
+               </seg>
+               <anchor synch="T96"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg68">
+                  <w xml:id="w668">You</w>
+                  <w xml:id="w669">know</w>
+                  <pc xml:id="pc56">,</pc>
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w670">people</w>
+                  <w xml:id="w671">can't</w>
+                  <w xml:id="w672">touch</w>
+                  <anchor synch="T97"/>
+                  <w xml:id="w673">and</w>
+                  <w xml:id="w674">won't</w>
+                  <w xml:id="w675">touch</w>
+               </seg>
+               <anchor synch="T98"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg69">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T99"/>
+                  <w xml:id="w676">And</w>
+                  <w xml:id="w677">so</w>
+                  <w xml:id="w678">when</w>
+                  <w xml:id="w679">somebody</w>
+                  <w xml:id="w680">tries</w>
+                  <w type="repair" xml:id="w681">to</w>
+                  <pause dur="PT0.5S"/>
+                  <anchor synch="T100"/>
+                  <w xml:id="w682">to</w>
+                  <w xml:id="w683">cause</w>
+                  <w xml:id="w684">problems</w>
+                  <w xml:id="w685">in</w>
+                  <w xml:id="w686">that</w>
+                  <w xml:id="w687">area</w>
+                  <w xml:id="w688">I</w>
+                  <w xml:id="w689">mean</w>
+                  <w xml:id="w690">that's</w>
+                  <pause dur="PT0.7S"/>
+                  <w xml:id="w691">how</w>
+                  <w xml:id="w692">it</w>
+                  <w xml:id="w693">gets</w>
+                  <w xml:id="w694">me</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T102" start="T101" who="SPK0" xml:id="au9">
+            <u xml:id="u9">
+               <seg subtype="interrogative" type="utterance" xml:id="seg19">
+                  <w xml:id="w695">You</w>
+                  <w xml:id="w696">whacked</w>
+                  <w xml:id="w697">him</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T105" start="T102" who="SPK1" xml:id="au30">
+            <u xml:id="u30">
+               <seg subtype="declarative" type="utterance" xml:id="seg70">
+                  <pause dur="PT0.9S"/>
+                  <w type="uncertain" xml:id="w698">T</w>
+                  <w type="uncertain" xml:id="w699">m</w>
+                  <w xml:id="w700">right</w>
+                  <pc xml:id="pc57">,</pc>
+                  <anchor synch="T103"/>
+                  <w xml:id="w701">I</w>
+                  <w xml:id="w702">have</w>
+                  <w xml:id="w703">whacked</w>
+                  <w xml:id="w704">him</w>
+               </seg>
+               <anchor synch="T104"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg71">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T105" start="T103" who="SPK2" xml:id="au41">
+            <u xml:id="u41">
+               <seg subtype="declarative" type="utterance" xml:id="seg95">
+                  <w xml:id="w705">Three</w>
+                  <w xml:id="w706">times</w>
+               </seg>
+               <anchor synch="T104"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg96">
+                  <w xml:id="w707">Three</w>
+                  <w xml:id="w708">times</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <incident end="T105" start="T103">
+            <desc>((laughter))</desc>
+         </incident>
+         <annotationBlock end="T106" start="T105" who="SPK0" xml:id="au10">
+            <u xml:id="u10">
+               <seg subtype="interrogative" type="utterance" xml:id="seg20">
+                  <w xml:id="w709">Three</w>
+                  <w xml:id="w710">times</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T107" start="T106" who="SPK1" xml:id="au31">
+            <u xml:id="u31">
+               <seg subtype="not_classified" type="utterance" xml:id="seg72">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T107" start="T106" who="SPK2" xml:id="au42">
+            <u xml:id="u42">
+               <seg subtype="declarative" type="utterance" xml:id="seg97">
+                  <w xml:id="w711">Yeah</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T109" start="T107" who="SPK0" xml:id="au11">
+            <u xml:id="u11">
+               <seg subtype="interrogative" type="utterance" xml:id="seg21">
+                  <w xml:id="w712">Yeah</w>
+               </seg>
+               <anchor synch="T108"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg22">
+                  <w xml:id="w713">Hurt</w>
+                  <w xml:id="w714">you</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T110" start="T109" who="SPK2" xml:id="au43">
+            <u xml:id="u43">
+               <seg subtype="declarative" type="utterance" xml:id="seg98">
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w715">Yeah</w>
+                  <pc xml:id="pc58">,</pc>
+                  <w xml:id="w716">of</w>
+                  <w xml:id="w717">course</w>
+                  <pc xml:id="pc59">,</pc>
+                  <w xml:id="w718">but</w>
+                  <w xml:id="w719">I</w>
+                  <w xml:id="w720">was</w>
+                  <w xml:id="w721">hurting</w>
+                  <w xml:id="w722">anyway</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T113" start="T110" who="SPK0" xml:id="au12">
+            <u xml:id="u12">
+               <seg subtype="declarative" type="utterance" xml:id="seg23">
+                  <w xml:id="w723">Yeah</w>
+               </seg>
+               <anchor synch="T111"/>
+               <seg subtype="interrogative" type="utterance" xml:id="seg24">
+                  <w xml:id="w724">In</w>
+                  <w xml:id="w725">fact</w>
+                  <pc xml:id="pc60">,</pc>
+                  <w xml:id="w726">hurting</w>
+                  <w xml:id="w727">so</w>
+                  <w xml:id="w728">much</w>
+                  <w type="repair" xml:id="w729">that</w>
+                  <w xml:id="w730">that's</w>
+                  <w type="repair" xml:id="w731">you</w>
+                  <w type="repair" xml:id="w732">you</w>
+                  <w xml:id="w733">you</w>
+                  <w xml:id="w734">were</w>
+                  <w xml:id="w735">very</w>
+                  <w xml:id="w736">depressed</w>
+                  <pc xml:id="pc61">,</pc>
+                  <w xml:id="w737">weren't</w>
+                  <w xml:id="w738">you</w>
+               </seg>
+               <anchor synch="T112"/>
+               <seg subtype="interrupted" type="utterance" xml:id="seg25">
+                  <w xml:id="w739">You</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T114" start="T113" who="SPK2" xml:id="au44">
+            <u xml:id="u44">
+               <seg subtype="declarative" type="utterance" xml:id="seg99">
+                  <w xml:id="w740">Yeah</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T115" start="T114" who="SPK0" xml:id="au13">
+            <u xml:id="u13">
+               <seg subtype="not_classified" type="utterance" xml:id="seg26">
+                  <pause dur="PT0.6S"/>
+                  <w xml:id="w741">Well</w>
+                  <pc xml:id="pc62">,</pc>
+                  <w xml:id="w742">how</w>
+                  <w xml:id="w743">depressed</w>
+                  <w xml:id="w744">were</w>
+                  <w xml:id="w745">you</w>
+                  <pc xml:id="pc63">,</pc>
+                  <w xml:id="w746">what</w>
+                  <w xml:id="w747">did</w>
+                  <w xml:id="w748">you</w>
+                  <w xml:id="w749">do</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T135" start="T115" who="SPK2" xml:id="au45">
+            <u xml:id="u45">
+               <seg subtype="declarative" type="utterance" xml:id="seg100">
+                  <w xml:id="w750">Ehm</w>
+                  <anchor synch="T116"/>
+                  <w xml:id="w751">well</w>
+                  <pc xml:id="pc64">,</pc>
+                  <w xml:id="w752">we</w>
+                  <w xml:id="w753">went</w>
+                  <anchor synch="T117"/>
+                  <w xml:id="w754">away</w>
+                  <w xml:id="w755">for</w>
+                  <w xml:id="w756">the</w>
+                  <w xml:id="w757">weekend</w>
+                  <w xml:id="w758">after</w>
+                  <w xml:id="w759">that</w>
+               </seg>
+               <anchor synch="T118"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg101">
+                  <w xml:id="w760">And</w>
+                  <w xml:id="w761">eh</w>
+                  <pc xml:id="pc65">,</pc>
+                  <w xml:id="w762">obviously</w>
+                  <w xml:id="w763">the</w>
+                  <w xml:id="w764">worst</w>
+                  <w xml:id="w765">thing</w>
+                  <w xml:id="w766">for</w>
+                  <w xml:id="w767">me</w>
+                  <w xml:id="w768">was</w>
+                  <w xml:id="w769">seeing</w>
+                  <w xml:id="w770">Victoria</w>
+                  <w xml:id="w771">hurting</w>
+                  <w xml:id="w772">so</w>
+                  <w xml:id="w773">much</w>
+               </seg>
+               <anchor synch="T119"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg102">
+                  <pause dur="PT0.5S"/>
+                  <w xml:id="w774">That</w>
+                  <w xml:id="w775">hurt</w>
+                  <w xml:id="w776">me</w>
+                  <w xml:id="w777">more</w>
+                  <w xml:id="w778">than</w>
+                  <w xml:id="w779">anything</w>
+               </seg>
+               <anchor synch="T120"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg103">
+                  <pause dur="PT0.6S"/>
+                  <w xml:id="w780">You</w>
+                  <w xml:id="w781">know</w>
+                  <pc xml:id="pc66">,</pc>
+                  <w xml:id="w782">and</w>
+                  <w xml:id="w783">trying</w>
+                  <w xml:id="w784">to</w>
+                  <w xml:id="w785">prove</w>
+                  <w xml:id="w786">my</w>
+                  <w xml:id="w787">innocence</w>
+                  <w xml:id="w788">to</w>
+                  <w xml:id="w789">someone</w>
+                  <w xml:id="w790">that's</w>
+                  <pause dur="PT0.7S"/>
+                  <anchor synch="T121"/>
+                  <w xml:id="w791">hearing</w>
+                  <w xml:id="w792">it</w>
+                  <w xml:id="w793">from</w>
+                  <w xml:id="w794">everyone</w>
+                  <w xml:id="w795">else</w>
+                  <w xml:id="w796">that</w>
+                  <w xml:id="w797">I'm</w>
+                  <pause dur="PT0.5S"/>
+                  <anchor synch="T122"/>
+                  <w xml:id="w798">up</w>
+                  <w xml:id="w799">to</w>
+                  <w xml:id="w800">something</w>
+                  <anchor synch="T123"/>
+                  <pause dur="PT0.7S"/>
+                  <w xml:id="w801">and</w>
+                  <w xml:id="w802">then</w>
+                  <w xml:id="w803">trying</w>
+                  <w xml:id="w804">to</w>
+                  <w xml:id="w805">prove</w>
+                  <w xml:id="w806">that</w>
+                  <pc xml:id="pc67">,</pc>
+                  <w xml:id="w807">is</w>
+                  <w xml:id="w808">hard</w>
+               </seg>
+               <anchor synch="T124"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg104">
+                  <w xml:id="w809">You</w>
+                  <w xml:id="w810">know</w>
+                  <pc xml:id="pc68">,</pc>
+                  <w xml:id="w811">and</w>
+                  <w xml:id="w812">trying</w>
+                  <w xml:id="w813">to</w>
+                  <w xml:id="w814">prove</w>
+                  <w xml:id="w815">your</w>
+                  <w xml:id="w816">innocence</w>
+                  <w xml:id="w817">when</w>
+                  <w xml:id="w818">you</w>
+                  <w xml:id="w819">know</w>
+                  <w xml:id="w820">for</w>
+                  <w xml:id="w821">well</w>
+                  <w xml:id="w822">that</w>
+                  <w xml:id="w823">there's</w>
+                  <w xml:id="w824">nothing</w>
+                  <w xml:id="w825">that's</w>
+                  <w xml:id="w826">gone</w>
+                  <w xml:id="w827">on</w>
+               </seg>
+               <anchor synch="T125"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg105">
+                  <pause dur="PT0.6S"/>
+                  <w xml:id="w828">And</w>
+                  <w xml:id="w829">that</w>
+                  <w xml:id="w830">was</w>
+                  <w xml:id="w831">the</w>
+                  <w xml:id="w832">hardest</w>
+                  <w xml:id="w833">thing</w>
+               </seg>
+               <anchor synch="T126"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg106">
+                  <w xml:id="w834">And</w>
+                  <w xml:id="w835">then</w>
+                  <pc xml:id="pc69">,</pc>
+                  <anchor synch="T127"/>
+                  <w xml:id="w836">you</w>
+                  <w xml:id="w837">know</w>
+                  <pc xml:id="pc70">,</pc>
+                  <w xml:id="w838">we</w>
+                  <w xml:id="w839">tried</w>
+                  <w xml:id="w840">to</w>
+                  <w xml:id="w841">get</w>
+                  <w xml:id="w842">away</w>
+                  <anchor synch="T128"/>
+                  <w xml:id="w843">for</w>
+                  <w xml:id="w844">a</w>
+                  <w xml:id="w845">few</w>
+                  <w xml:id="w846">days</w>
+                  <w xml:id="w847">just</w>
+                  <w xml:id="w848">to</w>
+                  <anchor synch="T129"/>
+                  <pause dur="PT0.3S"/>
+                  <w xml:id="w849">sort</w>
+                  <w xml:id="w850">of</w>
+                  <w xml:id="w851">be</w>
+                  <w xml:id="w852">together</w>
+                  <w xml:id="w853">and</w>
+                  <w xml:id="w854">be</w>
+                  <w xml:id="w855">away</w>
+                  <w xml:id="w856">from</w>
+                  <w xml:id="w857">everything</w>
+                  <w xml:id="w858">and</w>
+                  <w xml:id="w859">eh</w>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T130"/>
+                  <w xml:id="w860">it</w>
+                  <w xml:id="w861">sort</w>
+                  <w xml:id="w862">of</w>
+                  <pc xml:id="pc71">,</pc>
+                  <w type="repair" xml:id="w863">it</w>
+                  <w xml:id="w864">it</w>
+                  <w xml:id="w865">was</w>
+                  <w xml:id="w866">good</w>
+                  <pc xml:id="pc72">,</pc>
+                  <w xml:id="w867">but</w>
+                  <w xml:id="w868">it</w>
+                  <w xml:id="w869">was</w>
+                  <w xml:id="w870">bad</w>
+                  <pc xml:id="pc73">,</pc>
+                  <anchor synch="T131"/>
+                  <w xml:id="w871">because</w>
+                  <w xml:id="w872">we</w>
+                  <w xml:id="w873">was</w>
+                  <w xml:id="w874">away</w>
+                  <w xml:id="w875">and</w>
+                  <w xml:id="w876">we</w>
+                  <w xml:id="w877">was</w>
+                  <w xml:id="w878">on</w>
+                  <w xml:id="w879">our</w>
+                  <w xml:id="w880">own</w>
+                  <w xml:id="w881">and</w>
+                  <anchor synch="T132"/>
+                  <w xml:id="w882">there</w>
+                  <w xml:id="w883">was</w>
+                  <w xml:id="w884">times</w>
+                  <w xml:id="w885">where</w>
+                  <pause dur="PT0.4S"/>
+                  <anchor synch="T133"/>
+                  <w xml:id="w886">I</w>
+                  <w xml:id="w887">was</w>
+                  <w xml:id="w888">on</w>
+                  <w xml:id="w889">my</w>
+                  <w xml:id="w890">own</w>
+                  <w xml:id="w891">in</w>
+                  <w xml:id="w892">the</w>
+                  <w xml:id="w893">room</w>
+                  <w xml:id="w894">and</w>
+                  <w xml:id="w895">it</w>
+                  <w xml:id="w896">was</w>
+                  <w xml:id="w897">very</w>
+                  <w xml:id="w898">depressing</w>
+                  <w xml:id="w899">and</w>
+                  <w xml:id="w900">then</w>
+                  <pause dur="PT0.3S"/>
+                  <anchor synch="T134"/>
+                  <w xml:id="w901">and</w>
+                  <w xml:id="w902">eh</w>
+                  <pause dur="PT0.4S"/>
+                  <w xml:id="w903">it</w>
+                  <w xml:id="w904">was</w>
+                  <w xml:id="w905">it</w>
+                  <w type="repair" xml:id="w906">wa</w>
+                  <w xml:id="w907">was</w>
+                  <w xml:id="w908">very</w>
+                  <w xml:id="w909">hard</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T117" start="T116" who="SPK0" xml:id="au14">
+            <u xml:id="u14">
+               <seg subtype="not_classified" type="utterance" xml:id="seg27">
+                  <incident>
+                     <desc>unv.</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T136" start="T135" who="SPK0" xml:id="au15">
+            <u xml:id="u15">
+               <seg subtype="interrupted" type="utterance" xml:id="seg28">
+                  <w xml:id="w910">You</w>
+                  <w xml:id="w911">were</w>
+                  <w xml:id="w912">looking</w>
+                  <w xml:id="w913">out</w>
+                  <w xml:id="w914">the</w>
+                  <w xml:id="w915">window</w>
+                  <w xml:id="w916">thinking</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T140" start="T136" who="SPK2" xml:id="au46">
+            <u xml:id="u46">
+               <seg subtype="interrupted" type="utterance" xml:id="seg107">
+                  <pause dur="PT0.8S"/>
+                  <anchor synch="T137"/>
+                  <w xml:id="w917">It</w>
+                  <w type="repair" xml:id="w918">w</w>
+                  <w type="repair" xml:id="w919">w</w>
+                  <anchor synch="T138"/>
+                  <w xml:id="w920">was</w>
+                  <w xml:id="w921">on</w>
+                  <w xml:id="w922">the</w>
+                  <w xml:id="w923">edge</w>
+                  <w xml:id="w924">of</w>
+                  <w xml:id="w925">a</w>
+                  <w xml:id="w926">Lake</w>
+                  <w xml:id="w927">Como</w>
+                  <pc xml:id="pc74">,</pc>
+                  <anchor synch="T139"/>
+                  <w xml:id="w928">So</w>
+                  <w xml:id="w929">it</w>
+                  <w xml:id="w930">was</w>
+                  <w xml:id="w931">eh</w>
+                  <w xml:id="w932">very</w>
+                  <w xml:id="w933">tempting</w>
+                  <pc xml:id="pc75">,</pc>
+                  <w xml:id="w934">but</w>
+                  <w xml:id="w935">eh</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T138" start="T137" who="SPK0" xml:id="au16">
+            <u xml:id="u16">
+               <seg subtype="not_classified" type="utterance" xml:id="seg29">
+                  <w type="uncertain" xml:id="w936">so</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T141" start="T140" who="SPK0" xml:id="au17">
+            <u xml:id="u17">
+               <seg subtype="not_classified" type="utterance" xml:id="seg30">
+                  <w type="uncertain" xml:id="w937">to</w>
+                  <w type="uncertain" xml:id="w938">jump</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T145" start="T140" who="SPK1" xml:id="au32">
+            <u xml:id="u32">
+               <seg subtype="interrupted" type="utterance" xml:id="seg73">
+                  <w xml:id="w939">I</w>
+                  <w xml:id="w940">actually</w>
+                  <pc xml:id="pc76">,</pc>
+                  <w xml:id="w941">I</w>
+                  <w xml:id="w942">took</w>
+                  <w xml:id="w943">that</w>
+                  <w xml:id="w944">out</w>
+                  <anchor synch="T141"/>
+                  <w xml:id="w945">of</w>
+                  <w xml:id="w946">the</w>
+                  <w xml:id="w947">book</w>
+                  <w xml:id="w948">but</w>
+                  <pc xml:id="pc77">,</pc>
+               </seg>
+               <anchor synch="T142"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg74">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T143"/>
+                  <w xml:id="w949">That</w>
+                  <w xml:id="w950">eh</w>
+                  <w xml:id="w951">yeah</w>
+               </seg>
+               <anchor synch="T144"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg75">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T145" start="T142" who="SPK2" xml:id="au47">
+            <u xml:id="u47">
+               <seg subtype="interrogative" type="utterance" xml:id="seg108">
+                  <w xml:id="w952">Did</w>
+                  <w xml:id="w953">you</w>
+               </seg>
+               <anchor synch="T143"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg109">
+                  <w xml:id="w954">I</w>
+                  <w xml:id="w955">haven't</w>
+                  <w xml:id="w956">acctually</w>
+                  <anchor synch="T144"/>
+                  <w xml:id="w957">got</w>
+                  <w xml:id="w958">to</w>
+                  <w xml:id="w959">that</w>
+                  <w xml:id="w960">part</w>
+                  <w xml:id="w961">yet</w>
+                  <w xml:id="w962">in</w>
+                  <w xml:id="w963">the</w>
+                  <w xml:id="w964">book</w>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T154" start="T145" who="SPK0" xml:id="au18">
+            <u xml:id="u18">
+               <seg subtype="interrogative" type="utterance" xml:id="seg31">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T146"/>
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T147"/>
+                  <w xml:id="w965">A</w>
+                  <w xml:id="w966">surprising</w>
+                  <w xml:id="w967">read</w>
+                  <pc xml:id="pc78">,</pc>
+                  <w xml:id="w968">isn't</w>
+                  <w xml:id="w969">it</w>
+               </seg>
+               <anchor synch="T148"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg32">
+                  <w type="repair" xml:id="w970">It's</w>
+                  <w type="repair" xml:id="w971">it's</w>
+                  <w type="repair" xml:id="w972">it's</w>
+                  <w xml:id="w973">it's</w>
+                  <w type="repair" xml:id="w974">ve</w>
+                  <anchor synch="T149"/>
+                  <w xml:id="w975">it's</w>
+                  <w xml:id="w976">very</w>
+                  <w xml:id="w977">interesting</w>
+                  <anchor synch="T150"/>
+                  <w type="repair" xml:id="w978">v</w>
+                  <w xml:id="w979">part</w>
+                  <w xml:id="w980">of</w>
+                  <w xml:id="w981">the</w>
+                  <w xml:id="w982">book</w>
+               </seg>
+               <anchor synch="T151"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg33">
+                  <w xml:id="w983">I</w>
+                  <w xml:id="w984">hope</w>
+                  <w xml:id="w985">you</w>
+                  <w xml:id="w986">got</w>
+                  <w xml:id="w987">time</w>
+                  <w xml:id="w988">to</w>
+                  <w xml:id="w989">finish</w>
+                  <w xml:id="w990">this</w>
+                  <w xml:id="w991">book</w>
+                  <pc xml:id="pc79">,</pc>
+                  <w xml:id="w992">you</w>
+                  <w xml:id="w993">know</w>
+                  <pc xml:id="pc80">,</pc>
+                  <w xml:id="w994">before</w>
+                  <anchor synch="T152"/>
+                  <w xml:id="w995">to</w>
+                  <w xml:id="w996">long</w>
+               </seg>
+               <anchor synch="T153"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg34">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <incident end="T148" start="T146">
+            <desc>((laughter)) </desc>
+         </incident>
+         <annotationBlock end="T149" start="T147" who="SPK1" xml:id="au33">
+            <u xml:id="u33">
+               <seg subtype="declarative" type="utterance" xml:id="seg76">
+                  <w xml:id="w997">I</w>
+                  <w xml:id="w998">didn't</w>
+                  <w xml:id="w999">put</w>
+                  <w xml:id="w1000">it</w>
+                  <w xml:id="w1001">in</w>
+                  <w xml:id="w1002">there</w>
+               </seg>
+               <anchor synch="T148"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg77">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T155" start="T152" who="SPK1" xml:id="au34">
+            <u xml:id="u34">
+               <seg subtype="not_classified" type="utterance" xml:id="seg78">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T158" start="T152" who="SPK2" xml:id="au48">
+            <u xml:id="u48">
+               <seg subtype="interrupted" type="utterance" xml:id="seg110">
+                  <w xml:id="w1003">I</w>
+                  <w xml:id="w1004">know</w>
+                  <pc xml:id="pc81">,</pc>
+                  <w xml:id="w1005">I</w>
+                  <w xml:id="w1006">know</w>
+                  <w xml:id="w1007">well</w>
+               </seg>
+               <anchor synch="T154"/>
+               <seg subtype="declarative" type="utterance" xml:id="seg111">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+                  <anchor synch="T155"/>
+                  <w xml:id="w1008">Yeah</w>
+               </seg>
+               <anchor synch="T156"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg112">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <annotationBlock end="T158" start="T155" who="SPK0" xml:id="au19">
+            <u xml:id="u19">
+               <seg subtype="interrupted" type="utterance" xml:id="seg35">
+                  <w xml:id="w1009">Eh</w>
+                  <anchor synch="T156"/>
+                  <w xml:id="w1010">eh</w>
+                  <w xml:id="w1011">eh</w>
+               </seg>
+               <anchor synch="T157"/>
+               <seg subtype="not_classified" type="utterance" xml:id="seg36">
+                  <incident>
+                     <desc>laughing</desc>
+                  </incident>
+               </seg>
+            </u>
+         </annotationBlock>
+         <incident end="T158" start="T156">
+            <desc>((laughter)) </desc>
+         </incident>
+      </body>
+   </text>
+</TEI>
