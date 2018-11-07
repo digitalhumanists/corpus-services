@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  * The class that checks out that all annotations for Nganasan Corpus are from
@@ -167,7 +168,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
      * used.
      */
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             Class clSecond = Class.forName("de.uni_hamburg.corpora.AnnotationSpecification");
