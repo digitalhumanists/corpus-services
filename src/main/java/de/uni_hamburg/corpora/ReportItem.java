@@ -89,6 +89,19 @@ public class ReportItem {
         this.what = what;
     }
 
+    public ReportItem(Severity s, Throwable e, String filename, String what) {
+        this.severity = s;
+        this.e = e;
+        this.what = what;
+        this.filename = filename;
+    }
+    
+    public ReportItem(Severity s, String filename, String what) {
+        this.severity = s;
+        this.what = what;
+        this.filename = filename;
+    }
+    
     /**
      * Errors found by XML validation errors should always include a
      * SAXParseException. This can be used to extract file location informations

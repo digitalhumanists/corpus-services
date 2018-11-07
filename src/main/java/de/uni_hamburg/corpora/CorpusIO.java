@@ -1,6 +1,7 @@
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -22,6 +23,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
@@ -49,7 +52,7 @@ public class CorpusIO {
     /*
      * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
      *
-  
+
      public abstract Collection getAllTranscripts();
 
      public abstract Collection getAllAudioFiles();
@@ -97,8 +100,35 @@ public class CorpusIO {
 
     //TODO
     public CorpusData readFile(URL url) {
-        CorpusData cd = null;
-        return cd;
+        if (url.getPath().endsWith("exb")) {
+            BasicTranscriptionData bt = new BasicTranscriptionData(url);
+            //bt.loadFile(f);
+            return bt;
+        } else if (url.getPath().endsWith("coma")) {
+            ComaData cm = new ComaData(url);
+            //TODO
+            return cm;
+        } else if (url.getPath().endsWith("exs") || url.getPath().endsWith("xml")) {
+            UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
+            return usd;
+            //we can't read files other than coma and exb yet...
+        /*  } else if (f.getName().endsWith("cmdi")) {
+             CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi; */
+        } else {
+            System.out.println(url + " is not xml CorpusData");
+            CorpusData cd = null;
+            return cd;
+        }
+    }
+
+    public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
+        String xslstring = TypeConverter.InputStream2String(getClass().getResourceAsStream(path2resource));
+        System.out.println(path2resource);
+        if (xslstring == null) {
+            throw new IOException("Stylesheet not found!");
+        } 
+        return xslstring;
     }
 
     //TODO
@@ -157,7 +187,7 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (new File(url.getFile()).isDirectory()) {
-                //we need to iterate    
+                //we need to iterate
                 //and add everything to the list
                 Collection<File> recursed = getFileURLSRecursively(url);
                 for (File f : recursed) {
@@ -178,7 +208,7 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later          
+            //TODO later
             return null;
         }
     }
@@ -190,7 +220,7 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (new File(url.getFile()).isDirectory()) {
-                //we need to iterate    
+                //we need to iterate
                 //and add everything to the cdc list
                 Collection<File> recursed = getFileURLSRecursively(url);
                 for (File f : recursed) {
@@ -231,7 +261,7 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later          
+            //TODO later
             return null;
         }
     }

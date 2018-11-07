@@ -93,7 +93,8 @@ public class CmdiChecker implements CommandLineable, StringChecker {
 
     private boolean isUrlHandleOrHzsk(String url) {
         if ((url.startsWith("http://hdl.handle.net/11022/")) ||
-                (url.startsWith("https://corpora.uni-hamburg.de/repository/"))) {
+                (url.startsWith("https://corpora.uni-hamburg.de/repository/")) ||
+                (url.startsWith("http://annis.corpora.uni-hamburg.de"))) {
             return true;
         } else {
             return false;
@@ -131,6 +132,12 @@ public class CmdiChecker implements CommandLineable, StringChecker {
             } else if (restype.getTextContent().equals("Resource")) {
                 stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
                     "Good resource type Resource");
+            } else if (restype.getTextContent().equals("SearchPage")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type SearchPage");
+            } else if (restype.getTextContent().equals("SearchService")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type SearchService");
             } else {
                 stats.addWarning(CMDI_MISC, cmdiLoc + ": " +
                         "Unrecognised resource type " +
