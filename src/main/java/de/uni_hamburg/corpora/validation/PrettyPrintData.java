@@ -41,23 +41,25 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         return report;
     }
 
-    public Report fix(CorpusData cd) throws IOException {
+    public Report fix(CorpusData cd){
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         if(!CorpusDataIsAlreadyPretty(cd)){
-        String prettyCorpusData = indent(cd.toUnformattedString(), "event");
-        //System.out.println(cd.toSaveableString());
-        //System.out.println(prettyCorpusData);
-        //save it instead of the old file
-        CorpusIO cio = new CorpusIO();
-        cio.write(prettyCorpusData, cd.getURL());
-        cd.updateUnformattedString(prettyCorpusData);
-        report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was pretty printed and saved.");
+            try {
+                String prettyCorpusData = indent(cd.toUnformattedString(), "event");
+                //System.out.println(cd.toSaveableString());
+                //System.out.println(prettyCorpusData);
+                //save it instead of the old file
+                CorpusIO cio = new CorpusIO();
+                cio.write(prettyCorpusData, cd.getURL());
+                cd.updateUnformattedString(prettyCorpusData);
+                report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was pretty printed and saved.");
+            } catch (IOException ex) {
+                report.addException(ex, cd.getURL() + " causes an Input/Output error.");
+            }
         }
         else{
         report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was already pretty printed, nothing done.");
         }
-        // output which files were pretty printed
-        // catch errors when writing etc. doesn't work 
         return report;
     }
 
@@ -73,7 +75,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
             Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");   
             IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrettyPrintData.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
     return IsUsableFor;
     }

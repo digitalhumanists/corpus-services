@@ -45,7 +45,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                 exmaError.addError("RemoveAutoSaveExb", cd.getURL().getFile(), "", "", false, "autosave info needs to be removed");
             }
         } catch (JDOMException ex) {
-            Logger.getLogger(RemoveAutoSaveExb.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown reading error");
         }
         return report;
     }
@@ -80,8 +80,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrettyPrintData.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
