@@ -52,13 +52,13 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     String language = "en";
 
     //testing and debuging stuff
-    String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
+    /*String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
     String intermediate0 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exs";
     String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
     String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
     String intermediate3 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate3.xml";
     String intermediate4 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate4.xml";
-    String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";
+    String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";*/
     final String ISO_CONV = "inel iso tei";
 
     //locations of the used xsls
@@ -179,7 +179,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             //now we get a document of the first transformation, the iso tei skeleton
             teiDocument = TypeConverter.String2JdomDocument(result);
             //For testing only
-            cio.write(teiDocument, new URL(intermediate1));
+            //cio.write(teiDocument, new URL(intermediate1));
             System.out.println("STEP 1 completed.");
             /*
             * this method will take the segmented transcription and, for each speaker
@@ -203,7 +203,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             textNode.addContent(uElements);
             if (teiDocument != null) {
                 //For testing only
-                cio.write(teiDocument, new URL(intermediate2));
+                //cio.write(teiDocument, new URL(intermediate2));
                 System.out.println("STEP 2 completed.");
 
                 Document transformedDocument = null;
@@ -214,7 +214,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     //fix for issue #89
                     textNode = (Element) (xp.selectSingleNode(transformedDocument));
                     //For testing only
-                    cio.write(transformedDocument, new URL(intermediate3));
+                    //cio.write(transformedDocument, new URL(intermediate3));
                     System.out.println("STEP 3 completed.");
 
                     // now take care of the events from tiers of type 'd'
@@ -252,7 +252,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     generateWordIDs(transformedDocument);
                     if (transformedDocument != null) {
                         //for testing only
-                        cio.write(transformedDocument, new URL(intermediate4));
+                        //cio.write(transformedDocument, new URL(intermediate4));
                         //Here the annotations are taken care of
                         //this is important for the INEL morpheme segmentations
                         //for the INEL transformation, the word IDs are generated earlier
@@ -262,7 +262,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                             finalDocument = IOUtilities.readDocumentFromString(result3);
                             if (finalDocument != null) {
                                 //for testing only
-                                cio.write(finalDocument, new URL(intermediate5));
+                                //cio.write(finalDocument, new URL(intermediate5));
                             }
                         }
                     }
