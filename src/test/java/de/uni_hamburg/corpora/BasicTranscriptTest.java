@@ -27,6 +27,7 @@ import java.net.URL;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import static org.junit.Assert.assertTrue;
 
 public class BasicTranscriptTest {
 
@@ -34,20 +35,24 @@ public class BasicTranscriptTest {
     @Test
     public void readWriteBT() {
         try {
-            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resoruces/example.exb";
+            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/Beckhams/Beckhams.exb";
+            String newExbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/outxample.exb";
             String exbString = new
                 String(Files.readAllBytes(Paths.get(exbFilename)), "UTF-8");
             File exbFile = new File(exbFilename);
             URL url = exbFile.toURI().toURL();
             BasicTranscriptionData btd = new BasicTranscriptionData(url);
             //btd.loadFile(exbFile);
-            String prettyXML = btd.toSaveableString();
-            assertNotNull(prettyXML);
+            String unprettyXML = btd.toUnformattedString();
+            assertNotNull(unprettyXML);
             // could be assertThat()
-            assertFalse(prettyXML.equals(exbString));
-            PrintWriter exbOut = new PrintWriter("outxample.exb");
-            exbOut.print(prettyXML);
+            assertTrue(unprettyXML.equals(exbString));
+            PrintWriter exbOut = new PrintWriter("src/test/java/de/uni_hamburg/corpora/resources/example/outxample.exb");
+            exbOut.print(unprettyXML);
             exbOut.close();
+            File newExbFile = new File(newExbFilename);
+            //remove the created file after the tests
+            newExbFile.delete();
         } catch (UnsupportedEncodingException uee) {
             uee.printStackTrace();
             fail("Unexpected exception " + uee);
