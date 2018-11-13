@@ -14,6 +14,7 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
+import de.uni_hamburg.corpora.validation.NormalizeExb;
 //import de.uni_hamburg.corpora.validation.FilenameChecker;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -242,6 +243,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
+        allExistingCFs.add("NormalizeEXB");
 	//allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
@@ -373,6 +375,15 @@ public class CorpusMagician {
                 case "exb2hiatisotei":
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
                    corpusfunctions.add(ehit);
+                    break;
+                case "normalizeexb":
+                    NormalizeExb ne = new NormalizeExb();
+                   corpusfunctions.add(ne);
+                    break;
+                case "normalizeexbwhitespace":
+                    NormalizeExb neo = new NormalizeExb();
+                    neo.setfixWhiteSpaces(true);
+                    corpusfunctions.add(neo);
                     break;
                 /*
                 case "comaaddtiersfromexbscorrector":
