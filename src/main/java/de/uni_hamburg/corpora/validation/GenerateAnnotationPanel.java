@@ -90,7 +90,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
-        File f = new File(new File(cd.getURL().getFile()).getParentFile() + "\\AnnotationSpecFromExbs.xml");
+        File f = new File(new File(cd.getURL().getFile()).getParentFile() + File.separator + "AnnotationSpecFromExbs.xml");
         URI u = f.toURI();
         StreamResult result = new StreamResult(new File(u));
         transformer.transform(source, result);
@@ -137,7 +137,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript
         for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);
-            String category = tier.getAttribute("category"); // get category 
+            String category = tier.getAttribute("category"); // get category
             String type = tier.getAttribute("type"); // get type
             // check if it is an annotation tier category that is already in the map
             if (annotationsInExbs.containsKey(category) && type.equals("a")) {
@@ -163,7 +163,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                 }
                 //annotationsInExbs.remove(category);
                 annotationsInExbs.put(category, tags);     // add annotations to the map
-            } // check if it is an annotation tier category that is not in the map 
+            } // check if it is an annotation tier category that is not in the map
             else if (!annotationsInExbs.containsKey(category) && type.equals("a")) {
                 Collection<String> tags = new ArrayList<String>();
                 NodeList events = tier.getElementsByTagName("event");
