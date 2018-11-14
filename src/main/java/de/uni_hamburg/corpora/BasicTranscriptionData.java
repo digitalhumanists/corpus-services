@@ -188,4 +188,12 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     public BasicTranscription getEXMARaLDAbt() {
         return bt;
     }
+    
+    public void setEXMARaLDAbt(BasicTranscription btn) {
+        bt = btn;
+    }
+    
+    public void setOriginalString(String s) {
+        originalstring = s;
+    }
 }
