@@ -5,7 +5,7 @@ import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
-
+import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 //import de.uni_hamburg.corpora.validation.ComaNameChecker;
 //import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -14,6 +14,7 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
+import de.uni_hamburg.corpora.validation.NormalizeExb;
 //import de.uni_hamburg.corpora.validation.FilenameChecker;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -231,6 +232,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+		allExistingCFs.add("GenerateAnnotationPanel");
         //allExistingCFs.add("ExbPatternChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
         //allExistingCFs.add("ExbStructureChecker");
@@ -242,6 +244,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
+        allExistingCFs.add("NormalizeEXB");
 	//allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
@@ -374,7 +377,21 @@ public class CorpusMagician {
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
                    corpusfunctions.add(ehit);
                     break;
-                /*
+                case "normalizeexb":
+                    NormalizeExb ne = new NormalizeExb();
+                   corpusfunctions.add(ne);
+                    break;
+                case "normalizeexbwhitespace":
+                    NormalizeExb neo = new NormalizeExb();
+                    neo.setfixWhiteSpaces(true);
+                    corpusfunctions.add(neo);
+                    break;
+
+                case "generateannotationpanel":
+                    GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
+                    corpusfunctions.add(gap);
+                    break;
+                /* 
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
                     corpusfunctions.add(catfec);
