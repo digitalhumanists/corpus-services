@@ -52,7 +52,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     String language = "en";
 
     //testing and debuging stuff
-    /* String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
+    /*String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
     String intermediate0 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exs";
     String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
     String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
@@ -251,6 +251,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     //and the generating of the ids
                     generateWordIDs(transformedDocument);
                     if (transformedDocument != null) {
+                        //for testing only
                         //cio.write(transformedDocument, new URL(intermediate4));
                         //Here the annotations are taken care of
                         //this is important for the INEL morpheme segmentations
@@ -260,6 +261,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                         if (result3 != null) {
                             finalDocument = IOUtilities.readDocumentFromString(result3);
                             if (finalDocument != null) {
+                                //for testing only
                                 //cio.write(finalDocument, new URL(intermediate5));
                             }
                         }
@@ -544,6 +546,25 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             allExistingIDs.add(incID);
             //System.out.println("*** " + wordID);
             pc.setAttribute("id", incID, Namespace.XML_NAMESPACE);
+        }
+        
+         // we also need this for seg elements
+        XPath segXPath = XPath.newInstance("//tei:seg[not(@xml:id)]");
+        pcXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
+        pcXPath.addNamespace(Namespace.XML_NAMESPACE);
+
+        List segs = segXPath.selectNodes(document);
+        count = 1;
+        for (Object o : segs) {
+            Element seg = (Element) o;
+            while (allExistingIDs.contains("seg" + Integer.toString(count))) {
+                count++;
+            }
+
+            String segID = "seg" + Integer.toString(count);
+            allExistingIDs.add(segID);
+            //System.out.println("*** " + wordID);
+            seg.setAttribute("id", segID, Namespace.XML_NAMESPACE);
         }
     }
 
