@@ -81,6 +81,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     String referencePath = "./";
     File referenceFile;
     String comaLoc = "";
+    int comacounter = 0;
 
     final String COMA_FILECOVERAGE = "coma-filecoverage";
     final List<String> whitelist;
@@ -99,7 +100,6 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
      *
      * @return true, if all files were found, false otherwise
      */
-
     public Report oldCheck(String s) {
         Report stats = new Report();
         try {
@@ -135,6 +135,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
+                    } else if (f.getName().endsWith(".coma")) {
+                        comacounter++;
+                        if (comacounter > 1) {
+                            stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + f.getName());
+                        }
+                        System.out.println(comacounter);
+                        continue;
                     } else {
                         String relPath = stripPrefix(f.getCanonicalPath(),
                                 prefix);
@@ -159,6 +166,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
+                    } else if (f.getName().endsWith(".coma")) {
+                        comacounter++;
+                        if (comacounter > 1) {
+                            stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + f.getName());
+                        }
+                        System.out.println(comacounter);
+                        continue;
                     } else {
                         String relPath = stripPrefix(f.getCanonicalPath(),
                                 prefix);
@@ -183,6 +197,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
+                    } else if (f.getName().endsWith(".coma")) {
+                        comacounter++;
+                        if (comacounter > 1) {
+                            stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + f.getName());
+                        }
+                        System.out.println(comacounter);
+                        continue;
                     } else {
                         String relPath = stripPrefix(f.getCanonicalPath(),
                                 prefix);
@@ -296,10 +317,10 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     }
 
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally
-    * checks for parser configuration, SAXE and IO exceptions.
-    */
+     * Default check function which calls the exceptionalCheck function so that
+     * the primal functionality of the feature can be implemented, and
+     * additionally checks for parser configuration, SAXE and IO exceptions.
+     */
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
@@ -318,9 +339,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     }
 
     /**
-    * Main functionality of the feature: checks whether files are both in coma file
-    * and file system.
-    */
+     * Main functionality of the feature: checks whether files are both in coma
+     * file and file system.
+     */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         Report stats = new Report();
@@ -359,6 +380,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                                 continue;
                             } else if (a.isDirectory()) {
                                 dirs.add(a);
+                            } else if (a.getName().endsWith(".coma")) {
+                                comacounter++;
+                                if (comacounter > 1) {
+                                    stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + a.getName());
+                                }
+                                System.out.println(comacounter);
+                                continue;
                             } else {
                                 String relPath = stripPrefix(a.getCanonicalPath(),
                                         prefix);
@@ -383,6 +411,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                                 continue;
                             } else if (b.isDirectory()) {
                                 dirs.add(b);
+                            } else if (b.getName().endsWith(".coma")) {
+                                comacounter++;
+                                if (comacounter > 1) {
+                                    stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + b.getName());
+                                }
+                                System.out.println(comacounter);
+                                continue;
                             } else {
                                 String relPath = stripPrefix(b.getCanonicalPath(),
                                         prefix);
@@ -407,6 +442,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                                 continue;
                             } else if (c.isDirectory()) {
                                 dirs.add(c);
+                            } else if (c.getName().endsWith(".coma")) {
+                                comacounter++;
+                                if (comacounter > 1) {
+                                    stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + c.getName());
+                                }
+                                System.out.println(comacounter);
+                                continue;
                             } else {
                                 String relPath = stripPrefix(c.getCanonicalPath(),
                                         prefix);
@@ -458,7 +500,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                         }
                         Text reltext = (Text) reltexts.item(j);
                         String relpath = reltext.getWholeText();
-                         // added this line so it compares Coma NSLinks in the correct format of the OS
+                        // added this line so it compares Coma NSLinks in the correct format of the OS
                         // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn#t be the case anyway
                         relpath = relpath.replace('/', File.separatorChar);
                         System.out.println(relpath);
@@ -485,10 +527,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         return stats;
     }
 
-
     /**
-    * Fix to this issue is not supported yet.
-    */
+     * Fix to this issue is not supported yet.
+     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         report.addCritical(COMA_FILECOVERAGE,
@@ -497,9 +538,10 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     }
 
     /**
-    * Default function which determines for what type of files (basic transcription,
-    * segmented transcription, coma etc.) this feature can be used.
-    */
+     * Default function which determines for what type of files (basic
+     * transcription, segmented transcription, coma etc.) this feature can be
+     * used.
+     */
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
