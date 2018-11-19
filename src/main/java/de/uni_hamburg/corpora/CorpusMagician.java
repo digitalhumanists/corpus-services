@@ -239,8 +239,8 @@ public class CorpusMagician {
         //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         //allExistingCFs.add("ComaErrorReportGenerator");
         //allExistingCFs.add("SchematronChecker");
-        allExistingCFs.add("RemoveAutoSaveExb");
-        allExistingCFs.add("RemoveAbsolutePaths");
+        //allExistingCFs.add("RemoveAutoSaveExb");
+        //allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
