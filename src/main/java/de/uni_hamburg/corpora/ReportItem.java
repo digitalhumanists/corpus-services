@@ -481,7 +481,12 @@ public class ReportItem {
         report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/DataTables/buttons.dataTables.min.css")) + "</style>\n";
         report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/bootstrap/bootstrap-3.3.7.min.css")) + "</style>\n";
         
-        
+        //add custom CSS
+        report += "<style>"+
+                ".critical{ background:#ffdddd; } "+
+                ".other{ background:#ffd39e; } "+
+                ".warning{ background:#fafcc2; } "+
+                "</style>\n";
         report += "   </head>\n   <body>\n";
         
         report += "<table>\n  <thead><tr>" +
@@ -511,10 +516,10 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td style='border: red solid 1px'>" +
+            report += "<td>" +
                 error.getWhat() +
                 "</td>";
-            report += "<td style='border: green solid 1px'>" +
+            report += "<td>" +
                 error.getHowto() +
                 "</td>";
             report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
