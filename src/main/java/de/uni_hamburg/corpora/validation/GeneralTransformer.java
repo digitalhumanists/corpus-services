@@ -26,10 +26,13 @@ public class GeneralTransformer extends Checker{
     
     String pathToXSL;
     URL urlToOutput;
+    String getra = "General Transformer";
 
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        report.addCritical(getra,
+                "XSL Transformation cannot be checked, only fixed (use -f)");
+        return report;
     }
 
     @Override
@@ -41,6 +44,10 @@ public class GeneralTransformer extends Checker{
             XSLTransformer xslt = new XSLTransformer();
             String result
                     = xslt.transform(corpusdata, stylesheet);
+            if(result != null){
+               report.addCorrect(getra, cd.getURL().toString(),
+                "XSL Transformation was successful"); 
+            }
             cio.write(result, urlToOutput);
         } catch (TransformerConfigurationException ex) {
             Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,7 +59,17 @@ public class GeneralTransformer extends Checker{
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");   
+            IsUsableFor.add(cl);
+            Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
+            IsUsableFor.add(cl2);
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");   
+            IsUsableFor.add(cl3);
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, " usable class not found");
+        }
+    return IsUsableFor;
     }
     
 }
