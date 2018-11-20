@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,7 +39,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     static Map<String, Collection<String>> annotationsInExbs = new HashMap<String, Collection<String>>(); // list for holding annotations in exbs
     boolean generateDoc = true; // flag for whether the file created or not
     int iterateExbs = 0;
-    final String GAP = "gap";
+    final String GAP = "GenerateAnnotationPanel";
 
     /**
      * Creates the annotation panel with the annotationsinExbs.
@@ -78,7 +76,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                         lowerCategory.appendChild(lowerTag);
                         Element lowerDescription = doc.createElement("description");
                         lowerCategory.appendChild(lowerDescription);
-                        stats.addCorrect(GAP,
+                        stats.addCorrect(GAP, cd, 
                                 "Annotation added to the file annotation panel: "
                                 + tag);
                         category.appendChild(lowerCategory);
@@ -112,15 +110,15 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                 stats = generateAnnotation(cd);        // call the necessary method to create the annotation panel
             }
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, genLoc + ": Unknown parsing error");
+            stats.addException(pce, GAP, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, genLoc + ": Unknown parsing error");
+            stats.addException(saxe, GAP, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, genLoc + ": Unknown file reading error");
+            stats.addException(ioe, GAP, cd, "Unknown file reading error");
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(GenerateAnnotationPanel.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, GAP, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-            Logger.getLogger(GenerateAnnotationPanel.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, GAP, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -150,7 +148,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     if (tag.endsWith(" ")) {
                         System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
-                        stats.addWarning("generate-annotation-panel", "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        stats.addWarning(GAP, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         exmaError.addError("generate-annotation-panel", cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false,
                                 "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
@@ -174,7 +172,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     if (tag.endsWith(" ")) {
                         System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
-                        stats.addWarning("generate-annotation-panel", "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        stats.addWarning(GAP, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         exmaError.addError("generate-annotation-panel", cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false,
                                 "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
@@ -212,7 +210,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(GenerateAnnotationPanel.class.getName()).log(Level.SEVERE, null, ex);
+              report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }

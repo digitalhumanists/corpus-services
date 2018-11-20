@@ -84,15 +84,7 @@ public class Report {
         }
     }
 
-    /**
-     * Add a critical error in the root log.
-     *
-     * @sa addCritical(String, String)
-     */
-    public void addCritical(String description) {
-        addCritical(ROOT_BUCKET, description);
-    }
-
+    
     /**
      * Add a complete ReportItem in the root log.
      * Not sure if this was meant to work like this,
@@ -104,6 +96,15 @@ public class Report {
     public void addReportItem(String statId, ReportItem reportItem) {
        Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(reportItem);
+    }
+   
+    /**
+     * Add a critical error in the root log.
+     *
+     * @sa addCritical(String, String)
+     */
+    public void addCritical(String description) {
+        addCritical(ROOT_BUCKET, description);
     }
 
     /**
@@ -139,6 +140,16 @@ public class Report {
         addCritical(statId, description + e.getStackTrace()[0]);
     }
 
+    /**
+     * Add a critical error in named statistics bucket.
+     * with CorpusData object
+     */
+    public void addCritical(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
+                    cd.getURL().toString(), description));
+    }
+ 
 
     /**
      * Add a non-critical error in named statistics bucket.
@@ -165,6 +176,17 @@ public class Report {
         addWarning(statId, description + "::" + extrablah +
                 "..." + e.getStackTrace()[0]);
     }
+    
+    /**
+     * Add a critical error in named statistics bucket.
+     * with CorpusData object
+     */
+    public void addWarning(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.WARNING,
+                    cd.getURL().toString(), description));
+    }
+    
     /**
      * Add error about missing data in named statistics bucket.
      */
@@ -172,6 +194,16 @@ public class Report {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.MISSING,
                     description));
+    }
+    
+    /**
+     * Add a critical error in named statistics bucket.
+     * with CorpusData object
+     */
+    public void addMissing(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.MISSING,
+                    cd.getURL().toString(), description));
     }
 
     /**
@@ -190,6 +222,16 @@ public class Report {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem (ReportItem.Severity.CORRECT, filename, 
                     description));
+    }
+    
+    /**
+     * Add a correct note in named statistics bucket.
+     * with CorpusData object
+     */
+    public void addCorrect(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.CORRECT,
+                    cd.getURL().toString(), description));
     }
 
     /**
@@ -223,6 +265,15 @@ public class Report {
         addNote(statId, description + "::" + extraBlah);
     }
 
+    /**
+     * Add a correct note in named statistics bucket.
+     * with CorpusData object
+     */
+    public void addNote(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.NOTE,
+                    cd.getURL().toString(), description));
+    }
 
     /**
      * Add error with throwable to root log.
@@ -254,17 +305,17 @@ public class Report {
         addException(statId, e, description + "\n\t" + extrablah);
     }
     
-    
+
     /**
-     * An exception where we know which file was the cause
+     * Add a exception in named statistics bucket.
+     * with CorpusData object
      */
-    public void addExceptionFile(String statId, Throwable e, String filename,
-            String description) {
+    public void addException(Throwable e, String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
-                    e, filename, description));
+                    e, cd.getURL().toString(), description));
     }
-
+    
     /**
      * Generate a one-line text-only message summarising the named bucket.
      */

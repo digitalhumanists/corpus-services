@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import javax.xml.parsers.DocumentBuilder;
@@ -51,7 +50,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
 
     File exbFile;
 
-
+    CorpusData cd;
 
     /**
      * Check for referenced-files.
@@ -62,11 +61,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             exbName = f.getName();
             stats = exceptionalCheck(f);
         } catch (IOException ioe) {
-            stats.addException(ioe, "Reading error");
+            stats.addException(ioe, EXB_REFS, cd, "Reading error");
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, "Unknown parsing error");
+            stats.addException(pce, EXB_REFS, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, EXB_REFS, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -84,10 +83,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             Element reffile = (Element) reffiles.item(i);
             String url = reffile.getAttribute("url");
             if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                stats.addCritical(EXB_REFS, exbName + ": "
-                        + "Referenced-file " + url
-                        + " points to absolute local path",
-                        "use relative path instead?");
+                stats.addCritical(EXB_REFS, cd, "Referenced-file " + url + " points to absolute local path, fix it to relative first");
             }
             File justFile = new File(url);
             boolean found = false;
@@ -106,13 +102,12 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             }
             if (!found) {
                 reffilesMissing++;
-                stats.addCritical(EXB_REFS, exbName + ": "
-                        + "File in referenced-file NOT found: " + url);
-                 exmaError.addError(EXB_REFS, f.getName(), "", "", false, "Error: File in referenced-file NOT found: " + url);
+                stats.addCritical(EXB_REFS, cd,
+                        "File in referenced-file NOT found: " + url);
+                exmaError.addError(EXB_REFS, f.getName(), "", "", false, "Error: File in referenced-file NOT found: " + url);
             } else {
                 reffilesFound++;
-                stats.addCorrect(EXB_REFS, exbName + ": "
-                        + "File in referenced-file was found: " + url);
+                stats.addCorrect(EXB_REFS, cd, "File in referenced-file was found: " + url);
             }
         }
         return stats;
@@ -145,15 +140,16 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally
-    * checks for parser configuration, SAXE and IO exceptions.
-    */
+     * Default check function which calls the exceptionalCheck function so that
+     * the primal functionality of the feature can be implemented, and
+     * additionally checks for parser configuration, SAXE and IO exceptions.
+     */
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
+        this.cd = cd;
         try {
-            exbName = cd.getURL().toString().substring(cd.getURL().toString().lastIndexOf("/")+1);
+            exbName = cd.getURL().toString().substring(cd.getURL().toString().lastIndexOf("/") + 1);
             stats = exceptionalCheck(cd);
         } catch (IOException ioe) {
             stats.addException(ioe, "Reading error");
@@ -166,18 +162,18 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
     /**
-    * Main feature of the class: Checks Exmaralda .exb file for file references, if
-    * a referenced file does not exist, issues a warning.
-    */
+     * Main feature of the class: Checks Exmaralda .exb file for file
+     * references, if a referenced file does not exist, issues a warning.
+     */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
         NodeList reffiles = doc.getElementsByTagName("referenced-file");
-        if(cd.getURL().toString().contains("file:/")){
-            exbFile = new File(cd.getURL().toString().substring(cd.getURL().toString().indexOf("file:/")+6));
-        }else{
+        if (cd.getURL().toString().contains("file:/")) {
+            exbFile = new File(cd.getURL().toString().substring(cd.getURL().toString().indexOf("file:/") + 6));
+        } else {
             exbFile = new File(cd.getURL().toString());
         }
         int reffilesFound = 0;
@@ -223,26 +219,28 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
     /**
-    * No fix is applicable for this feature.
-    */
+     * No fix is applicable for this feature.
+     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        this.cd = cd;
         report.addCritical(EXB_REFS,
                 "Automatic fix is not yet supported.");
         return report;
     }
 
     /**
-    * Default function which determines for what type of files (basic transcription,
-    * segmented transcription, coma etc.) this feature can be used.
-    */
+     * Default function which determines for what type of files (basic
+     * transcription, segmented transcription, coma etc.) this feature can be
+     * used.
+     */
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbFileReferenceChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
