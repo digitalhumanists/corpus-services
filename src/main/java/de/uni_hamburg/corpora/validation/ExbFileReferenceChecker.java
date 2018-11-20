@@ -183,10 +183,8 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             Element reffile = (Element) reffiles.item(i);
             String url = reffile.getAttribute("url");
             if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                stats.addCritical(EXB_REFS, exbName + ": "
-                        + "Referenced-file " + url
-                        + " points to absolute local path",
-                        "use relative path instead?");
+                stats.addCritical(EXB_REFS, cd, "Referenced-file " + url
+                        + " points to absolute local path, fix to relative path first");
             }
             File justFile = new File(url);
             boolean found = false;
@@ -206,13 +204,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             }
             if (!found) {
                 reffilesMissing++;
-                stats.addCritical(EXB_REFS, exbName + ": "
-                        + "File in referenced-file NOT found: " + url);
+                stats.addCritical(EXB_REFS, cd, "File in referenced-file NOT found: " + url);
                 exmaError.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
             } else {
                 reffilesFound++;
-                stats.addCorrect(EXB_REFS, exbName + ": "
-                        + "File in referenced-file was found: " + url);
+                stats.addCorrect(EXB_REFS, cd, "File in referenced-file was found: " + url);
             }
         }
         return stats;
