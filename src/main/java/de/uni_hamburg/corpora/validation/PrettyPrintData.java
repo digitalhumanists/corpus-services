@@ -5,8 +5,6 @@
  */
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.BasicTranscriptionData;
-import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -14,12 +12,6 @@ import de.uni_hamburg.corpora.Report;
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
-import org.xml.sax.SAXException;
-
 /**
  *
  * @author fsnv625
@@ -34,11 +26,11 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) {      
         // if no diff - all fine, nothing needs to be done     
         if (CorpusDataIsAlreadyPretty(cd)){
-        report.addCorrect(ppd, cd.getURL().toString(), "Already pretty printed.");
+        report.addCorrect(ppd, cd, "Already pretty printed.");
         }
                 // if difference then - needs to be pretty printed
         else{
-        report.addCritical(ppd, cd.getURL().toString(), "Needs to be pretty printed.");
+        report.addCritical(ppd, cd, "Needs to be pretty printed.");
         }
         return report;
     }
@@ -54,13 +46,13 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
                 CorpusIO cio = new CorpusIO();
                 cio.write(prettyCorpusData, cd.getURL());
                 cd.updateUnformattedString(prettyCorpusData);
-                report.addCorrect(ppd, cd.getURL().toString(), "CorpusData was pretty printed and saved.");
+                report.addCorrect(ppd, cd, "CorpusData was pretty printed and saved.");
             } catch (IOException ex) {
-                report.addExceptionFile(ppd, ex, cd.getURL().toString(), "Causes an Input/Output error.");
+                report.addException(ex, ppd, cd, "Causes an Input/Output error.");
             }
         }
         else{
-        report.addCorrect(ppd, cd.getURL().toString(), "Was already pretty printed.");
+        report.addCorrect(ppd, cd, "Was already pretty printed.");
         }
         return report;
     }
