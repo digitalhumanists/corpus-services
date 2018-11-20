@@ -26,17 +26,19 @@ import org.xml.sax.SAXException;
  */
 public class PrettyPrintData extends Checker implements CorpusFunction {
 
+    String ppd = "PrettyPrintData";
+    
     public PrettyPrintData() {
     }
     
     public Report check(CorpusData cd) {      
         // if no diff - all fine, nothing needs to be done     
         if (CorpusDataIsAlreadyPretty(cd)){
-        report.addCorrect("PrettyPrintData", "Already pretty printed.");
+        report.addCorrect(ppd, cd.getURL().toString(), "Already pretty printed.");
         }
                 // if difference then - needs to be pretty printed
         else{
-        report.addCritical("PrettyPrintData", "Needs to be pretty printed.");
+        report.addCritical(ppd, cd.getURL().toString(), "Needs to be pretty printed.");
         }
         return report;
     }
@@ -52,13 +54,13 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
                 CorpusIO cio = new CorpusIO();
                 cio.write(prettyCorpusData, cd.getURL());
                 cd.updateUnformattedString(prettyCorpusData);
-                report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was pretty printed and saved.");
+                report.addCorrect(ppd, cd.getURL().toString(), "CorpusData was pretty printed and saved.");
             } catch (IOException ex) {
-                report.addException(ex, cd.getURL() + " causes an Input/Output error.");
+                report.addExceptionFile(ppd, ex, cd.getURL().toString(), "Causes an Input/Output error.");
             }
         }
         else{
-        report.addCorrect("PrettyPrintData", "CorpusData "+ cd.getURL()+" was already pretty printed, nothing done.");
+        report.addCorrect(ppd, cd.getURL().toString(), "Was already pretty printed.");
         }
         return report;
     }
@@ -75,7 +77,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
             Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");   
             IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
-            report.addException(ex, " usable class not found");
+            report.addException(ex, "Usable class not found.");
         }
     return IsUsableFor;
     }
