@@ -47,7 +47,7 @@
             
             <!-- Compare recording Filename and communication name -->
             <xsl:for-each select="*:Recording/*:Media[not(ends-with(string-join(tokenize(tokenize(*:NSLink, '/')[last()], '\.')[position()!=last()], '.'), $COM_NAME))]">
-                <xsl:value-of select="concat('CRITICAL;The transcription NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The recording NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- check if paths are relative -->
