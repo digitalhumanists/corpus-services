@@ -79,13 +79,40 @@
             <xsl:variable name="annotation-name" select="../@category"/>
             <xsl:variable name="mbValue" select="//*:tier[@category = 'mb']/*:event[@start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/text()"/>
             <xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
-             <xsl:value-of select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue,  ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, $NEWLINE)"/>
-	    </xsl:if>
+               <xsl:value-of select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue,  ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, $NEWLINE)"/>
+			</xsl:if>
                 
-
-            
         </xsl:for-each>
-        
+		
+		
+        <xsl:for-each select="$ROOT//*:event">
+                        
+            <!-- Check if event is empty (https://lab.multilingua.uni-hamburg.de/redmine/issues/5885) -->
+        	<xsl:if test="matches(., '^$')">
+               <xsl:value-of select="concat('CRITICAL;empty event (start: ', @start, ', end: ', @end, ')', $NEWLINE)"/>
+        	</xsl:if>
+        	
+            <!-- Check for instance of 'Attachestoanycategory' (https://lab.multilingua.uni-hamburg.de/redmine/issues/5751) -->
+        	<xsl:if test="matches(., 'Attaches.*?to.*?any.*?category')">
+               <xsl:value-of select="concat('CRITICAL;found ''Attaches.*?to.*?any.*?category'' in event (start: ', @start, ', end: ', @end, ')', $NEWLINE)"/>
+        	</xsl:if>
+        	
+            <!-- Check for ellipsis with wrong bracket number (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
+        	<xsl:if test="(../@category = ('ts', 'tx', 'fe', 'fg', 'fr')) and matches(., '\(\((…|\.{2,})\)\)')">
+               <xsl:value-of select="concat('CRITICAL;found ''\(\((…|\.{2,})\)\)'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+        	</xsl:if>
+                        
+            <!-- Check for ellipsis in other tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
+            <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr'))) and matches(., '…')">
+                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''…'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+            </xsl:if>
+            
+            <!-- Check for ellipsis candidates present as dots (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
+            <xsl:if test="matches(., '\.{2,}')">
+                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''\.{2,}'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+            </xsl:if>
+            
+        </xsl:for-each>        
         
     </xsl:template>
     
