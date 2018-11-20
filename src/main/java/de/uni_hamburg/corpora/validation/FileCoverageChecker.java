@@ -83,6 +83,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
 
     final String COMA_FILECOVERAGE = "coma-filecoverage";
     final List<String> whitelist;
+    final List<String> fileendingwhitelist;
 
     public FileCoverageChecker() {
         // these are acceptable
@@ -91,6 +92,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         whitelist.add(".gitignore");
         whitelist.add("README");
         whitelist.add("Thumbs.db");
+        fileendingwhitelist = new ArrayList<String>();
     }
 
     /**
@@ -129,7 +131,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName())) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -160,7 +162,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName())) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -191,7 +193,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName())) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -372,7 +374,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File a : files) {
-                            if (whitelist.contains(a.getName())) {
+                            if (whitelist.contains(a.getName()) || fileendingwhitelist.contains(getFileExtension(a))) {
                                 continue;
                             } else if (a.isDirectory()) {
                                 dirs.add(a);
@@ -403,7 +405,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File b : files) {
-                            if (whitelist.contains(b.getName())) {
+                            if (whitelist.contains(b.getName()) || fileendingwhitelist.contains(getFileExtension(b))) {
                                 continue;
                             } else if (b.isDirectory()) {
                                 dirs.add(b);
@@ -434,7 +436,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File c : files) {
-                            if (whitelist.contains(c.getName())) {
+                            if (whitelist.contains(c.getName()) || fileendingwhitelist.contains(getFileExtension(c))) {
                                 continue;
                             } else if (c.isDirectory()) {
                                 dirs.add(c);
@@ -550,6 +552,26 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     @Override
     public Report check(String data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void addWhiteListString(String s) {
+        whitelist.add(s);
+    }
+
+    public void addFileEndingWhiteListString(String s) {
+        fileendingwhitelist.add(s);
+    }
+
+    private String getFileExtension(File f) {
+        String extension = "";
+        String fileName = f.getName();
+        int i = fileName.lastIndexOf('.');
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
     }
 
 }

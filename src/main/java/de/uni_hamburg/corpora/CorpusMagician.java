@@ -224,59 +224,23 @@ public class CorpusMagician {
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("EXB2INELISOTEI");
+        allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("FileCoverageChecker");
+        allExistingCFs.add("FileCoverageCheckerInel");
+        allExistingCFs.add("NormalizeEXB");
+        allExistingCFs.add("NormalizeExbWhitespace");
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
-        //allExistingCFs.add("ExbPatternChecker");
-        //allExistingCFs.add("ExbSegmentationChecker");
-        //allExistingCFs.add("ExbStructureChecker");
-        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
-        //allExistingCFs.add("ComaErrorReportGenerator");
-        //allExistingCFs.add("SchematronChecker");
-        //allExistingCFs.add("RemoveAutoSaveExb");
-        //allExistingCFs.add("RemoveAbsolutePaths");
-        allExistingCFs.add("ComaOverviewGeneration");
-        allExistingCFs.add("EXB2INELISOTEI");
-        allExistingCFs.add("EXB2HIATISOTEI");
-        allExistingCFs.add("NormalizeEXB");
-        //allExistingCFs.add("TierChecker");
-        //allExistingCFs.add("ComaNameChecker");
-        //allExistingCFs.add("TierCheckerWithAnnotation");
-        //allExistingCFs.add("FilenameChecker");
-        //allExistingCFs.add("ComaPIDLengthChecker");
-        //allExistingCFs.add("CmdiChecker");
-        //allExistingCFs.add("NgexmaraldaCorpusChecker");
-//        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
-//        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
-//        for (Class c : classes) {
-//            System.out.println(c.toString());
-//            try {
-//                Constructor cons = c.getConstructor();
-//                try {
-//                    CorpusFunction cf = (CorpusFunction) cons.newInstance();
-//                    allExistingCFs.add(cf.getClass().getName());
-//                } catch (InstantiationException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (IllegalAccessException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (IllegalArgumentException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (InvocationTargetException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            } catch (NoSuchMethodException ex) {
-//                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (SecurityException ex) {
-//                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        /*
         for (String cf : allExistingCFs) {
             //System.out.println(cf);
         }
-
+        */
         return allExistingCFs;
     }
 
@@ -392,10 +356,17 @@ public class CorpusMagician {
                     neo.setfixWhiteSpaces(true);
                     corpusfunctions.add(neo);
                     break;
-
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
                     corpusfunctions.add(gap);
+                    break;
+                case "filecoveragecheckerinel":
+                    FileCoverageChecker fcci = new FileCoverageChecker();
+                    fcci.addFileEndingWhiteListString("flextext");
+                    fcci.addWhiteListString("report-output.html");
+                    fcci.addWhiteListString("Segmentation_Errors.xml");
+                    fcci.addWhiteListString("Structure_Errors.xml");
+                    corpusfunctions.add(fcci);
                     break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
