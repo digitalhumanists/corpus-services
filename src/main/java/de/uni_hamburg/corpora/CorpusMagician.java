@@ -42,6 +42,7 @@ import org.apache.commons.cli.ParseException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
 import java.util.Arrays;
+import java.util.Iterator;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -58,11 +59,10 @@ public class CorpusMagician {
     //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
-    Collection<String> allExistingCFs;
+    static Collection<String> allExistingCFs = new ArrayList<String>();
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
-    static Collection<CorpusFunction> corpusfunctions = new
-        ArrayList<CorpusFunction>();
+    static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
     //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
@@ -115,8 +115,6 @@ public class CorpusMagician {
             }
             corpusfunctions = corpusFunctionStrings2Classes();
 
-
-
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
@@ -152,7 +150,7 @@ public class CorpusMagician {
 
                 }
             }
-            */
+             */
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
@@ -219,9 +217,8 @@ public class CorpusMagician {
     //this shows that it doesn't work to just check for implementations of corpus functions
     //probably need to check for implementations of CorpusFunction?
     //TODO
-    public Collection<String> getAllExistingCFs() {
+    public static Collection<String> getAllExistingCFs() {
 
-        this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
@@ -232,7 +229,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
-		allExistingCFs.add("GenerateAnnotationPanel");
+        allExistingCFs.add("GenerateAnnotationPanel");
         //allExistingCFs.add("ExbPatternChecker");
         //allExistingCFs.add("ExbSegmentationChecker");
         //allExistingCFs.add("ExbStructureChecker");
@@ -245,7 +242,7 @@ public class CorpusMagician {
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("NormalizeEXB");
-	//allExistingCFs.add("TierChecker");
+        //allExistingCFs.add("TierChecker");
         //allExistingCFs.add("ComaNameChecker");
         //allExistingCFs.add("TierCheckerWithAnnotation");
         //allExistingCFs.add("FilenameChecker");
@@ -277,10 +274,19 @@ public class CorpusMagician {
 //            }
 //        }
         for (String cf : allExistingCFs) {
-            System.out.println(cf);
+            //System.out.println(cf);
         }
 
         return allExistingCFs;
+    }
+
+    public static String getAllExistingCFsAsString() {
+        String all = "";
+        for (Iterator<String> it = getAllExistingCFs().iterator(); it.hasNext();) {
+            String s = it.next();
+            all = all + "\n" + s;
+        }
+        return all;
     }
 
     //TODO checks which functions can be run on specified data
@@ -313,7 +319,7 @@ public class CorpusMagician {
                     ComaApostropheChecker cac = new ComaApostropheChecker();
                     corpusfunctions.add(cac);
                     break;
-                 case "comanslinkschecker":
+                case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     corpusfunctions.add(cnslc);
                     break;
@@ -375,11 +381,11 @@ public class CorpusMagician {
                     break;
                 case "exb2hiatisotei":
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
-                   corpusfunctions.add(ehit);
+                    corpusfunctions.add(ehit);
                     break;
                 case "normalizeexb":
                     NormalizeExb ne = new NormalizeExb();
-                   corpusfunctions.add(ne);
+                    corpusfunctions.add(ne);
                     break;
                 case "normalizeexbwhitespace":
                     NormalizeExb neo = new NormalizeExb();
@@ -435,7 +441,7 @@ public class CorpusMagician {
  				case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     corpusfunctions.add(ngex);
-                    break; */              
+                    break; */
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
@@ -606,8 +612,7 @@ public class CorpusMagician {
         Option speed = new Option("s", "speed", false, "faster but more heap space");
         speed.setRequired(false);
         options.addOption(speed);
-        */
-
+         */
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
@@ -619,17 +624,21 @@ public class CorpusMagician {
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
+        String header = "Specify a corpus folder or file and a function to be applied\n\n";
+        String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
+        
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", options);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer);
             System.exit(1);
         }
 
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
-            formatter.printHelp("hzsk-corpus-services", options);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer);
+            System.exit(1);
         }
         /*
         String inputFilePath = cmd.getOptionValue("input");
