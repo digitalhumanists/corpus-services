@@ -577,6 +577,7 @@ public class CorpusMagician {
         // Set option c to take 1 to oo arguments
         corpusfunction.setArgs(Option.UNLIMITED_VALUES);
         corpusfunction.setRequired(true);
+        corpusfunction.setValueSeparator(',');
         options.addOption(corpusfunction);
 
         /*
