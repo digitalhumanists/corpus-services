@@ -69,6 +69,7 @@ public class CorpusMagician {
     static ArrayList<URL> alldata = new ArrayList<URL>();
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
+    static boolean errorsonly = false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
@@ -91,6 +92,7 @@ public class CorpusMagician {
             String urlstring = cmd.getOptionValue("input");
             URL url;
             fixing = cmd.hasOption("f");
+            errorsonly = cmd.hasOption("e");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
@@ -154,7 +156,11 @@ public class CorpusMagician {
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
-                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+                if (errorsonly) {
+                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
+                } else {
+                    reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+                }
                 cio.write(reportOutput, reportlocation);
             } else {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
@@ -240,7 +246,7 @@ public class CorpusMagician {
         for (String cf : allExistingCFs) {
             //System.out.println(cf);
         }
-        */
+         */
         return allExistingCFs;
     }
 
@@ -593,12 +599,16 @@ public class CorpusMagician {
         fix.setRequired(false);
         options.addOption(help);
 
+        Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
+        fix.setRequired(false);
+        options.addOption(errorsonly);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
         String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
-        
+
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
