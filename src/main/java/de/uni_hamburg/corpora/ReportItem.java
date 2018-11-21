@@ -461,7 +461,7 @@ public class ReportItem {
      * Includes quite ugly table of all the reports with a java script to hide
      * errors based on severity.
      */
-    public static String generateDataTableHTML(Collection<ReportItem> errors) {
+    public static String generateDataTableHTML(Collection<ReportItem> errors, String summarylines) {
         
         String report = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         
@@ -535,6 +535,7 @@ public class ReportItem {
                   "    $('table').DataTable({ 'iDisplayLength': 50 });\n" +
                   "} );</script>";
         
+        report += "   <footer>" + summarylines + "</footer>";
         report += "   </body>\n</html>";
         
         return report;

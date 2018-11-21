@@ -154,7 +154,7 @@ public class CorpusMagician {
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
-                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics());
+                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
                 cio.write(reportOutput, reportlocation);
             } else {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
