@@ -87,8 +87,8 @@ public class PrettyPrinter {
             Pattern r3 = Pattern.compile("<event\\s*(end=\"[^\">]*\")\\s+(start=\"[^\">]*\")\\s*>", Pattern.DOTALL);
             prettyXmlString = r3.matcher(prettyXmlString).replaceAll("<event $2 $1>");
             
-            Pattern r4 = Pattern.compile("<tier\\s+(category=\"[^\">]*\")\\s+(display\\-name=\"[^\">]*\")\\s+(id=\"[^\">]*\")\\s+(speaker=\"[^\">]*\")\\s+(type=\"[^\">]*\")\\s*>", Pattern.DOTALL);
-            prettyXmlString = r4.matcher(prettyXmlString).replaceAll("<tier $3 $4 $1 $5 $2>");
+            Pattern r4 = Pattern.compile("<tier\\s+(category=\"[^\">]*\")\\s+(display\\-name=\"[^\">]*\")\\s+(id=\"[^\">]*\")\\s+(speaker=\"[^\">]*\")\\s+(type=\"[^\">]*\")\\s*(/?)>", Pattern.DOTALL);
+            prettyXmlString = r4.matcher(prettyXmlString).replaceAll("<tier $3 $4 $1 $5 $2 $6>");
                    
             return prettyXmlString;
 
