@@ -462,16 +462,17 @@ public class Report {
      */
     public Collection<ReportItem> getErrorStatistics() {
         Collection<ReportItem> errorStats = new ArrayList<ReportItem>();
+        Collection<ReportItem> onlyerrorStats = new ArrayList<ReportItem>();
         for (Map.Entry<String, Collection<ReportItem>> kv
                 : statistics.entrySet()) {
-            for (ReportItem ri : kv.getValue()) {
-                if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
-                    errorStats.addAll(kv.getValue());
+            errorStats.addAll(kv.getValue());
+        }
+        for (ReportItem ri : errorStats) {
+               if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
+                    onlyerrorStats.add(ri);
                 }
 
             }
-
-        }
-        return errorStats;
+        return onlyerrorStats;
     }
 }
