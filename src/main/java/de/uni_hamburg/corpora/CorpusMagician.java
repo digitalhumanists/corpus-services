@@ -69,7 +69,7 @@ public class CorpusMagician {
     static ArrayList<URL> alldata = new ArrayList<URL>();
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
-    static boolean errorsonly = false;
+    static boolean iserrorsonly = false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
@@ -92,7 +92,7 @@ public class CorpusMagician {
             String urlstring = cmd.getOptionValue("input");
             URL url;
             fixing = cmd.hasOption("f");
-            errorsonly = cmd.hasOption("e");
+            iserrorsonly = cmd.hasOption("e");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
@@ -156,7 +156,7 @@ public class CorpusMagician {
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
-                if (errorsonly) {
+                if (iserrorsonly) {
                     reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
                 } else {
                     reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
