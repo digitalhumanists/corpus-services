@@ -157,21 +157,9 @@ public class CorpusMagician {
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
                 if (iserrorsonly) {
-                    System.out.println("############");
-                    System.out.println(report.getErrorStatistics());
-                    System.out.println("############");
-                    System.out.println(report.getRawStatistics());
-                    System.out.println("############");
-                    System.out.println(report.getSummaryLines());
-                    System.out.println("############");
                     reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
-                    System.out.println(reportOutput);
-                    System.out.println("############");
                 } else {
-                    System.out.println(report.getRawStatistics());
-                    System.out.println(report.getSummaryLines());
                     reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
-                    System.out.println(reportOutput);
                 }
                 cio.write(reportOutput, reportlocation);
             } else {
