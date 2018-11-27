@@ -81,8 +81,11 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                 }
 
             }
+            if (!containsRegEx) {
+                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
+            }
         } else {
-            stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
+            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + xpathContext);
         }
         return stats; // return the report with warnings
     }
@@ -108,10 +111,14 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     stats.addCorrect(cdrr, cd, "Replaced " + replace + " with " + replacement + " at " + xpathContext + " here: " + s + " with " + snew);
                 }
             }
-            CorpusIO cio = new CorpusIO();
-            cio.write(doc, cd.getURL());
+            if (containsRegEx) {
+                CorpusIO cio = new CorpusIO();
+                cio.write(doc, cd.getURL());
+            } else {
+                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
+            }
         } else {
-            stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
+            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + xpathContext);
         }
         return stats;
     }

@@ -390,10 +390,8 @@ public class CorpusMagician {
                         System.out.println(cfProperties.getProperty("xpathcontext"));
                     }
                     if (cfProperties.containsKey("coma")) {
-                        System.out.println("It does have coma option");
                         cdrr.setComa(cfProperties.getProperty("coma"));
-                        System.out.println(cfProperties.getProperty("coma"));
-                    }
+                    }                    
                     corpusfunctions.add(cdrr);
                     break;
                 /* 
