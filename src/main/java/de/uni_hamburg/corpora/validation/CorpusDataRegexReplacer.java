@@ -76,14 +76,13 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                 String s = e.getText();
                 if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
                     containsRegEx = true;
-                    System.err.println("CorpusData file is containing " + replace  + " at " + xpathContext + ": " + s);
-                    stats.addWarning(cdrr, cd, "CorpusData file is containing " + replace  + " at " + xpathContext + ": " + s);
-                } //;
-                else {
-                    stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace  + " at " + xpathContext);
+                    System.err.println("CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
+                    stats.addWarning(cdrr, cd, "CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
                 }
 
             }
+        } else {
+            stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
         }
         return stats; // return the report with warnings
     }
@@ -98,15 +97,19 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
         if (!allContextInstances.isEmpty()) {
             for (int i = 0; i < allContextInstances.size(); i++) {
                 Object o = allContextInstances.get(i);
+                //TODO Attributes?
                 Element e = (Element) o;
                 String s = e.getText();
                 if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
                     containsRegEx = true;
                     String snew = s.replaceAll(replace, replacement);    //replace all replace with replacement
+                    //TODO Attributes?
                     e.setText(snew);
-                    stats.addCorrect(cdrr, cd, "Replaced " + replace + " with "+ replacement + " at " + xpathContext + " here: " + s + " with " + snew );
-                } 
+                    stats.addCorrect(cdrr, cd, "Replaced " + replace + " with " + replacement + " at " + xpathContext + " here: " + s + " with " + snew);
+                }
             }
+            CorpusIO cio = new CorpusIO();
+            cio.write(doc, cd.getURL());
         } else {
             stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
         }
@@ -140,4 +143,15 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
     public void setXpathContext(String s) {
         xpathContext = s;
     }
+
+    public void setComa(String s) {
+        if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("wahr") || s.equalsIgnoreCase("ja")) {
+            coma = true;
+        } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
+            coma = false;
+        } else {
+            report.addCritical(cdrr, cd, "Parameter coma not recognized: " + s);
+        }
+    }
+
 }
