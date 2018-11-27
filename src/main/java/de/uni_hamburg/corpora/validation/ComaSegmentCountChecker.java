@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,6 +26,7 @@ import org.xml.sax.SAXException;
 public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
     
     String comaLoc = "";
+    String cscc = "ComaSegmentCountChecker";
     
     /**
     * Default check function which calls the exceptionalCheck function so that the
@@ -38,13 +38,13 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, cscc, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, cscc, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, cscc, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, cscc, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -100,12 +100,12 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
             if(!algorithmName.equals(algorithmNames.get(i))){
                 error = true;
                 System.err.println("Coma file contains different segmentation algorithms: " + algorithmNames.get(i));
-                stats.addWarning("coma-segment-count-checker", "More than one segmentation algorithm: " + algorithmNames.get(i) + " and " + algorithmName + " in " + cd.getURL().getFile());
+                stats.addWarning(cscc, cd, "More than one segmentation algorithm: " + algorithmNames.get(i) + " and " + algorithmName);
                 break;
             } 
         }
         if(!error){
-        stats.addCorrect("coma-segment-count-checker", "Only segmentation " + algorithmNames.get(1) + " in " + cd.getURL().getFile());
+        stats.addCorrect(cscc, cd, "Only segmentation " + algorithmNames.get(1));
         }
         return stats; // return the report with warnings
     }
@@ -128,7 +128,7 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaSegmentCountChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }

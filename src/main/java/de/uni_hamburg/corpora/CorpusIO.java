@@ -1,6 +1,7 @@
 package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -22,6 +23,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
@@ -117,6 +120,15 @@ public class CorpusIO {
             CorpusData cd = null;
             return cd;
         }
+    }
+
+    public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
+        String xslstring = TypeConverter.InputStream2String(getClass().getResourceAsStream(path2resource));
+        System.out.println(path2resource);
+        if (xslstring == null) {
+            throw new IOException("Stylesheet not found!");
+        } 
+        return xslstring;
     }
 
     //TODO
