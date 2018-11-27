@@ -9,8 +9,10 @@ import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.apache.commons.cli.Option;
 
 /**
  *
@@ -22,6 +24,7 @@ public abstract class Publisher implements CorpusFunction {
     Report report;
         Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
             extends CorpusData>>();
+    ValidatorSettings settings;
 
     public Publisher() {
     }
@@ -69,6 +72,42 @@ public abstract class Publisher implements CorpusFunction {
         for (CorpusData cd : cdc) {
             report.merge(publish(cd));
         }
+        return report;
+    }
+    //TODO
+    public Report doMain(String[] args) {
+        settings = new ValidatorSettings("name",
+                "what", "fix");
+        settings.handleCommandLine(args, new ArrayList<Option>());
+        if (settings.isVerbose()) {
+            System.out.println("");
+        }
+        report = new Report();
+        //TODO
+//        for (File f : settings.getInputFiles()) {
+//            if (settings.isVerbose()) {
+//                System.out.println(" * " + f.getName());
+//            }
+//            stats = check(cd);
+//        }
+//
+//        settings = new ValidatorSettings("name",
+//                "what", "fix");
+//        settings.handleCommandLine(args, new ArrayList<Option>());
+//        if (settings.isVerbose()) {
+//            System.out.println("");
+//        }
+//        for (File f : settings.getInputFiles()) {
+//            if (settings.isVerbose()) {
+//                System.out.println(" * " + f.getName());
+//            }
+//            stats = fix(f);
+//            if (settings.isVerbose()) {
+//                System.out.println(stats.getFullReports());
+//            } else {
+//                System.out.println(stats.getSummaryLines());
+//            }
+//        }
         return report;
     }
 

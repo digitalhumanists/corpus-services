@@ -387,21 +387,36 @@ public class CorpusMagician {
                             System.out.println(cfProperties.getProperty("replace"));
                         }
                         if (cfProperties.containsKey("replacement")) {
-                        System.out.println(cfProperties.getProperty("replacement"));
-                        cdrr.setReplacement(cfProperties.getProperty("replacement"));
+                            System.out.println(cfProperties.getProperty("replacement"));
+                            cdrr.setReplacement(cfProperties.getProperty("replacement"));
                         }
                         if (cfProperties.containsKey("xpathcontext")) {
-                        cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
-                        System.out.println(cfProperties.getProperty("xpathcontext"));
+                            cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
+                            System.out.println(cfProperties.getProperty("xpathcontext"));
                         }
-                    }
-                    if (cfProperties != null && cfProperties.containsKey("coma")) {
-                        cdrr.setComa(cfProperties.getProperty("coma"));
+                        if (cfProperties.containsKey("coma")) {
+                            cdrr.setComa(cfProperties.getProperty("coma"));
+                        }
                     }
                     corpusfunctions.add(cdrr);
                     break;
                 case "zipcorpus":
                     ZipCorpus zc = new ZipCorpus();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("SOURCE_FOLDER")) {
+                            zc.setSourceFolder(cfProperties.getProperty("SOURCE_FOLDER"));
+                            System.out.println(cfProperties.getProperty("SOURCE_FOLDER"));
+                        }
+                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {
+                            System.out.println(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                            zc.setOutputFile(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                        }
+                        if (cfProperties.containsKey("AUDIO")) {
+                            zc.setWithAudio(cfProperties.getProperty("AUDIO"));
+                            System.out.println(cfProperties.getProperty("AUDIO"));
+                        }
+                    }
                     corpusfunctions.add(zc);
                     break;
                 default:
