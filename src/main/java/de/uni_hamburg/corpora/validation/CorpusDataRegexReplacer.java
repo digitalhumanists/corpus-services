@@ -23,6 +23,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 /**
  *
@@ -30,6 +31,7 @@ import org.xml.sax.SAXException;
  */
 public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
 
+    //ToDo 
     boolean containsRegEx = false;
     String cdrr = "CorpusDataRegexReplacer";
     String replace = "'";
@@ -82,21 +84,21 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     s = a.getValue();
                 }
                 else {
-                    stats.addWarning(cdrr, cd, "Xpath " + xpathContext + " doesn#t lead to Element or Attribute");
+                    stats.addWarning(cdrr, cd, "Xpath " + escapeHtml4(xpathContext) + " doesn#t lead to Element or Attribute");
                     s ="";
                 }
                 if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
                     containsRegEx = true;
-                    System.err.println("CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
-                    stats.addCritical(cdrr, cd, "CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
+                    System.err.println("CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
+                    stats.addCritical(cdrr, cd, "CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
                 }
 
             }
             if (!containsRegEx) {
-                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
+                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
             }
         } else {
-            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + xpathContext);
+            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
         }
         return stats; // return the report with warnings
     }
@@ -119,17 +121,17 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     String snew = s.replaceAll(replace, replacement);    //replace all replace with replacement
                     //TODO Attributes?
                     e.setText(snew);
-                    stats.addCorrect(cdrr, cd, "Replaced " + replace + " with " + replacement + " at " + xpathContext + " here: " + s + " with " + snew);
+                    stats.addCorrect(cdrr, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                 }
             }
             if (containsRegEx) {
                 CorpusIO cio = new CorpusIO();
                 cio.write(doc, cd.getURL());
             } else {
-                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + replace + " at " + xpathContext);
+                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
             }
         } else {
-            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + xpathContext);
+            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
         }
         return stats;
     }
@@ -168,7 +170,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             coma = false;
         } else {
-            report.addCritical(cdrr, cd, "Parameter coma not recognized: " + s);
+            report.addCritical(cdrr, cd, "Parameter coma not recognized: " + escapeHtml4(s));
         }
     }
 
