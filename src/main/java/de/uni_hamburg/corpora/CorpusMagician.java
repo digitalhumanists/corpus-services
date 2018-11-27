@@ -39,9 +39,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.xml.sax.SAXException;
-import java.util.Arrays;
 import java.util.Iterator;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -242,6 +239,7 @@ public class CorpusMagician {
         allExistingCFs.add("XSLTChecker");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
+        allExistingCFs.add("CorpusDataRegExReplacer");
         /*
         for (String cf : allExistingCFs) {
             //System.out.println(cf);
@@ -373,6 +371,9 @@ public class CorpusMagician {
                     fcci.addWhiteListString("Segmentation_Errors.xml");
                     fcci.addWhiteListString("Structure_Errors.xml");
                     corpusfunctions.add(fcci);
+                    break;
+                case "CorpusDataRegExReplacer":
+                    //ToDo
                     break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
@@ -573,19 +574,22 @@ public class CorpusMagician {
 
         Option input = new Option("i", "input", true, "input file path");
         input.setRequired(true);
+        input.setArgName("FILE PATH");
         options.addOption(input);
 
         Option output = new Option("o", "output", true, "output file");
         output.setRequired(true);
+        output.setArgName("FILE PATH");
         options.addOption(output);
 
         Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
         // Set option c to take 1 to oo arguments
         corpusfunction.setArgs(Option.UNLIMITED_VALUES);
+        corpusfunction.setArgName("CORPUS FUNCTION");
         corpusfunction.setRequired(true);
         corpusfunction.setValueSeparator(',');
         options.addOption(corpusfunction);
-
+        
         /*
         Option speed = new Option("s", "speed", false, "faster but more heap space");
         speed.setRequired(false);
@@ -602,9 +606,10 @@ public class CorpusMagician {
         Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
         fix.setRequired(false);
         options.addOption(errorsonly);
-
+            
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
+        formatter.setOptionComparator(null);
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
         String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
@@ -613,13 +618,13 @@ public class CorpusMagician {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", header, options, footer);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
             System.exit(1);
         }
 
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
-            formatter.printHelp("hzsk-corpus-services", header, options, footer);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
             System.exit(1);
         }
         /*
