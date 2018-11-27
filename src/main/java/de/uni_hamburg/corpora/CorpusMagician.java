@@ -328,7 +328,7 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-				case "tierchecker":
+                case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
                 case "xsltcheckerinel":
@@ -386,16 +386,22 @@ public class CorpusMagician {
                     //try custom properties for the different corpusfunctions
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        cdrr.setReplace(cfProperties.getProperty("replace"));
-                        System.out.println(cfProperties.getProperty("replace"));
+                        if (cfProperties.containsKey("replace")) {
+                            cdrr.setReplace(cfProperties.getProperty("replace"));
+                            System.out.println(cfProperties.getProperty("replace"));
+                        }
+                        if (cfProperties.containsKey("replacement")) {
                         System.out.println(cfProperties.getProperty("replacement"));
                         cdrr.setReplacement(cfProperties.getProperty("replacement"));
+                        }
+                        if (cfProperties.containsKey("xpathcontext")) {
                         cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
                         System.out.println(cfProperties.getProperty("xpathcontext"));
+                        }
                     }
-                    if (cfProperties.containsKey("coma")) {
+                    if (cfProperties != null && cfProperties.containsKey("coma")) {
                         cdrr.setComa(cfProperties.getProperty("coma"));
-                    }                    
+                    }
                     corpusfunctions.add(cdrr);
                     break;
                 /* 
@@ -614,8 +620,8 @@ public class CorpusMagician {
         speed.setRequired(false);
         options.addOption(speed);
          */
-        Option propertyOption = Option.builder()
-                .longOpt("P")
+        Option propertyOption = Option.builder("p")
+                .longOpt("property")
                 .argName("property=value")
                 .hasArgs()
                 .valueSeparator()
@@ -657,8 +663,8 @@ public class CorpusMagician {
             formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
             System.exit(1);
         }
-        if (cmd.hasOption("P")) {
-            cfProperties = cmd.getOptionProperties("P");
+        if (cmd.hasOption("p")) {
+            cfProperties = cmd.getOptionProperties("p");
         }
         /*
         String inputFilePath = cmd.getOptionValue("input");
