@@ -7,7 +7,6 @@ import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.logging.Level;
 import javax.xml.parsers.ParserConfigurationException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -101,27 +100,4 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**
-     * Execute function for calling check and fix functions if necessary.
-     */
-    public Report execute(CorpusData cd, boolean fix) {
-        Report report = new Report();
-        try {
-
-            if (fix) {
-                report.merge(fix(cd));
-            } else {
-                report.merge(check(cd));
-            }
-        } catch (SAXException ex) {
-            report.addException(ex, cac, cd, "Unknown file reading error");
-        } catch (JDOMException ex) {
-            report.addException(ex, cac, cd, "Unknown file reading error");
-        } catch (IOException ex) {
-            report.addException(ex, cac, cd, "Unknown file reading error");
-        } catch (JexmaraldaException ex) {
-            report.addException(ex, cac, cd, "Unknown EXMARaLDA reading error");
-        }
-        return report;
-    }
 }
