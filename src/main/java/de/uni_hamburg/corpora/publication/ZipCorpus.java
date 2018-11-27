@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -34,24 +32,26 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
     List<String> fileList;
     //folder
-    private static String SOURCE_FOLDER = "E:\\Anne\\NganasanCorpus";
-    //get name of folder
-    private static String SOURCE_FOLDER_NAME = SOURCE_FOLDER.substring(SOURCE_FOLDER.lastIndexOf(File.separator) + 1);
+    String SOURCE_FOLDER = "";
     //get path of zip file corpus/resources/corpus.zip
-    private static String OUTPUT_ZIP_FILE;
-    private static Boolean AUDIO = false;
-    Report report = null;
+    String OUTPUT_ZIP_FILE = "";
+    Boolean AUDIO = false;
+    Report stats = new Report();
+    String zc = "ZipCorpus";
+    CorpusData comadata;
 
     public ZipCorpus() {
         fileList = new ArrayList<String>();
     }
 
+    /*
     public static void main(String[] args) {
         ZipCorpus appZip = new ZipCorpus();
         System.out.println(SOURCE_FOLDER);
         appZip.generateFileList(new File(SOURCE_FOLDER));
         appZip.zipIt(OUTPUT_ZIP_FILE, AUDIO);
     }
+    */
 
     /**
      * Zip it
@@ -59,10 +59,14 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      * @param zipFile output ZIP file location
      */
     public Report zipIt(String zipFile, Boolean AUDIO) {
+        //get name of folder
+        if (zipFile.equals("")){
+        String SOURCE_FOLDER_NAME = SOURCE_FOLDER.substring(SOURCE_FOLDER.lastIndexOf(File.separator) + 1);
         if (AUDIO) {
             zipFile = SOURCE_FOLDER + File.separator + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
         } else {
             zipFile = SOURCE_FOLDER + File.separator + "resources" + File.separator + SOURCE_FOLDER_NAME + "NoAudio.zip";
+        }
         }
         byte[] buffer = new byte[1024];
 
@@ -95,10 +99,11 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
             zos.close();
 
             System.out.println("Done");
+            stats.addCorrect(zc, comadata, "Successfully created zip file at " + OUTPUT_ZIP_FILE);
         } catch (IOException ex) {
-            report.addException(ex, "Unknown IO exception");
+            stats.addException(ex, zc, comadata, "Unknown IO exception");
         }
-    return report;
+    return stats;
     }
 
     /**
@@ -107,18 +112,17 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      * @param node file or directory
      */
     public Report generateFileList(File node) {
-
         //add file only
         if (node.isFile()) {
             if (AUDIO) {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf") || node.getName().endsWith(".mp3")) {
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
-                    report.addCorrect("zipfiles", node.getAbsoluteFile().toString() + "added to filelist");
+                    stats.addCorrect(zc, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
             } else {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf")) {
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
-                    report.addCorrect("zipfiles", node.getAbsoluteFile().toString() + "added to filelist");
+                    stats.addCorrect(zc, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
             }
         }
@@ -128,7 +132,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 generateFileList(new File(node, filename));
             }
         }
-    return report;
+    return stats;
     }
 
     /**
@@ -143,10 +147,10 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
     @Override
     public Report publish(CorpusData cd) {
-        Report report;
-        report = generateFileList(new File(SOURCE_FOLDER));
-        report = zipIt(OUTPUT_ZIP_FILE, AUDIO);
-        return report;
+        comadata = cd;
+        stats = generateFileList(new File(SOURCE_FOLDER));
+        stats.merge(zipIt(OUTPUT_ZIP_FILE, AUDIO));
+        return stats;
     }
 
     @Override
@@ -155,14 +159,28 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ZipCorpus.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
 
-    @Override
-    public Report doMain(String[] args) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    public void setSourceFolder(String s) {
+        SOURCE_FOLDER = s;
+    }
+
+    public void setOutputFile(String s) {
+        OUTPUT_ZIP_FILE = s;
+    }
+
+    public void setWithAudio(String s) {
+        if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("wahr") || s.equalsIgnoreCase("ja")) {
+            AUDIO = true;
+        } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
+            AUDIO = false;
+        } else {
+            stats.addCritical(zc, cd, "Parameter coma not recognized: " + s);
+        }
     }
 
 }
