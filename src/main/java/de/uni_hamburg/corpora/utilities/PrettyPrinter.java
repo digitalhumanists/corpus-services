@@ -90,8 +90,8 @@ public class PrettyPrinter {
             Pattern r4 = Pattern.compile("<tier\\s+(category=\"[^\">]*\")\\s+(display\\-name=\"[^\">]*\")\\s+(id=\"[^\">]*\")\\s+(speaker=\"[^\">]*\")\\s+(type=\"[^\">]*\")\\s*(/?)>", Pattern.DOTALL);
             prettyXmlString = r4.matcher(prettyXmlString).replaceAll("<tier $3 $4 $1 $5 $2 $6>");
                    
-            // return certain empty elements with two tags
-            Pattern r5 = Pattern.compile("<(tier|event)([^/>]*?)\\s*/>", Pattern.DOTALL);
+            // return certain empty elements from EXB with opening and closing tags
+            Pattern r5 = Pattern.compile("<(tier|event|ud\\-meta\\-information|languages\\-used|ud\\-speaker\\-information)([^/>]*?)\\s*/>", Pattern.DOTALL);
             prettyXmlString = r5.matcher(prettyXmlString).replaceAll("<$1$2></$1>");
             
             return prettyXmlString;

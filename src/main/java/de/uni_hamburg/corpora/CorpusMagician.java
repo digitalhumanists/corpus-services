@@ -20,7 +20,7 @@ import de.uni_hamburg.corpora.validation.NormalizeExb;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
-//import de.uni_hamburg.corpora.validation.TierChecker;
+import de.uni_hamburg.corpora.validation.TierChecker;
 //import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
@@ -241,6 +241,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("TierChecker");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
@@ -327,6 +328,9 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+				case "tierchecker":
+                    TierChecker tc = new TierChecker();
+                    corpusfunctions.add(tc);
                 case "xsltcheckerinel":
                     XSLTChecker xci = new XSLTChecker();
                     xci.setXSLresource("/xsl/inel-checks.xsl");
@@ -398,10 +402,6 @@ public class CorpusMagician {
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
                     corpusfunctions.add(catfec);
-                    break;
-                case "tierchecker":
-                    TierChecker tc = new TierChecker();
-                    corpusfunctions.add(tc);
                     break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
