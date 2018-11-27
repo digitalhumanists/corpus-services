@@ -32,8 +32,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,7 +88,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
     settings = new ValidatorSettings("ComaNSLinksChecker",
                 "Checks Exmaralda .coma file for NSLink references and relPaths that do not "
                 + "exist", "If input is a directory, performs recursive check "
-                + "from that directory, otherwise checks input file");   
+                + "from that directory, otherwise checks input file");
     }
 
     /**
@@ -103,13 +101,15 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, COMA_NSLINKS, cd , "Unknown parsing error.");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, COMA_NSLINKS, cd , "Unknown parsing error.");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            ioe.printStackTrace();
+            stats.addException(ioe, COMA_NSLINKS, cd, "Unknown file reading error.");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            ex.printStackTrace();
+            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
         }
         return stats;
     }
@@ -150,7 +150,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     File dataFile = new File(urlAbsPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
-                    } 
+                    }
                 }
                 if (settings.getDataDirectory() != null) {
                     String dataPath
@@ -171,10 +171,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS,
+                    stats.addCritical(COMA_NSLINKS, cd,
                             "File in NSLink not found: " + nspath);
                 } else {
-                    stats.addCorrect(COMA_NSLINKS,
+                    stats.addCorrect(COMA_NSLINKS, cd,
                             "File in NSLink was found: " + nspath);
                 }
             }
@@ -204,12 +204,11 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 }
                 if(cd.getURL() != null){
                     URL urlPath = cd.getURL();
-                    URL urlRelPath = new URL(urlPath , relpath.replace(File.separator, "/"));
-                    //System.out.println(urlPath + "##############");
+                    URL urlRelPath = new URL(urlPath , relpath.replace("\\", "/"));
                     File dataFile = new File(urlRelPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
-                    } 
+                    }
                 }
                 if (settings.getDataDirectory() != null) {
                     String dataPath
@@ -230,10 +229,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS,
+                    stats.addCritical(COMA_NSLINKS, cd, 
                             "File in relPath not found: " + relpath);
                 } else {
-                    stats.addCorrect(COMA_NSLINKS,
+                    stats.addCorrect(COMA_NSLINKS, cd,
                             "File in relPath was found: " + relpath);
                 }
             }
@@ -304,18 +303,18 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
     }
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaNSLinksChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
 
     @Override
-    public Report execute(Corpus c) {  
+    public Report execute(Corpus c) {
         for (CorpusData cd : c.getCorpusData()) {
             report.merge(check(cd));
         }

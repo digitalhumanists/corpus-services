@@ -6,7 +6,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
-import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -14,14 +13,13 @@ import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  *
@@ -31,6 +29,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
 
     Document doc = null;
     BasicTranscriptionData btd = null;
+    String rase = "RemoveAutoSaveExb";
     
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
@@ -38,12 +37,13 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
             List al = findAllAutoSaveInstances(cd);
             //if there is no autosave, nothing needs to be done
             if (al.isEmpty()) {
-                report.addCorrect("RemoveAutoSaveExb", "there is no autosave info left, nothing to do");
+                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
             } else {
-                report.addCritical("RemoveAutoSaveExb", "autosave info needs to be removed in " + cd.getURL().getFile());
+                report.addCritical(rase, cd, "autosave info needs to be removed");
+                exmaError.addError("RemoveAutoSaveExb", cd.getURL().getFile(), "", "", false, "autosave info needs to be removed");
             }
         } catch (JDOMException ex) {
-            Logger.getLogger(RemoveAutoSaveExb.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, rase, cd, "unknown reading error");
         }
         return report;
     }
@@ -64,22 +64,21 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
             cd = (CorpusData) btd;
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
-             report.addCorrect("RemoveAutoSaveExb", "removed AutoSave info in " + cd.getURL().getFile());
+             report.addCorrect(rase, cd, "removed AutoSave info");
         } else {
-            report.addCorrect("RemoveAutoSaveExb", "there is no autosave info left, nothing to do");
+            report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
         }
         return report;
     }
 
     @Override
-    public Collection<Class> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PrettyPrintData.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
