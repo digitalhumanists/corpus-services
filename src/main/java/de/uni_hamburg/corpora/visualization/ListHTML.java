@@ -31,6 +31,8 @@ import java.nio.file.Paths;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -91,18 +93,27 @@ public class ListHTML extends AbstractVisualization {
             // create XSLTransformer and set the parameters
             XSLTransformer xt = new XSLTransformer();
             xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
-            xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
+            xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME+" ("+segmAlgorithm+")");
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
 
             // perform XSLT transformation
             result = xt.transform(getUtteranceList(), xsl);
 
-            // insert JavaScript for highlighting
-            String js = TypeConverter.InputStream2String(getClass().getResourceAsStream(JS_HIGHLIGHTING_PATH));
-
-
-            result = result.replace("<!--jsholder-->", js);
-
+            // replace JS/CSS placeholders from XSLT output
+            try{                
+                Pattern regex = Pattern.compile("(<hzsk\\-pi:include( xmlns:hzsk\\-pi=\"https://corpora\\.uni\\-hamburg\\.de/hzsk/xmlns/processing\\-instruction\")?>([^<]+)</hzsk\\-pi:include>)", Pattern.DOTALL);
+                Matcher m = regex.matcher(result);
+                StringBuffer sb = new StringBuffer();
+                while (m.find()) {
+                    String insertion = TypeConverter.InputStream2String(getClass().getResourceAsStream(m.group(3)));
+                    m.appendReplacement(sb, m.group(0).replaceFirst(Pattern.quote(m.group(1)), insertion));
+                }
+                m.appendTail(sb);
+                result = sb.toString();
+            } catch(Exception e){
+                setHTML("Custom Exception for inserting JS/CSS into result: " + e.getLocalizedMessage() + "\n" + result);
+                return;
+            }
 
 
         } catch (TransformerConfigurationException ex) {

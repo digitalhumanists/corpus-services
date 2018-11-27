@@ -20,7 +20,8 @@ public abstract class Publisher implements CorpusFunction {
 
     CorpusData cd;
     Report report;
-    Collection<Class> IsUsableFor = new ArrayList();
+        Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
+            extends CorpusData>>();
 
     public Publisher() {
     }
@@ -71,11 +72,11 @@ public abstract class Publisher implements CorpusFunction {
         return report;
     }
 
-    public abstract Collection<Class> getIsUsableFor();
+    public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
 
-    public void setIsUsableFor(Collection<Class> cdc) {
-        for (Class cl : cdc) {
-            IsUsableFor.add(cl);
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
+        for (Class<? extends CorpusData> cl : cdc){
+        IsUsableFor.add(cl);
         }
     }
 
