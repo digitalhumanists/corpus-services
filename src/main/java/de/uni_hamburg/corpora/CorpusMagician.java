@@ -1,11 +1,11 @@
 package de.uni_hamburg.corpora;
 
-//import de.uni_hamburg.corpora.validation.CmdiChecker;
-//import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
+import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
+import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
-
+import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 //import de.uni_hamburg.corpora.validation.ComaNameChecker;
 //import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -14,12 +14,13 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
+import de.uni_hamburg.corpora.validation.NormalizeExb;
 //import de.uni_hamburg.corpora.validation.FilenameChecker;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
-//import de.uni_hamburg.corpora.validation.TierChecker;
+import de.uni_hamburg.corpora.validation.TierChecker;
 import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import java.io.File;
@@ -41,6 +42,7 @@ import org.apache.commons.cli.ParseException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
 import java.util.Arrays;
+import java.util.Iterator;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -57,17 +59,17 @@ public class CorpusMagician {
     //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
-    Collection<String> allExistingCFs;
+    static Collection<String> allExistingCFs = new ArrayList<String>();
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
-    static Collection<CorpusFunction> corpusfunctions = new
-        ArrayList<CorpusFunction>();
+    static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
     //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
     static ArrayList<URL> alldata = new ArrayList<URL>();
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
+    static boolean iserrorsonly = false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
@@ -90,6 +92,7 @@ public class CorpusMagician {
             String urlstring = cmd.getOptionValue("input");
             URL url;
             fixing = cmd.hasOption("f");
+            iserrorsonly = cmd.hasOption("e");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
@@ -113,8 +116,6 @@ public class CorpusMagician {
                 System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             }
             corpusfunctions = corpusFunctionStrings2Classes();
-
-
 
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
@@ -151,11 +152,15 @@ public class CorpusMagician {
 
                 }
             }
-            */
+             */
             System.out.println(report.getFullReports());
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
-                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics());
+                if (iserrorsonly) {
+                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
+                } else {
+                    reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+                }
                 cio.write(reportOutput, reportlocation);
             } else {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
@@ -218,61 +223,42 @@ public class CorpusMagician {
     //this shows that it doesn't work to just check for implementations of corpus functions
     //probably need to check for implementations of CorpusFunction?
     //TODO
-    public Collection<String> getAllExistingCFs() {
+    public static Collection<String> getAllExistingCFs() {
 
-        this.allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("EXB2INELISOTEI");
+        allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("FileCoverageChecker");
+        allExistingCFs.add("FileCoverageCheckerInel");
+        allExistingCFs.add("NormalizeEXB");
+        allExistingCFs.add("NormalizeExbWhitespace");
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
-        //allExistingCFs.add("ExbPatternChecker");
-        //allExistingCFs.add("ExbSegmentationChecker");
-        //allExistingCFs.add("ExbStructureChecker");
-        //allExistingCFs.add("ComaAddTiersFromExbsCorrector");
-        //allExistingCFs.add("ComaErrorReportGenerator");
-        //allExistingCFs.add("SchematronChecker");
-        //allExistingCFs.add("TierChecker");
-        //allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
-        //allExistingCFs.add("FilenameChecker");
-        //allExistingCFs.add("ComaPIDLengthChecker");
-        //allExistingCFs.add("CmdiChecker");
-        //allExistingCFs.add("NgexmaraldaCorpusChecker");
-//        Reflections reflections = new Reflections("de.uni_hamburg.corpora");
-//        Set<Class<? extends CorpusFunction>> classes = reflections.getSubTypesOf(CorpusFunction.class);
-//        for (Class c : classes) {
-//            System.out.println(c.toString());
-//            try {
-//                Constructor cons = c.getConstructor();
-//                try {
-//                    CorpusFunction cf = (CorpusFunction) cons.newInstance();
-//                    allExistingCFs.add(cf.getClass().getName());
-//                } catch (InstantiationException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (IllegalAccessException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (IllegalArgumentException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (InvocationTargetException ex) {
-//                    Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            } catch (NoSuchMethodException ex) {
-//                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (SecurityException ex) {
-//                Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
+        allExistingCFs.add("TierChecker");
+        allExistingCFs.add("XsltCheckerInel");
+        allExistingCFs.add("GenerateAnnotationPanel");
+        /*
         for (String cf : allExistingCFs) {
-            System.out.println(cf);
+            //System.out.println(cf);
         }
-
+         */
         return allExistingCFs;
+    }
+
+    public static String getAllExistingCFsAsString() {
+        String all = "";
+        for (Iterator<String> it = getAllExistingCFs().iterator(); it.hasNext();) {
+            String s = it.next();
+            all = all + "\n" + s;
+        }
+        return all;
     }
 
     //TODO checks which functions can be run on specified data
@@ -305,7 +291,7 @@ public class CorpusMagician {
                     ComaApostropheChecker cac = new ComaApostropheChecker();
                     corpusfunctions.add(cac);
                     break;
-                 case "comanslinkschecker":
+                case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
                     corpusfunctions.add(cnslc);
                     break;
@@ -344,15 +330,62 @@ public class CorpusMagician {
 				case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
                     corpusfunctions.add(tcwa);
+				case "tierchecker":
+                    TierChecker tc = new TierChecker();
+                    corpusfunctions.add(tc);
+                case "xsltcheckerinel":
+                    XSLTChecker xci = new XSLTChecker();
+                    xci.setXSLresource("/xsl/inel-checks.xsl");
+                    corpusfunctions.add(xci);
+                    break;
+                case "exb2inelisotei":
+                    EXB2INELISOTEI eiit = new EXB2INELISOTEI();
+                    corpusfunctions.add(eiit);
+                    break;
+                case "exb2inelisoteisel":
+                    EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
+                    eiitsel.setLanguage("sel");
+                    corpusfunctions.add(eiitsel);
+                    break;
+                case "exb2inelisoteidlg":
+                    EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
+                    eiitdlg.setLanguage("dlg");
+                    corpusfunctions.add(eiitdlg);
+                    break;
+                case "exb2inelisoteixas":
+                    EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
+                    eiitxas.setLanguage("xas");
+                    corpusfunctions.add(eiitxas);
+                    break;
+                case "exb2hiatisotei":
+                    EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
+                    corpusfunctions.add(ehit);
+                    break;
+                case "normalizeexb":
+                    NormalizeExb ne = new NormalizeExb();
+                    corpusfunctions.add(ne);
+                    break;
+                case "normalizeexbwhitespace":
+                    NormalizeExb neo = new NormalizeExb();
+                    neo.setfixWhiteSpaces(true);
+                    corpusfunctions.add(neo);
+                    break;
+                case "generateannotationpanel":
+                    GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
+                    corpusfunctions.add(gap);
+                    break;
+                case "filecoveragecheckerinel":
+                    FileCoverageChecker fcci = new FileCoverageChecker();
+                    fcci.addFileEndingWhiteListString("flextext");
+                    fcci.addWhiteListString("report-output.html");
+                    fcci.addWhiteListString("Segmentation_Errors.xml");
+                    fcci.addWhiteListString("Structure_Errors.xml");
+                    corpusfunctions.add(fcci);
                     break;
                 /* 
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
                     corpusfunctions.add(catfec);
-                    break;
-                case "tierchecker":
-                    TierChecker tc = new TierChecker();
-                    corpusfunctions.add(tc);
                     break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
@@ -382,7 +415,7 @@ public class CorpusMagician {
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
-                case "ngexmaraldacorpuschecker":
+ 				case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     corpusfunctions.add(ngex);
                     break; */
@@ -550,14 +583,14 @@ public class CorpusMagician {
         // Set option c to take 1 to oo arguments
         corpusfunction.setArgs(Option.UNLIMITED_VALUES);
         corpusfunction.setRequired(true);
+        corpusfunction.setValueSeparator(',');
         options.addOption(corpusfunction);
 
         /*
         Option speed = new Option("s", "speed", false, "faster but more heap space");
         speed.setRequired(false);
         options.addOption(speed);
-        */
-
+         */
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
@@ -566,20 +599,28 @@ public class CorpusMagician {
         fix.setRequired(false);
         options.addOption(help);
 
+        Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
+        fix.setRequired(false);
+        options.addOption(errorsonly);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
+
+        String header = "Specify a corpus folder or file and a function to be applied\n\n";
+        String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
 
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", options);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer);
             System.exit(1);
         }
 
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
-            formatter.printHelp("hzsk-corpus-services", options);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer);
+            System.exit(1);
         }
         /*
         String inputFilePath = cmd.getOptionValue("input");
