@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -31,10 +32,10 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
 
     boolean containsRegEx = false;
     String cdrr = "CorpusDataRegexReplacer";
-    String replace = "";
-    String replacement = "";
+    String replace = "'";
+    String replacement = "´";
     boolean coma = false;
-    String xpathContext = "//";
+    String xpathContext = "/test";
     Document doc = null;
     XPath context;
 
@@ -69,15 +70,25 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
         Pattern replacePattern = Pattern.compile(replace);
         context = XPath.newInstance(xpathContext);
         List allContextInstances = context.selectNodes(doc);
+        String s;
         if (!allContextInstances.isEmpty()) {
             for (int i = 0; i < allContextInstances.size(); i++) {
                 Object o = allContextInstances.get(i);
-                Element e = (Element) o;
-                String s = e.getText();
+                if (o instanceof Element) {
+                    Element e = (Element) o;
+                    s = e.getText();
+                } else if (o instanceof Attribute) {
+                    Attribute a = (Attribute) o;
+                    s = a.getValue();
+                }
+                else {
+                    stats.addWarning(cdrr, cd, "Xpath " + xpathContext + " doesn#t lead to Element or Attribute");
+                    s ="";
+                }
                 if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
                     containsRegEx = true;
                     System.err.println("CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
-                    stats.addWarning(cdrr, cd, "CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
+                    stats.addCritical(cdrr, cd, "CorpusData file is containing " + replace + " at " + xpathContext + ": " + s);
                 }
 
             }
