@@ -22,7 +22,7 @@ import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.TierChecker;
-//import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
+import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import java.io.File;
@@ -242,6 +242,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("TierChecker");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
@@ -324,6 +325,9 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+		case "tiercheckerwithannotation":
+                    TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
+                    corpusfunctions.add(tcwa);				
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
