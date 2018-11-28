@@ -34,8 +34,6 @@ import org.jdom.Text;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import net.sf.saxon.expr.instruct.TerminationException;
@@ -135,23 +133,23 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 cio.write(teiDoc, url);
 
                 System.out.println("document written.");
-                report.addCorrect(ISO_CONV, cd.getURL().getFile(), "ISO TEI conversion of file was successful");
+                report.addCorrect(ISO_CONV, cd, "ISO TEI conversion of file was successful");
             }
 
         } catch (SAXException ex) {
-            report.addExceptionFile(ISO_CONV, ex, cd.getURL().toString(), "Unknown exception error");
+            report.addException(ex, ISO_CONV, cd, "Unknown exception error");
         } catch (FSMException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown finite state machine error");
+            report.addException(ex, ISO_CONV, cd, "Unknown finite state machine error");
         } catch (MalformedURLException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file URL reading error");
+            report.addException(ex, ISO_CONV, cd, "Unknown file URL reading error");
         } catch (JDOMException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file reading error");
+            report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file reading error");
+            report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (TerminationException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Terminated because of XSL message - check structure of input file");
+            report.addException(ex, ISO_CONV, cd, "Terminated because of XSL message - check structure of input file");
         } catch (TransformerException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "XSL transformer error");
+            report.addException(ex, ISO_CONV, cd, "XSL transformer error");
         }
         return report;
     }
@@ -619,7 +617,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+               report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
