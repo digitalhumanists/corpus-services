@@ -125,9 +125,9 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element) nslinks.item(i);
             Node communication = nslink.getParentNode();
-            if (communication.getLocalName().equals("Transcription")) {
+            if (communication.getNodeName() != null && communication.getNodeName().equals("Transcription")) {
                 communicationname = communication.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
-            } else if (communication.getLocalName().equals("Recording")) {
+            } else if (communication.getNodeName() != null && communication.getNodeName().equals("Recording")) {
                 communicationname = communication.getParentNode().getParentNode().getAttributes().getNamedItem("Name").getTextContent();
             } else {
                 //could not find matching communication name
@@ -195,8 +195,8 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
             NodeList reltexts = relpathnode.getChildNodes();
             for (int j = 0; j < reltexts.getLength(); j++) {
                 Node maybeText = reltexts.item(j);
-                Node communicationrel = maybeText.getParentNode();
-                if (communicationrel.getLocalName().equals("File")) {
+                Node communicationrel = maybeText.getParentNode().getParentNode();
+                if (communicationrel.getNodeName() != null && communicationrel.getNodeName().equals("File")) {
                     communicationname = communicationrel.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
                 } else {
                     //could not find matching communication name
