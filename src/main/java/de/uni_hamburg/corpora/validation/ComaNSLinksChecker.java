@@ -85,7 +85,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
     final String COMA_RELPATHS = "coma-relpaths";
 
     public ComaNSLinksChecker() {
-    settings = new ValidatorSettings("ComaNSLinksChecker",
+        settings = new ValidatorSettings("ComaNSLinksChecker",
                 "Checks Exmaralda .coma file for NSLink references and relPaths that do not "
                 + "exist", "If input is a directory, performs recursive check "
                 + "from that directory, otherwise checks input file");
@@ -101,9 +101,9 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, COMA_NSLINKS, cd , "Unknown parsing error.");
+            stats.addException(pce, COMA_NSLINKS, cd, "Unknown parsing error.");
         } catch (SAXException saxe) {
-            stats.addException(saxe, COMA_NSLINKS, cd , "Unknown parsing error.");
+            stats.addException(saxe, COMA_NSLINKS, cd, "Unknown parsing error.");
         } catch (IOException ioe) {
             ioe.printStackTrace();
             stats.addException(ioe, COMA_NSLINKS, cd, "Unknown file reading error.");
@@ -121,8 +121,18 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString()));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         Report stats = new Report();
+        String communicationname;
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element) nslinks.item(i);
+            Node communication = nslink.getParentNode();
+            if (communication.getLocalName().equals("Transcription")) {
+                communicationname = communication.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
+            } else if (communication.getLocalName().equals("Recording")) {
+                communicationname = communication.getParentNode().getParentNode().getAttributes().getNamedItem("Name").getTextContent();
+            } else {
+                //could not find matching communication name
+                communicationname = "Could not figure out Communication name";
+            }
             NodeList nstexts = nslink.getChildNodes();
             for (int j = 0; j < nstexts.getLength(); j++) {
                 Node maybeText = nstexts.item(j);
@@ -143,9 +153,9 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 if (absFile.exists()) {
                     found = true;
                 }
-                if(cd.getURL() != null){
+                if (cd.getURL() != null) {
                     URL urlPath = cd.getURL();
-                    URL urlAbsPath = new URL(urlPath , nspath.replace(File.separator, "/"));
+                    URL urlAbsPath = new URL(urlPath, nspath.replace(File.separator, "/"));
                     //System.out.println(urlPath + "##############");
                     File dataFile = new File(urlAbsPath.toURI());
                     if (dataFile.exists()) {
@@ -172,7 +182,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 }
                 if (!found) {
                     stats.addCritical(COMA_NSLINKS, cd,
-                            "File in NSLink not found: " + nspath);
+                            "In Communication: " + communicationname + " File in NSLink not found: " + nspath);
                 } else {
                     stats.addCorrect(COMA_NSLINKS, cd,
                             "File in NSLink was found: " + nspath);
@@ -185,6 +195,13 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
             NodeList reltexts = relpathnode.getChildNodes();
             for (int j = 0; j < reltexts.getLength(); j++) {
                 Node maybeText = reltexts.item(j);
+                Node communicationrel = maybeText.getParentNode();
+                if (communicationrel.getLocalName().equals("File")) {
+                    communicationname = communicationrel.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
+                } else {
+                    //could not find matching communication name
+                    communicationname = "Could not figure out Communication name";
+                }
                 if (maybeText.getNodeType() != Node.TEXT_NODE) {
                     System.err.print("This is not a text node: "
                             + maybeText);
@@ -202,9 +219,9 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 if (absFile.exists()) {
                     found = true;
                 }
-                if(cd.getURL() != null){
+                if (cd.getURL() != null) {
                     URL urlPath = cd.getURL();
-                    URL urlRelPath = new URL(urlPath , relpath.replace("\\", "/"));
+                    URL urlRelPath = new URL(urlPath, relpath.replace("\\", "/"));
                     File dataFile = new File(urlRelPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
@@ -229,8 +246,8 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS, cd, 
-                            "File in relPath not found: " + relpath);
+                    stats.addCritical(COMA_NSLINKS, cd,
+                            "In Communication: " + communicationname + " File in relPath not found: " + relpath);
                 } else {
                     stats.addCorrect(COMA_NSLINKS, cd,
                             "File in relPath was found: " + relpath);
