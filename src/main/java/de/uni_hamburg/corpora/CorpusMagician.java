@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
 import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
@@ -23,6 +24,7 @@ import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.TierChecker;
 import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
+import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,10 +41,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.xml.sax.SAXException;
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -73,6 +74,7 @@ public class CorpusMagician {
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
+    static Properties cfProperties;
 
     public CorpusMagician() {
     }
@@ -224,10 +226,10 @@ public class CorpusMagician {
     //probably need to check for implementations of CorpusFunction?
     //TODO
     public static Collection<String> getAllExistingCFs() {
-
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
         allExistingCFs.add("EXB2INELISOTEI");
@@ -244,11 +246,7 @@ public class CorpusMagician {
         allExistingCFs.add("TierChecker");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
-        /*
-        for (String cf : allExistingCFs) {
-            //System.out.println(cf);
-        }
-         */
+        allExistingCFs.add("CorpusDataRegexReplacer");
         return allExistingCFs;
     }
 
@@ -327,10 +325,10 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-				case "tiercheckerwithannotation":
+		case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
-                    corpusfunctions.add(tcwa);
-				case "tierchecker":
+                    corpusfunctions.add(tcwa);				
+                case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
                 case "xsltcheckerinel":
@@ -382,43 +380,49 @@ public class CorpusMagician {
                     fcci.addWhiteListString("Structure_Errors.xml");
                     corpusfunctions.add(fcci);
                     break;
-                /* 
-                case "comaaddtiersfromexbscorrector":
-                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
-                    corpusfunctions.add(catfec);
+                case "corpusdataregexreplacer":
+                    //ToDo                   
+                    CorpusDataRegexReplacer cdrr = new CorpusDataRegexReplacer();
+                    //try custom properties for the different corpusfunctions
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("replace")) {
+                            cdrr.setReplace(cfProperties.getProperty("replace"));
+                            System.out.println(cfProperties.getProperty("replace"));
+                        }
+                        if (cfProperties.containsKey("replacement")) {
+                            System.out.println(cfProperties.getProperty("replacement"));
+                            cdrr.setReplacement(cfProperties.getProperty("replacement"));
+                        }
+                        if (cfProperties.containsKey("xpathcontext")) {
+                            cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
+                            System.out.println(cfProperties.getProperty("xpathcontext"));
+                        }
+                        if (cfProperties.containsKey("coma")) {
+                            cdrr.setComa(cfProperties.getProperty("coma"));
+                        }
+                    }
+                    corpusfunctions.add(cdrr);
                     break;
-                case "comanamechecker":
-                    ComaNameChecker cnc = new ComaNameChecker();
-                    corpusfunctions.add(cnc);
+                case "zipcorpus":
+                    ZipCorpus zc = new ZipCorpus();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("SOURCE_FOLDER")) {
+                            zc.setSourceFolder(cfProperties.getProperty("SOURCE_FOLDER"));
+                            System.out.println(cfProperties.getProperty("SOURCE_FOLDER"));
+                        }
+                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {
+                            System.out.println(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                            zc.setOutputFile(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                        }
+                        if (cfProperties.containsKey("AUDIO")) {
+                            zc.setWithAudio(cfProperties.getProperty("AUDIO"));
+                            System.out.println(cfProperties.getProperty("AUDIO"));
+                        }
+                    }
+                    corpusfunctions.add(zc);
                     break;
-                case "comapidlengthchecker":
-                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
-                    corpusfunctions.add(cplc);
-                    break;
-                case "filenamechecker":
-                    FilenameChecker fnc = new FilenameChecker();
-                    corpusfunctions.add(fnc);
-                    break;
-                case "exbpatternchecker":
-                    ExbPatternChecker epc = new ExbPatternChecker();
-                    report.merge(runCorpusFunction(corpus, epc));
-                    break;
-                case "exbsegmentationchecker":
-                    ExbSegmentationChecker esg = new ExbSegmentationChecker();
-                    corpusfunctions.add(esg);
-                    break;
-                case "exbstructurechecker":
-                    ExbStructureChecker esc = new ExbStructureChecker();
-                    corpusfunctions.add(esc);
-                    break;
-                case "cmdichecker":
-                    CmdiChecker cmdi = new CmdiChecker();
-                    corpusfunctions.add(cmdi);
-                    break;
- 				case "ngexmaraldacorpuschecker":
-                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
-                    corpusfunctions.add(ngex);
-                    break; */
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
@@ -573,15 +577,18 @@ public class CorpusMagician {
 
         Option input = new Option("i", "input", true, "input file path");
         input.setRequired(true);
+        input.setArgName("FILE PATH");
         options.addOption(input);
 
         Option output = new Option("o", "output", true, "output file");
         output.setRequired(true);
+        output.setArgName("FILE PATH");
         options.addOption(output);
 
         Option corpusfunction = new Option("c", "corpusfunction", true, "corpus function");
         // Set option c to take 1 to oo arguments
         corpusfunction.setArgs(Option.UNLIMITED_VALUES);
+        corpusfunction.setArgName("CORPUS FUNCTION");
         corpusfunction.setRequired(true);
         corpusfunction.setValueSeparator(',');
         options.addOption(corpusfunction);
@@ -591,6 +598,17 @@ public class CorpusMagician {
         speed.setRequired(false);
         options.addOption(speed);
          */
+        Option propertyOption = Option.builder("p")
+                .longOpt("property")
+                .argName("property=value")
+                .hasArgs()
+                .valueSeparator()
+                .numberOfArgs(2)
+                .desc("use value for given properties")
+                .build();
+
+        options.addOption(propertyOption);
+
         Option fix = new Option("f", "fix", false, "fixes problems automatically");
         fix.setRequired(false);
         options.addOption(fix);
@@ -605,6 +623,7 @@ public class CorpusMagician {
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
+        formatter.setOptionComparator(null);
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
         String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
@@ -613,14 +632,17 @@ public class CorpusMagician {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", header, options, footer);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
             System.exit(1);
         }
 
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
-            formatter.printHelp("hzsk-corpus-services", header, options, footer);
+            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
             System.exit(1);
+        }
+        if (cmd.hasOption("p")) {
+            cfProperties = cmd.getOptionProperties("p");
         }
         /*
         String inputFilePath = cmd.getOptionValue("input");
