@@ -71,6 +71,7 @@ public class ExmaErrorList {
 
     /**
      * Add an error in named statistics bucket.
+     * @todo change input filename to corpusdata object
      */
     public void addError(String statId, String fileName, String tierID, String eventStart, boolean done, String description) {
         Collection<ExmaErrorListItem> stat = getOrCreateStatistic(statId);
