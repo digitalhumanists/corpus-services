@@ -5,10 +5,14 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.net.URL;
+import java.util.Collection;
+
 /**
  *
  * @author fsnv625
  */
 interface Metadata extends CorpusData{
     
+    public Collection<URL> getReferencedCorpusDataURLs(); 
 }

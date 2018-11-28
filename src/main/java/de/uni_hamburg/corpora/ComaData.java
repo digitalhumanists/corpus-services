@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -24,6 +25,11 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
 
 /**
  *
@@ -36,6 +42,14 @@ public class ComaData implements Metadata, CorpusData {
     URL url;
     Document readcomaasjdom = new Document();
     String originalstring;
+
+    public String CORPUS_BASEDIRECTORY = "";
+    
+    public static String SEGMENTED_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='true']/NSLink";
+    public static String BASIC_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='false']/NSLink";
+    public static String ALL_FILE_XPATH = "//Transcription/NSLink";
+    
+    public ArrayList<URL> referencedCorpusDataURLs;
 
     public ComaData() {
     }
@@ -92,7 +106,38 @@ public class ComaData implements Metadata, CorpusData {
         return originalstring;
     }
 
-    @Override
+    public Collection<URL> getReferencedCorpusDataURLs() {
+        try {
+            URI uri = url.toURI();
+            URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+            CORPUS_BASEDIRECTORY = parentURI.toString();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(ComaData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //now add the URLs from the files
+        //do we need to have different ArrayLists for exb, exs, audio, pdf?
+        return referencedCorpusDataURLs;
+    }
+    
+    public ArrayList<String> getAllFilenames() {
+		try {
+			ArrayList<String> result = new ArrayList<>();
+			XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
+			List transcriptionList = xpath.selectNodes(readcomaasjdom);
+			for (int pos = 0; pos < transcriptionList.size(); pos++) {
+				Element nslink = (Element) (transcriptionList.get(pos));
+				// currentElement = nslink;
+				// String fullTranscriptionName = CORPUS_BASEDIRECTORY + "\\" +
+				// nslink.getText();
+				result.add(nslink.getText());
+			}
+			return result;
+		} catch (JDOMException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
     public void updateUnformattedString(String newUnformattedString) {
         originalstring = newUnformattedString;
     }
