@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation-specification>
+	<annotation-set exmaralda-tier-category="k">
+        <category name="k-tags">            
+			<tag name="k"/>
+			<description>free comment</description>
+		</category>	
+	</annotation-set>	
+	<annotation-set exmaralda-tier-category="translations">
+		<category name="translation-tags">
+            <description>translations to different languages</description>
+
+			<category name="German">
+				<tag name="de"/>
+				<description>German translation</description>
+			</category>	
+			<category name="Standard German">
+				<tag name="hd"/>
+				<description>Standard German translation</description>
+			</category>	
+        </category>
+	</annotation-set>
+	<annotation-set exmaralda-tier-category="nv">
+        <category name="nv-tags">            
+			<tag name="nv"/>
+			<description>non-verbal</description>
+		</category>		
+	</annotation-set>		
+	<annotation-set exmaralda-tier-category="akz">
+        <category name="akz-tags">            
+			<tag name="akz"/>
+			<description>accentuation/stress</description>
+		</category>		
+	</annotation-set>	
+	<annotation-set exmaralda-tier-category="sup">
+        <category name="sup-tags">            
+			<tag name="sup"/>
+			<description>suprasegmental information</description>
+		</category>		
+	</annotation-set>	
+	<annotation-set exmaralda-tier-category="cs">
+        <category name="cs-tags">            
+			<tag name="cs"/>
+			<description>code-switch</description>
+		</category>		
+	</annotation-set>	
+</annotation-specification>

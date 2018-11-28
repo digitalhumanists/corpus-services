@@ -34,8 +34,6 @@ import org.jdom.Text;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import net.sf.saxon.expr.instruct.TerminationException;
@@ -52,7 +50,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     String language = "en";
 
     //testing and debuging stuff
-    /* String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
+    /*String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
     String intermediate0 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exs";
     String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
     String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
@@ -135,23 +133,23 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 cio.write(teiDoc, url);
 
                 System.out.println("document written.");
-                report.addCorrect(ISO_CONV, cd.getURL().getFile(), "ISO TEI conversion of file was successful");
+                report.addCorrect(ISO_CONV, cd, "ISO TEI conversion of file was successful");
             }
 
         } catch (SAXException ex) {
-            report.addExceptionFile(ISO_CONV, ex, cd.getURL().toString(), "Unknown exception error");
+            report.addException(ex, ISO_CONV, cd, "Unknown exception error");
         } catch (FSMException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown finite state machine error");
+            report.addException(ex, ISO_CONV, cd, "Unknown finite state machine error");
         } catch (MalformedURLException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file URL reading error");
+            report.addException(ex, ISO_CONV, cd, "Unknown file URL reading error");
         } catch (JDOMException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file reading error");
+            report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Unknown file reading error");
+            report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (TerminationException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "Terminated because of XSL message - check structure of input file");
+            report.addException(ex, ISO_CONV, cd, "Terminated because of XSL message - check structure of input file");
         } catch (TransformerException ex) {
-            report.addException(ISO_CONV, ex, cd.getURL().toString(), "XSL transformer error");
+            report.addException(ex, ISO_CONV, cd, "XSL transformer error");
         }
         return report;
     }
@@ -251,6 +249,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     //and the generating of the ids
                     generateWordIDs(transformedDocument);
                     if (transformedDocument != null) {
+                        //for testing only
                         //cio.write(transformedDocument, new URL(intermediate4));
                         //Here the annotations are taken care of
                         //this is important for the INEL morpheme segmentations
@@ -260,6 +259,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                         if (result3 != null) {
                             finalDocument = IOUtilities.readDocumentFromString(result3);
                             if (finalDocument != null) {
+                                //for testing only
                                 //cio.write(finalDocument, new URL(intermediate5));
                             }
                         }
@@ -545,6 +545,25 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             //System.out.println("*** " + wordID);
             pc.setAttribute("id", incID, Namespace.XML_NAMESPACE);
         }
+        
+         // we also need this for seg elements
+        XPath segXPath = XPath.newInstance("//tei:seg[not(@xml:id)]");
+        pcXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
+        pcXPath.addNamespace(Namespace.XML_NAMESPACE);
+
+        List segs = segXPath.selectNodes(document);
+        count = 1;
+        for (Object o : segs) {
+            Element seg = (Element) o;
+            while (allExistingIDs.contains("seg" + Integer.toString(count))) {
+                count++;
+            }
+
+            String segID = "seg" + Integer.toString(count);
+            allExistingIDs.add(segID);
+            //System.out.println("*** " + wordID);
+            seg.setAttribute("id", segID, Namespace.XML_NAMESPACE);
+        }
     }
 
     //TODO
@@ -598,7 +617,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+               report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
