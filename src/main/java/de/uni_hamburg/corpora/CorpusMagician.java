@@ -56,7 +56,9 @@ import javax.xml.transform.TransformerException;
 public class CorpusMagician {
 
     //the whole corpus I want to run checks on
-    Corpus corpus;
+    static Corpus corpus;
+    //Basedirectory if it exists
+    static String basedirectory;
     //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
@@ -122,6 +124,12 @@ public class CorpusMagician {
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
+            //get the basedirectory if there is a coma file
+            if (!(corpus.getMetadata().isEmpty())){
+                Metadata md = corpus.getMetadata().iterator().next();
+                ComaData cod = (ComaData) md;
+                basedirectory = cod.getBasedirectory();
+            }
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
@@ -159,16 +167,15 @@ public class CorpusMagician {
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
                 if (iserrorsonly) {
-                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
+                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
                 } else {
                     reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
                 }
-                cio.write(reportOutput, reportlocation);
             } else {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
-                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
-                cio.write(reportOutput, reportlocation);
+                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();  
             }
+            cio.write(reportOutput, reportlocation);
             //create the error list file
             //needs to be OS independent
             String errorstring = new File(reportstring).getParent() + File.separator + "errorlist.xml";
