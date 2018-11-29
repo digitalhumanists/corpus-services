@@ -15,59 +15,21 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import java.io.File;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.List;
-import java.util.Map;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.XMLConstants;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.StringUtils;
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
-import org.exmaralda.partitureditor.jexmaralda.BasicBody;
-import org.exmaralda.partitureditor.jexmaralda.Tier;
 import org.jdom.JDOMException;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URISyntaxException;
 
@@ -77,18 +39,14 @@ import java.net.URISyntaxException;
  */
 public class ComaNSLinksChecker extends Checker implements CommandLineable, CorpusFunction {
 
-    ValidatorSettings settings;
     String referencePath = "./";
     String comaLoc = "";
+    String communicationname;
 
     final String COMA_NSLINKS = "coma-nslinks";
     final String COMA_RELPATHS = "coma-relpaths";
 
     public ComaNSLinksChecker() {
-        settings = new ValidatorSettings("ComaNSLinksChecker",
-                "Checks Exmaralda .coma file for NSLink references and relPaths that do not "
-                + "exist", "If input is a directory, performs recursive check "
-                + "from that directory, otherwise checks input file");
     }
 
     /**
@@ -116,12 +74,9 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
 
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString()));
+        Document doc = (Document) TypeConverter.String2JdomDocument(cd.toSaveableString());
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         Report stats = new Report();
-        String communicationname;
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element) nslinks.item(i);
             Node communication = nslink.getParentNode();
@@ -149,14 +104,16 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     found = true;
                 }
                 String absPath = referencePath + File.separator + nspath;
+                System.out.println(absPath + "##############");
                 File absFile = new File(absPath);
                 if (absFile.exists()) {
                     found = true;
                 }
                 if (cd.getURL() != null) {
                     URL urlPath = cd.getURL();
+                    //I think here is the Linux Problem 
                     URL urlAbsPath = new URL(urlPath, nspath.replace(File.separator, "/"));
-                    //System.out.println(urlPath + "##############");
+                    System.out.println(urlPath + "##############");
                     File dataFile = new File(urlAbsPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
