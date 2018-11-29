@@ -469,7 +469,9 @@ public class Report {
         }
         for (ReportItem ri : errorStats) {
                if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
-                    onlyerrorStats.add(ri);
+                   //now make the Location relative to the base dir
+                   ri.getLocation();
+                   onlyerrorStats.add(ri);
                 }
 
             }
