@@ -39,6 +39,7 @@ public class ComaData implements Metadata, CorpusData {
 
     //TODO
     //private Coma coma;
+    //TODO change exceptions to adding ReportItems
     URL url;
     Document readcomaasjdom = new Document();
     String originalstring;
@@ -63,6 +64,9 @@ public class ComaData implements Metadata, CorpusData {
            originalstring = new
                 String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
             //loadFile(f);
+            URI uri = url.toURI();
+            URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+            CORPUS_BASEDIRECTORY = parentURI.toString();
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -116,6 +120,7 @@ public class ComaData implements Metadata, CorpusData {
         }
         //now add the URLs from the files
         //do we need to have different ArrayLists for exb, exs, audio, pdf?
+        //TODO! Waht happened here?
         return referencedCorpusDataURLs;
     }
     
@@ -140,5 +145,13 @@ public class ComaData implements Metadata, CorpusData {
 
     public void updateUnformattedString(String newUnformattedString) {
         originalstring = newUnformattedString;
+    }
+    
+    public void setBaseDirectory(String s) {
+        CORPUS_BASEDIRECTORY = s;
+    }
+    
+    public String getBasedirectory() {
+        return CORPUS_BASEDIRECTORY;
     }
 }

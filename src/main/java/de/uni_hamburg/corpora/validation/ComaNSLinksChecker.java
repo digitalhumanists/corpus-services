@@ -8,6 +8,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.Corpus;
@@ -74,9 +75,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
 
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
-        Document doc = (Document) TypeConverter.String2JdomDocument(cd.toSaveableString());
+        Document doc = TypeConverter.JdomDocument2W3cDocument(TypeConverter.String2JdomDocument(cd.toSaveableString()));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         Report stats = new Report();
+        ComaData cdcoma = (ComaData) cd;
         for (int i = 0; i < nslinks.getLength(); i++) {
             Element nslink = (Element) nslinks.item(i);
             Node communication = nslink.getParentNode();
@@ -119,18 +121,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                         found = true;
                     }
                 }
-                if (settings.getDataDirectory() != null) {
-                    String dataPath
-                            = settings.getDataDirectory().getCanonicalPath()
-                            + File.separator + nspath;
-                    File dataFile = new File(dataPath);
-                    if (dataFile.exists()) {
-                        found = true;
-                    }
-                }
-                if (settings.getBaseDirectory() != null) {
+                if (cdcoma.getBasedirectory() != null) {
+                    File basedirectory = new File(cdcoma.getBasedirectory());
                     String basePath
-                            = settings.getBaseDirectory().getCanonicalPath()
+                            = basedirectory.getCanonicalPath()
                             + File.separator + nspath;
                     File baseFile = new File(basePath);
                     if (baseFile.exists()) {
@@ -153,7 +147,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
             for (int j = 0; j < reltexts.getLength(); j++) {
                 Node maybeText = reltexts.item(j);
                 Node communicationrel = maybeText.getParentNode().getParentNode();
-                if (communicationrel.getNodeName() != null && communicationrel.getNodeName().equals("File")) {
+                if (communicationrel.getNodeName() != null && communicationrel.getNodeName().equals("File") && communicationrel.getParentNode().hasAttributes() && communicationrel.getParentNode().getAttributes().getNamedItem("Name") != null) {
                     communicationname = communicationrel.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
                 } else {
                     //could not find matching communication name
@@ -184,18 +178,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                         found = true;
                     }
                 }
-                if (settings.getDataDirectory() != null) {
-                    String dataPath
-                            = settings.getDataDirectory().getCanonicalPath()
-                            + File.separator + relpath;
-                    File dataFile = new File(dataPath);
-                    if (dataFile.exists()) {
-                        found = true;
-                    }
-                }
-                if (settings.getBaseDirectory() != null) {
+               if (cdcoma.getBasedirectory() != null) {
+                    File basedirectory = new File(cdcoma.getBasedirectory());
                     String basePath
-                            = settings.getBaseDirectory().getCanonicalPath()
+                            = basedirectory.getCanonicalPath()
                             + File.separator + relpath;
                     File baseFile = new File(basePath);
                     if (baseFile.exists()) {
