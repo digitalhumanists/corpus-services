@@ -81,7 +81,7 @@ public class ExmaErrorList {
     /**
      * Create the error list xml file from all the errors.
      */
-    public static void createFullErrorList(URL location) throws ParserConfigurationException, TransformerConfigurationException, TransformerException {
+    public static Document createFullErrorList() throws ParserConfigurationException, TransformerConfigurationException, TransformerException {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
@@ -112,12 +112,13 @@ public class ExmaErrorList {
                 secondElement.appendChild(error);
             }
         }
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        return doc;
+        /* TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
         File f = new File(location.getFile());
         URI u = f.toURI();
         StreamResult result = new StreamResult(new File(u));
-        transformer.transform(source, result);
+        transformer.transform(source, result); */
     }
 }

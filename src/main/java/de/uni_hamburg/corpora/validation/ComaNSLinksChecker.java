@@ -32,7 +32,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
@@ -122,9 +124,11 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                 if (cdcoma.getBasedirectory() != null) {
-                    File basedirectory = new File(cdcoma.getBasedirectory());
+                    //File basedirectory = new File(cdcoma.getBasedirectory());
+                    URI uri = cdcoma.getBasedirectory().toURI();
+                    URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
                     String basePath
-                            = basedirectory.getCanonicalPath()
+                            = Paths.get(parentURI).toString()
                             + File.separator + nspath;
                     File baseFile = new File(basePath);
                     if (baseFile.exists()) {
@@ -179,9 +183,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                if (cdcoma.getBasedirectory() != null) {
-                    File basedirectory = new File(cdcoma.getBasedirectory());
+                    URI uri = cdcoma.getBasedirectory().toURI();
+                    URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
                     String basePath
-                            = basedirectory.getCanonicalPath()
+                            = Paths.get(parentURI).toString()
                             + File.separator + relpath;
                     File baseFile = new File(basePath);
                     if (baseFile.exists()) {

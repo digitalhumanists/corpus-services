@@ -3,6 +3,7 @@ package de.uni_hamburg.corpora;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
 import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
@@ -28,6 +29,8 @@ import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +49,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.jdom.Document;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -58,7 +62,7 @@ public class CorpusMagician {
     //the whole corpus I want to run checks on
     static Corpus corpus;
     //Basedirectory if it exists
-    static String basedirectory;
+    static URL basedirectory;
     //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
@@ -167,7 +171,9 @@ public class CorpusMagician {
             String reportOutput;
             if (reportlocation.getFile().endsWith("html")) {
                 if (iserrorsonly) {
-                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
+                    //ToDo
+                    //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
+                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
                 } else {
                     reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
                 }
@@ -178,9 +184,15 @@ public class CorpusMagician {
             cio.write(reportOutput, reportlocation);
             //create the error list file
             //needs to be OS independent
-            String errorstring = new File(reportstring).getParent() + File.separator + "errorlist.xml";
-            URL errorlistlocation = Paths.get(errorstring).toUri().toURL();
-            ExmaErrorList.createFullErrorList(errorlistlocation);
+            //There is an error for me when running on windows: \null gets created
+            URI uri = reportlocation.toURI();
+            URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+            String errorlistlocstring = Paths.get(parentURI).toString() + File.separator + "CorpusServices_Errors.xml";
+            URL errorlistlocation = Paths.get(errorlistlocstring).toUri().toURL();
+            System.out.println("Wrote ErrorList at " + errorlistlocation);
+            Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
+            //System.out.println(exmaErrorList.toString());
+            cio.write(exmaErrorList, errorlistlocation);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -188,6 +200,8 @@ public class CorpusMagician {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TransformerException ex) {
+            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
         }
 
