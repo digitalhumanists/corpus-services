@@ -74,22 +74,22 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                 switch (lineParts[0].toUpperCase()) {
                     case "WARNING":
                         r.addWarning(xc, cd, lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
                         break;
                     case "CRITICAL":
                         r.addCritical(xc, cd, lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
                         break;
                     case "NOTE":
                         r.addNote(xc, cd, lineParts[1]);
                         break;
                     case "MISSING":
                         r.addMissing(xc, cd, lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
                         break;
                     default:
                         r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
                 }
 
                 i++;

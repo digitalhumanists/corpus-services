@@ -33,7 +33,7 @@
 
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
         <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), '''', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
 
@@ -44,32 +44,32 @@
 
             <!-- Check transcription name against communication name -->
             <xsl:for-each select="*:Transcription[not(*:Name = $COM_NAME)]">
-                <xsl:value-of select="concat('CRITICAL;The transcription name ''', *:Name, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription name ''', *:Name, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
 
             <!-- Check transcription file name against communication name -->
             <xsl:for-each select="*:Transcription[not(matches(*:Filename, concat('^', $COM_NAME, '(\.exb|_s\.exs)$')))]">
-                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
 
             <!-- Compare transcription Filename and NSLink -->
             <xsl:for-each select="*:Transcription[not(ends-with(*:NSLink, *:Filename))]">
-                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from NSLink ''', *:NSLink, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from NSLink ''', *:NSLink, ''';;', $NEWLINE)"/>
             </xsl:for-each>
 
             <!-- Check recording name against communication name -->
             <xsl:for-each select="*:Recording[not(*:Name = $COM_NAME)]">
-                <xsl:value-of select="concat('CRITICAL;The recording name ''', *:Name, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The recording name ''', *:Name, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
 
             <!-- Compare recording Filename and communication name -->
             <xsl:for-each select="*:Recording/*:Media[not(ends-with(string-join(tokenize(tokenize(*:NSLink, '/')[last()], '\.')[position() != last()], '.'), $COM_NAME))]">
-                <xsl:value-of select="concat('CRITICAL;The recording NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The recording NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
 
             <!-- check if paths are relative -->
             <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
-                <xsl:value-of select="concat('WARNING;The file reference ''', text(), ''' appears to be an absolute path', $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;The file reference ''', text(), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
 
         </xsl:for-each>
@@ -81,7 +81,7 @@
 
             <!-- Check speaker ID pattern -->
             <xsl:for-each select="*:abbreviation[not(matches(text(), '^[A-Za-z0-9]+$'))]">
-                <xsl:value-of select="concat('CRITICAL;The speaker abbreviation ', ., ' does not conform to pattern ''[A-Za-z0-9]+''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The speaker abbreviation ', ., ' does not conform to pattern ''[A-Za-z0-9]+'';;', $NEWLINE)"/>
             </xsl:for-each>
 
         </xsl:for-each>
@@ -97,7 +97,7 @@
             <xsl:variable name="mbValue" select="//*:tier[@category = 'mb']/*:event[@start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/text()"/>
             <xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
                 <xsl:value-of
-                    select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue, ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, $NEWLINE)"
+                    select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue, ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, ';', ../@category, ';', $morpheme-annotation-start, $NEWLINE)"
                 />
             </xsl:if>
 
@@ -105,7 +105,7 @@
 
         <xsl:for-each select="$duplicateids/*:element">
             <!-- Check that only unique tier ids exist in each exb -->
-            <xsl:value-of select="concat('CRITICAL;', @nr, ' duplicate tier ids (tiers: ', @cat, ', id: ', @id, ')', $NEWLINE)"/>
+            <xsl:value-of select="concat('CRITICAL;', @nr, ' duplicate tier ids (tiers: ', @cat, ', id: ', @id, ');;', $NEWLINE)"/>
         </xsl:for-each>
 
 
@@ -113,32 +113,32 @@
 
             <!-- Check if event is empty (https://lab.multilingua.uni-hamburg.de/redmine/issues/5885) -->
             <xsl:if test="matches(., '^$')">
-                <xsl:value-of select="concat('CRITICAL;empty event (start: ', @start, ', end: ', @end, ')', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;empty event (start: ', @start, ', end: ', @end, ');', ../@category, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for instance of 'Attachestoanycategory' (https://lab.multilingua.uni-hamburg.de/redmine/issues/5751) -->
             <xsl:if test="matches(., 'Attaches.*?to.*?any.*?category')">
-                <xsl:value-of select="concat('CRITICAL;found ''Attaches.*?to.*?any.*?category'' in event (start: ', @start, ', end: ', @end, ')', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;found ''Attaches.*?to.*?any.*?category'' in event (start: ', @start, ', end: ', @end, ');', ../@category, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis with wrong bracket number (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="(../@category = ('ts', 'tx', 'fe', 'fg', 'fr')) and matches(., '\(\((…|\.{2,})\)\)')">
-                <xsl:value-of select="concat('CRITICAL;found ''\(\((…|\.{2,})\)\)'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;found ''\(\((…|\.{2,})\)\)'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@category, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis in other tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr'))) and matches(., '…')">
-                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''…'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''…'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@category, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis candidates present as dots (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="matches(., '\.{2,}')">
-                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''\.{2,}'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''\.{2,}'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@category, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for instance of '§' (https://lab.multilingua.uni-hamburg.de/redmine/issues/5749) -->
             <xsl:if test="matches(., '§')">
-                <xsl:value-of select="concat('CRITICAL;found ''§'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ')', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;found ''§'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@category, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
 

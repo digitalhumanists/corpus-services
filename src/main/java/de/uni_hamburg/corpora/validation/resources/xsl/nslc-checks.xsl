@@ -16,7 +16,7 @@
         
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
         <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), '''', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), ''';;', $NEWLINE)"/>
         </xsl:for-each>
         
         
@@ -27,32 +27,32 @@
             
             <!-- Check transcription name against communication name -->
             <xsl:for-each select="*:Transcription[not(*:Name = $COM_NAME)]">
-                <xsl:value-of select="concat('CRITICAL;The transcription name ''', *:Name, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription name ''', *:Name, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- Check transcription file name against communication name -->
             <xsl:for-each select="*:Transcription[not(matches(*:Filename, concat('^', $COM_NAME, '(\.exb|_s\.exs)$')))]">
-                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- Compare transcription Filename and NSLink -->
             <xsl:for-each select="*:Transcription[not(ends-with(*:NSLink, *:Filename))]">
-                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from NSLink ''', *:NSLink, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription file name ''', *:Filename, ''' differs from NSLink ''', *:NSLink, ''';;', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- Check recording name against communication name -->            
             <xsl:for-each select="*:Recording[not(*:Name = $COM_NAME)]">
-                <xsl:value-of select="concat('CRITICAL;The recording name ''', *:Name, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The recording name ''', *:Name, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- Compare recording Filename and communication name -->
             <xsl:for-each select="*:Recording/*:Media[not(ends-with(string-join(tokenize(tokenize(*:NSLink, '/')[last()], '\.')[position()!=last()], '.'), $COM_NAME))]">
-                <xsl:value-of select="concat('CRITICAL;The transcription NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, '''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The transcription NSLink ''', *:NSLink, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
             
             <!-- check if paths are relative -->
             <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
-                <xsl:value-of select="concat('WARNING;The file reference ''', text(), ''' appears to be an absolute path', $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;The file reference ''', text(), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
             
         </xsl:for-each>
@@ -64,7 +64,7 @@
                         
             <!-- Check speaker ID pattern -->
             <xsl:for-each select="*:abbreviation[not(matches(text(), '^[A-Za-z0-9]+$'))]">
-                <xsl:value-of select="concat('CRITICAL;The speaker abbreviation ', ., ' does not conform to pattern ''[A-Za-z0-9]+''', $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;The speaker abbreviation ', ., ' does not conform to pattern ''[A-Za-z0-9]+'';;', $NEWLINE)"/>
             </xsl:for-each>
             
         </xsl:for-each>
