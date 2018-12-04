@@ -69,7 +69,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                 String line = scanner.nextLine();
 
                 //split line by ;
-                String[] lineParts = line.split(";");
+                String[] lineParts = line.split(";", -1);
 
                 switch (lineParts[0].toUpperCase()) {
                     case "WARNING":
