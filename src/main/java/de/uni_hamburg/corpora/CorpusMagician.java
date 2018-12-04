@@ -9,7 +9,7 @@ import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
-//import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
+import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
@@ -129,7 +129,7 @@ public class CorpusMagician {
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
             //get the basedirectory if there is a coma file
-            if (!(corpus.getMetadata().isEmpty())){
+            if (!(corpus.getMetadata().isEmpty())) {
                 Metadata md = corpus.getMetadata().iterator().next();
                 ComaData cod = (ComaData) md;
                 basedirectory = cod.getBasedirectory();
@@ -179,7 +179,7 @@ public class CorpusMagician {
                 }
             } else {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
-                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();  
+                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
             }
             cio.write(reportOutput, reportlocation);
             //create the error list file
@@ -347,13 +347,17 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-				case "comanamechecker":
+                case "comapidlengthchecker":
+                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                    corpusfunctions.add(cplc);
+                    break;
+                case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
                     corpusfunctions.add(cnc);
-                    break;   
-				case "tiercheckerwithannotation":
+                    break;
+                case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
-                    corpusfunctions.add(tcwa);				
+                    corpusfunctions.add(tcwa);
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
