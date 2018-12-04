@@ -16,7 +16,7 @@
         
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
         <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), ''';', parent::tier/@id, ',;', self::event/@start, $NEWLINE)"/>
         </xsl:for-each>
         
         
