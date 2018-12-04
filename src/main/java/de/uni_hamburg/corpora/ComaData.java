@@ -44,7 +44,7 @@ public class ComaData implements Metadata, CorpusData {
     Document readcomaasjdom = new Document();
     String originalstring;
 
-    public String CORPUS_BASEDIRECTORY = "";
+    public URL CORPUS_BASEDIRECTORY;
     
     public static String SEGMENTED_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='true']/NSLink";
     public static String BASIC_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='false']/NSLink";
@@ -66,7 +66,7 @@ public class ComaData implements Metadata, CorpusData {
             //loadFile(f);
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
-            CORPUS_BASEDIRECTORY = parentURI.toString();
+            CORPUS_BASEDIRECTORY = parentURI.toURL();
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -114,8 +114,10 @@ public class ComaData implements Metadata, CorpusData {
         try {
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
-            CORPUS_BASEDIRECTORY = parentURI.toString();
+            CORPUS_BASEDIRECTORY = parentURI.toURL();
         } catch (URISyntaxException ex) {
+            Logger.getLogger(ComaData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
             Logger.getLogger(ComaData.class.getName()).log(Level.SEVERE, null, ex);
         }
         //now add the URLs from the files
@@ -147,11 +149,11 @@ public class ComaData implements Metadata, CorpusData {
         originalstring = newUnformattedString;
     }
     
-    public void setBaseDirectory(String s) {
-        CORPUS_BASEDIRECTORY = s;
+    public void setBaseDirectory(URL url) {
+        CORPUS_BASEDIRECTORY = url;
     }
     
-    public String getBasedirectory() {
+    public URL getBasedirectory() {
         return CORPUS_BASEDIRECTORY;
     }
 }
