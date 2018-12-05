@@ -108,7 +108,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     found = true;
                 }
                 String absPath = referencePath + File.separator + nspath;
-                System.out.println(absPath + "##############");
+                //System.out.println(absPath + "##############");
                 File absFile = new File(absPath);
                 if (absFile.exists()) {
                     found = true;
@@ -117,7 +117,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     URL urlPath = cd.getURL();
                     //I think here is the Linux Problem 
                     URL urlAbsPath = new URL(urlPath, nspath.replace(File.separator, "/"));
-                    System.out.println(urlPath + "##############");
+                    //System.out.println(urlPath + "##############");
                     File dataFile = new File(urlAbsPath.toURI());
                     if (dataFile.exists()) {
                         found = true;
