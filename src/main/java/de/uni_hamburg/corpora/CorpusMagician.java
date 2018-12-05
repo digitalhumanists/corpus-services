@@ -274,7 +274,6 @@ public class CorpusMagician {
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
->>>>>>> develop
         return allExistingCFs;
     }
 
@@ -357,11 +356,11 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-				case "filenamechecker":
+		case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
                     break;
-				case "cmdichecker":
+		case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
