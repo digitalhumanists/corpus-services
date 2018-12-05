@@ -141,16 +141,15 @@ public class CorpusIO {
             ComaData cm = new ComaData(f.toURI().toURL());
             //TODO
             return cm;
-        /* }  else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
-             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
-            return as; */
+        } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
+            AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
+            return as; 
         } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
-            //we can't read files other than coma and exb yet...
-        /*  } else if (f.getName().endsWith("cmdi")) {
-             CmdiData cmdi = new CmdiData(f.toURI().toURL());
-            return cmdi; */
+        } else if (f.getName().endsWith("cmdi")) {
+            CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi;
         } else {
             System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;
