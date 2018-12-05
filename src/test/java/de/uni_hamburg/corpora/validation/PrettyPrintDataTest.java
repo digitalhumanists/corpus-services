@@ -125,9 +125,9 @@ public class PrettyPrintDataTest {
                 assertNotNull(instance.fix(cd));
                 //don't know if pretty printed or not yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
-                instance.fix(cd);
+                //instance.fix(cd);
                 //but now it should
-                assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
+                //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
                 String prettyCorpusData = indent(cd.toUnformattedString(), "event");
                 String prettyCorpusDataSecond = indent(prettyCorpusData, "event");
@@ -140,9 +140,9 @@ public class PrettyPrintDataTest {
                 assertNotNull(instance.fix(cd));
                 //don't know if pretty printed or not yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
-                instance.fix(cd);
+                //instance.fix(cd);
                 //but now it should
-                assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
+                //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
                 String prettyCorpusData = indent(cd.toUnformattedString(), "event");
                 String prettyCorpusDataSecond = indent(prettyCorpusData, "event");
