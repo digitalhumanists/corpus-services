@@ -333,12 +333,36 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 }
                 // this is where the magic happens
                 Element mergedElement = merge(sc, sc2);
-
-                //We would also like to keep the FlatSegmentation as an annotation to display it correctly
-                //TO DO
-                // now take care of the corresponding annotations
                 int s = ((Integer) (timelineItems.get(start)));
                 int e = ((Integer) (timelineItems.get(end)));
+                //We would also like to keep the FlatSegmentation as an annotation to display it correctly
+                //TO DO
+                String xpath3 = "//segmentation[@name='" + nameOfFlatSegmentation + "' and @tierref='" + tierref + "']"
+                        + "/ts[@s='" + start + "' and @e='" + end + "']/ts";
+                XPath xp3 = XPath.newInstance(xpath3);
+                List transannos = xp3.selectNodes(segmentedTranscription);
+                for (Object transanno1 : transannos){
+                Element transanno = (Element) transanno1;
+                String transaStart = transanno.getAttributeValue("s");
+                String transaEnd = transanno.getAttributeValue("e");
+                int transas = ((Integer) (timelineItems.get(transaStart)));
+                int transae = ((Integer) (timelineItems.get(transaEnd)));
+                boolean transannotationBelongsToThisElement = (transas >= s && transas <= e) || (transae >= s && transae <= e);
+                if (transannotationBelongsToThisElement) {
+                    Element annotationsElement = mergedElement.getChild("annotations");
+                    if (annotationsElement == null) {
+                        annotationsElement = new Element("annotations");
+                        mergedElement.addContent(annotationsElement);
+                    }
+                    Element annotation = new Element("annotation");
+                    annotation.setAttribute("start", transaStart);
+                    annotation.setAttribute("end", transaEnd);
+                    annotation.setAttribute("level", transanno.getParentElement().getParentElement().getAttributeValue("name"));
+                    annotation.setAttribute("value", transanno.getText());
+                    annotationsElement.addContent(annotation);
+                }
+                }
+                // now take care of the corresponding annotations
                 String xpath5 = "//segmented-tier[@id='" + tierref + "']/annotation/ta";
                 XPath xp5 = XPath.newInstance(xpath5);
                 List annotations = xp5.selectNodes(segmentedTranscription);
@@ -549,8 +573,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             //System.out.println("*** " + wordID);
             pc.setAttribute("id", incID, Namespace.XML_NAMESPACE);
         }
-        
-         // we also need this for seg elements
+
+        // we also need this for seg elements
         XPath segXPath = XPath.newInstance("//tei:seg[not(@xml:id)]");
         pcXPath.addNamespace("tei", "http://www.tei-c.org/ns/1.0");
         pcXPath.addNamespace(Namespace.XML_NAMESPACE);
@@ -621,7 +645,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-               report.addException(ex, "unknown class not found error");
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
