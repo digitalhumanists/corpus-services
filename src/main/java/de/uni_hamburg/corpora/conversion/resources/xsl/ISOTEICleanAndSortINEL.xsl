@@ -228,7 +228,7 @@
                     <xsl:for-each select="current-group()">
                         <xsl:choose>
                             <!-- here needs to be every tier that has word (or smaller) based annotations -->
-                            <xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc', 'hn', 'ps', 'SeR', 'SyF', 'IST', 'BOR', 'BOR-Phon', 'BOR-Morph', 'CS')">
+                            <xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc', 'hn', 'ps', 'SeR', 'SyF', 'IST', 'BOR', 'BOR-Phon', 'BOR-Morph', 'CS', 'SpeakerContribution_Event')">
                                 <xsl:element name="span">
                                     <!-- this needs to be changed for INEL -->
                                     <xsl:attribute name="from">
