@@ -12,6 +12,7 @@ import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
+import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
@@ -253,6 +254,7 @@ public class CorpusMagician {
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("FileCoverageChecker");
@@ -327,6 +329,10 @@ public class CorpusMagician {
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
                     corpusfunctions.add(efrc);
                     break;
+                case "exbannotationpanelcheck":
+                    ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
+                    corpusfunctions.add(eapc);
+                    break;    
                 case "filecoveragechecker":
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     corpusfunctions.add(fcc);
