@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
 import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
@@ -265,6 +266,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("CmdiChecker");
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("TierChecker");
@@ -352,6 +354,10 @@ public class CorpusMagician {
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
+                    break;
+				case "cmdichecker":
+                    CmdiChecker cmdi = new CmdiChecker();
+                    corpusfunctions.add(cmdi);
                     break;
                 case "comapidlengthchecker":
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
