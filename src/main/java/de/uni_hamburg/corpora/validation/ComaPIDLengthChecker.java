@@ -108,12 +108,18 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
             String fedoraPID = new String("communication: " + corpusPrefix +
                     "-" + corpusVersion +
                     "_" + communicationName);
+            String shortenedCommuniationName;
+            if(communicationName.length()>39){
+                shortenedCommuniationName = communicationName.substring(0, 40);
+            } else {
+                shortenedCommuniationName = communicationName;
+            }
             if (fedoraPID.length() >= 64) {
                 stats.addCritical(COMA_PID_LENGTH, comaLoc + ": " +
                             "Communication is too long for Fedora PID" +
                             "generation: " + fedoraPID,
-                            "It must be shortened, e.g. use: " +
-                            communicationName.substring(0, 40) + ", or change " +
+                            " It must be shortened, e.g. use: " +
+                            shortenedCommuniationName + ", or change " +
                             "the corpus prefix");
             } else {
                 stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
@@ -167,11 +173,11 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
         try {
             stats = exceptionalCheck(cd);
         } catch(ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce,  COMA_PID_LENGTH, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, COMA_PID_LENGTH, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, COMA_PID_LENGTH, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -199,41 +205,47 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
             }
         }
         if (corpusPrefix.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
-                        "Missing <Key name='HZSK:corpusprefix'>.",
+            stats.addWarning(COMA_PID_LENGTH, cd,
+                        "Missing <Key name='HZSK:corpusprefix'>." +
                         "PID length cannot be estimated accurately. " +
                         "Add that key in coma.");
             corpusPrefix = "muster";
         } else {
-            stats.addCorrect(COMA_PID_LENGTH + "-config", comaLoc + ": " +
+            stats.addCorrect(COMA_PID_LENGTH,cd,
                     "HZSK corpus prefix OK: " + corpusPrefix);
         }
         if (corpusVersion.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
-                        "Missing <Key name='HZSK:corpusversion'>.",
+            stats.addWarning(COMA_PID_LENGTH, cd,
+                        "Missing <Key name='HZSK:corpusversion'>." +
                         "PID length cannot be estimated accurately. " +
                         "Add that key in coma.");
             corpusVersion = "0.0";
         } else {
-            stats.addCorrect(COMA_PID_LENGTH + "-config", comaLoc + ": " +
+            stats.addCorrect(COMA_PID_LENGTH, cd, 
                     "HZSK corpus version OK: " + corpusVersion);
         }
         NodeList communications = doc.getElementsByTagName("Communication");
         for (int i = 0; i < communications.getLength(); i++) {
             Element communication = (Element)communications.item(i);
             String communicationName = communication.getAttribute("Name");
-            String fedoraPID = new String("communication: " + corpusPrefix +
+            String fedoraPID = "communication: " + corpusPrefix +
                     "-" + corpusVersion +
-                    "_" + communicationName);
+                    "_" + communicationName;
+            String shortenedCommuniationName;
+            if(communicationName.length()>39){
+                shortenedCommuniationName = communicationName.substring(0, 40);
+            } else {
+                shortenedCommuniationName = communicationName;
+            }
             if (fedoraPID.length() >= 64) {
-                stats.addCritical(COMA_PID_LENGTH, comaLoc + ": " +
+                stats.addCritical(COMA_PID_LENGTH, cd,
                             "Communication is too long for Fedora PID" +
-                            "generation: " + fedoraPID,
-                            "It must be shortened, e.g. use: " +
-                            communicationName.substring(0, 40) + ", or change " +
+                            "generation: " + fedoraPID +
+                            " It must be shortened, e.g. use: " +
+                            shortenedCommuniationName + ", or change " +
                             "the corpus prefix");
             } else {
-                stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
+                stats.addCorrect(COMA_PID_LENGTH, cd,
                             "Following PID will be generated for this " +
                             "communication in Fedora: " + fedoraPID);
             }
