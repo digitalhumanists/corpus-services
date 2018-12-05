@@ -7,8 +7,6 @@ import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -23,6 +21,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
     String comaFile = "";
     boolean apostrophe = false;
+    String cac = "ComaApostropheChecker";
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -34,13 +33,13 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, cac, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, cac, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, cac, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, cac, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -57,10 +56,10 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         if (comaFile.contains("'")) {          // if coma file contains an apostrophe ' then issue warning
             apostrophe = true;
             System.err.println("Coma file is containing apostrophe(s) ’");
-            stats.addWarning("coma-apostrophe-checker", "Coma file " + cd.getURL().getFile() + " is containing apostrophe(s) ’");
+            stats.addWarning(cac, cd, "Coma file is containing apostrophe(s) ’");
         }
         else {
-            stats.addCorrect("coma-apostrophe-checker", "Coma file " + cd.getURL().getFile() + " does not contain apostrophes");
+            stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");
         }
         return stats; // return the report with warnings
     }
@@ -78,9 +77,9 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
             comaFile = comaFile.replaceAll("'", "’");    //replace all 's with ´s
             CorpusIO cio = new CorpusIO();
             cio.write(comaFile, cd.getURL());    // write back to coma file with allowed apostrophes ´ 
-            stats.addCorrect("ComaApostropheChecker", "corrected the apostrophes in " + cd.getURL().getFile()); // fix report 
+            stats.addCorrect(cac, cd, "Corrected the apostrophes"); // fix report 
         } else {
-            stats.addCorrect("coma-apostrophe-checker", "Coma file " + cd.getURL().getFile() + " does not contain apostrophes");
+            stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");
         }
         return stats;
     }
@@ -96,32 +95,9 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
 
-    /**
-     * Execute function for calling check and fix functions if necessary.
-     */
-    public Report execute(CorpusData cd, boolean fix) {
-        Report report = new Report();
-        try {
-
-            if (fix) {
-                report.merge(fix(cd));
-            } else {
-                report.merge(check(cd));
-            }
-        } catch (SAXException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JDOMException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JexmaraldaException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return report;
-    }
 }
