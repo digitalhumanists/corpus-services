@@ -9,9 +9,10 @@ import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
-//import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
+import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
+import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
@@ -129,7 +130,7 @@ public class CorpusMagician {
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
             //get the basedirectory if there is a coma file
-            if (!(corpus.getMetadata().isEmpty())){
+            if (!(corpus.getMetadata().isEmpty())) {
                 Metadata md = corpus.getMetadata().iterator().next();
                 ComaData cod = (ComaData) md;
                 basedirectory = cod.getBasedirectory();
@@ -179,7 +180,7 @@ public class CorpusMagician {
                 }
             } else {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
-                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();  
+                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
             }
             cio.write(reportOutput, reportlocation);
             //create the error list file
@@ -253,6 +254,7 @@ public class CorpusMagician {
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("FileCoverageChecker");
@@ -327,6 +329,10 @@ public class CorpusMagician {
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
                     corpusfunctions.add(efrc);
                     break;
+                case "exbannotationpanelcheck":
+                    ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
+                    corpusfunctions.add(eapc);
+                    break;    
                 case "filecoveragechecker":
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     corpusfunctions.add(fcc);
@@ -347,13 +353,17 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
-				case "comanamechecker":
+                case "comapidlengthchecker":
+                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                    corpusfunctions.add(cplc);
+                    break;
+                case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
                     corpusfunctions.add(cnc);
-                    break;   
-				case "tiercheckerwithannotation":
+                    break;
+                case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
-                    corpusfunctions.add(tcwa);				
+                    corpusfunctions.add(tcwa);
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
