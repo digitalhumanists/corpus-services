@@ -26,6 +26,7 @@
             </xsl:if>
         </xsl:for-each-group>
     </xsl:variable>
+    <xsl:param name="filename"/>
 
     <xsl:template match="/">
 
@@ -108,6 +109,15 @@
             <xsl:value-of select="concat('CRITICAL;', @nr, ' duplicate tier ids (tiers: ', @cat, ', id: ', @id, ');;', $NEWLINE)"/>
         </xsl:for-each>
 
+        
+        <xsl:for-each select="$ROOT//*:tier[@category = ('ref')]/*:event">
+            <!-- Check that in the ref tier the substring before the fullstop is the same as the exb file name -->
+            <xsl:variable name="refvalue" select="substring-before(text(), '.')"/>
+            <xsl:if test="not($filename = $refvalue)">
+                <xsl:value-of select="concat('CRITICAL;ref tier value ', $refvalue,' does not match file name ', $filename ,' (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+            </xsl:if>
+            
+        </xsl:for-each>
 
         <xsl:for-each select="$ROOT//*:event">
 
