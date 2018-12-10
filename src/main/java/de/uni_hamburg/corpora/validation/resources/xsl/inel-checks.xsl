@@ -146,7 +146,15 @@
                 <xsl:value-of select="concat('CRITICAL;found ''§'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
-
+        </xsl:for-each>
+        
+        
+        <xsl:for-each select="$ROOT//*:tier">
+            
+            <!-- check if every tier has a tier-format in the tier-format-table -->
+            <xsl:if test="empty($ROOT//*:tier-format[@tierref = current()/@id])">
+                <xsl:value-of select="concat('CRITICAL;no tier-format found for tier ''', @id, ''';', @id, ';', $NEWLINE)"/>
+            </xsl:if>
         </xsl:for-each>
 
     </xsl:template>
