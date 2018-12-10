@@ -51,7 +51,9 @@ import java.util.Properties;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * This class has a Corpus and a Corpus Function as a field and is able to run a
@@ -196,15 +198,19 @@ public class CorpusMagician {
             //System.out.println(exmaErrorList.toString());
             cio.write(exmaErrorList, errorlistlocation);
         } catch (MalformedURLException ex) {
-            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "The given URL was incorrect");
         } catch (IOException ex) {
-            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "A file could not be read");
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "A file could not be parsed");
         } catch (TransformerException ex) {
-            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "A transformation error occured");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "A URI syntax was incorrect");
+        } catch (SAXException ex) {
+            report.addException(ex, "An XSLT error occured");
+        } catch (JexmaraldaException ex) {
+            report.addException(ex, "A Exmaralda file reading error occured");
         }
 
     }
@@ -233,7 +239,7 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException {
         corpus = new Corpus(url);
     }
 

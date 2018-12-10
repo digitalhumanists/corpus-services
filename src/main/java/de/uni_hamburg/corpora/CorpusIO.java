@@ -112,7 +112,7 @@ public class CorpusIO {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
             return usd;
             //we can't read files other than coma and exb yet...
-        /*  } else if (f.getName().endsWith("cmdi")) {
+            /*  } else if (f.getName().endsWith("cmdi")) {
              CmdiData cmdi = new CmdiData(f.toURI().toURL());
             return cmdi; */
         } else {
@@ -127,7 +127,7 @@ public class CorpusIO {
         System.out.println(path2resource);
         if (xslstring == null) {
             throw new IOException("Stylesheet not found!");
-        } 
+        }
         return xslstring;
     }
 
@@ -143,7 +143,7 @@ public class CorpusIO {
             return cm;
         } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
-            return as; 
+            return as;
         } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
@@ -212,7 +212,7 @@ public class CorpusIO {
         }
     }
 
-    public Collection<CorpusData> read(URL url) {
+    public Collection<CorpusData> read(URL url) throws MalformedURLException, SAXException, SAXException, JexmaraldaException {
         Collection<CorpusData> cdc = new ArrayList();
         ArrayList<CorpusData> acdc;
         acdc = (ArrayList) cdc;
@@ -223,17 +223,9 @@ public class CorpusIO {
                 //and add everything to the cdc list
                 Collection<File> recursed = getFileURLSRecursively(url);
                 for (File f : recursed) {
-                    try {
-                        CorpusData cd = toCorpusData(f);
-                        if (cd != null) {
-                            acdc.add(toCorpusData(f));
-                        }
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SAXException ex) {
-                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (JexmaraldaException ex) {
-                        Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                    CorpusData cd = toCorpusData(f);
+                    if (cd != null) {
+                        acdc.add(toCorpusData(f));
                     }
                 }
                 cdc = (Collection) acdc;
@@ -242,17 +234,9 @@ public class CorpusIO {
             else {
                 //we need to read this file as some implementation of corpusdata
                 File f = new File(url.getFile());
-                try {
-                    CorpusData cd = toCorpusData(f);
-                    if (cd != null) {
-                        acdc.add(toCorpusData(f));
-                    }
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SAXException ex) {
-                    Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JexmaraldaException ex) {
-                    Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
+                CorpusData cd = toCorpusData(f);
+                if (cd != null) {
+                    acdc.add(toCorpusData(f));
                 }
                 cdc = (Collection) acdc;
                 return cdc;
