@@ -30,8 +30,8 @@ public class XSLTChecker extends Checker implements CorpusFunction {
 
     String xslresource = "/xsl/nslc-checks.xsl";
     String xc = "XSLTChecker";
-    String filename= "";
-    
+    String filename = "";
+
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -51,7 +51,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
 
         Report r = new Report();
-        filename = cd.getURL().getFile().subSequence(cd.getURL().getFile().lastIndexOf('/')+1, cd.getURL().getFile().lastIndexOf('.')).toString();
+        filename = cd.getURL().getFile().subSequence(cd.getURL().getFile().lastIndexOf('/') + 1, cd.getURL().getFile().lastIndexOf('.')).toString();
         try {
 
             // get the XSLT stylesheet
@@ -73,26 +73,33 @@ public class XSLTChecker extends Checker implements CorpusFunction {
 
                 //split line by ;
                 String[] lineParts = line.split(";", -1);
-
-                switch (lineParts[0].toUpperCase()) {
-                    case "WARNING":
-                        r.addWarning(xc, cd, lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
-                        break;
-                    case "CRITICAL":
-                        r.addCritical(xc, cd, lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
-                        break;
-                    case "NOTE":
-                        r.addNote(xc, cd, lineParts[1]);
-                        break;
-                    case "MISSING":
-                        r.addMissing(xc, cd, lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
-                        break;
-                    default:
-                        r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                if (lineParts.length != 4) {
+                    String message = "";
+                    for (String s : lineParts) {
+                        message = message + s;
+                    }
+                    r.addCritical(xc, cd, "There was an exception while creating the error probably because of a semicolon or newline in an event: " + message);
+                } else {
+                    switch (lineParts[0].toUpperCase()) {
+                        case "WARNING":
+                            r.addWarning(xc, cd, lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            break;
+                        case "CRITICAL":
+                            r.addCritical(xc, cd, lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            break;
+                        case "NOTE":
+                            r.addNote(xc, cd, lineParts[1]);
+                            break;
+                        case "MISSING":
+                            r.addMissing(xc, cd, lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            break;
+                        default:
+                            r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                    }
                 }
 
                 i++;
@@ -109,7 +116,6 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         return r;
 
     }
-
 
     public void setXSLresource(String s) {
         xslresource = s;
