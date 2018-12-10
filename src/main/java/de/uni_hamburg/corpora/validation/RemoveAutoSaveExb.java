@@ -91,7 +91,8 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
         btd = (BasicTranscriptionData) cd;
         doc = btd.getReadbtasjdom();
         XPath xp1;
-        xp1 = XPath.newInstance("/basic-transcription/head/meta-information/ud-meta-information/ud-information[@attribute-name='AutoSave']");
+        //working for exs too
+        xp1 = XPath.newInstance("//head/meta-information/ud-meta-information/ud-information[@attribute-name='AutoSave']");
         List allAutoSaveInfo = xp1.selectNodes(doc);
         return allAutoSaveInfo;
     }

@@ -287,6 +287,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
+            Class cl2 = Class.forName("de.uni_hamburg.corpora.SegmentedTranscriptionData");
+            IsUsableFor.add(cl2);
             Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
@@ -298,8 +300,9 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     public List findAllAbsolutePathsExb(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
-        // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>        
-        xp1 = XPath.newInstance("/basic-transcription/head/meta-information/referenced-file/@url");
+        // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>  
+        //working for exs too
+        xp1 = XPath.newInstance("//head/meta-information/referenced-file/@url");
         List allAbsolutePaths = xp1.selectNodes(doc);
         if (allAbsolutePaths.isEmpty()) {
             report.addWarning(rap, cd, "no paths found");
