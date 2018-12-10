@@ -144,9 +144,12 @@ public class CorpusIO {
         } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
             return as;
-        } else if (f.getName().endsWith("exs") || f.getName().endsWith("xml")) {
+        } else if (f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
+        } else if (f.getName().endsWith("exs")) {
+            SegmentedTranscriptionData setd = new SegmentedTranscriptionData(f.toURI().toURL());
+            return setd;
         } else if (f.getName().endsWith("cmdi")) {
             CmdiData cmdi = new CmdiData(f.toURI().toURL());
             return cmdi;
