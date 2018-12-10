@@ -69,4 +69,14 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     public void updateUnformattedString(String newUnformattedString) {
         originalstring = newUnformattedString;
     }
+    @Override
+    public Document getJdom() {
+        return jdom;
+    }
+
+    @Override
+    public void setJdom(Document doc) {
+        jdom = doc;
+    }
+    
 }

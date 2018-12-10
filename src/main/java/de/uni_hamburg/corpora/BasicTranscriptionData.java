@@ -42,7 +42,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
 
     private BasicTranscription bt;
     URL url;
-    Document readbtasjdom = new Document();
+    Document jdom = new Document();
     String originalstring;
 
     public BasicTranscriptionData() {
@@ -52,7 +52,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         try {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
-            readbtasjdom = builder.build(url);
+            jdom = builder.build(url);
             File f = new File(url.toURI());
             loadFile(f);
             originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
@@ -84,10 +84,10 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         url = f.toURI().toURL();
     }
 
-    public void updateReadbtasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
+    public void updateJdomDoc() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
         String xmlString = bt.toXML();
         SAXBuilder builder = new SAXBuilder();
-        readbtasjdom = builder.build(xmlString);
+        jdom = builder.build(xmlString);
     }
 
     /* 
@@ -167,12 +167,7 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     }
 
     public Document getReadbtasjdom() {
-        return readbtasjdom;
-    }
-
-    public Document setReadbtasjdom(Document doc) {
-        readbtasjdom = doc;
-        return readbtasjdom;
+        return jdom;
     }
 
     @Override
@@ -195,5 +190,19 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     
     public void setOriginalString(String s) {
         originalstring = s;
+    }
+
+    @Override
+    public Document getJdom() {
+        return getReadbtasjdom();
+    }
+
+    @Override
+    public void setJdom(Document doc) {
+        jdom = doc;
+    }
+    
+    public void setReadbtasjdom (Document doc){
+        setJdom(doc);
     }
 }
