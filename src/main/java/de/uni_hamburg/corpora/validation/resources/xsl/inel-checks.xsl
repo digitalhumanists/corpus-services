@@ -114,7 +114,7 @@
             <!-- Check that in the ref tier the substring before the fullstop is the same as the exb file name -->
             <xsl:variable name="refvalue" select="substring-before(text(), '.')"/>
             <xsl:if test="not($filename = $refvalue)">
-                <xsl:value-of select="concat('CRITICAL;ref tier value ', $refvalue,' does not match file name ', $filename ,' (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+                <xsl:value-of select="concat('CRITICAL;ref tier ', ../@id, ' value ', $refvalue,' does not match file name ', $filename ,' (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
             </xsl:if>
             
         </xsl:for-each>
