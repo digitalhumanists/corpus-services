@@ -20,6 +20,7 @@ import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 
 /**
  *
@@ -61,6 +62,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                 //then save file
                 //add a report message
             btd.setReadbtasjdom(doc);
+            btd.setOriginalString(TypeConverter.JdomDocument2String(doc));
             cd = (CorpusData) btd;
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
@@ -76,6 +78,8 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
+             Class cl2 = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            IsUsableFor.add(cl2);
 
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "unknown class not found error");

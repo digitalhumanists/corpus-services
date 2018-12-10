@@ -22,13 +22,13 @@ import org.jdom.output.XMLOutputter;
  *
  * @author fsnv625
  */
-public class UnspecifiedXMLData implements CorpusData, XMLData {
+public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLData {
 
     Document jdom;
     URL url;
     String originalstring;
     
-    public UnspecifiedXMLData(URL url) {
+    public SegmentedTranscriptionData(URL url) {
         try {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
@@ -36,11 +36,11 @@ public class UnspecifiedXMLData implements CorpusData, XMLData {
            originalstring = new
                 String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
         } catch (JDOMException ex) {
-            Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SegmentedTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SegmentedTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SegmentedTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

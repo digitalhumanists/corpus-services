@@ -84,7 +84,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     s = a.getValue();
                 }
                 else {
-                    stats.addWarning(cdrr, cd, "Xpath " + escapeHtml4(xpathContext) + " doesn#t lead to Element or Attribute");
+                    stats.addWarning(cdrr, cd, "Xpath " + escapeHtml4(xpathContext) + " does not lead to Element or Attribute");
                     s ="";
                 }
                 if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
