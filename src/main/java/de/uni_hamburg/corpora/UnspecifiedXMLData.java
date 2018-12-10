@@ -69,4 +69,14 @@ public class UnspecifiedXMLData implements CorpusData, XMLData {
     public void updateUnformattedString(String newUnformattedString) {
         originalstring = newUnformattedString;
     }
+
+    @Override
+    public Document getJdom() {
+        return jdom;
+    }
+
+    @Override
+    public void setJdom(Document doc) {
+        jdom = doc;
+    }
 }

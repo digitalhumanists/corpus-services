@@ -43,8 +43,9 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.SegmentedTranscriptionData");
             Class cl2 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            if (cl.isInstance(cd)) {
+            if (cl.isInstance(cd) || cl3.isInstance(cd)) {
                 List al = findAllAbsolutePathsExb(cd);
                 //if there is no absolute path, nothing needs to be done
                 //check if the paths that are there are absolute
@@ -63,7 +64,9 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         if (pabs.isAbsolute()) {
                             report.addCritical(rap, cd, "absolute path info needs to be replaced");
+                            if (cl.isInstance(cd)){
                             exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
+                            }
                         } else {
                             al.remove(o);
                             report.addCorrect(rap, cd, "path is already relative, nothing to do");
@@ -97,7 +100,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                     }
                 }
             } else {
-                report.addCritical(rap, cd, "File is neither coma nor exb file");
+                report.addCritical(rap, cd, "File is neither coma nor exb nor exs file");
             }
         } catch (ClassNotFoundException ex) {
             report.addException(ex, rap, cd, "unknown class not found error");
@@ -115,8 +118,9 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.SegmentedTranscriptionData");
             Class cl2 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            if (cl.isInstance(cd)) {
+            if (cl.isInstance(cd) || cl3.isInstance(cd)) {
                 List al = findAllAbsolutePathsExb(cd);
                 System.out.println(cd.getURL());
                 Path directory = Paths.get(cd.getURL().toURI());
@@ -151,7 +155,9 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                             } else {
                                 report.addCritical(rap, cd,
                                         "relative path " + pabs.toString() + " cannot be figured out");
+                                if(cl.isInstance(cd)){
                                 exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path needs to be replaced manually");
+                                }
                             }
                         } else {
                             report.addCorrect(rap, cd, "path is already relative");
@@ -270,7 +276,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                  *
                  */
             } else {
-                report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb file");
+                report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb nor exs file");
             }
         } catch (ClassNotFoundException ex) {
             report.addException(ex, rap, cd, "unknown class not found error");
