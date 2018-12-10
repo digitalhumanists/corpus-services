@@ -50,7 +50,7 @@ public class AddCSVMetadataToComaTest {
      */
     @Test
     public void testMain() throws IOException, JDOMException {
-        System.out.println("main");
+        /* System.out.println("main");
         
         File upTwo = new File(System.getProperty("user.dir"));
         String comaFile = upTwo.getPath() + "\\src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\ExampleCorpus.coma";
@@ -58,6 +58,7 @@ public class AddCSVMetadataToComaTest {
         String isSpeaker = "communication";
         AddCSVMetadataToComa instance = new AddCSVMetadataToComa(comaFile, csvFile, isSpeaker);
         instance.inputData();
+*/
     }
     
 }
