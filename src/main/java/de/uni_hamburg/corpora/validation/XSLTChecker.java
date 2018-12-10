@@ -20,6 +20,7 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import java.io.File;
 
 /**
  *
@@ -29,7 +30,8 @@ public class XSLTChecker extends Checker implements CorpusFunction {
 
     String xslresource = "/xsl/nslc-checks.xsl";
     String xc = "XSLTChecker";
-
+    String filename= "";
+    
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -49,7 +51,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
 
         Report r = new Report();
-
+        filename = cd.getURL().getFile().subSequence(cd.getURL().getFile().lastIndexOf('/')+1, cd.getURL().getFile().lastIndexOf('.')).toString();
         try {
 
             // get the XSLT stylesheet
@@ -58,6 +60,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
 
+            xt.setParameter("filename", filename);
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
 
