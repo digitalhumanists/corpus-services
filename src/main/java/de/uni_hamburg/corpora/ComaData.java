@@ -179,7 +179,7 @@ public class ComaData implements Metadata, CorpusData, XMLData {
 
     @Override
     public String getFilename() {
-        return filenamewithoutending;
+        return filename;
     }
 
     @Override
@@ -189,7 +189,7 @@ public class ComaData implements Metadata, CorpusData, XMLData {
 
     @Override
     public String getFilenameWithoutFileEnding() {
-        return filename;
+        return filenamewithoutending;
     }
 
     @Override

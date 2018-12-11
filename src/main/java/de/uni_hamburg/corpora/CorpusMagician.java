@@ -29,6 +29,7 @@ import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
+import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import java.io.File;
 import java.io.IOException;
@@ -137,8 +138,7 @@ public class CorpusMagician {
             //get the basedirectory if there is a coma file
             if (!(corpus.getMetadata().isEmpty())) {
                 Metadata md = corpus.getMetadata().iterator().next();
-                ComaData cod = (ComaData) md;
-                basedirectory = cod.getBasedirectory();
+                basedirectory = md.getParentURL();
             }
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
@@ -284,6 +284,7 @@ public class CorpusMagician {
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
         allExistingCFs.add("CorpusHTML");
+        allExistingCFs.add("ListHTML");
         return allExistingCFs;
     }
 
@@ -487,6 +488,10 @@ public class CorpusMagician {
                 case "corpushtml":
                     CorpusHTML chtml = new CorpusHTML();
                     corpusfunctions.add(chtml);
+                    break;
+                case "listhtml":
+                    ListHTML lhtml = new ListHTML();
+                    corpusfunctions.add(lhtml);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
