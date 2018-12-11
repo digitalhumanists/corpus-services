@@ -9,7 +9,6 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
-import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -20,6 +19,7 @@ import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.NormalizeExb;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -42,14 +42,6 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.nio.file.Paths;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -131,7 +123,6 @@ public class CorpusMagician {
             } else {
                 reportlocation = Paths.get(reportstring).toUri().toURL();
             }
-
             //now add the functionsstrings to array
             String[] corpusfunctionarray = cmd.getOptionValues("c");
             for (String cf : corpusfunctionarray) {
@@ -269,7 +260,6 @@ public class CorpusMagician {
     public static Collection<String> getAllExistingCFs() {
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
-		allExistingCFs.add("IAAFunctionality");
         allExistingCFs.add("ComaOverviewGeneration");
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
@@ -295,6 +285,7 @@ public class CorpusMagician {
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
         allExistingCFs.add("CorpusHTML");
+        allExistingCFs.add("IAAFunctionality");
         return allExistingCFs;
     }
 
@@ -365,9 +356,9 @@ public class CorpusMagician {
                     PrettyPrintData pd = new PrettyPrintData();
                     corpusfunctions.add(pd);
                     break;
-                case "xsltchecker":
-                    XSLTChecker xc = new XSLTChecker();
-                    corpusfunctions.add(xc);
+                case "removeabsolutepaths":
+                    RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
+                    corpusfunctions.add(rap);
                     break;
                 case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
@@ -385,13 +376,9 @@ public class CorpusMagician {
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
-                case "comaapostrophecheckerfix":
-                    ComaApostropheChecker cacf = new ComaApostropheChecker();
-                    corpusfunctions.add(cacf);
-                    break;
-                case "iaafunctionality":
-                    IAAFunctionality iaa = new IAAFunctionality();
-                    corpusfunctions.add(iaa);
+                case "comapidlengthchecker":
+                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                    corpusfunctions.add(cplc);
                     break;
                 case "comanamechecker":
                     ComaNameChecker cnc = new ComaNameChecker();
@@ -443,6 +430,10 @@ public class CorpusMagician {
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
                     corpusfunctions.add(gap);
+                    break;
+                case "iaafunctionality":
+                    IAAFunctionality iaa = new IAAFunctionality();
+                    corpusfunctions.add(iaa);
                     break;
                 case "filecoveragecheckerinel":
                     FileCoverageChecker fcci = new FileCoverageChecker();
@@ -610,17 +601,8 @@ public class CorpusMagician {
     public static Report runCorpusFunctions(CorpusData cd, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
-            for (Class cl : cf.getIsUsableFor()) {
-            //if the corpus files are an instance 
-                //of the class cl, run the function
-                {
-                    if (cl.isInstance(cd)) {
-                        Report newReport = (cf.execute(cd));
-                        report.merge(newReport);
-                    }
-
-                }
-            }
+            Report newReport = (cf.execute(cd));
+            report.merge(newReport);
         }
         return report;
     }
