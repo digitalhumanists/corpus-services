@@ -26,11 +26,13 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
@@ -44,6 +46,9 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     URL url;
     Document jdom = new Document();
     String originalstring;
+    URL parenturl;
+    String filename;
+    String filenamewithoutending;
 
     public BasicTranscriptionData() {
     }
@@ -56,7 +61,11 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             File f = new File(url.toURI());
             loadFile(f);
             originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
-
+            URI uri = url.toURI();
+            URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+            parenturl = parentURI.toURL();
+            filename = FilenameUtils.getName(url.getPath());
+            filenamewithoutending = FilenameUtils.getBaseName(url.getPath());
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -183,11 +192,11 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     public BasicTranscription getEXMARaLDAbt() {
         return bt;
     }
-    
+
     public void setEXMARaLDAbt(BasicTranscription btn) {
         bt = btn;
     }
-    
+
     public void setOriginalString(String s) {
         originalstring = s;
     }
@@ -201,8 +210,44 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     public void setJdom(Document doc) {
         jdom = doc;
     }
-    
-    public void setReadbtasjdom (Document doc){
+
+    public void setReadbtasjdom(Document doc) {
         setJdom(doc);
     }
+
+    @Override
+    public URL getParentURL() {
+        return parenturl;
+    }
+
+    @Override
+    public void setURL(URL nurl) {
+        url = nurl;
+    }
+
+    @Override
+    public void setParentURL(URL url) {
+        parenturl = url;
+    }
+
+    @Override
+    public String getFilename() {
+        return filename;
+    }
+
+    @Override
+    public void setFilename(String s) {
+        filename = s;
+    }
+
+    @Override
+    public String getFilenameWithoutFileEnding() {
+        return filenamewithoutending;
+    }
+
+    @Override
+    public void setFilenameWithoutFileEnding(String s) {
+        filenamewithoutending = s;
+    }
+
 }
