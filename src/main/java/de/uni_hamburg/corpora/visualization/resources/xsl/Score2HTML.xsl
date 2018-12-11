@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction"
-    exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml"
+    xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all" version="2.0">
     <xsl:output encoding="UTF-8" method="xml" omit-xml-declaration="yes"/>
 
 
@@ -53,10 +52,10 @@
     <xsl:variable name="PROJECT_URL" as="xs:string" select="'http://www.exmaralda.org/'"/>
 
     <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('webm', 'mpeg', 'mpg')"/>
+    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = ('webm', 'mpeg', 'mpg')"/>
 
     <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE)=('wav', 'ogg', 'mp3')"/>
+    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = ('wav', 'ogg', 'mp3')"/>
 
     <!-- Titles of tiers by category -->
     <xsl:variable name="TIER_TITLES">
@@ -82,14 +81,26 @@
     <xsl:template match="/">
         <html>
             <head>
-                <title><xsl:value-of select="concat($CORPUS_NAME, ': ', $TRANSCRIPTION_NAME)"/></title>
+                <title>
+                    <xsl:value-of select="concat($CORPUS_NAME, ': ', $TRANSCRIPTION_NAME)"/>
+                </title>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
+                <xsl:choose>
+                    <xsl:when test="not($STYLES = '/* EMTPY TIER FORMAT TABLE!!! */')">
+                        <style><xsl:value-of select="$STYLES"/></style>
+                        <!-- placeholder for css, inserted later by Java -->
+                        <style><hzsk-pi:include>/css/ScoreFormat.css</hzsk-pi:include></style>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <!-- placeholder for css, inserted later by Java -->
+                        <style><hzsk-pi:include>/css/ScoreFormat.css</hzsk-pi:include></style>
+                    </xsl:otherwise>
+                </xsl:choose>
                 <!-- placeholder for css, inserted later by Java -->
-                <style><hzsk-pi:include>/css/ScoreFormat.css</hzsk-pi:include></style>
                 <style><hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include></style>
 
-                <!-- placeholder for js script, inserted later by Java -->                
+                <!-- placeholder for js script, inserted later by Java -->
                 <script><hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include></script>
                 <script><hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include></script>
             </head>
@@ -157,8 +168,8 @@
     <xsl:template match="sync-point">
         <td class="snc">
             <!-- anchor for media playback -->
-            <xsl:if test="//tli[@id=current()/@id]/@time">
-                <xsl:variable name="TIME" select="0 + //tli[@id=current()/@id]/@time"/>
+            <xsl:if test="//tli[@id = current()/@id]/@time">
+                <xsl:variable name="TIME" select="0 + //tli[@id = current()/@id]/@time"/>
                 <a onclick="jump('{format-number(($TIME + 0.03), '#.##')}');">
                     <img class="media invert" title="{exmaralda:FORMAT_TIME($TIME)}&#x0020;-&#x0020;Click to start player" src="{$TOP_LEVEL_PATH}pbn.gif"/>
                 </a>
@@ -170,94 +181,89 @@
     <!-- an individual it-line aka tier -->
     <!-- ****************************** -->
     <xsl:template match="it-line">
-        <tr class="{//tier[@id=current()/@formatref]/@category}" name="{//tier[@id=current()/@formatref]/@category}"></tr>
+        <tr class="{//tier[@id=current()/@formatref]/@category}" name="{//tier[@id=current()/@formatref]/@category}"/>
 
-            <xsl:variable name="itLinePosition" select="position()" as="xs:integer"/>
+        <xsl:variable name="itLinePosition" select="position()" as="xs:integer"/>
 
-            <!-- aply the template for the tier label -->
-            <xsl:apply-templates select="it-label"/>
+        <!-- aply the template for the tier label -->
+        <xsl:apply-templates select="it-label"/>
 
-            <xsl:for-each select="../sync-points/sync-point">
+        <xsl:for-each select="../sync-points/sync-point">
 
-                <xsl:variable name="Pos" select="1+count(preceding-sibling::*)" as="xs:integer"/>
+            <xsl:variable name="Pos" select="1 + count(preceding-sibling::*)" as="xs:integer"/>
 
-                <xsl:variable name="interval_is_covered">
-                    <xsl:for-each select="../../it-line[$itLinePosition+0]/it-chunk">
-                        <xsl:variable name="startPos" select="1+count(../../sync-points/sync-point[@id=current()/@start-sync]/preceding-sibling::*)" as="xs:integer"/>
-                        <xsl:variable name="endPos" select="1+count(../../sync-points/sync-point[@id=current()/@end-sync]/preceding-sibling::*)" as="xs:integer"/>
-                        <xsl:if test="$startPos+0&lt;=$Pos+0 and $endPos+0&gt;$Pos+0">X</xsl:if>
-                    </xsl:for-each>
-                </xsl:variable>
+            <xsl:variable name="interval_is_covered">
+                <xsl:for-each select="../../it-line[$itLinePosition + 0]/it-chunk">
+                    <xsl:variable name="startPos" select="1 + count(../../sync-points/sync-point[@id = current()/@start-sync]/preceding-sibling::*)" as="xs:integer"/>
+                    <xsl:variable name="endPos" select="1 + count(../../sync-points/sync-point[@id = current()/@end-sync]/preceding-sibling::*)" as="xs:integer"/>
+                    <xsl:if test="$startPos + 0 &lt;= $Pos + 0 and $endPos + 0 &gt; $Pos + 0">X</xsl:if>
+                </xsl:for-each>
+            </xsl:variable>
 
-                <xsl:choose>
-                    <!-- case where there is no event at or across the current timepoint -->
-                    <xsl:when test="not(contains($interval_is_covered,'X'))">
-                        <td>
-                            <xsl:attribute name="class">
-                                <!-- TODO: check why this is so complex - don't we have the variable's value already? -->
-                                <xsl:variable name="CATEGORY" select="//tier[@id=current()/../../it-line[$itLinePosition+0]/@formatref]/@category"/>
-                                <!-- TODO: check why this is so complex , use parameters maybe -->
-                                <xsl:if
-                                    test="($CATEGORY!='k' and count(current()/../../it-line[$itLinePosition+0]/following-sibling::*)=0) or ($CATEGORY!='k' and //tier[@id=current()/../../it-line[$itLinePosition+0]/following-sibling::*[1]/@formatref]/@category='k')">
-                                    <xsl:text>b </xsl:text>
-                                </xsl:if>
-                                <xsl:if
-                                    test="$CATEGORY!='k' and count(current()/following-sibling::*)=0">
-                                    <xsl:text>r </xsl:text>
-                                </xsl:if>
-                                <xsl:text>emp</xsl:text>
-                            </xsl:attribute>
-
-                            <!-- if this is the last entry in that row: stretch it! -->
-                            <xsl:if test="count(current()/following-sibling::*)=0">
-                                <xsl:attribute name="width">100%</xsl:attribute>
+            <xsl:choose>
+                <!-- case where there is no event at or across the current timepoint -->
+                <xsl:when test="not(contains($interval_is_covered, 'X'))">
+                    <td>
+                        <xsl:attribute name="class">
+                            <!-- TODO: check why this is so complex - don't we have the variable's value already? -->
+                            <xsl:variable name="CATEGORY" select="//tier[@id = current()/../../it-line[$itLinePosition + 0]/@formatref]/@category"/>
+                            <!-- TODO: check why this is so complex , use parameters maybe -->
+                            <xsl:if
+                                test="($CATEGORY != 'k' and count(current()/../../it-line[$itLinePosition + 0]/following-sibling::*) = 0) or ($CATEGORY != 'k' and //tier[@id = current()/../../it-line[$itLinePosition + 0]/following-sibling::*[1]/@formatref]/@category = 'k')">
+                                <xsl:text>b </xsl:text>
                             </xsl:if>
-                        </td>
-                    </xsl:when>
+                            <xsl:if test="$CATEGORY != 'k' and count(current()/following-sibling::*) = 0">
+                                <xsl:text>r </xsl:text>
+                            </xsl:if>
+                            <xsl:text>emp</xsl:text>
+                        </xsl:attribute>
 
-                    <!-- case where there IS an event at the current timepoint -->
-                    <xsl:otherwise>
-                        <xsl:apply-templates
-                            select="../../it-line[$itLinePosition+0]/it-chunk[@start-sync=current()/@id]"
-                        />
-                    </xsl:otherwise>
+                        <!-- if this is the last entry in that row: stretch it! -->
+                        <xsl:if test="count(current()/following-sibling::*) = 0">
+                            <xsl:attribute name="width">100%</xsl:attribute>
+                        </xsl:if>
+                    </td>
+                </xsl:when>
 
-                </xsl:choose>
-            </xsl:for-each>
+                <!-- case where there IS an event at the current timepoint -->
+                <xsl:otherwise>
+                    <xsl:apply-templates select="../../it-line[$itLinePosition + 0]/it-chunk[@start-sync = current()/@id]"/>
+                </xsl:otherwise>
+
+            </xsl:choose>
+        </xsl:for-each>
 
     </xsl:template>
 
     <xsl:template match="it-label">
-        <xsl:variable name="CATEGORY" select="//tier[@id=current()/../@formatref]/@category"/>
+        <xsl:variable name="CATEGORY" select="//tier[@id = current()/../@formatref]/@category"/>
         <xsl:element name="td">
             <xsl:attribute name="class">
                 <!-- check if it is the last tier in the partitur frame -->
-                <xsl:if
-                    test="($CATEGORY!='k' and count(../following-sibling::*)=0) or ($CATEGORY!='k' and //tier[@id=current()/../following-sibling::*[1]/@formatref]/@category='k')">
+                <xsl:if test="($CATEGORY != 'k' and count(../following-sibling::*) = 0) or ($CATEGORY != 'k' and //tier[@id = current()/../following-sibling::*[1]/@formatref]/@category = 'k')">
                     <xsl:text>b </xsl:text>
                 </xsl:if>
                 <!-- check whether it is a main or a subordinate tier -->
                 <xsl:choose>
-                    <xsl:when test="//tier[@id=current()/../@formatref]/@category='v'"
-                        >tlm</xsl:when>
+                    <xsl:when test="//tier[@id = current()/../@formatref]/@category = 'v'">tlm</xsl:when>
                     <xsl:otherwise>tlo</xsl:otherwise>
                 </xsl:choose>
                 <!-- TODO: check if this can/should be parameterized -->
-                <xsl:if test="//tier[@id=current()/../@formatref]/@category='k' ">
+                <xsl:if test="//tier[@id = current()/../@formatref]/@category = 'k'">
                     <xsl:text> nlb</xsl:text>
                 </xsl:if>
             </xsl:attribute>
 
             <!-- the tooltip title for this tier -->
             <xsl:attribute name="title">
-                <xsl:variable name="SPEAKER_ID" select="//tier[@id=current()/../@formatref]/@speaker" as="xs:string"/>
+                <xsl:variable name="SPEAKER_ID" select="//tier[@id = current()/../@formatref]/@speaker" as="xs:string"/>
                 <xsl:value-of select="key('tier-title-by-category', $CATEGORY, $TIER_TITLES)"/>
             </xsl:attribute>
 
             <xsl:value-of select="run/text()"/>
 
             <!-- two non-breaking spaces behind the tier-label -->
-            <xsl:if test="not(string-length(run/text())=0)">
+            <xsl:if test="not(string-length(run/text()) = 0)">
                 <xsl:text>&#x00A0;&#x00A0;</xsl:text>
             </xsl:if>
 
@@ -265,33 +271,30 @@
     </xsl:template>
 
     <xsl:template match="it-chunk">
-        <xsl:variable name="CATEGORY" select="//tier[@id=current()/../@formatref]/@category"/>
-        <xsl:variable name="cellspan" select="count(../../sync-points/sync-point[@id=current()/@end-sync]/preceding-sibling::*)-count(../../sync-points/sync-point[@id=current()/@start-sync]/preceding-sibling::*)"/>
-        <xsl:variable name="tiercategory" select="//tier[@id=current()/@formatref]/@category"/>
+        <xsl:variable name="CATEGORY" select="//tier[@id = current()/../@formatref]/@category"/>
+        <xsl:variable name="cellspan"
+            select="count(../../sync-points/sync-point[@id = current()/@end-sync]/preceding-sibling::*) - count(../../sync-points/sync-point[@id = current()/@start-sync]/preceding-sibling::*)"/>
+        <xsl:variable name="tiercategory" select="//tier[@id = current()/@formatref]/@category"/>
 
         <td colspan="{$cellspan}">
             <xsl:attribute name="class">
-                <xsl:if
-                    test="($CATEGORY!='k' and count(../following-sibling::*)=0) or ($CATEGORY!='k' and //tier[@id=current()/../following-sibling::*[1]/@formatref]/@category='k')">
+                <xsl:if test="($CATEGORY != 'k' and count(../following-sibling::*) = 0) or ($CATEGORY != 'k' and //tier[@id = current()/../following-sibling::*[1]/@formatref]/@category = 'k')">
                     <xsl:text>b </xsl:text>
                 </xsl:if>
                 <xsl:value-of select="$tiercategory"/>
             </xsl:attribute>
 
             <xsl:attribute name="data-tl">
-                <xsl:variable name="TIMESTART" select="0 + //tli[@id=current()/@start-sync]/@time"/>
+                <xsl:variable name="TIMESTART" select="0 + //tli[@id = current()/@start-sync]/@time"/>
                 <xsl:variable name="TIMEEND">
                     <xsl:choose>
-                        <xsl:when
-                            test="number(//tli[@id=current()/@end-sync]/@time) = number(//tli[@id=current()/@end-sync]/@time)">
+                        <xsl:when test="number(//tli[@id = current()/@end-sync]/@time) = number(//tli[@id = current()/@end-sync]/@time)">
                             <!-- One needs to adjust the 0 so that the previous annotation would not get highlighted when one is started by clicking play icon -->
-                            <xsl:value-of select="0 + //tli[@id=current()/@end-sync]/@time"/>
+                            <xsl:value-of select="0 + //tli[@id = current()/@end-sync]/@time"/>
                         </xsl:when>
                         <xsl:when
-                            test="number(//tli[@id=current()/../../following-sibling::it-bundle[1]/it-line[1]/it-chunk[1]/@end-sync]/@time) = number(//tli[@id=current()/../../following-sibling::it-bundle[1]/it-line[1]/it-chunk[1]/@end-sync]/@time)">
-                            <xsl:value-of
-                                select="0 + //tli[@id=current()/../../following-sibling::it-bundle[1]/it-line[1]/it-chunk[1]/@end-sync]/@time"
-                            />
+                            test="number(//tli[@id = current()/../../following-sibling::it-bundle[1]/it-line[1]/it-chunk[1]/@end-sync]/@time) = number(//tli[@id = current()/../../following-sibling::it-bundle[1]/it-line[1]/it-chunk[1]/@end-sync]/@time)">
+                            <xsl:value-of select="0 + //tli[@id = current()/../../following-sibling::it-bundle[1]/it-line[1]/it-chunk[1]/@end-sync]/@time"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:value-of select="0 + max(//tli/@time)"/>
@@ -347,7 +350,9 @@
                     <xsl:for-each-group select="//tier/@category" group-by=".">
                         <xsl:sort select="."/>
                         <input style="margin-left:7px;" type="checkbox" name="category" value="{current-grouping-key()}" checked="checked" onclick="showHideTier(this,'{current-grouping-key()}')">
-                            <b><xsl:value-of select="current-grouping-key()"/></b>
+                            <b>
+                                <xsl:value-of select="current-grouping-key()"/>
+                            </b>
                         </input>
                     </xsl:for-each-group>
                 </div>
@@ -363,12 +368,14 @@
 				</div>
                 <div class="collapse_content">
                     <img alt="EXB" class="collapse_icon" src="{$TOP_LEVEL_PATH}exb-icon.png"/>
-                    <a href="{test}/EXB" style="text-decoration:none;font-weight:bold;font-family:sans-serif;font-size:10pt;">
+                    <a href="{test}/EXB" style="text-decoration:none;font-weight:bold;font-family:sans-serif;font-size:10pt;"
+                        >
                         EXMARaLDA Basic Transcription
                     </a>
                     <br/>
                     <img alt="EXS" class="collapse_icon" src="{$TOP_LEVEL_PATH}exs-icon.png"/>
-                    <a href="{$RECORDING_PATH}/EXB" style="text-decoration:none;font-weight:bold;font-family:sans-serif;font-size:10pt;">
+                    <a href="{$RECORDING_PATH}/EXB" style="text-decoration:none;font-weight:bold;font-family:sans-serif;font-size:10pt;"
+                        >
                         EXMARaLDA Segmented Transcription
                     </a>
                     <br/>
@@ -380,10 +387,10 @@
     <xsl:template name="MAKE_FOOTER">
         <div id="footer-new">
             <p>
-                This visualization was generated on <xsl:value-of select="current-dateTime()"/>
-                with <xsl:value-of select="$WEBSERVICE_NAME"/>.
-                Please contact HZSK for more information: <xsl:value-of select="$EMAIL_ADDRESS"/>
-            </p>
+                This visualization was generated on <xsl:value-of select="format-date(current-date(), '[D01].[M01].[Y0001]')"/>.
+                <!--with <xsl:value-of select="$WEBSERVICE_NAME"
+                />.-->
+                Please contact HZSK for more information: <xsl:value-of select="$EMAIL_ADDRESS"/> </p>
         </div>
     </xsl:template>
 
@@ -393,8 +400,9 @@
                 <div class="collapse_title"> Web service information </div>
                 <div class="collapse_content" style="width:310;">
                     <p>
-                        Generated on <xsl:value-of select="current-dateTime()"/>
-                        with <xsl:value-of select="$WEBSERVICE_NAME"/>.
+                        Generated on <xsl:value-of select="format-date(current-date(), '[D01].[M01].[Y0001]')"/>.
+                        <!--with <xsl:value-of select="$WEBSERVICE_NAME"
+                        />.-->
                     </p>
                     <p>Please contact the <a href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.</p>
                 </div>
@@ -406,9 +414,9 @@
         <xsl:param name="TIME"/>
         <xsl:variable name="totalseconds" select="0 + $TIME"/>
         <xsl:variable name="hours" select="0 + floor($totalseconds div 3600)"/>
-        <xsl:variable name="minutes" select="0 + floor(($totalseconds - 3600*$hours) div 60)"/>
-        <xsl:variable name="seconds" select="0 + ($totalseconds - 3600*$hours - 60*$minutes)"/>
-        <xsl:if test="$hours+0 &lt; 10 and $hours &gt;0">
+        <xsl:variable name="minutes" select="0 + floor(($totalseconds - 3600 * $hours) div 60)"/>
+        <xsl:variable name="seconds" select="0 + ($totalseconds - 3600 * $hours - 60 * $minutes)"/>
+        <xsl:if test="$hours + 0 &lt; 10 and $hours &gt; 0">
             <xsl:text>0</xsl:text>
             <xsl:value-of select="$hours"/>
         </xsl:if>
@@ -416,15 +424,15 @@
             <xsl:text>00</xsl:text>
         </xsl:if>
         <xsl:text>:</xsl:text>
-        <xsl:if test="$minutes+0 &lt; 10">
+        <xsl:if test="$minutes + 0 &lt; 10">
             <xsl:text>0</xsl:text>
         </xsl:if>
         <xsl:value-of select="$minutes"/>
         <xsl:text>:</xsl:text>
-        <xsl:if test="$seconds+0 &lt; 10">
+        <xsl:if test="$seconds + 0 &lt; 10">
             <xsl:text>0</xsl:text>
         </xsl:if>
-        <xsl:value-of select="round($seconds*100) div 100"/>
+        <xsl:value-of select="round($seconds * 100) div 100"/>
     </xsl:function>
 
     <xsl:function name="exmaralda:FORMAT_TIMELIGHT">

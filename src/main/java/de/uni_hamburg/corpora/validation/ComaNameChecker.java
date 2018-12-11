@@ -112,7 +112,7 @@ public class ComaNameChecker extends Checker implements CorpusFunction {
                 }
                 if (!basicFileName.isEmpty() && !segmentedFileName.isEmpty()) {
                     // check for mismatch between file names, issue a warning if necessary
-                    if (!basicFileName.substring(0, basicFileName.indexOf(".")).equals(segmentedFileName.substring(0, segmentedFileName.indexOf("_")))) {
+                    if (!basicFileName.substring(0, basicFileName.lastIndexOf(".")).equals(segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_")))) {
                         System.err.println("Basic file name and segmented file name do not match "
                                 + "for communication " + communicationName + ", id: " + communicationID + ".");
                         stats.addWarning("coma-name-checker", "File name mismatch "
@@ -121,7 +121,7 @@ public class ComaNameChecker extends Checker implements CorpusFunction {
                 }
                 if (!basicNSLink.isEmpty() && !segmentedNSLink.isEmpty()) {
                     // check for mismatch between nslinks, issue a warning if necessary
-                    if (!basicNSLink.substring(0, basicNSLink.indexOf(".")).equals(segmentedNSLink.substring(0, segmentedNSLink.indexOf("_")))) {
+                    if (!basicNSLink.substring(0, basicNSLink.lastIndexOf(".")).equals(segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_")))) {
                         System.err.println("Basic NSLink and segmented NSLink do not match "
                                 + "for communication " + communicationName + ", id: " + communicationID + ".");
                         stats.addWarning("coma-name-checker", "NSLink mismatch "
