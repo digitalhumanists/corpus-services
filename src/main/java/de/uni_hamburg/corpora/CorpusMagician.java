@@ -28,6 +28,8 @@ import de.uni_hamburg.corpora.validation.TierChecker;
 import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
+import de.uni_hamburg.corpora.visualization.CorpusHTML;
+import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -280,6 +282,8 @@ public class CorpusMagician {
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
+        allExistingCFs.add("ScoreHTML");
+        allExistingCFs.add("CorpusHTML");
         return allExistingCFs;
     }
 
@@ -475,6 +479,14 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(zc);
+                    break;
+                case "scorehtml":
+                    ScoreHTML shtml = new ScoreHTML();
+                    corpusfunctions.add(shtml);
+                    break;
+                case "corpushtml":
+                    CorpusHTML chtml = new CorpusHTML();
+                    corpusfunctions.add(chtml);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");

@@ -6,6 +6,8 @@
 
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.util.logging.Level;
@@ -31,6 +33,7 @@ import java.nio.file.Paths;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +41,7 @@ import java.util.regex.Pattern;
  *
  * @author Daniel Jettka
  */
-public class ListHTML extends AbstractVisualization {
+public class ListHTML extends Visualizer {
 
     private String utteranceList = null;
     private String segmentationAlgorithm = "Generic";
@@ -241,5 +244,20 @@ public class ListHTML extends AbstractVisualization {
             ioe.printStackTrace();
         }
 
+    }
+
+    @Override
+    public Report visualize(CorpusData cd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report doMain(String[] args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
