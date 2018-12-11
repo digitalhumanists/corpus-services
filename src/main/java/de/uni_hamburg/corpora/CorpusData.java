@@ -14,6 +14,20 @@ import java.net.URL;
 public interface CorpusData {
 
     public URL getURL();
+    
+    public void setURL(URL url);
+    
+    public URL getParentURL();
+    
+    public void setParentURL(URL url);
+    
+    public String getFilename();
+    
+    public void setFilename(String s);
+    
+    public String getFilenameWithoutFileEnding();
+    
+    public void setFilenameWithoutFileEnding(String s);
 
     public String toSaveableString();
 
