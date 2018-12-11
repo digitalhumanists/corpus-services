@@ -133,6 +133,7 @@ public class CorpusIO {
 
     //TODO
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
+        //at some point we will need to use correct mimetypes here....
         if (f.getName().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
             //bt.loadFile(f);
@@ -150,7 +151,7 @@ public class CorpusIO {
         } else if (f.getName().endsWith("exs")) {
             SegmentedTranscriptionData setd = new SegmentedTranscriptionData(f.toURI().toURL());
             return setd;
-        } else if (f.getName().endsWith("cmdi")) {
+        } else if ((f.getName().endsWith("xml") && f.getName().contains("cmdi")) || f.getName().endsWith("cmdi")) {
             CmdiData cmdi = new CmdiData(f.toURI().toURL());
             return cmdi;
         } else {
