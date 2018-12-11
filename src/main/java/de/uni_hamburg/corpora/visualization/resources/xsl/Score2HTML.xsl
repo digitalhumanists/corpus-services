@@ -18,19 +18,20 @@
     <xsl:param name="WEBSERVICE_NAME" select="'ScoreHTML'" as="xs:string?" required="no"/>
     <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
     <xsl:param name="STYLES" as="xs:string?" required="no"/>
-
+    <!-- The displayed name of the transcription -->
+    <!-- occurs, for example in the navigation bar -->
+    <xsl:param name="TRANSCRIPTION_NAME" select="//transcription-name" as="xs:string?" required="no"/>
+        <!-- The displayed name of the corpus -->
+    <!-- occurs, for example in the navigation bar -->
+    <xsl:param name="CORPUS_NAME" select="//project-name" as="xs:string?" required="no"/>
 
     <!-- ********************* -->
     <!-- Variables Declaration -->
     <!-- ********************* -->
 
-    <!-- The displayed name of the corpus -->
-    <!-- occurs, for example in the navigation bar -->
-    <xsl:variable name="CORPUS_NAME" select="//project-name" as="xs:string?"/>
 
-    <!-- The displayed name of the transcription -->
-    <!-- occurs, for example in the navigation bar -->
-    <xsl:variable name="TRANSCRIPTION_NAME" select="//transcription-name" as="xs:string?"/>
+
+
 
     <!-- the base of the filename from which the names of all linked files are derived -->
     <xsl:variable name="BASE_FILENAME">

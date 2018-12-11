@@ -103,7 +103,9 @@ public class ListHTML extends Visualizer {
             xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME + " (" + segmAlgorithm + ")");
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
-
+            xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
+            //xt.setParameter("CORPUS_NAME", cd.getFilenameWithoutFileEnding());
+            xt.setParameter("CORPUS_NAME", "Selkup");
             // perform XSLT transformation
             result = xt.transform(getUtteranceList(), xsl);
 
@@ -120,6 +122,7 @@ public class ListHTML extends Visualizer {
                 result = sb.toString();
             } catch (Exception e) {
                 setHTML("Custom Exception for inserting JS/CSS into result: " + e.getLocalizedMessage() + "\n" + result);
+                stats.addException(SERVICE_NAME, e, "JS/CSS exception");
             }
 
         } catch (TransformerConfigurationException ex) {
@@ -129,6 +132,7 @@ public class ListHTML extends Visualizer {
         }
 
         setHTML(result);
+        System.out.println(result);
         return result;
     }
 
@@ -183,6 +187,14 @@ public class ListHTML extends Visualizer {
                     list = IOUtilities.documentToString(listXML);
                     break;
                 }
+                case "HIATINEL": {
+                    GenericSegmentation genS = new GenericSegmentation();
+                    SegmentedTranscription st = genS.BasicToSegmented(basicTranscription);
+                    ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
+                    final Document listXML = FileIO.readDocumentFromString(lt.toXML());
+                    list = IOUtilities.documentToString(listXML);
+                    break;
+                }
                 default:
                     throw new Exception("createUtteranceList - unsupported parameter segmAlgorithm='" + segmentationAlgorithm + "'");
             }
@@ -228,11 +240,14 @@ public class ListHTML extends Visualizer {
     }
 
     @Override
-    public Report visualize(CorpusData cd) {
+    public Report visualize(CorpusData ccd) {
         try {
-            Report stats = new Report();
+            cd = ccd;
+            stats = new Report();
             String result = createFromBasicTranscription(cd.toUnformattedString(), segmentationAlgorithm);
+            //String result = createFromBasicTranscription(cd.toSaveableString(), "HIAT");
             targeturl = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_list.html");
+            System.out.println("targeturl: " + targeturl);
             CorpusIO cio = new CorpusIO();
             cio.write(result, targeturl);
             stats.addCorrect(SERVICE_NAME, cd, "Visualization of file was successfully saved at " + targeturl);
