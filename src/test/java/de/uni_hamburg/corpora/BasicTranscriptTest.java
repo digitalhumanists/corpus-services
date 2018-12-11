@@ -27,6 +27,7 @@ import java.net.URL;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import static org.junit.Assert.assertTrue;
 
 public class BasicTranscriptTest {
 
@@ -42,12 +43,12 @@ public class BasicTranscriptTest {
             URL url = exbFile.toURI().toURL();
             BasicTranscriptionData btd = new BasicTranscriptionData(url);
             //btd.loadFile(exbFile);
-            String prettyXML = btd.toSaveableString();
-            assertNotNull(prettyXML);
+            String unprettyXML = btd.toUnformattedString();
+            assertNotNull(unprettyXML);
             // could be assertThat()
-            assertFalse(prettyXML.equals(exbString));
+            assertTrue(unprettyXML.equals(exbString));
             PrintWriter exbOut = new PrintWriter("src/test/java/de/uni_hamburg/corpora/resources/example/outxample.exb");
-            exbOut.print(prettyXML);
+            exbOut.print(unprettyXML);
             exbOut.close();
             File newExbFile = new File(newExbFilename);
             //remove the created file after the tests

@@ -14,4 +14,5 @@ import java.util.Collection;
  */
 interface Metadata extends CorpusData{
     
+    public Collection<URL> getReferencedCorpusDataURLs(); 
 }
