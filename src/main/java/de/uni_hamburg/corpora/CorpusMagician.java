@@ -188,19 +188,22 @@ public class CorpusMagician {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
                 reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
             }
-            String absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+            String absoluteReport = reportOutput;
+            if(absoluteReport!=null && basedirectory!=null && absoluteReport.contains(basedirectory.toString())){
+            absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+            }
+            if(absoluteReport!=null){
             cio.write(absoluteReport, reportlocation);
+            }
             //create the error list file
             //needs to be OS independent
             //There is an error for me when running on windows: \null gets created
-            URI uri = reportlocation.toURI();
-            URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
-            String errorlistlocstring = Paths.get(parentURI).toString() + File.separator + "CorpusServices_Errors.xml";
-            URL errorlistlocation = Paths.get(errorlistlocstring).toUri().toURL();
-            System.out.println("Wrote ErrorList at " + errorlistlocation);
+            URL errorlistlocation = new URL(basedirectory + "/" + "CorpusServices_Errors.xml");            
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
-            //System.out.println(exmaErrorList.toString());
+            if (exmaErrorList != null){
             cio.write(exmaErrorList, errorlistlocation);
+            System.out.println("Wrote ErrorList at " + errorlistlocation);
+            }           
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
         } catch (IOException ex) {
@@ -208,9 +211,7 @@ public class CorpusMagician {
         } catch (ParserConfigurationException ex) {
             report.addException(ex, "A file could not be parsed");
         } catch (TransformerException ex) {
-            report.addException(ex, "A transformation error occured");
-        } catch (URISyntaxException ex) {
-            report.addException(ex, "A URI syntax was incorrect");
+            report.addException(ex, "A transformation error occured");       
         } catch (SAXException ex) {
             report.addException(ex, "An XSLT error occured");
         } catch (JexmaraldaException ex) {
