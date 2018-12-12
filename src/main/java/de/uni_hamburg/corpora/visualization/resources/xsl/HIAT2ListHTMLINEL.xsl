@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml" exclude-result-prefixes="exmaralda"
-    version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml"
+    xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all"    version="2.0">
 
     <xsl:output encoding="UTF-8" method="html" omit-xml-declaration="yes"/>
 
@@ -71,6 +71,10 @@
     <!-- ... and then specify those which are only valid for this kind of visualisation document -->
 
 
+    <!-- Is the VisualizationFormat still needed? -->
+    <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, '/VisualizationFormat.css')" as="xs:string"/>
+    <xsl:variable name="CSS_PATH_LIST" select="'css/ListFormat.css'"/>
+
     <!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
     <xsl:variable name="DOCUMENT_SUFFIX" select="'u'" as="xs:string"/>
 
@@ -85,20 +89,12 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
                 <!-- placeholder for css, inserted later by Java -->
-                <style>
-                    <hzsk-pi:include>/css/ListFormat.css</hzsk-pi:include>
-                </style>
-                <style>
-                    <hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include>
-                </style>
+                <style><hzsk-pi:include>/css/ListFormat.css</hzsk-pi:include></style>
+                <style><hzsk-pi:include>/css/VisualizationFormat.css</hzsk-pi:include></style>
 
                 <!-- placeholder for js script, inserted later by Java -->
-                <script>
-                    <hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include>
-                </script>
-                <script>
-                    <hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include>
-                </script>
+                <script><hzsk-pi:include>/js/timelight-0.1.min.js</hzsk-pi:include></script>
+                <script><hzsk-pi:include>/js/jsfunctions.js</hzsk-pi:include></script>
             </head>
             <body>
                 <xsl:call-template name="MAKE_TITLE"/>
