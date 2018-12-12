@@ -20,7 +20,7 @@ import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
  *
  * @author fsnv625
  */
-public class NormalizeExb extends Checker implements CorpusFunction {
+public class ExbNormalize extends Checker implements CorpusFunction {
 
     Document doc = null;
     BasicTranscriptionData btd = null;
