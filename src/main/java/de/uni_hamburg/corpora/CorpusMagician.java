@@ -19,7 +19,7 @@ import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
-import de.uni_hamburg.corpora.validation.NormalizeExb;
+import de.uni_hamburg.corpora.validation.ExbNormalize;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
@@ -28,6 +28,7 @@ import de.uni_hamburg.corpora.validation.TierChecker;
 import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
+import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -285,6 +286,7 @@ public class CorpusMagician {
         allExistingCFs.add("ScoreHTML");
         allExistingCFs.add("CorpusHTML");
         allExistingCFs.add("ListHTML");
+        allExistingCFs.add("ExbEventLinebreaksChecker");
         return allExistingCFs;
     }
 
@@ -418,11 +420,11 @@ public class CorpusMagician {
                     corpusfunctions.add(ehit);
                     break;
                 case "normalizeexb":
-                    NormalizeExb ne = new NormalizeExb();
+                    ExbNormalize ne = new ExbNormalize();
                     corpusfunctions.add(ne);
                     break;
                 case "normalizeexbwhitespace":
-                    NormalizeExb neo = new NormalizeExb();
+                    ExbNormalize neo = new ExbNormalize();
                     neo.setfixWhiteSpaces(true);
                     corpusfunctions.add(neo);
                     break;
@@ -500,6 +502,10 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(lhtml);
+                    break;
+                case "exbeventlinebreakschecker":
+                    ExbEventLinebreaksChecker elb = new ExbEventLinebreaksChecker();
+                    corpusfunctions.add(elb);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");

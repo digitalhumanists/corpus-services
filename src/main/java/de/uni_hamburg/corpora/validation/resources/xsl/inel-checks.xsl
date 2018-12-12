@@ -34,12 +34,12 @@
 
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
         <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''', text(), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''',  replace(text(), ';', ':'), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
         <!-- check for multiple whitespaces in text content of non-mixed content elements -->
         <xsl:for-each select="//*[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''', text(), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''',  replace(text(), ';', ':'), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
 
