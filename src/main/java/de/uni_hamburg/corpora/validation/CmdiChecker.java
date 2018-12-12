@@ -96,6 +96,9 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             } else if (restype.getTextContent().equals("SearchService")) {
                 stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
                     "Good resource type SearchService");
+            } else if (restype.getTextContent().equals("Metadata")) {
+                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                    "Good resource type Metadata");
             } else {
                 stats.addWarning(CMDI_MISC, cmdiLoc + ": "
                         + "Unrecognised resource type "

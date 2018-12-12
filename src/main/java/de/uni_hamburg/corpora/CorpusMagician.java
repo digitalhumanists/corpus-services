@@ -29,6 +29,7 @@ import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
+import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import java.io.File;
 import java.io.IOException;
@@ -137,8 +138,7 @@ public class CorpusMagician {
             //get the basedirectory if there is a coma file
             if (!(corpus.getMetadata().isEmpty())) {
                 Metadata md = corpus.getMetadata().iterator().next();
-                ComaData cod = (ComaData) md;
-                basedirectory = cod.getBasedirectory();
+                basedirectory = md.getParentURL();
             }
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
@@ -284,6 +284,7 @@ public class CorpusMagician {
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
         allExistingCFs.add("CorpusHTML");
+        allExistingCFs.add("ListHTML");
         return allExistingCFs;
     }
 
@@ -445,18 +446,19 @@ public class CorpusMagician {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey("replace")) {
                             cdrr.setReplace(cfProperties.getProperty("replace"));
-                            System.out.println(cfProperties.getProperty("replace"));
+                            System.out.println("Replace set to " + cfProperties.getProperty("replace"));
                         }
                         if (cfProperties.containsKey("replacement")) {
                             System.out.println(cfProperties.getProperty("replacement"));
-                            cdrr.setReplacement(cfProperties.getProperty("replacement"));
+                            cdrr.setReplacement("Replacement set to " + cfProperties.getProperty("replacement"));
                         }
                         if (cfProperties.containsKey("xpathcontext")) {
                             cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
-                            System.out.println(cfProperties.getProperty("xpathcontext"));
+                            System.out.println("Xpath set to " + cfProperties.getProperty("xpathcontext"));
                         }
                         if (cfProperties.containsKey("coma")) {
                             cdrr.setComa(cfProperties.getProperty("coma"));
+                            System.out.println("Replace in Coma set to " + cfProperties.getProperty("xpathcontext"));
                         }
                     }
                     corpusfunctions.add(cdrr);
@@ -467,15 +469,15 @@ public class CorpusMagician {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey("SOURCE_FOLDER")) {
                             zc.setSourceFolder(cfProperties.getProperty("SOURCE_FOLDER"));
-                            System.out.println(cfProperties.getProperty("SOURCE_FOLDER"));
+                            System.out.println("Location of source folder set to " + cfProperties.getProperty("SOURCE_FOLDER"));
                         }
-                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {
-                            System.out.println(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {                           
                             zc.setOutputFile(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                            System.out.println("Location of output file set to " + cfProperties.getProperty("OUTPUT_ZIP_FILE"));
                         }
                         if (cfProperties.containsKey("AUDIO")) {
                             zc.setWithAudio(cfProperties.getProperty("AUDIO"));
-                            System.out.println(cfProperties.getProperty("AUDIO"));
+                            System.out.println("Should contain audio set to " + cfProperties.getProperty("AUDIO"));
                         }
                     }
                     corpusfunctions.add(zc);
@@ -487,6 +489,17 @@ public class CorpusMagician {
                 case "corpushtml":
                     CorpusHTML chtml = new CorpusHTML();
                     corpusfunctions.add(chtml);
+                    break;
+                case "listhtml":
+                    ListHTML lhtml = new ListHTML();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("SEGMENTATION")) {
+                            lhtml.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        }
+                    }
+                    corpusfunctions.add(lhtml);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
