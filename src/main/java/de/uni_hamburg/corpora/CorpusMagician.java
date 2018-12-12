@@ -180,7 +180,7 @@ public class CorpusMagician {
                 if (iserrorsonly) {
                     //ToDo
                     //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
-                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
+                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());                    
                 } else {
                     reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
                 }
@@ -188,7 +188,8 @@ public class CorpusMagician {
                 //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
                 reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
             }
-            cio.write(reportOutput, reportlocation);
+            String absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+            cio.write(absoluteReport, reportlocation);
             //create the error list file
             //needs to be OS independent
             //There is an error for me when running on windows: \null gets created
