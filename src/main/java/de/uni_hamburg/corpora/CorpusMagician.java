@@ -29,6 +29,7 @@ import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
+import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -272,7 +273,6 @@ public class CorpusMagician {
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("FileCoverageCheckerInel");
         allExistingCFs.add("NormalizeEXB");
-        allExistingCFs.add("NormalizeExbWhitespace");
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
@@ -289,6 +289,7 @@ public class CorpusMagician {
         allExistingCFs.add("CorpusHTML");
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
+        allExistingCFs.add("MakeTimelineConsistent");
         return allExistingCFs;
     }
 
@@ -423,12 +424,14 @@ public class CorpusMagician {
                     break;
                 case "normalizeexb":
                     ExbNormalize ne = new ExbNormalize();
+                     if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("whitespace")) {
+                            ne.setfixWhiteSpaces(cfProperties.getProperty("whitespace"));
+                            System.out.println("FixWhitespace set to " + cfProperties.getProperty("whitespace"));
+                        }
+                     }
                     corpusfunctions.add(ne);
-                    break;
-                case "normalizeexbwhitespace":
-                    ExbNormalize neo = new ExbNormalize();
-                    neo.setfixWhiteSpaces(true);
-                    corpusfunctions.add(neo);
                     break;
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
@@ -508,6 +511,17 @@ public class CorpusMagician {
                 case "exbeventlinebreakschecker":
                     ExbEventLinebreaksChecker elb = new ExbEventLinebreaksChecker();
                     corpusfunctions.add(elb);
+                    break;
+                case "maketimelineconsistent":
+                    ExbMakeTimelineConsistent emtc = new ExbMakeTimelineConsistent();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("interpolate")) {
+                             emtc.setInterpolateTimeline(cfProperties.getProperty("interpolate"));
+                            System.out.println("FixWhitespace set to " + cfProperties.getProperty("interpolate"));
+                        }
+                     }
+                    corpusfunctions.add(emtc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
