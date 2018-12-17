@@ -41,8 +41,9 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
             if(interpolateTimeline){
                 bt.getBody().getCommonTimeline().completeTimes();
             }
+            
             btd.setReadbtasjdom(bt.toJDOMDocument());
-            btd.setOriginalString(bt.toXML());
+            btd.setOriginalString(bt.toXML(bt.getTierFormatTable()));
             //btd.updateReadbtasjdom();
             cd = (CorpusData) btd;
             CorpusIO cio = new CorpusIO();

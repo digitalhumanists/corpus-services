@@ -289,7 +289,7 @@ public class CorpusMagician {
         allExistingCFs.add("CorpusHTML");
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
-        allExistingCFs.add("MakeTimelineConsitent");
+        allExistingCFs.add("MakeTimelineConsistent");
         return allExistingCFs;
     }
 
@@ -512,7 +512,7 @@ public class CorpusMagician {
                     ExbEventLinebreaksChecker elb = new ExbEventLinebreaksChecker();
                     corpusfunctions.add(elb);
                     break;
-                case "MakeTimelineConsistent":
+                case "maketimelineconsistent":
                     ExbMakeTimelineConsistent emtc = new ExbMakeTimelineConsistent();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
