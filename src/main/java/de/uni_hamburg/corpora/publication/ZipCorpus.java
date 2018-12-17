@@ -58,10 +58,10 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      *
      * @param zipFile output ZIP file location
      */
-    public Report zipIt(String zipFile, Boolean AUDIO) {
+    public Report zipIt(CorpusData comadata, String zipFile, Boolean AUDIO) {
         //get name of folder
         if (zipFile.equals("")){
-        String SOURCE_FOLDER_NAME = SOURCE_FOLDER.substring(SOURCE_FOLDER.lastIndexOf(File.separator) + 1);
+        String SOURCE_FOLDER_NAME = comadata.getFilenameWithoutFileEnding();
         if (AUDIO) {
             zipFile = SOURCE_FOLDER + File.separator + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
         } else {
@@ -97,9 +97,8 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
             zos.closeEntry();
             //remember close it
             zos.close();
-
             System.out.println("Done");
-            stats.addCorrect(zc, comadata, "Successfully created zip file at " + OUTPUT_ZIP_FILE);
+            stats.addCorrect(zc, comadata, "Successfully created zip file at " + zipFile);
         } catch (IOException ex) {
             stats.addException(ex, zc, comadata, "Unknown IO exception");
         }
@@ -148,8 +147,9 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     @Override
     public Report publish(CorpusData cd) {
         comadata = cd;
+        SOURCE_FOLDER = cd.getParentURL().getPath();
         stats = generateFileList(new File(SOURCE_FOLDER));
-        stats.merge(zipIt(OUTPUT_ZIP_FILE, AUDIO));
+        stats.merge(zipIt(cd, OUTPUT_ZIP_FILE, AUDIO));
         return stats;
     }
 
