@@ -82,7 +82,18 @@ public class PrettyPrinter {
             // insert explicit CDATA section for specific elements
             Pattern r2 = Pattern.compile("<nts([^>]*)>([\\s]+)</nts>", Pattern.DOTALL);
             prettyXmlString = r2.matcher(prettyXmlString).replaceAll("<nts$1><![CDATA[$2]]></nts>");
-                        
+                   
+            // re-sort attributes for EXBs from alphabetic to EXB style
+            Pattern r3 = Pattern.compile("<event\\s*(end=\"[^\">]*\")\\s+(start=\"[^\">]*\")\\s*>", Pattern.DOTALL);
+            prettyXmlString = r3.matcher(prettyXmlString).replaceAll("<event $2 $1>");
+            
+            Pattern r4 = Pattern.compile("<tier\\s+(category=\"[^\">]*\")\\s+(display\\-name=\"[^\">]*\")\\s+(id=\"[^\">]*\")\\s+(speaker=\"[^\">]*\")\\s+(type=\"[^\">]*\")\\s*(/?)>", Pattern.DOTALL);
+            prettyXmlString = r4.matcher(prettyXmlString).replaceAll("<tier $3 $4 $1 $5 $2 $6>");
+                   
+            // return certain empty elements from EXB with opening and closing tags
+            Pattern r5 = Pattern.compile("<(tier|event|ud\\-meta\\-information|languages\\-used|ud\\-speaker\\-information)([^/>]*?)\\s*/>", Pattern.DOTALL);
+            prettyXmlString = r5.matcher(prettyXmlString).replaceAll("<$1$2></$1>");
+            
             return prettyXmlString;
 
         } catch (Exception e) {
