@@ -20,16 +20,15 @@ import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
  *
  * @author fsnv625
  */
-public class NormalizeExb extends Checker implements CorpusFunction {
-
+public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction {
     Document doc = null;
     BasicTranscriptionData btd = null;
-    Boolean fixWhiteSpaces = false;
-    String ne = "NormalizeExb";
+    Boolean interpolateTimeline = false;
+    String ne = "MakeTimelineConsistent";
     
     @Override
     public Report check(CorpusData cd) {
-        report.addCritical("NormalizeExb", cd.getURL().getFile(), "Checking option is not available");
+        report.addCritical(ne, cd.getURL().getFile(), "Checking option is not available");
         return report;
     }
 
@@ -38,21 +37,22 @@ public class NormalizeExb extends Checker implements CorpusFunction {
         try {
             btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
-            bt.normalize();
-            if(fixWhiteSpaces){
-                bt.normalizeWhiteSpace();
+            bt.getBody().getCommonTimeline().makeConsistent();
+            if(interpolateTimeline){
+                bt.getBody().getCommonTimeline().completeTimes();
             }
+            
             btd.setReadbtasjdom(bt.toJDOMDocument());
-            btd.setOriginalString(bt.toXML());
+            btd.setOriginalString(bt.toXML(bt.getTierFormatTable()));
             //btd.updateReadbtasjdom();
             cd = (CorpusData) btd;
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
             if(cd != null){
-            report.addCorrect(ne, cd, "normalized the file");   
+            report.addCorrect(ne, cd, "made timeline consistent");   
             }
             else{
-            report.addCritical(ne, cd, "normalizing was not possible");
+            report.addCritical(ne, cd, "making timeline consistent not possible");
             }
         } catch (JDOMException ex) {
             report.addException(ex, ne, cd, "unknown xml exception");
@@ -74,8 +74,10 @@ public class NormalizeExb extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
     
-    public void setfixWhiteSpaces(Boolean boo){
-        fixWhiteSpaces = boo;
+    public void setInterpolateTimeline(String s){
+        interpolateTimeline = false;
+        if (s.equals("true") || s.equals("wahr") || s.equals("ja") || s.equals("yes")) {
+            interpolateTimeline = true;
+        }
     }
-
 }

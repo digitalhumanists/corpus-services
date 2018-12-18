@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml"
-    xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all" version="2.0">
+    xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all"    version="2.0">
 
     <xsl:output encoding="UTF-8" method="html" omit-xml-declaration="yes"/>
 
@@ -28,18 +28,17 @@
     <xsl:param name="WEBSERVICE_NAME" select="'HIATListHTML'" as="xs:string?" required="no"/>
     <xsl:param name="HZSK_WEBSITE" select="'https://corpora.uni-hamburg.de/'" as="xs:string?" required="no"/>
     <xsl:param name="LABEL" required="no" as="xs:string?"/>
+    <!-- The displayed name of the corpus; e.g. occurs in the navigation bar -->
+    <xsl:param name="CORPUS_NAME" select="//project-name" as="xs:string?" required="no"/>
+
+    <!-- The displayed name of the transcription -->
+    <!-- occurs, for example in the navigation bar -->
+    <xsl:param name="TRANSCRIPTION_NAME" select="//transcription-name" as="xs:string?" required="no"/>
 
 
     <!-- ***************************** -->
     <!-- Global variables Declaration  -->
     <!-- ***************************** -->
-
-    <!-- The displayed name of the corpus; e.g. occurs in the navigation bar -->
-    <xsl:variable name="CORPUS_NAME" select="//project-name" as="xs:string?"/>
-
-    <!-- The displayed name of the transcription -->
-    <!-- occurs, for example in the navigation bar -->
-    <xsl:variable name="TRANSCRIPTION_NAME" select="//transcription-name" as="xs:string?"/>
 
     <!-- the base of the filename from which the names of all linked files are derived -->
     <xsl:variable name="BASE_FILENAME" select="substring-before(//referenced-file[1]/@url, '.')" as="xs:string?"/>
@@ -49,8 +48,8 @@
     <xsl:variable name="TOP_LEVEL_PATH" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'" as="xs:string"/>
 
     <!-- <xsl:variable name="DATASTREAM">
-		<xsl:value-of select="concat('https://corpora.uni-hamburg.de/drupal/de/islandora/object/', $TRANSCRIPTION_ID, '/datastream')"/>
-	</xsl:variable>-->
+            <xsl:value-of select="concat('https://corpora.uni-hamburg.de/drupal/de/islandora/object/', $TRANSCRIPTION_ID, '/datastream')"/>
+    </xsl:variable>-->
 
     <xsl:variable name="SUPPORTED_VIDEO_TYPES" select="('webm', 'mpeg', 'mpg')" as="xs:string+"/>
     <!-- sorted by favourited format -->
@@ -72,6 +71,10 @@
     <!-- ... and then specify those which are only valid for this kind of visualisation document -->
 
 
+    <!-- Is the VisualizationFormat still needed? -->
+    <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, '/VisualizationFormat.css')" as="xs:string"/>
+    <xsl:variable name="CSS_PATH_LIST" select="'css/ListFormat.css'"/>
+
     <!-- a suffix to be used with the flash player ID to make sure flash players do not interact across documents -->
     <xsl:variable name="DOCUMENT_SUFFIX" select="'u'" as="xs:string"/>
 
@@ -82,7 +85,7 @@
     <xsl:template match="/">
         <html>
             <head>
-                <title><xsl:value-of select="$CORPUS_NAME"/>: <xsl:value-of select="$TRANSCRIPTION_NAME"/></title>
+                <title> <xsl:value-of select="$CORPUS_NAME"/>: <xsl:value-of select="$TRANSCRIPTION_NAME"/> </title>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
                 <!-- placeholder for css, inserted later by Java -->
@@ -218,13 +221,10 @@
         <div class="sidebarcontrol">
             <div class="collapse_box" id="tier_display">
                 <p>
-                        Generated on <xsl:value-of select="current-dateTime()"/>
-                        with the <xsl:value-of select="$WEBSERVICE_NAME"
-                    /> service.
-                        <br/>
-                        Please contact the <a target="_blank" href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora"
-                    >HZSK</a> for more information.
-                    </p>
+                    This visualization was generated on <xsl:value-of select="format-date(current-date(), '[D01].[M01].[Y0001]')"/>.
+                    Please contact the <a
+                    target="_blank" href="{$HZSK_WEBSITE}" title="Hamburger Zentrum für Sprachkorpora">HZSK</a> for more information.
+                </p>
             </div>
         </div>
     </xsl:template>
@@ -246,25 +246,25 @@
             <!-- ... and anchors for all start timeline references included in this sc -->
             <!-- ********************* TODO ************************* - doesn't work.. -->
             <!-- Now it works, but I'm not sure if this substring-before-after-concat -mess is the prettiest way to do it,
-				     the problem was, as far as I understand, in the way how the same xpath has to be able to pick meaningful part from
-				     both values like T100 and T100.100. -->
+            the problem was, as far as I understand, in the way how the same xpath has to be able to pick meaningful part from
+            both values like T100 and T100.100. -->
             <xsl:for-each select="*//@s">
                 <a name="{.}"/>
             </xsl:for-each>
             <!--<xsl:element name="a">
-					<xsl:attribute name="class">numbering</xsl:attribute>
-					<xsl:attribute name="href">
-						<xsl:value-of select="$DATASTREAM"/>
-						<xsl:text>/SCORE#</xsl:text>
-						<xsl:value-of select="substring-before(concat(current()/descendant::ts[1]/@s, '.'),'.')"/>
-					</xsl:attribute>
-					<xsl:value-of select="position()"/>
-					<span style="font-size:6pt; vertical-align:sub; color:rgb(150,150,150);">
-						<xsl:text>&#x00A0;[</xsl:text>
-						<xsl:value-of select="substring-before(concat(substring-after(current()/descendant::ts[1]/@s,'T'), '.'), '.')"/>
-						<xsl:text>]</xsl:text>
-					</span>
-				</xsl:element>-->
+                    <xsl:attribute name="class">numbering</xsl:attribute>
+                    <xsl:attribute name="href">
+                            <xsl:value-of select="$DATASTREAM"/>
+                            <xsl:text>/SCORE#</xsl:text>
+                            <xsl:value-of select="substring-before(concat(current()/descendant::ts[1]/@s, '.'),'.')"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="position()"/>
+                    <span style="font-size:6pt; vertical-align:sub; color:rgb(150,150,150);">
+                            <xsl:text>&#x00A0;[</xsl:text>
+                            <xsl:value-of select="substring-before(concat(substring-after(current()/descendant::ts[1]/@s,'T'), '.'), '.')"/>
+                            <xsl:text>]</xsl:text>
+                    </span>
+            </xsl:element>-->
         </td>
     </xsl:template>
 
