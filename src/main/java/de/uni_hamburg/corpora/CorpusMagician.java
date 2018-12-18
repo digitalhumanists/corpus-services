@@ -22,6 +22,7 @@ import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
+import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -283,6 +284,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("TierChecker");
+        allExistingCFs.add("NgTierCheckerWithAnnotation");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
@@ -396,6 +398,10 @@ public class CorpusMagician {
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
+                case "ngtiercheckerwithannotation":
+                    NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
+                    corpusfunctions.add(ngtcwa);
+                    break;
                 case "xsltcheckerinel":
                     XSLTChecker xci = new XSLTChecker();
                     xci.setXSLresource("/xsl/inel-checks.xsl");
