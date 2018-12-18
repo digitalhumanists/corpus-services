@@ -19,6 +19,7 @@ import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
 //import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
@@ -287,6 +288,7 @@ public class CorpusMagician {
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
         allExistingCFs.add("CorpusHTML");
+        allExistingCFs.add("IAAFunctionality");
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
         allExistingCFs.add("MakeTimelineConsistent");
@@ -436,6 +438,10 @@ public class CorpusMagician {
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
                     corpusfunctions.add(gap);
+                    break;
+                case "iaafunctionality":
+                    IAAFunctionality iaa = new IAAFunctionality();
+                    corpusfunctions.add(iaa);
                     break;
                 case "filecoveragecheckerinel":
                     FileCoverageChecker fcci = new FileCoverageChecker();
