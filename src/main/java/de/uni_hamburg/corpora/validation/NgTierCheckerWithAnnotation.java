@@ -119,7 +119,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         Report stats = new Report(); //create a new report
-
+        if (annotationsInComa != null){
         for (Map.Entry<String, Collection<String>> entry : annotationsInComa.entrySet()) {
             String name = entry.getKey();
             Collection<String> annotTypes = entry.getValue();
@@ -149,6 +149,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
                             + annotType + ") for " + name + " not specified in the annotation specification file!");
                 }
             }
+        }
         }
 
         return stats; // return the report with warnings

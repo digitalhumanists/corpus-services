@@ -35,12 +35,12 @@
 		<char>&#x0022;</char>
 	</char-set>
 	<char-set id="OpenParenthesis">
-		<comment>Characters whose double appearance signals the beginning of a non-phonological segment</comment>
+		<comment>Characters whose double appearance signals the beginning of a non-phonological segment.  Between these, utterance terminators will be ignored</comment>
 		<!-- Open round bracket -->
 		<char>(</char>
 	</char-set>
 	<char-set id="CloseParenthesis">
-		<comment>Characters whose double appearance signals the end of a non-phonological segment</comment>
+		<comment>Characters whose double appearance signals the end of a non-phonological segment.  Between these, utterance terminators will be ignored</comment>
 		<!-- Closed round bracket -->
 		<char>)</char>
 	</char-set>
@@ -263,7 +263,8 @@
 			</output>
 		</transition>
 		<transition>
-			<!-- this should actually be an error: utterance should not end when a parenthesis is open -->
+			<!-- this should actually not be an error in INEL: utterance end symbols can be there in a non-pho segment (= when a parenthesis is open) -->
+			<!-- needs to be parsed as an non-pho -->
 			<input-char-set id="UtteranceEndSymbols"/>
 			<target id="TurnOpen_UtteranceOpen_UtteranceEndEncountered"/>
 			<output oo="yes">
@@ -407,14 +408,15 @@
 			<output oo="no">
 				<prefix><![CDATA[</ts>]]><![CDATA[</ts>]]></prefix>
 			</output>
-    </transition>
-    <transition>
+		</transition>
+		<transition>
 			<input-char-set id="UtteranceEndSymbols"/>
-			<target id="TurnOpen_UtteranceOpen_UtteranceEndEncountered"/>
+			<!-- <target id="TurnOpen_UtteranceOpen_UtteranceEndEncountered"/>
 			<output oo="yes">
 				<prefix><![CDATA[<nts n="HIAT:ip">]]></prefix>
 				<suffix><![CDATA[</nts>]]></suffix>
-			</output>
+			</output> -->
+			<target id="Error"/>
 		</transition>
 		<transition>
 			<input-char-set id="SpaceSymbols"/>
@@ -513,7 +515,7 @@
 		<transition>
 			<input-char-set id="OpenParenthesis"/>
 			<!-- CHANGE!!! -->
-			<target id="TurnOpen_UtteranceOpen"/>
+			<target id="TurnOpen_UtteranceOpen_OpenParenthesisEncountered"/>
 			<output oo="yes">
 				<prefix><![CDATA[<ts n="HIAT:u" s="" e="">]]><![CDATA[<nts n="HIAT:ip">]]></prefix>
 				<suffix><![CDATA[</nts>]]></suffix>

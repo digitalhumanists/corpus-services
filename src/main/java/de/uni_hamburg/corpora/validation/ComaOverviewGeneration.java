@@ -11,7 +11,6 @@ import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -33,8 +32,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -73,7 +70,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             CorpusIO cio = new CorpusIO();
             cio.write(result, overviewurl);
             
-            r.addCorrect(COMA_OVERVIEW, "created html overview at " + overviewurl);
+            r.addCorrect(COMA_OVERVIEW, cd, "created html overview at " + overviewurl);
             
             
 //            //read lines and add to Report
@@ -110,15 +107,15 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
 
         } catch (TransformerConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW + ": Transformer configuration error");
+            r.addException(ex, COMA_OVERVIEW, cd, "Transformer configuration error");
         } catch (TransformerException ex) {
-            r.addException(ex, COMA_OVERVIEW + ": Transformer error");
+            r.addException(ex, COMA_OVERVIEW, cd, "Transformer error");
         } catch (MalformedURLException ex) {
-            r.addException(ex, COMA_OVERVIEW + ": Malformed URL error");
+            r.addException(ex, COMA_OVERVIEW, cd, "Malformed URL error");
         } catch (IOException ex) {
-            r.addException(ex, COMA_OVERVIEW + ": Unknown input/output error");
+            r.addException(ex, COMA_OVERVIEW, cd, "Unknown input/output error");
         } catch (URISyntaxException ex) {
-            r.addException(ex, COMA_OVERVIEW + ": Unknown URI syntax error");
+            r.addException(ex, COMA_OVERVIEW, cd, "Unknown URI syntax error");
         }
         
         return r;
@@ -137,7 +134,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");
              IsUsableFor.add(cl1);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaOverviewGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
             return IsUsableFor;
     }
