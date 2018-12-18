@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
@@ -47,7 +48,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     final String EXB_REFS = "exb-referenced-file";
 
     String exbName = "";
-
+    
     File exbFile;
 
     CorpusData cd;
@@ -242,3 +243,4 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
 }
+

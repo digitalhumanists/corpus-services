@@ -190,7 +190,8 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (new File(url.getFile()).isDirectory()) {
-                //we need to iterate
+                //we need to iterate    
+
                 //and add everything to the list
                 Collection<File> recursed = getFileURLSRecursively(url);
                 for (File f : recursed) {
@@ -211,7 +212,7 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later
+            //TODO later          
             return null;
         }
     }
@@ -248,7 +249,7 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later
+            //TODO later          
             return null;
         }
     }
