@@ -8,6 +8,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
+import de.uni_hamburg.corpora.validation.ComaXsdChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
@@ -279,6 +280,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+		allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
@@ -376,6 +378,10 @@ public class CorpusMagician {
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
+                    break;
+                case "comaxsdchecker":
+                    ComaXsdChecker cxsd = new ComaXsdChecker();
+                    corpusfunctions.add(cxsd);
                     break;
 				case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
