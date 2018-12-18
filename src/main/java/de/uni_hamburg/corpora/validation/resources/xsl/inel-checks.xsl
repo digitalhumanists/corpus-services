@@ -75,7 +75,7 @@
 
             <!-- check if paths are relative -->
             <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
-                <xsl:value-of select="concat('WARNING;The file reference ''', text(), ''' appears to be an absolute path;;', $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;The file reference ''', replace(text(), ';', ':'), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
 
         </xsl:for-each>
@@ -122,6 +122,11 @@
                 <xsl:value-of select="concat('CRITICAL;ref tier ', ../@id, ' value ', $refvalue,' does not match file name ', $filename ,' (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
             </xsl:if>
             
+        </xsl:for-each>
+        
+        <xsl:for-each select="$ROOT//*:tier[@category = ('mc')]/*:event[contains(text(), '&lt;NotSure&gt;')]">
+            <!-- Check that in the mc tier no <NotSure> exists -->
+            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(text(), ';', ':'),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
         </xsl:for-each>
 
         <xsl:for-each select="$ROOT//*:event">
