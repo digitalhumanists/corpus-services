@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
@@ -8,6 +9,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
+import de.uni_hamburg.corpora.validation.ComaXsdChecker;
 import de.uni_hamburg.corpora.validation.ComaNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
@@ -19,8 +21,10 @@ import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
-//import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
+import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
+import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
@@ -276,17 +280,22 @@ public class CorpusMagician {
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
-        allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("XSLTChecker");      
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
+		allExistingCFs.add("ComaXsdChecker");
+        allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
         allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("TierChecker");
+        allExistingCFs.add("NgTierCheckerWithAnnotation");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
         allExistingCFs.add("CorpusHTML");
+        allExistingCFs.add("IAAFunctionality");
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
         allExistingCFs.add("MakeTimelineConsistent");
@@ -372,6 +381,17 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
                     break;
+				case "comaaddtiersfromexbscorrector":
+                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
+                    corpusfunctions.add(catfec);
+                    break;
+                case "comaxsdchecker":
+                    ComaXsdChecker cxsd = new ComaXsdChecker();
+                    corpusfunctions.add(cxsd);
+                    break;
+				case "ngexmaraldacorpuschecker":
+                    NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
+                    corpusfunctions.add(ngex);
 		case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
@@ -394,6 +414,10 @@ public class CorpusMagician {
                 case "tierchecker":
                     TierChecker tc = new TierChecker();
                     corpusfunctions.add(tc);
+                case "ngtiercheckerwithannotation":
+                    NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
+                    corpusfunctions.add(ngtcwa);
+                    break;
                 case "xsltcheckerinel":
                     XSLTChecker xci = new XSLTChecker();
                     xci.setXSLresource("/xsl/inel-checks.xsl");
@@ -437,6 +461,10 @@ public class CorpusMagician {
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
                     corpusfunctions.add(gap);
                     break;
+                case "iaafunctionality":
+                    IAAFunctionality iaa = new IAAFunctionality();
+                    corpusfunctions.add(iaa);
+                    break;
                 case "filecoveragecheckerinel":
                     FileCoverageChecker fcci = new FileCoverageChecker();
                     fcci.addFileEndingWhiteListString("flextext");
@@ -456,8 +484,8 @@ public class CorpusMagician {
                             System.out.println("Replace set to " + cfProperties.getProperty("replace"));
                         }
                         if (cfProperties.containsKey("replacement")) {
-                            System.out.println(cfProperties.getProperty("replacement"));
-                            cdrr.setReplacement("Replacement set to " + cfProperties.getProperty("replacement"));
+                            cdrr.setReplacement(cfProperties.getProperty("replacement"));
+                            System.out.println("Replacement set to " + cfProperties.getProperty("replacement"));
                         }
                         if (cfProperties.containsKey("xpathcontext")) {
                             cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
