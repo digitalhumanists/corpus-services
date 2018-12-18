@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
@@ -279,7 +280,8 @@ public class CorpusMagician {
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
-        allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("XSLTChecker");      
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
 		allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
@@ -378,6 +380,10 @@ public class CorpusMagician {
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
+                    break;
+				case "comaaddtiersfromexbscorrector":
+                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
+                    corpusfunctions.add(catfec);
                     break;
                 case "comaxsdchecker":
                     ComaXsdChecker cxsd = new ComaXsdChecker();
