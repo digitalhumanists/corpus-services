@@ -93,6 +93,9 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         url = f.toURI().toURL();
     }
 
+    /*
+    * uses the field of the Exmaralda Basic transcription to update the jdom field
+    */
     public void updateJdomDoc() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
         String xmlString = bt.toXML();
         SAXBuilder builder = new SAXBuilder();
