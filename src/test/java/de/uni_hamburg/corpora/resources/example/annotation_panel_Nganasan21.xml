@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation-specification>
+   <annotation-set exmaralda-tier-category="POS">
+      <category depends-on="N" name="noun">
+         <category name="noun">
+            <tag name="N"/>
+            <description>nouns</description>
+         </category>
+         <category name="proper noun">
+            <tag name="NPR"/>
+            <description>proper noun</description>
+         </category>
+         <category name="adjective">
+            <tag name="ADJ"/>
+            <description>adjectives and participles</description>
+         </category>
+      </category>
+      <category name="adverbs">
+         <tag name="ADV"/>
+         <description>adverbs</description>
+      </category>
+      <category name="verbs">
+         <category name="affirmative verb">
+            <tag name="V"/>
+            <description>affirmative verbs</description>
+         </category>
+         <category name="negative verb">
+            <tag name="V.NEG"/>
+            <description>negative verbs like nicht-wissen</description>
+         </category>
+         <category name="existential verb">
+            <tag name="V.EX"/>
+            <description>existential verbs</description>
+         </category>
+         <category depends-on="COP" name="copula">
+            <tag name="COP"/>
+            <description>overt copular verb, in combination with some kind of non-verbal predicate complement</description>
+         </category>
+         <category depends-on="AUX" name="auxiliary">
+            <category name="affirmative auxiliary">
+               <tag name="AUX"/>
+            </category>
+            <category name="negative auxiliary">
+               <tag name="AUX.NEG"/>
+            </category>
+         </category>
+         <category depends-on="PRON" name="pronoun">
+            <category name="personal pronoun">
+               <tag name="PRONP"/>
+            </category>
+            <category name="possessive pronoun">
+               <tag name="PRONPOS"/>
+            </category>
+         </category>
+         <category name="conjungtion">
+            <tag name="CONJ"/>
+            <description>conjungtions</description>
+         </category>
+         <category name="demonstratives">
+            <tag name="DEM"/>
+            <description>demonstratives and determiners</description>
+         </category>
+         <category name="indefinites">
+            <tag name="INDF"/>
+            <description>indefinites</description>
+         </category>
+         <category name="intensifiers">
+            <tag name="INTS"/>
+            <description>intensifiers</description>
+         </category>
+         <category name="negative polaryty">
+            <tag name="NPI"/>
+            <description>negative polarity items</description>
+         </category>
+         <category name="postposition">
+            <tag name="PP"/>
+            <description>postpositions</description>
+         </category>
+         <category depends-on="PTCL" name="particle">
+            <category name="affirmative particle">
+               <tag name="PTCL"/>
+            </category>
+            <category name="negative particle">
+               <tag name="PTCL.NEG"/>
+            </category>
+            <description>particle and interjections</description>
+         </category>
+         <category name="quantifiers">
+            <tag name="QUANT"/>
+            <description>quantifiers and numerals</description>
+         </category>
+         <category name="questionword">
+            <tag name="QUE"/>
+            <description>question words</description>
+         </category>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="SeR">
+      <category depends-on="A" name="agent">
+         <category name="pronominal human agent">
+            <tag name="pro.h:A"/>
+         </category>
+         <category name="pronominal agent">
+            <tag name="pro:A"/>
+         </category>
+         <category name="nominal human agent">
+            <tag name="np.h:A"/>
+         </category>
+         <category name="nominal agent">
+            <tag name="np:A"/>
+         </category>
+         <category name="deleted human first person agent">
+            <tag name="0.1.h:A"/>
+         </category>
+         <category name="deleted human second person agent">
+            <tag name="0.2.h:A"/>
+         </category>
+         <category name="deleted human third person agent">
+            <tag name="0.3.h:A"/>
+         </category>
+         <category name="deleted third person agent">
+            <tag name="0.3:A"/>
+         </category>
+         <description>initiator of the action </description>
+      </category>
+      <category depends-on="E" name="experiencier">
+         <category name="pronominal human experiencier">
+            <tag name="pro.h:E"/>
+         </category>
+         <category name="nominal human experiencier">
+            <tag name="np.h:E"/>
+         </category>
+         <category name="deleted human first person experiencer">
+            <tag name="0.1.h:E"/>
+         </category>
+         <category name="deleted human second person experiencer">
+            <tag name="0.2.h:E"/>
+         </category>
+         <category name="deleted human third person experiencer">
+            <tag name="0.3.h:E"/>
+         </category>
+      </category>
+      <category depends-on="P" name="patient">
+         <category name="pronominal human patient">
+            <tag name="pro.h:P"/>
+         </category>
+         <category name="pronominal patient">
+            <tag name="pro:P"/>
+         </category>
+         <category name="nominal human patient">
+            <tag name="np.h:P"/>
+         </category>
+         <category name="nominal patient">
+            <tag name="np:P"/>
+         </category>
+         <category name="deleted first person human patient">
+            <tag name="0.1.h:P"/>
+         </category>
+         <category name="deleted second person human patient">
+            <tag name="0.2.h:P"/>
+         </category>
+         <category name="deleted third person human patient">
+            <tag name="0.3.h:P"/>
+         </category>
+         <category name="deleted third person nominal patient">
+            <tag name="0.3:P"/>
+         </category>
+         <description>undergoer of the action</description>
+      </category>
+      <category depends-on="G" name="goal">
+         <category name="nominal goal">
+            <tag name="np:G"/>
+         </category>
+         <category name="postpositional goal">
+            <tag name="pp:G"/>
+         </category>
+         <category name="adverbial goal">
+            <tag name="adv:G"/>
+         </category>
+         <description>goal argument of a goal-oriented verb of motion</description>
+      </category>
+      <category depends-on="R" name="recipient">
+         <category name="prominal human recipient">
+            <tag name="pro.h:R"/>
+         </category>
+         <category name="pronominal recipient">
+            <tag name="pro:R"/>
+         </category>
+         <category name="nominal human recipient">
+            <tag name="np.h:R"/>
+         </category>
+         <category name="nominal recipient">
+            <tag name="np:R"/>
+         </category>
+         <category name="deleted first person human recipient">
+            <tag name="0.1.h:R"/>
+         </category>
+         <category name="deleted second person human recipient">
+            <tag name="0.2.h:R"/>
+         </category>
+         <category name="deleted third person human recipient">
+            <tag name="0.3.h:R"/>
+         </category>
+         <category name="deleted third person niminal recipient">
+            <tag name="0.3:R"/>
+         </category>
+         <description>animate recipient of transfer or addressee of verb of speech</description>
+      </category>
+      <category depends-on="B" name="Beneficiary">
+         <category name="prominal human beneficiary">
+            <tag name="pro.h:B"/>
+         </category>
+         <category name="prominal beneficiary">
+            <tag name="pro:B"/>
+         </category>
+         <category name="nominal human beneficiary">
+            <tag name="np.h:B"/>
+         </category>
+         <category name="nominal beneficiary">
+            <tag name="np:B"/>
+         </category>
+         <category name="deleted first person human beneficiary">
+            <tag name="0.1.h:B"/>
+         </category>
+         <category name="deleted second person human beneficiary">
+            <tag name="0.2.h:B"/>
+         </category>
+         <category name="deleted third person human beneficiary">
+            <tag name="0.3.h:B"/>
+         </category>
+         <category name="deleted third person beneficiary">
+            <tag name="0.3:B"/>
+         </category>
+         <description>entity for whose benefit the action was performed</description>
+      </category>
+      <category depends-on="L" name="Locative">
+         <category name="nominal locative">
+            <tag name="np:L"/>
+         </category>
+         <category name="pronominal locative">
+            <tag name="pro:L"/>
+         </category>
+         <category name="postpositional locative">
+            <tag name="pp:L"/>
+         </category>
+         <category name="adverbial locative">
+            <tag name="adv:L"/>
+         </category>
+         <description>locative arguments of verbs of location</description>
+      </category>
+      <category depends-on="POSS" name="possessor">
+         <category name="nominal possessor">
+            <tag name="np:Poss"/>
+         </category>
+         <category name="pronominal human possessor">
+            <tag name="pro.h:Poss"/>
+         </category>
+         <category name="nominal human possessor">
+            <tag name="np.h:Poss"/>
+         </category>
+         <category name="deleted first person human possessor">
+            <tag name="0.1.h:Poss"/>
+         </category>
+         <category name="deleted second person human possessor">
+            <tag name="0.2.h:Poss"/>
+         </category>
+         <category name="deleted third person human Possessor">
+            <tag name="0.3.h:Poss"/>
+         </category>
+      </category>
+      <category depends-on="INS" name="Instrument">
+         <category name="nominal instrumental">
+            <tag name="np:Ins"/>
+         </category>
+         <category name="pronominal instrumental">
+            <tag name="pro:Ins"/>
+         </category>
+      </category>
+      <category depends-on="Time" name="time">
+         <category name="adverbial time">
+            <tag name="adv:Time"/>
+         </category>
+         <category name="nominal time">
+            <tag name="n:Time"/>
+         </category>
+         <category name="postpositional time">
+            <tag name="pp:Time"/>
+            <description>time</description>
+         </category>
+      </category>
+      <category depends-on="COM" name="comitative">
+         <category name="nominal comitative">
+            <tag name="np:Com"/>
+         </category>
+         <category name="pronominal comitative">
+            <tag name="pro:Com"/>
+         </category>
+         <category name="postpositonal comitative">
+            <tag name="pp:Com"/>
+         </category>
+      </category>
+      <category name="source">
+         <tag name="np:So"/>
+      </category>
+      <category name="theme">
+         <category name="nominal theme">
+            <tag name="np:Th"/>
+            <description>change of location or possession</description>
+         </category>
+         <category name="nominal human theme">
+            <tag name="np.h:Th"/>
+         </category>
+         <category name="pronominal theme">
+            <tag name="pro:Th"/>
+         </category>
+         <category name="pronominal human theme">
+            <tag name="pro.h:Th"/>
+         </category>
+         <category name="deleted human first person theme">
+            <tag name="0.1.h:Th"/>
+         </category>
+         <category name="deleted human second person theme">
+            <tag name="0.2.h:Th"/>
+         </category>
+         <category name="deleted human third person theme">
+            <tag name="0.3.h:Th"/>
+         </category>
+      </category>
+      <category depends-on="Cau" name="cause">
+         <category name="pronominal human causal">
+            <tag name="pro.h:Cau"/>
+         </category>
+         <category name="pronominal causal">
+            <tag name="pro:Cau"/>
+         </category>
+         <category name="nominal human causal">
+            <tag name="np.h:Cau"/>
+         </category>
+         <category name="nominal causal">
+            <tag name="np:Cau"/>
+         </category>
+         <category name="deleted human first person causal">
+            <tag name="0.1.h:Cau"/>
+         </category>
+         <category name="deleted human second person causal">
+            <tag name="0.2.h:Cau"/>
+         </category>
+         <category name="deleted human third person causal">
+            <tag name="0.3.h:Cau"/>
+         </category>
+      </category>
+      <category depends-on="Path" name="path">
+         <category name="nominal path">
+            <tag name="np:Path"/>
+         </category>
+         <category name="adverbial path">
+            <tag name="adv:Path"/>
+         </category>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="IST">
+      <category name="Quotative say">
+         <category name="quotative say">
+            <tag name="quot-S"/>
+            <description>utterance predicate of a clause</description>
+         </category>
+         <category name="quotative say with referent in direct quotation">
+            <tag name="quot-S-Q"/>
+         </category>
+         <category name="quotative say with dropped/zero referent">
+            <tag name="quot-S_0"/>
+         </category>
+         <category name="quotative say with dropped/zero referent in direct quotation">
+            <tag name="quot-S-Q_0"/>
+         </category>
+      </category>
+      <category depends-on="GIVE" name="Given">
+         <category name="underspecified">
+            <tag name="giv"/>
+         </category>
+         <category name="given active">
+            <tag name="giv-active"/>
+            <description>referred within the last or in current sentence</description>
+         </category>
+         <category name="given inactive">
+            <tag name="giv-inactive"/>
+         </category>
+         <category name="given active situative">
+            <tag name="giv-active-sit"/>
+         </category>
+         <category name="given inactive situative">
+            <tag name="giv-inactive-sit"/>
+         </category>
+         <category name="given with referent in direct quotation">
+            <tag name="giv-Q"/>
+         </category>
+         <category name="given active with referent in direct quotation">
+            <tag name="giv-active-Q"/>
+         </category>
+         <category name="given inactive quwith referent in direct quotationoted">
+            <tag name="giv-inactive-Q"/>
+         </category>
+         <category name="given active situative with referent in direct quotation">
+            <tag name="giv-active-sit-Q"/>
+         </category>
+         <category name="given inactive situative with referent in direct quotation">
+            <tag name="giv-inactive-sit-Q"/>
+         </category>
+         <category name="given with dropped/zero referent">
+            <tag name="giv_0"/>
+         </category>
+         <category name="given active with dropped/zero referent">
+            <tag name="giv-active_0"/>
+         </category>
+         <category name="given inactive with dropped/zero referent">
+            <tag name="giv-inactive_0"/>
+         </category>
+         <category name="given active situationally with dropped/zero referent">
+            <tag name="giv-active-sit_0"/>
+         </category>
+         <category name="given inactive situationally with dropped/zero referent">
+            <tag name="giv-inactive-sit_0"/>
+         </category>
+         <category name="given with dropped/zero referent in direct quotation">
+            <tag name="giv-Q_0"/>
+         </category>
+         <category name="given active with dropped/zero referent in direct quotation">
+            <tag name="giv-active-Q_0"/>
+         </category>
+         <category name="given inactive with dropped/zero referent in direct quotation">
+            <tag name="giv-inactive-Q_0"/>
+         </category>
+         <category name="given active situative with dropped/zero referent in direct quotation">
+            <tag name="giv-active-sit-Q_0"/>
+         </category>
+         <category name="given inactive situative with dropped/zero referent in direct quotation">
+            <tag name="giv-inactive-sit-Q_0"/>
+         </category>
+      </category>
+      <category depends-on="Accessible" name="Accessible">
+         <category name="accessible">
+            <tag name="accs"/>
+            <description>accessible element</description>
+         </category>
+         <category name="accessible with referent in direct quotation">
+            <tag name="accs-Q"/>
+         </category>
+         <category name="accessible with dropped/zero referent">
+            <tag name="accs_0"/>
+         </category>
+         <category name="accessible with dropped/zero referent in direct quotation">
+            <tag name="accs-Q_0"/>
+         </category>
+      </category>
+      <category depends-on="New" name="New">
+         <category name="new">
+            <tag name="new"/>
+            <description>new element</description>
+         </category>
+         <category name="new with referent in direct quotation">
+            <tag name="new-Q"/>
+         </category>
+         <category name="new with dropped/zero referent">
+            <tag name="new_0"/>
+         </category>
+         <category name="new with dropped/zero referent in direct quotation">
+            <tag name="new-Q_0"/>
+         </category>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="SyF">
+      <category depends-on="S" name="Subject">
+         <category name="pronominal human subject">
+            <tag name="pro.h:S"/>
+         </category>
+         <category name="pronominal subject">
+            <tag name="pro:S"/>
+         </category>
+         <category name="nominal human subject">
+            <tag name="np.h:S"/>
+         </category>
+         <category name="nominal subject">
+            <tag name="np:S"/>
+         </category>
+         <category name="deleted human first person subject">
+            <tag name="0.1.h:S"/>
+         </category>
+         <category name="deleted human second person subject">
+            <tag name="0.2.h:S"/>
+         </category>
+         <category name="deleted human third person subject">
+            <tag name="0.3.h:S"/>
+         </category>
+         <category name="deleted third person subject">
+            <tag name="0.3:S"/>
+         </category>
+         <description>subject of transitive or intransitive sentence</description>
+      </category>
+      <category depends-on="O" name="Object">
+         <category name="pronominal human object">
+            <tag name="pro.h:O"/>
+         </category>
+         <category name="pronominal object">
+            <tag name="pro:O"/>
+         </category>
+         <category name="nominal human object">
+            <tag name="np.h:O"/>
+         </category>
+         <category name="nominal object">
+            <tag name="np:O"/>
+         </category>
+         <category name="deleted human third person object">
+            <tag name="0.3.h:O"/>
+         </category>
+         <category name="deleted third person object">
+            <tag name="0.3:O"/>
+         </category>
+         <description>object of transitive sentence</description>
+      </category>
+      <category depends-on="pred" name="predicate">
+         <category name="verbal predicate">
+            <tag name="v:pred"/>
+         </category>
+         <category name="nominal predicate">
+            <tag name="n:pred"/>
+         </category>
+         <category name="attributive predicate">
+            <tag name="adj:pred"/>
+         </category>
+         <category name="pronominal predicate">
+            <tag name="pro:pred"/>
+         </category>
+         <category name="particle predicate">
+            <tag name="ptcl:pred"/>
+            <description>verbal and non-verbal element as the form element of a predicate</description>
+         </category>
+      </category>
+      <category depends-on="COP" name="copula">
+         <tag name="cop"/>
+         <description>overt copular verb, in combination with some kind of non-verbal predicate complement</description>
+      </category>
+      <category depends-on="s" name="subordination">
+         <category name="relative clause">
+            <tag name="s:rel"/>
+         </category>
+         <category name="temporal subordination">
+            <tag name="s:temp"/>
+         </category>
+         <category name="conditional subordination">
+            <tag name="s:cond"/>
+         </category>
+         <category name="purpose clause">
+            <tag name="s:purp"/>
+         </category>
+         <category name="adverbial clause">
+            <tag name="s:adv"/>
+         </category>
+         <category name="complement clause">
+            <tag name="s:compl"/>
+         </category>
+         <description>subordinate clauses</description>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="BOR">
+      <category depends-on="BOR" name="Source of borrowing">
+         <category name="Russian borrowing">
+            <tag name="RUS"/>
+         </category>
+         <category name="Dolgan borrowing">
+            <tag name="DOL"/>
+         </category>
+         <category name="Enets borrowing">
+            <tag name="EN"/>
+         </category>
+         <category name="Evenki borrowing">
+            <tag name="EV"/>
+         </category>
+         <category name="Nenets borrowing">
+            <tag name="NEN"/>
+         </category>
+      </category>
+      <category depends-on="BOR" name="Semantic type of borrowing">
+         <category name="cultural vocabulary">
+            <tag name=":cult"/>
+         </category>
+         <category name="core vocabulary">
+            <tag name=":core"/>
+         </category>
+         <category name="grammatical marker">
+            <tag name=":gram"/>
+         </category>
+         <category name="modal marker">
+            <tag name=":mod"/>
+         </category>
+         <category name="discourse marker">
+            <tag name=":disc"/>
+         </category>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="BOR-Phon">
+      <description>Phonological adaptation strategies</description>
+      <category depends-on="del" name="deletion">
+         <category name="initial consonant deletion">
+            <tag name="inCdel"/>
+         </category>
+         <category name="initial vowel deletion (aphaeresis)">
+            <tag name="inVdel"/>
+         </category>
+         <category name="medial consonant deletion">
+            <tag name="medCdel"/>
+         </category>
+         <category name="medial vowel deletion (syncope)">
+            <tag name="medVdel"/>
+         </category>
+         <category name="final consonant deletion">
+            <tag name="finCdel"/>
+         </category>
+         <category name="final vowel deletion (apocope)">
+            <tag name="finVdel"/>
+         </category>
+      </category>
+      <category depends-on="ins" name="insertion">
+         <category name="initial vowel insertion">
+            <tag name="inVins"/>
+         </category>
+         <category name="medial vowel insertion">
+            <tag name="medVins"/>
+         </category>
+         <category name="final vowel insertion">
+            <tag name="finVins"/>
+         </category>
+      </category>
+      <category depends-on="sub" name="substitution">
+         <category name="consonant substitution">
+            <tag name="Csub"/>
+         </category>
+         <category name="vowel substitution">
+            <tag name="Vsub"/>
+         </category>
+      </category>
+      <category name="lenition">
+         <tag name="lenition"/>
+         <description>weakening</description>
+      </category>
+      <category name="fortition">
+         <tag name="fortition"/>
+         <description>strengthening</description>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="BOR-Morph">
+      <category name="Morphological adaptation strategies">
+         <category name="direct insertion, not inflected">
+            <tag name="dir:bare"/>
+            <description>insertion without any morphological adaptation, not inflected in matrix language</description>
+         </category>
+         <category name="direct insertion, further inflected">
+            <tag name="dir:infl"/>
+            <description>insertion without any morphological adaptation, further inflected in matrix language</description>
+         </category>
+         <category name="indirect insertion, not inflected">
+            <tag name="indir:bare"/>
+            <description>insertion with morphological adaptation, not inflected in matrix language</description>
+         </category>
+         <category name="indirect insertion, further inflected">
+            <tag name="indir:infl"/>
+            <description>insertion with morphological adaptation, further inflected in matrix language</description>
+         </category>
+         <category name="paradigm insertion, not inflected">
+            <tag name="parad:bare"/>
+            <description>a (subset of) paradigm is borrowed with inflexion from the donor language, not inflected in matrix language</description>
+         </category>
+         <category name="paradigm insertion, further inflected">
+            <tag name="parad:infl"/>
+            <description>a (subset of) paradigm is borrowed with inflexion from the donor language, further inflected in matrix language</description>
+         </category>
+      </category>
+   </annotation-set>
+   <annotation-set exmaralda-tier-category="CS">
+      <description>Code-switching strategies</description>
+      <category name="sentence-external code-switching">
+         <tag name="ext"/>
+      </category>
+      <category name="sentence-internal code-switching">
+         <category name="insertion">
+            <tag name="int:ins"/>
+         </category>
+         <category name="alternation">
+            <tag name="int:alt"/>
+         </category>
+      </category>
+   </annotation-set>
+</annotation-specification>

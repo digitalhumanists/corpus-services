@@ -12,70 +12,32 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
-import java.io.File;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.StringBufferInputStream;
 import java.io.IOException;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.XMLConstants;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.StringUtils;
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
-import org.exmaralda.partitureditor.jexmaralda.BasicBody;
-import org.exmaralda.partitureditor.jexmaralda.Tier;
 import org.jdom.JDOMException;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
+public class ComaPIDLengthChecker extends Checker implements CommandLineable, StringChecker, CorpusFunction {
 
     ValidatorSettings settings;
     final String COMA_PID_LENGTH = "coma-pid-length";
@@ -146,12 +108,18 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
             String fedoraPID = new String("communication: " + corpusPrefix +
                     "-" + corpusVersion +
                     "_" + communicationName);
+            String shortenedCommuniationName;
+            if(communicationName.length()>39){
+                shortenedCommuniationName = communicationName.substring(0, 40);
+            } else {
+                shortenedCommuniationName = communicationName;
+            }
             if (fedoraPID.length() >= 64) {
                 stats.addCritical(COMA_PID_LENGTH, comaLoc + ": " +
                             "Communication is too long for Fedora PID" +
                             "generation: " + fedoraPID,
-                            "It must be shortened, e.g. use: " +
-                            communicationName.substring(0, 40) + ", or change " +
+                            " It must be shortened, e.g. use: " +
+                            shortenedCommuniationName + ", or change " +
                             "the corpus prefix");
             } else {
                 stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
@@ -192,6 +160,122 @@ public class ComaPIDLengthChecker implements CommandLineable, StringChecker {
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
+    }
+    
+    /**
+    * Default check function which calls the exceptionalCheck function so that the
+    * primal functionality of the feature can be implemented, and additionally 
+    * checks for parser configuration, SAXE and IO exceptions.
+    */   
+    @Override
+    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
+        Report stats = new Report();
+        try {
+            stats = exceptionalCheck(cd);
+        } catch(ParserConfigurationException pce) {
+            stats.addException(pce,  COMA_PID_LENGTH, cd, "Unknown parsing error");
+        } catch(SAXException saxe) {
+            stats.addException(saxe, COMA_PID_LENGTH, cd, "Unknown parsing error");
+        } catch(IOException ioe) {
+            stats.addException(ioe, COMA_PID_LENGTH, cd, "Unknown file reading error");
+        }
+        return stats;
+    }
+    
+    /**
+    * Main feature of the class: Checks Exmaralda .coma file for 
+    * ID's that violate Fedora's PID limits.
+    */  
+     private Report exceptionalCheck(CorpusData cd)
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException{
+        Report stats = new Report();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString()));
+        NodeList keys = doc.getElementsByTagName("Key");
+        String corpusPrefix = "";
+        String corpusVersion = "";
+        for (int i = 0; i < keys.getLength(); i++) {
+            Element keyElement = (Element)keys.item(i);
+            if (keyElement.getAttribute("Name").equalsIgnoreCase("HZSK:corpusprefix")) {
+                corpusPrefix = keyElement.getTextContent();
+            } else if
+                (keyElement.getAttribute("Name").equalsIgnoreCase("HZSK:corpusversion")) {
+                corpusVersion = keyElement.getTextContent();
+            }
+        }
+        if (corpusPrefix.equals("")) {
+            stats.addWarning(COMA_PID_LENGTH, cd,
+                        "Missing <Key name='HZSK:corpusprefix'>." +
+                        "PID length cannot be estimated accurately. " +
+                        "Add that key in coma.");
+            corpusPrefix = "muster";
+        } else {
+            stats.addCorrect(COMA_PID_LENGTH,cd,
+                    "HZSK corpus prefix OK: " + corpusPrefix);
+        }
+        if (corpusVersion.equals("")) {
+            stats.addWarning(COMA_PID_LENGTH, cd,
+                        "Missing <Key name='HZSK:corpusversion'>." +
+                        "PID length cannot be estimated accurately. " +
+                        "Add that key in coma.");
+            corpusVersion = "0.0";
+        } else {
+            stats.addCorrect(COMA_PID_LENGTH, cd, 
+                    "HZSK corpus version OK: " + corpusVersion);
+        }
+        NodeList communications = doc.getElementsByTagName("Communication");
+        for (int i = 0; i < communications.getLength(); i++) {
+            Element communication = (Element)communications.item(i);
+            String communicationName = communication.getAttribute("Name");
+            String fedoraPID = "communication: " + corpusPrefix +
+                    "-" + corpusVersion +
+                    "_" + communicationName;
+            String shortenedCommuniationName;
+            if(communicationName.length()>39){
+                shortenedCommuniationName = communicationName.substring(0, 40);
+            } else {
+                shortenedCommuniationName = communicationName;
+            }
+            if (fedoraPID.length() >= 64) {
+                stats.addCritical(COMA_PID_LENGTH, cd,
+                            "Communication is too long for Fedora PID" +
+                            "generation: " + fedoraPID +
+                            " It must be shortened, e.g. use: " +
+                            shortenedCommuniationName + ", or change " +
+                            "the corpus prefix");
+            } else {
+                stats.addCorrect(COMA_PID_LENGTH, cd,
+                            "Following PID will be generated for this " +
+                            "communication in Fedora: " + fedoraPID);
+            }
+        }
+        return stats;
+     }
+    
+    /**
+    * No fix is applicable for this feature.
+    */
+    @Override
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        report.addCritical(COMA_PID_LENGTH,
+                "Communication IDs which do not comply with Fedora PID cannot be fixed automatically");
+        return report;
+    }
+
+    /**
+    * Default function which determines for what type of files (basic transcription, 
+    * segmented transcription, coma etc.) this feature can be used.
+    */
+    @Override
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ComaPIDLengthChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return IsUsableFor;
     }
 
 }

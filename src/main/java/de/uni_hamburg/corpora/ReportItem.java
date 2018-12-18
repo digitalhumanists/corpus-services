@@ -89,6 +89,19 @@ public class ReportItem {
         this.what = what;
     }
 
+    public ReportItem(Severity s, Throwable e, String filename, String what) {
+        this.severity = s;
+        this.e = e;
+        this.what = what;
+        this.filename = filename;
+    }
+    
+    public ReportItem(Severity s, String filename, String what) {
+        this.severity = s;
+        this.what = what;
+        this.filename = filename;
+    }
+    
     /**
      * Errors found by XML validation errors should always include a
      * SAXParseException. This can be used to extract file location informations
@@ -448,7 +461,7 @@ public class ReportItem {
      * Includes quite ugly table of all the reports with a java script to hide
      * errors based on severity.
      */
-    public static String generateDataTableHTML(Collection<ReportItem> errors) {
+    public static String generateDataTableHTML(Collection<ReportItem> errors, String summarylines) {
         
         String report = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         
@@ -468,7 +481,12 @@ public class ReportItem {
         report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/DataTables/buttons.dataTables.min.css")) + "</style>\n";
         report += "<style>" + TypeConverter.InputStream2String(ReportItem.class.getResourceAsStream("/css/bootstrap/bootstrap-3.3.7.min.css")) + "</style>\n";
         
-        
+        //add custom CSS
+        report += "<style>"+
+                ".critical{ background:#ffdddd; } "+
+                ".other{ background:#ffd39e; } "+
+                ".warning{ background:#fafcc2; } "+
+                "</style>\n";
         report += "   </head>\n   <body>\n";
         
         report += "<table>\n  <thead><tr>" +
@@ -498,10 +516,10 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td style='border: red solid 1px'>" +
+            report += "<td>" +
                 error.getWhat() +
                 "</td>";
-            report += "<td style='border: green solid 1px'>" +
+            report += "<td>" +
                 error.getHowto() +
                 "</td>";
             report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
@@ -517,6 +535,7 @@ public class ReportItem {
                   "    $('table').DataTable({ 'iDisplayLength': 50 });\n" +
                   "} );</script>";
         
+        report += "   <footer>" + summarylines + "</footer>";
         report += "   </body>\n</html>";
         
         return report;
