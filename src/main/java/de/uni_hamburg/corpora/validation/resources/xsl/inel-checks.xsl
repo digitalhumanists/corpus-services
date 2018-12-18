@@ -126,7 +126,7 @@
         
         <xsl:for-each select="$ROOT//*:tier[@category = ('mc')]/*:event[contains(text(), '&lt;NotSure&gt;')]">
             <!-- Check that in the mc tier no <NotSure> exists -->
-            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(text(), ';', ':'),' contains &lt;NotSure&gt; replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(text(), ';', ':'),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
         </xsl:for-each>
 
         <xsl:for-each select="$ROOT//*:event">
