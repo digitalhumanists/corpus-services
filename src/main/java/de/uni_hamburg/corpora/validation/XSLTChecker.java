@@ -1,28 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import de.uni_hamburg.corpora.visualization.ListHTML;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import java.io.File;
 
 /**
  *
@@ -31,6 +26,8 @@ import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 public class XSLTChecker extends Checker implements CorpusFunction {
 
     String xslresource = "/xsl/nslc-checks.xsl";
+    String xc = "XSLTChecker";
+    String filename = "";
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -51,7 +48,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
 
         Report r = new Report();
-
+        filename = cd.getURL().getFile().subSequence(cd.getURL().getFile().lastIndexOf('/') + 1, cd.getURL().getFile().lastIndexOf('.')).toString();
         try {
 
             // get the XSLT stylesheet
@@ -60,6 +57,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
 
+            xt.setParameter("filename", filename);
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
 
@@ -71,27 +69,34 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                 String line = scanner.nextLine();
 
                 //split line by ;
-                String[] lineParts = line.split(";");
-
-                switch (lineParts[0].toUpperCase()) {
-                    case "WARNING":
-                        r.addWarning("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
-                        break;
-                    case "CRITICAL":
-                        r.addCritical("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
-                        break;
-                    case "NOTE":
-                        r.addNote("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        break;
-                    case "MISSING":
-                        r.addMissing("XSLTChecker", cd.getURL().getFile() + ": " + lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
-                        break;
-                    default:
-                        r.addCritical("XSLTChecker", "(Unrecognized report type) " + cd.getURL().getFile() + ": " + lineParts[1]);
-                        exmaError.addError("XSLTChecker", cd.getURL().getFile(), "", "", false, lineParts[1]);
+                String[] lineParts = line.split(";", -1);
+                if (lineParts.length != 4) {
+                    String message = "";
+                    for (String s : lineParts) {
+                        message = message + s;
+                    }
+                    r.addCritical(xc, cd, "There was an exception while creating the error probably because of a semicolon or newline in an event: " + message);
+                } else {
+                    switch (lineParts[0].toUpperCase()) {
+                        case "WARNING":
+                            r.addWarning(xc, cd, lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            break;
+                        case "CRITICAL":
+                            r.addCritical(xc, cd, lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            break;
+                        case "NOTE":
+                            r.addNote(xc, cd, lineParts[1]);
+                            break;
+                        case "MISSING":
+                            r.addMissing(xc, cd, lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            break;
+                        default:
+                            r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);
+                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                    }
                 }
 
                 i++;
@@ -100,18 +105,13 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             scanner.close();
 
         } catch (TransformerConfigurationException ex) {
-            report.addException(ex, "unknown tranformation configuration error");
+            report.addException(ex, xc, cd, "unknown tranformation configuration error");
         } catch (TransformerException ex) {
-            report.addException(ex, "unknown tranformation error");
+            report.addException(ex, xc, cd, "unknown tranformation error");
         }
 
         return r;
 
-    }
-
-    @Override
-    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void setXSLresource(String s) {

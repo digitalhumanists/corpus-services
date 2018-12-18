@@ -6,6 +6,8 @@
 
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.InputStream;
@@ -16,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +32,7 @@ import javax.xml.transform.stream.StreamSource;
  *
  * @author Daniel Jettka
  */
-public class HScoreHTML extends AbstractVisualization {
+public class HScoreHTML extends Visualizer {
 
     // resources loaded from directory supplied in pom.xml
     private static final String STYLESHEET_PATH = "/xsl/EXB2hScoreHTML.xsl";
@@ -96,6 +99,21 @@ public class HScoreHTML extends AbstractVisualization {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+
+    @Override
+    public Report visualize(CorpusData cd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report doMain(String[] args) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
