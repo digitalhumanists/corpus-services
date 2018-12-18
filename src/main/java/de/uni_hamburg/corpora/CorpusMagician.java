@@ -456,8 +456,8 @@ public class CorpusMagician {
                             System.out.println("Replace set to " + cfProperties.getProperty("replace"));
                         }
                         if (cfProperties.containsKey("replacement")) {
-                            System.out.println(cfProperties.getProperty("replacement"));
-                            cdrr.setReplacement("Replacement set to " + cfProperties.getProperty("replacement"));
+                            cdrr.setReplacement(cfProperties.getProperty("replacement"));
+                            System.out.println("Replacement set to " + cfProperties.getProperty("replacement"));
                         }
                         if (cfProperties.containsKey("xpathcontext")) {
                             cdrr.setXpathContext(cfProperties.getProperty("xpathcontext"));
