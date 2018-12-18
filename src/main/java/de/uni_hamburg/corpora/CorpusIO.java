@@ -133,6 +133,7 @@ public class CorpusIO {
 
     //TODO
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
+        //at some point we will need to use correct mimetypes here....
         if (f.getName().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
             //bt.loadFile(f);
@@ -141,18 +142,18 @@ public class CorpusIO {
             ComaData cm = new ComaData(f.toURI().toURL());
             //TODO
             return cm;
-        } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
+        } else if (f.getName().endsWith("xml") && ((f.getName().contains("Annotation") || f.getName().contains("annotation")))) {
             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
             return as;
+        } else if ((f.getName().endsWith("xml") && f.getName().contains("cmdi")) || f.getName().endsWith("cmdi")) {
+            CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi;
         } else if (f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
         } else if (f.getName().endsWith("exs")) {
             SegmentedTranscriptionData setd = new SegmentedTranscriptionData(f.toURI().toURL());
             return setd;
-        } else if (f.getName().endsWith("cmdi")) {
-            CmdiData cmdi = new CmdiData(f.toURI().toURL());
-            return cmdi;
         } else {
             System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;

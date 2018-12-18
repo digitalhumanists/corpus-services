@@ -279,7 +279,7 @@ public class ScoreHTML extends Visualizer {
         return stats;
     }
 
-    public URL getTargetURL() throws MalformedURLException {
+    public URL getTargetURL() {
         return targeturl;
     }
 }
