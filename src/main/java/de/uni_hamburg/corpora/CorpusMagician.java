@@ -184,7 +184,7 @@ public class CorpusMagician {
                 if (iserrorsonly) {
                     //ToDo
                     //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
-                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());                    
+                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
                 } else {
                     reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
                 }
@@ -193,21 +193,21 @@ public class CorpusMagician {
                 reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
             }
             String absoluteReport = reportOutput;
-            if(absoluteReport!=null && basedirectory!=null && absoluteReport.contains(basedirectory.toString())){
-            absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+            if (absoluteReport != null && basedirectory != null && absoluteReport.contains(basedirectory.toString())) {
+                absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
             }
-            if(absoluteReport!=null){
-            cio.write(absoluteReport, reportlocation);
+            if (absoluteReport != null) {
+                cio.write(absoluteReport, reportlocation);
             }
             //create the error list file
             //needs to be OS independent
             //There is an error for me when running on windows: \null gets created
-            URL errorlistlocation = new URL(basedirectory + "/" + "CorpusServices_Errors.xml");            
+            URL errorlistlocation = new URL(basedirectory + "/" + "CorpusServices_Errors.xml");
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
-            if (exmaErrorList != null){
-            cio.write(exmaErrorList, errorlistlocation);
-            System.out.println("Wrote ErrorList at " + errorlistlocation);
-            }           
+            if (exmaErrorList != null) {
+                cio.write(exmaErrorList, errorlistlocation);
+                System.out.println("Wrote ErrorList at " + errorlistlocation);
+            }
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
         } catch (IOException ex) {
@@ -215,7 +215,7 @@ public class CorpusMagician {
         } catch (ParserConfigurationException ex) {
             report.addException(ex, "A file could not be parsed");
         } catch (TransformerException ex) {
-            report.addException(ex, "A transformation error occured");       
+            report.addException(ex, "A transformation error occured");
         } catch (SAXException ex) {
             report.addException(ex, "An XSLT error occured");
         } catch (JexmaraldaException ex) {
@@ -280,7 +280,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
-		allExistingCFs.add("ComaXsdChecker");
+        allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
@@ -358,7 +358,7 @@ public class CorpusMagician {
                 case "exbannotationpanelcheck":
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
                     corpusfunctions.add(eapc);
-                    break;    
+                    break;
                 case "filecoveragechecker":
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     corpusfunctions.add(fcc);
@@ -383,14 +383,14 @@ public class CorpusMagician {
                     ComaXsdChecker cxsd = new ComaXsdChecker();
                     corpusfunctions.add(cxsd);
                     break;
-				case "ngexmaraldacorpuschecker":
+                case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     corpusfunctions.add(ngex);
-		case "filenamechecker":
+                case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
                     break;
-		case "cmdichecker":
+                case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
@@ -442,13 +442,13 @@ public class CorpusMagician {
                     break;
                 case "normalizeexb":
                     ExbNormalize ne = new ExbNormalize();
-                     if (cfProperties != null) {
+                    if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey("whitespace")) {
                             ne.setfixWhiteSpaces(cfProperties.getProperty("whitespace"));
                             System.out.println("FixWhitespace set to " + cfProperties.getProperty("whitespace"));
                         }
-                     }
+                    }
                     corpusfunctions.add(ne);
                     break;
                 case "generateannotationpanel":
@@ -500,7 +500,7 @@ public class CorpusMagician {
                             zc.setSourceFolder(cfProperties.getProperty("SOURCE_FOLDER"));
                             System.out.println("Location of source folder set to " + cfProperties.getProperty("SOURCE_FOLDER"));
                         }
-                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {                           
+                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {
                             zc.setOutputFile(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
                             System.out.println("Location of output file set to " + cfProperties.getProperty("OUTPUT_ZIP_FILE"));
                         }
@@ -513,6 +513,12 @@ public class CorpusMagician {
                     break;
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("CORPUSNAME")) {
+                            shtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        }
+                    }
                     corpusfunctions.add(shtml);
                     break;
                 case "corpushtml":
@@ -527,6 +533,10 @@ public class CorpusMagician {
                             lhtml.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
                             System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
                         }
+                        if (cfProperties.containsKey("CORPUSNAME")) {
+                            lhtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        }
                     }
                     corpusfunctions.add(lhtml);
                     break;
@@ -539,10 +549,10 @@ public class CorpusMagician {
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey("interpolate")) {
-                             emtc.setInterpolateTimeline(cfProperties.getProperty("interpolate"));
+                            emtc.setInterpolateTimeline(cfProperties.getProperty("interpolate"));
                             System.out.println("FixWhitespace set to " + cfProperties.getProperty("interpolate"));
                         }
-                     }
+                    }
                     corpusfunctions.add(emtc);
                     break;
                 default:
