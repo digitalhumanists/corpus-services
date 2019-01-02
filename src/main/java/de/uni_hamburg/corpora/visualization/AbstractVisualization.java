@@ -86,8 +86,19 @@ public abstract class AbstractVisualization {
                            "</video>";
         }
         
-        setHTML( Pattern.compile("<div id=\"mediaplayer\".*?</div>", Pattern.DOTALL).matcher(html).replaceAll("<div id=\"mediaplayer\" class=\"sidebarcontrol\">"+newMediaElem+"</div>") );
+        setHTML( Pattern.compile("<div[^>]*id=\"mediaplayer\".*?</div>", Pattern.DOTALL).matcher(html).replaceAll("<div id=\"mediaplayer\" class=\"sidebarcontrol\">"+newMediaElem+"</div>") );
                 
     }
     
+    
+    /**
+	 * remove content from media element in the HTML content of the visualization
+	 *
+	 * @return  
+	 */
+    public void removeMedia(){        
+        
+        setHTML( Pattern.compile("<div[^>]*id=\"mediaplayer\".*?</div>", Pattern.DOTALL).matcher(html).replaceAll("<div id=\"mediaplayer\" class=\"sidebarcontrol\"></div>") );
+                
+    }
 }

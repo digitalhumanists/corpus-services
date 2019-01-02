@@ -7,7 +7,10 @@ package de.uni_hamburg.corpora;
 
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.Document;
@@ -19,19 +22,24 @@ import org.jdom.output.XMLOutputter;
  *
  * @author fsnv625
  */
-public class UnspecifiedXMLData implements CorpusData {
+public class UnspecifiedXMLData implements CorpusData, XMLData {
 
     Document jdom;
     URL url;
-
+    String originalstring;
+    
     public UnspecifiedXMLData(URL url) {
         try {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
             jdom = builder.build(url);
+           originalstring = new
+                String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -48,13 +56,27 @@ public class UnspecifiedXMLData implements CorpusData {
 
     @Override
     public String toUnformattedString() {
-        XMLOutputter xmOut = new XMLOutputter();
-        return xmOut.outputString(jdom);
+        return originalstring;
     }
 
     private String toPrettyPrintedXML() {
         String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
+    }
+    
+    @Override
+    public void updateUnformattedString(String newUnformattedString) {
+        originalstring = newUnformattedString;
+    }
+
+    @Override
+    public Document getJdom() {
+        return jdom;
+    }
+
+    @Override
+    public void setJdom(Document doc) {
+        jdom = doc;
     }
 }
