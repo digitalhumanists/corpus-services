@@ -37,12 +37,14 @@ import org.xml.sax.SAXException;
  */
 public abstract class Checker implements CorpusFunction {
 
-    //I will keep the settings for now, so they can stay as they are for the Moment 
-    //and we know where to refactor when we change them 
+    //I will keep the settings for now, so they can stay as they are for the Moment
+    //and we know where to refactor when we change them
+    //They are only allowed to be used in the main method, not the other CorpusFunction methods
     ValidatorSettings settings;
     CorpusData cd;
     Report report;
-    Collection<Class> IsUsableFor = new ArrayList();
+    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
+            extends CorpusData>>();
 
     public Checker() {
     }
@@ -50,7 +52,7 @@ public abstract class Checker implements CorpusFunction {
     public Report execute(Corpus c) {
         return execute(c.getCorpusData());
     }
-      
+
     public Report execute(CorpusData cd) {
         return execute(cd, false);
     }
@@ -119,7 +121,7 @@ public abstract class Checker implements CorpusFunction {
 
     //TODO
     public abstract Report check(CorpusData cd) throws SAXException, JexmaraldaException;
-    
+
 
     //TODO
     //needed for annotation panel check maybe
@@ -184,10 +186,10 @@ public abstract class Checker implements CorpusFunction {
         return report;
     }
 
-    public abstract Collection<Class> getIsUsableFor();
-    
-    public void setIsUsableFor(Collection<Class> cdc){
-        for (Class cl : cdc){
+    public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
+
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
+        for (Class<? extends CorpusData> cl : cdc){
         IsUsableFor.add(cl);
         }
     }

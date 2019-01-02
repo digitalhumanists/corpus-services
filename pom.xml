@@ -78,7 +78,7 @@
                 <directory>src/main/java/de/uni_hamburg/corpora/conversion/resources</directory>
             </resource>
             <resource>
-                <directory>src/test/java/de/uni_hamburg/corpora/resoruces</directory>
+                <directory>src/test/java/de/uni_hamburg/corpora/resources</directory>
             </resource>
         </resources>
     </build>
@@ -154,7 +154,7 @@
             <artifactId>reflections</artifactId>
             <version>0.9.11</version>
         </dependency>
-        
+
         <!-- https://github.com/phax/ph-schematron -->
         <dependency>
             <groupId>com.helger</groupId>
@@ -169,10 +169,16 @@
            <version>2.0.2</version>
          </dependency>
         -->
-        <dependency>
+		<dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>4.2</version>
+            <type>jar</type>
         </dependency>
+      <dependency>
+        <groupId>org.languagetool</groupId>
+        <artifactId>language-de</artifactId>
+        <version>4.2</version>
+      </dependency>
     </dependencies>
 </project>
