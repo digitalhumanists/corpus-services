@@ -42,7 +42,7 @@ public class DropPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 3, true));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exmaralda/tei/swing/droptarget.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/droptarget.png")));
         jLabel1.setToolTipText("Drag CLAN, EXMARaLDA, ELAN, FOLKER or Transcriber file(s) here");
         add(jLabel1);
     }// </editor-fold>//GEN-END:initComponents
