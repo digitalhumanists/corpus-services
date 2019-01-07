@@ -9,7 +9,7 @@
  * Created on 21.09.2010, 10:46:53
  */
 
-package org.exmaralda.tei.swing;
+package de.uni_hamburg.corpora.swing;
 
 import javax.swing.ImageIcon;
 

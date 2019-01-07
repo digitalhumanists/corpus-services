@@ -9,7 +9,7 @@
  * Created on 21.09.2010, 10:53:59
  */
 
-package org.exmaralda.tei.swing;
+package de.uni_hamburg.corpora.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
