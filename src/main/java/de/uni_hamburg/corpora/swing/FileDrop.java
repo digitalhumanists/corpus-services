@@ -1,4 +1,4 @@
-package org.exmaralda.tei.swing;
+package de.uni_hamburg.corpora.swing;
 
 
 import java.awt.datatransfer.DataFlavor;
