@@ -220,7 +220,7 @@ public class CorpusMagician {
         } catch (SAXException ex) {
             report.addException(ex, "An XSLT error occured");
         } catch (JexmaraldaException ex) {
-            report.addException(ex, "A Exmaralda file reading error occured");
+            report.addException(ex, "An Exmaralda file reading error occured");
         }
 
     }
