@@ -33,16 +33,16 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import org.exmaralda.common.jdomutilities.IOUtilities;
-import org.exmaralda.folker.utilities.HTMLDisplayDialog;
-import org.exmaralda.partitureditor.fsm.FSMException;
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.convert.CHATConverter;
-import org.exmaralda.partitureditor.jexmaralda.convert.ELANConverter;
-import org.exmaralda.partitureditor.jexmaralda.convert.StylesheetFactory;
-import org.exmaralda.partitureditor.jexmaralda.convert.TEIConverter;
-import org.exmaralda.partitureditor.jexmaralda.convert.TranscriberConverter;
-import org.exmaralda.partitureditor.partiture.BrowserLauncher;
+//import org.exmaralda.common.jdomutilities.IOUtilities;
+//import org.exmaralda.folker.utilities.HTMLDisplayDialog;
+//import org.exmaralda.partitureditor.fsm.FSMException;
+//import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+//import org.exmaralda.partitureditor.jexmaralda.convert.CHATConverter;
+//import org.exmaralda.partitureditor.jexmaralda.convert.ELANConverter;
+//import org.exmaralda.partitureditor.jexmaralda.convert.StylesheetFactory;
+//import org.exmaralda.partitureditor.jexmaralda.convert.TEIConverter;
+//import org.exmaralda.partitureditor.jexmaralda.convert.TranscriberConverter;
+//import org.exmaralda.partitureditor.partiture.BrowserLauncher;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
@@ -71,8 +71,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
     /** Creates new form ApplicationFrame */
     public ApplicationFrame() {
         initComponents();
-        inactiveIcon = new javax.swing.ImageIcon(getClass().getResource("/org/exmaralda/tei/swing/droptarget.png"));
-        activeIcon = new javax.swing.ImageIcon(getClass().getResource("/org/exmaralda/tei/swing/droptarget_active.png"));
+        inactiveIcon = new javax.swing.ImageIcon(getClass().getResource("/images/droptarget.png"));
+        activeIcon = new javax.swing.ImageIcon(getClass().getResource("/images/droptarget_active.png"));
         mainPanel.add(dropPanel, java.awt.BorderLayout.WEST);
         teiFilesList.setModel(listModel);
         pack();
@@ -198,7 +198,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         // Determine input type
                         int index = f.getName().lastIndexOf(".");
                         String suffix = f.getName().substring(index+1);
-
+                        /*
                         BasicTranscription bt = null;
                         try {
                             if ("exb".equalsIgnoreCase(suffix)){
@@ -230,7 +230,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                             updateProgress(f.getName());
                             return;
                         }
-
+                        */
                         // Determine output name
                         File directory;
                         if (sameDirectory.isSelected()){
@@ -243,6 +243,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         String OUTPUT_NAME = output.getAbsolutePath();
 
                         // convert
+                        /*
                         TEIConverter teiConverter = new TEIConverter();
                         try {
                             bt.normalize();
@@ -264,7 +265,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                                         teiConverter.writeGenericTEIToFile(bt, OUTPUT_NAME);
                                     }
                             }
-
+                            
                             String SHORT_ON = OUTPUT_NAME;
                             if (SHORT_ON.length()>35){
                                 SHORT_ON = "..." + SHORT_ON.substring(SHORT_ON.length()-35);
@@ -278,6 +279,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                             message(ex.getLocalizedMessage());
                             updateProgress(f.getName());
                         }
+                        */
                 }
             };
             t.start();
@@ -285,7 +287,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }
 
    void displayHelp(){
-        HTMLDisplayDialog dialog = new HTMLDisplayDialog(this, false);
+        /* HTMLDisplayDialog dialog = new HTMLDisplayDialog(this, false);
         dialog.setTitle("TEI Drop Help");
         dialog.setSize(600, 400);
         dialog.setPreferredSize(dialog.getSize());
@@ -298,7 +300,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
+       */
 
    }
 
@@ -543,7 +545,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         File f = (File)(teiFilesList.getSelectedValue());
         Document teidoc;
         try {
-            teidoc = IOUtilities.readDocumentFromLocalFile(f.getAbsolutePath());
+            //teidoc = IOUtilities.readDocumentFromLocalFile(f.getAbsolutePath());
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, ex.getLocalizedMessage());
@@ -562,11 +564,11 @@ public class ApplicationFrame extends javax.swing.JFrame {
         StyleConstants.setFontSize(style, 12);
         // Foreground color
         StyleConstants.setForeground(style, Color.black);
-        try {
+        /* try {
             doc.insertString(doc.getLength(), outputter.outputString(teidoc), style);
         } catch (BadLocationException ex) {
             ex.printStackTrace();
-        }
+        } */
         JDialog dialog = new JDialog(this, true);
         dialog.setTitle(f.getName());
         dialog.getContentPane().setLayout(new BorderLayout());
@@ -602,12 +604,12 @@ public class ApplicationFrame extends javax.swing.JFrame {
             File f = (File) (teiFilesList.getSelectedValue());
             File tempHTML = File.createTempFile("teidrophtml", ".html");
             tempHTML.deleteOnExit();
-            String htmlString = new StylesheetFactory(true).applyInternalStylesheetToExternalXMLFile("/org/exmaralda/tei/xml/tei2html.xsl", f.getAbsolutePath());
+            //String htmlString = new StylesheetFactory(true).applyInternalStylesheetToExternalXMLFile("/org/exmaralda/tei/xml/tei2html.xsl", f.getAbsolutePath());
             FileOutputStream fos = new FileOutputStream(tempHTML);
-            fos.write(htmlString.getBytes("UTF-8"));
+            //fos.write(htmlString.getBytes("UTF-8"));
             fos.close();
             System.out.println("document written.");
-            BrowserLauncher.openURL(tempHTML.toURI().toURL().toString());
+            //BrowserLauncher.openURL(tempHTML.toURI().toURL().toString());
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, ex.getLocalizedMessage());

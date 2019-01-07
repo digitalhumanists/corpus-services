@@ -78,6 +78,9 @@
                 <directory>src/main/java/de/uni_hamburg/corpora/conversion/resources</directory>
             </resource>
             <resource>
+                <directory>src/main/java/de/uni_hamburg/corpora/swing/resources</directory>
+            </resource>
+            <resource>
                 <directory>src/test/java/de/uni_hamburg/corpora/resources</directory>
             </resource>
         </resources>
