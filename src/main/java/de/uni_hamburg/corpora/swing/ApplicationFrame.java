@@ -238,7 +238,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         } else {
                             directory = new File(otherDirectoryTextField.getText());
                         }
-                        String name = f.getName().substring(0,index) + suffixTextField.getText();
+                        //String name = f.getName().substring(0,index) + suffixTextField.getText();
+                        String name = f.getName().substring(0,index);
                         File output = new File(directory, name);
                         String OUTPUT_NAME = output.getAbsolutePath();
 
@@ -325,8 +326,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
         otherDirectoryTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        suffixTextField = new javax.swing.JTextField();
         mainPanel = new javax.swing.JPanel();
         messageAndProgressPanel = new javax.swing.JPanel();
         messageScrollPane = new javax.swing.JScrollPane();
@@ -357,7 +356,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel1.setText("Corpus function: ");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/magic-wand.png")));
+        jLabel1.setText("Corpus function");
         jLabel1.setMaximumSize(new java.awt.Dimension(150, 20));
         jLabel1.setMinimumSize(new java.awt.Dimension(150, 20));
         jLabel1.setPreferredSize(new java.awt.Dimension(150, 20));
@@ -376,7 +376,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel2.setText("Write output to...");
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/enter.png")));
+        jLabel2.setText("Write output to");
         jLabel2.setMaximumSize(new java.awt.Dimension(150, 20));
         jLabel2.setMinimumSize(new java.awt.Dimension(150, 20));
         jLabel2.setPreferredSize(new java.awt.Dimension(150, 20));
@@ -385,12 +386,22 @@ public class ApplicationFrame extends javax.swing.JFrame {
         buttonGroup1.add(sameDirectory);
         sameDirectory.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         sameDirectory.setSelected(true);
-        sameDirectory.setText("...the same...");
+        sameDirectory.setText("the same directory");
+        sameDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sameDirectoryActionPerformed(evt);
+            }
+        });
         jPanel4.add(sameDirectory);
 
         buttonGroup1.add(otherDirectory);
         otherDirectory.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        otherDirectory.setText("...a separate directory: ");
+        otherDirectory.setText("a separate directory: ");
+        otherDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                otherDirectoryActionPerformed(evt);
+            }
+        });
         jPanel4.add(otherDirectory);
 
         otherDirectoryTextField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -401,6 +412,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel4.add(otherDirectoryTextField);
 
         browseButton.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        browseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/file-empty.png")));
         browseButton.setText("Browse...");
         browseButton.setAlignmentX(0.5F);
         browseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -414,20 +426,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         jPanel5.setAlignmentX(0.0F);
         jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
-
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel3.setText("Suffix for output: ");
-        jLabel3.setMaximumSize(new java.awt.Dimension(150, 20));
-        jLabel3.setMinimumSize(new java.awt.Dimension(150, 20));
-        jLabel3.setPreferredSize(new java.awt.Dimension(150, 20));
-        jPanel5.add(jLabel3);
-
-        suffixTextField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        suffixTextField.setText("_TEI.xml");
-        suffixTextField.setMaximumSize(new java.awt.Dimension(180, 23));
-        suffixTextField.setPreferredSize(new java.awt.Dimension(120, 23));
-        jPanel5.add(suffixTextField);
-
         settingsPanel.add(jPanel5);
 
         getContentPane().add(settingsPanel, java.awt.BorderLayout.PAGE_START);
@@ -461,6 +459,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         messageAndProgressPanel.add(listScrollPane, java.awt.BorderLayout.PAGE_START);
 
+        mainPanel.add(messageAndProgressPanel, java.awt.BorderLayout.PAGE_START);
+
         operationsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Operations", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         showXMLButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exmaralda/tei/swing/xmldoc.gif"))); // NOI18N
@@ -493,9 +493,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         });
         operationsPanel.add(showHTMLButton);
 
-        messageAndProgressPanel.add(operationsPanel, java.awt.BorderLayout.PAGE_END);
-
-        mainPanel.add(messageAndProgressPanel, java.awt.BorderLayout.PAGE_START);
+        mainPanel.add(operationsPanel, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
@@ -508,6 +506,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         progressBar.setStringPainted(true);
         jPanel7.add(progressBar, java.awt.BorderLayout.CENTER);
 
+        dropletToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/chevron-left-circle.png")));
         dropletToggleButton.setText("Reduce to droplet");
         dropletToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -517,6 +516,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel7.add(dropletToggleButton, java.awt.BorderLayout.EAST);
 
         helpButton.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        helpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/question-circle.png")));
         helpButton.setText("Help");
         helpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -622,6 +622,14 @@ public class ApplicationFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_showHTMLButtonActionPerformed
 
+    private void sameDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sameDirectoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sameDirectoryActionPerformed
+
+    private void otherDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_otherDirectoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_otherDirectoryActionPerformed
+
     void enableOperations(boolean enable){
         showXMLButton.setEnabled(enable);
         showHTMLButton.setEnabled(enable);
@@ -650,7 +658,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private javax.swing.JButton helpButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -670,7 +677,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JButton showHTMLButton;
     private javax.swing.JButton showXMLButton;
-    private javax.swing.JTextField suffixTextField;
     private javax.swing.JList teiFilesList;
     // End of variables declaration//GEN-END:variables
 
