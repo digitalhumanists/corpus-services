@@ -333,10 +333,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
         messagesTextArea = new javax.swing.JTextArea();
         listScrollPane = new javax.swing.JScrollPane();
         teiFilesList = new javax.swing.JList();
-        lowerPanel = new javax.swing.JPanel();
         operationsPanel = new javax.swing.JPanel();
         showXMLButton = new javax.swing.JButton();
         showHTMLButton = new javax.swing.JButton();
+        lowerPanel = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         dropletToggleButton = new javax.swing.JToggleButton();
@@ -345,22 +345,25 @@ public class ApplicationFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TEI Drop");
         setAlwaysOnTop(true);
+        setBackground(new java.awt.Color(15, 155, 155));
 
-        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Settings", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+        settingsPanel.setToolTipText("");
+        settingsPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         settingsPanel.setLayout(new javax.swing.BoxLayout(settingsPanel, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel1.setAlignmentX(0.0F);
         jPanel1.setPreferredSize(new java.awt.Dimension(150, 20));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14));
-        jLabel1.setText("Parse method: ");
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel1.setText("Corpus function: ");
         jLabel1.setMaximumSize(new java.awt.Dimension(150, 20));
         jLabel1.setMinimumSize(new java.awt.Dimension(150, 20));
         jLabel1.setPreferredSize(new java.awt.Dimension(150, 20));
         jPanel1.add(jLabel1);
 
-        parseMethodComboBox.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        parseMethodComboBox.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         parseMethodComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "cGAT", "HIAT" }));
         parseMethodComboBox.setMaximumSize(new java.awt.Dimension(90, 24));
         parseMethodComboBox.setMinimumSize(new java.awt.Dimension(63, 24));
@@ -372,7 +375,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel4.setAlignmentX(0.0F);
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14));
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText("Write output to...");
         jLabel2.setMaximumSize(new java.awt.Dimension(150, 20));
         jLabel2.setMinimumSize(new java.awt.Dimension(150, 20));
@@ -380,23 +383,24 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel4.add(jLabel2);
 
         buttonGroup1.add(sameDirectory);
-        sameDirectory.setFont(new java.awt.Font("Tahoma", 1, 14));
+        sameDirectory.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         sameDirectory.setSelected(true);
         sameDirectory.setText("...the same...");
         jPanel4.add(sameDirectory);
 
         buttonGroup1.add(otherDirectory);
-        otherDirectory.setFont(new java.awt.Font("Tahoma", 1, 14));
+        otherDirectory.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         otherDirectory.setText("...a separate directory: ");
         jPanel4.add(otherDirectory);
 
-        otherDirectoryTextField.setFont(new java.awt.Font("Tahoma", 1, 14));
+        otherDirectoryTextField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         otherDirectoryTextField.setAlignmentX(1.0F);
         otherDirectoryTextField.setMaximumSize(new java.awt.Dimension(300, 20));
         otherDirectoryTextField.setMinimumSize(new java.awt.Dimension(200, 20));
         otherDirectoryTextField.setPreferredSize(new java.awt.Dimension(250, 20));
         jPanel4.add(otherDirectoryTextField);
 
+        browseButton.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         browseButton.setText("Browse...");
         browseButton.setAlignmentX(0.5F);
         browseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -411,14 +415,14 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel5.setAlignmentX(0.0F);
         jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14));
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel3.setText("Suffix for output: ");
         jLabel3.setMaximumSize(new java.awt.Dimension(150, 20));
         jLabel3.setMinimumSize(new java.awt.Dimension(150, 20));
         jLabel3.setPreferredSize(new java.awt.Dimension(150, 20));
         jPanel5.add(jLabel3);
 
-        suffixTextField.setFont(new java.awt.Font("Tahoma", 1, 14));
+        suffixTextField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         suffixTextField.setText("_TEI.xml");
         suffixTextField.setMaximumSize(new java.awt.Dimension(180, 23));
         suffixTextField.setPreferredSize(new java.awt.Dimension(120, 23));
@@ -426,27 +430,27 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         settingsPanel.add(jPanel5);
 
-        getContentPane().add(settingsPanel, java.awt.BorderLayout.NORTH);
+        getContentPane().add(settingsPanel, java.awt.BorderLayout.PAGE_START);
 
         mainPanel.setLayout(new java.awt.BorderLayout());
 
-        messageAndProgressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Messages", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        messageAndProgressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Messages", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+        messageAndProgressPanel.setToolTipText("");
+        messageAndProgressPanel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         messageAndProgressPanel.setLayout(new java.awt.BorderLayout());
 
         messageScrollPane.setPreferredSize(new java.awt.Dimension(400, 120));
 
         messagesTextArea.setBackground(new java.awt.Color(0, 0, 0));
         messagesTextArea.setColumns(20);
-        messagesTextArea.setFont(new java.awt.Font("Monospaced", 0, 12));
+        messagesTextArea.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         messagesTextArea.setForeground(new java.awt.Color(0, 153, 0));
         messagesTextArea.setRows(5);
         messageScrollPane.setViewportView(messagesTextArea);
 
         messageAndProgressPanel.add(messageScrollPane, java.awt.BorderLayout.CENTER);
 
-        mainPanel.add(messageAndProgressPanel, java.awt.BorderLayout.CENTER);
-
-        listScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Converted files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        listScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Converted files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         teiFilesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -455,13 +459,9 @@ public class ApplicationFrame extends javax.swing.JFrame {
         });
         listScrollPane.setViewportView(teiFilesList);
 
-        mainPanel.add(listScrollPane, java.awt.BorderLayout.SOUTH);
+        messageAndProgressPanel.add(listScrollPane, java.awt.BorderLayout.PAGE_START);
 
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
-
-        lowerPanel.setLayout(new java.awt.BorderLayout());
-
-        operationsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Operations", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14))); // NOI18N
+        operationsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Operations", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         showXMLButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exmaralda/tei/swing/xmldoc.gif"))); // NOI18N
         showXMLButton.setToolTipText("Show XML");
@@ -493,7 +493,13 @@ public class ApplicationFrame extends javax.swing.JFrame {
         });
         operationsPanel.add(showHTMLButton);
 
-        lowerPanel.add(operationsPanel, java.awt.BorderLayout.CENTER);
+        messageAndProgressPanel.add(operationsPanel, java.awt.BorderLayout.PAGE_END);
+
+        mainPanel.add(messageAndProgressPanel, java.awt.BorderLayout.PAGE_START);
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+
+        lowerPanel.setLayout(new java.awt.BorderLayout());
 
         jPanel7.setLayout(new java.awt.BorderLayout());
 
@@ -510,7 +516,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         });
         jPanel7.add(dropletToggleButton, java.awt.BorderLayout.EAST);
 
-        helpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/exmaralda/folker/tangoicons/tango-icon-theme-0.8.1/16x16/apps/help-browser.png"))); // NOI18N
+        helpButton.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         helpButton.setText("Help");
         helpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
