@@ -3,17 +3,20 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * ApplicationFrame.java
  *
  * Created on 21.09.2010, 10:53:59
  */
-
 package de.uni_hamburg.corpora.swing;
 
 import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.CorpusMagician;
+import static de.uni_hamburg.corpora.CorpusMagician.corpusFunctionStrings2Classes;
+import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.ReportItem;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -26,8 +29,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +66,7 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter; 
+import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 /**
@@ -70,7 +76,6 @@ import org.xml.sax.SAXException;
 public class ApplicationFrame extends javax.swing.JFrame {
 
     // TEST: EXMARaLDA_FRESH
-    
     DropPanel dropPanel = new DropPanel();
     FileDrop fileDrop;
     DefaultListModel listModel = new DefaultListModel();
@@ -80,13 +85,15 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
     ImageIcon inactiveIcon;
     ImageIcon activeIcon;
-    
+
     CorpusIO cio = new CorpusIO();
-    CorpusMagician corpuma = new CorpusMagician();        
+    CorpusMagician corpuma = new CorpusMagician();
+    Collection<CorpusData> allFiles = new ArrayList();
+    Report report = new Report();
 
-
-
-    /** Creates new form ApplicationFrame */
+    /**
+     * Creates new form ApplicationFrame
+     */
     public ApplicationFrame() {
         initComponents();
         inactiveIcon = new javax.swing.ImageIcon(getClass().getResource("/images/droptarget.png"));
@@ -94,202 +101,150 @@ public class ApplicationFrame extends javax.swing.JFrame {
         mainPanel.add(dropPanel, java.awt.BorderLayout.NORTH);
         teiFilesList.setModel(listModel);
         pack();
-        fileDrop = new  FileDrop( dropPanel,
+        fileDrop = new FileDrop(dropPanel,
                 dragBorder,
-                new FileDrop.Listener(){
-                @Override
-                public void  filesDropped( java.io.File[] files )
-                    {
-                        // handle file drop
-                           handleFileDrop(files);
-                    }   // end filesDropped
+                new FileDrop.Listener() {
+            @Override
+            public void filesDropped(java.io.File[] files) {
+                // handle file drop
+                handleFileDrop(files);
+            }   // end filesDropped
         }); // end FileDrop.Listener
     }
 
-   void message(final String s){
-       int index=0;
-       while (index<s.length()){
-         String schnippel = s.substring(index, Math.min(index+75, s.length()));
-         messagesTextArea.append(schnippel + "\n");
-         index+=75;
-       }
-       messagesTextArea.setCaretPosition(messagesTextArea.getText().length()-1);
-   }
+    void message(final String s) {
+        int index = 0;
+        while (index < s.length()) {
+            String schnippel = s.substring(index, Math.min(index + 75, s.length()));
+            messagesTextArea.append(schnippel + "\n");
+            index += 75;
+        }
+        messagesTextArea.setCaretPosition(messagesTextArea.getText().length() - 1);
+    }
 
-   void updateProgress(String s){
-       done++;
-       progressBar.setValue((int)Math.round(((double)done/all)*100));
-       progressBar.setString(s);
-       if (done==all){
-           progressBar.setString("Done.");
-           dropPanel.setIcon(inactiveIcon);
-           message("***** DONE *****");
-       }
-       if ((teiFilesList.getModel().getSize()>0) || (teiFilesList.isVisible())){
-           final int lastIndex = teiFilesList.getModel().getSize()-1;
+    void updateProgress(String s) {
+        done++;
+        progressBar.setValue((int) Math.round(((double) done / all) * 100));
+        progressBar.setString(s);
+        if (done == all) {
+            progressBar.setString("Done.");
+            dropPanel.setIcon(inactiveIcon);
+            message("***** DONE *****");
+        }
+        if ((teiFilesList.getModel().getSize() > 0) || (teiFilesList.isVisible())) {
+            final int lastIndex = teiFilesList.getModel().getSize() - 1;
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
                         teiFilesList.getSelectionModel().setSelectionInterval(lastIndex, lastIndex);
                     }
                 });
-               teiFilesList.scrollRectToVisible(teiFilesList.getCellBounds(lastIndex, lastIndex));
+                teiFilesList.scrollRectToVisible(teiFilesList.getCellBounds(lastIndex, lastIndex));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-       }
-   }
+        }
+    }
 
-
-   void handleFileDrop(final File[] files){
-        Collection<CorpusData> allFiles = new ArrayList();
-        for (File f : files){
+    void handleFileDrop(final File[] files) {
+        for (File f : files) {
             try {
-            if (f.isDirectory()){
-                message("[Directory "+ f.getName() + "]");
-                //need to use CorpusIO read(URL) method here
-                //that gives back a Colelction of CorpusData Objects
-                URL url = f.toURI().toURL();
-                Collection<File> recursed = cio.getFileURLSRecursively(url);
-                for (File ff : recursed) {
+                if (f.isDirectory()) {
+                    message("[Directory " + f.getName() + "]");
+                    //need to use CorpusIO read(URL) method here
+                    //that gives back a Colelction of CorpusData Objects
+                    URL url = f.toURI().toURL();
+                    Collection<File> recursed = cio.getFileURLSRecursively(url);
+                    for (File ff : recursed) {
+                        CorpusData cd = cio.toCorpusData(f);
+                        if (cd != null) {
+                            allFiles.add(cd);
+                            message(cd.getFilename() + " added to list.");
+                        } else {
+                            message(f.getName() + " not added to list (data suffix not recognized).");
+                        }
+                    }
+                } else {
                     CorpusData cd = cio.toCorpusData(f);
                     if (cd != null) {
-                       allFiles.add(cd);                    
-                       message(cd.getFilename() + " added to list."); 
-                    }
-                    else {
-                      message(f.getName() + " not added to list (data suffix not recognized).");  
-                    }
-                }
-            } else {
-                    CorpusData cd = cio.toCorpusData(f);
-                    if (cd!=null){
                         allFiles.add(cd);
                         message(cd.getFilename() + " added to list.");
-                    }
-                    else {
+                    } else {
                         message(f.getName() + " not added to list (data suffix not recognized).");
                     }
                 }
             } catch (MalformedURLException ex) {
-                        message(f.getName() + " not added to list (file could not be read).");
-                    } catch (SAXException ex) {
-                        message(f.getName() + " not added to list (file could not be read).");
-                    } catch (JexmaraldaException ex) {
-                        message(f.getName() + " not added to list (file could not be read).");
-                    }
-            }       
+                message(f.getName() + " not added to list (file could not be read).");
+            } catch (SAXException ex) {
+                message(f.getName() + " not added to list (file could not be read).");
+            } catch (JexmaraldaException ex) {
+                message(f.getName() + " not added to list (file could not be read).");
+            }
+        }
         done = 0;
         all = allFiles.size();
         dropPanel.setIcon(activeIcon);
 
-        /*if (f.isDirectory()){
-            message("[Directory "+ f.getName() + "]");
-            updateProgress(f.getName());
-            return;
-        }*/
-        // to do : recurse into subdirectories
-
-        for (final CorpusData cd : allFiles){
-            Thread t = new Thread(){
+        for (final CorpusData cd : allFiles) {
+            Thread t = new Thread() {
 
                 @Override
                 public void run() {
+                    try {
                         //now we need to run the correct functions on the correct data
                         //where do we display which functions are possible on the data?
                         // Determine input type
-                        //int index = f.getName().lastIndexOf(".");
-                        //String suffix = f.getName().substring(index+1);
-                        /*
-                        BasicTranscription bt = null;
-                        try {
-                            if ("exb".equalsIgnoreCase(suffix)){
-                                    bt = new BasicTranscription(f.getAbsolutePath());
-                                    message(f.getName() + " read as EXMARaLDA basic transcription");
-                            } else if ("eaf".equalsIgnoreCase(suffix)){
-                                    ELANConverter elanConverter = new ELANConverter();
-                                    bt = elanConverter.readELANFromFile(f.getAbsolutePath());
-                                    message(f.getName() + " read as ELAN annotation file");
-                            } else if ("cha".equalsIgnoreCase(suffix)){
-                                    CHATConverter chatConverter = new CHATConverter(f);
-                                    bt = chatConverter.convert();
-                                    message(f.getName() + " read as CHAT transcription file");
-                            } else if (("flk".equalsIgnoreCase(suffix) || ("fln".equalsIgnoreCase(suffix)))){
-                                    bt = org.exmaralda.folker.io.EventListTranscriptionXMLReaderWriter.readXMLAsBasicTranscription(f);
-                                    message(f.getName() + " read as FOLKER transcription file");
-                            }  else if ("trs".equalsIgnoreCase(suffix)){
-                                    TranscriberConverter transcriberConverter = new TranscriberConverter();
-                                    bt = transcriberConverter.readTranscriberFromFile(f.getAbsolutePath());
-                                    message(f.getName() + " read as Transcriber file");
-                            } else {
-                                message("["+ f.getName() + "]" + " File suffix " + suffix + " not recognized");
-                                updateProgress(f.getName());
-                                return;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            message("["+ f.getName() + "] " + ex.getLocalizedMessage());
-                            updateProgress(f.getName());
-                            return;
-                        }
-                        */
-                        // Determine output name
+
+//                            ex.printStackTrace();
+//                            message("["+ f.getName() + "] " + ex.getLocalizedMessage());
+//                            updateProgress(f.getName());
+//                            return;
+// Determine output name
                         File directory;
-                        if (sameDirectory.isSelected()){
+                        if (sameDirectory.isSelected()) {
                             //directory = f.getParentFile();
                         } else {
                             directory = new File(otherDirectoryTextField.getText());
                         }
-                        //String name = f.getName().substring(0,index) + suffixTextField.getText();
-                        //String name = f.getName().substring(0,index);
-                        //File output = new File(directory, name);
-                        //String OUTPUT_NAME = output.getAbsolutePath();
+//String name = f.getName().substring(0,index) + suffixTextField.getText();
+//String name = f.getName().substring(0,index);
+//File output = new File(directory, name);
+//String OUTPUT_NAME = output.getAbsolutePath();
 
-                        // convert
-                        /*
-                        TEIConverter teiConverter = new TEIConverter();
-                        try {
-                            bt.normalize();
-                            switch (parseMethodComboBox.getSelectedIndex()){
-                                case 0 :
-                                    //teiConverter.writeGenericTEIToFile(bt, OUTPUT_NAME);                                    
-                                    teiConverter.writeGenericISOTEIToFile(bt, OUTPUT_NAME);
-                                    break;
-                                case 1 : // cGAT
-                                    //teiConverter.writeFOLKERTEIToFile(bt, OUTPUT_NAME);
-                                    teiConverter.writeFOLKERISOTEIToFile(bt, OUTPUT_NAME);
-                                    break;
-                                case 2 : // HIAT
-                                    try {
-                                        //teiConverter.writeNewHIATTEIToFile(bt, OUTPUT_NAME);
-                                        teiConverter.writeHIATISOTEIToFile(bt, OUTPUT_NAME);
-                                    } catch (FSMException fsm){
-                                        message("["+ f.getName() + "]" + " Parse error.");
-                                        teiConverter.writeGenericTEIToFile(bt, OUTPUT_NAME);
-                                    }
-                            }
-                            
-                            String SHORT_ON = OUTPUT_NAME;
-                            if (SHORT_ON.length()>35){
-                                SHORT_ON = "..." + SHORT_ON.substring(SHORT_ON.length()-35);
-                            }
-                            message("["+ f.getName() + "]" + " TEI file written to " + SHORT_ON);
-                            listModel.addElement(new File(OUTPUT_NAME));
-                            updateProgress(f.getName());
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            message("["+ f.getName() + "] " + OUTPUT_NAME + " could not be written:");
-                            message(ex.getLocalizedMessage());
-                            updateProgress(f.getName());
+// run corpusfunctions
+//find out which function to run
+                        List<String> s = Arrays.asList(String.valueOf(parseMethodComboBox.getSelectedItem()));
+                        corpuma.setChosencorpusfunctions(s);
+                        for (String str : s) {
+                            message("Added function " + str + " to list");
                         }
-                        */
+
+                        Collection<CorpusFunction> cfs = corpusFunctionStrings2Classes();
+                        for (CorpusFunction cf : cfs) {
+                            report.merge(corpuma.runCorpusFunction(cd, cf));
+                        }
+//TO DO
+                        String reportstring = "C:\\Users\\fsnv625\\Desktop\\test\\report-output.html";
+                        URL reportlocation = Paths.get(reportstring).toUri().toURL();
+                        URL basedirectory = cd.getParentURL();
+                        String reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+                        String absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+                        cio.write(absoluteReport, reportlocation);
+                        listModel.addElement(new File(reportstring));
+                        updateProgress(cd.getFilename());
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+
             };
             t.start();
         }
     }
 
-   void displayHelp(){
+    void displayHelp() {
         try {
             //TO DO better website
             Desktop.getDesktop().browse(new URI("https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator"));
@@ -299,12 +254,12 @@ public class ApplicationFrame extends javax.swing.JFrame {
             Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-   }
+    }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                                                    
@@ -359,18 +314,18 @@ public class ApplicationFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout corpusServicesLayout = new javax.swing.GroupLayout(corpusServices);
         corpusServices.setLayout(corpusServicesLayout);
         corpusServicesLayout.setHorizontalGroup(
-            corpusServicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(corpusServicesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                corpusServicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(corpusServicesLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         corpusServicesLayout.setVerticalGroup(
-            corpusServicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(corpusServicesLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                corpusServicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(corpusServicesLayout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         settingsPanel.setBackground(new java.awt.Color(15, 155, 155));
@@ -400,7 +355,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         parseMethodComboBox.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         parseMethodComboBox.setForeground(new java.awt.Color(15, 155, 155));
         //To Do the available corpus functions
-        ArrayList<String> functions =  (ArrayList<String>) corpuma.getAllExistingCFs();
+        ArrayList<String> functions = (ArrayList<String>) corpuma.getAllExistingCFs();
         parseMethodComboBox.setModel(new javax.swing.DefaultComboBoxModel(functions.toArray()));
         parseMethodComboBox.setMaximumSize(new java.awt.Dimension(150, 24));
         parseMethodComboBox.setMinimumSize(new java.awt.Dimension(150, 24));
@@ -415,22 +370,22 @@ public class ApplicationFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout corpusFunctionLayout = new javax.swing.GroupLayout(corpusFunction);
         corpusFunction.setLayout(corpusFunctionLayout);
         corpusFunctionLayout.setHorizontalGroup(
-            corpusFunctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(corpusFunctionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(corpusFunctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(parseMethodComboBox, 0, 200, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                corpusFunctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(corpusFunctionLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(corpusFunctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(parseMethodComboBox, 0, 200, Short.MAX_VALUE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         corpusFunctionLayout.setVerticalGroup(
-            corpusFunctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(corpusFunctionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(parseMethodComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(43, Short.MAX_VALUE))
+                corpusFunctionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(corpusFunctionLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(parseMethodComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         outputPanel.setBackground(new java.awt.Color(15, 155, 155));
@@ -493,77 +448,77 @@ public class ApplicationFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
         outputPanel.setLayout(outputPanelLayout);
         outputPanelLayout.setHorizontalGroup(
-            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(otherDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68))
-            .addGroup(outputPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(outputPanelLayout.createSequentialGroup()
-                        .addComponent(output, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(36, 36, 36))
-                    .addGroup(outputPanelLayout.createSequentialGroup()
-                        .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sameDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(otherDirectory)
-                            .addComponent(browseButton))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputPanelLayout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(otherDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(68, 68, 68))
+                        .addGroup(outputPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(outputPanelLayout.createSequentialGroup()
+                                                .addComponent(output, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(36, 36, 36))
+                                        .addGroup(outputPanelLayout.createSequentialGroup()
+                                                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(sameDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(otherDirectory)
+                                                        .addComponent(browseButton))
+                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         outputPanelLayout.setVerticalGroup(
-            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(outputPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(output, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sameDirectory)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(otherDirectory)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(otherDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(browseButton)
-                .addGap(25, 25, 25))
+                outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(outputPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(output, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sameDirectory)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(otherDirectory)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(otherDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(browseButton)
+                                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(corpusFunction, 0, 178, Short.MAX_VALUE)
-                    .addComponent(outputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(settingsPanelLayout.createSequentialGroup()
+                                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(corpusFunction, 0, 178, Short.MAX_VALUE)
+                                        .addComponent(outputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(19, Short.MAX_VALUE))
         );
         settingsPanelLayout.setVerticalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(corpusFunction, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(outputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(86, 86, 86))
+                settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(settingsPanelLayout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(corpusFunction, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(outputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(86, 86, 86))
         );
 
         javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
         sidePanel.setLayout(sidePanelLayout);
         sidePanelLayout.setHorizontalGroup(
-            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(corpusServices, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(sidePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(corpusServices, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
         );
         sidePanelLayout.setVerticalGroup(
-            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(corpusServices, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(corpusServices, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
         );
 
         mainPanel.setBackground(new java.awt.Color(15, 155, 155));
@@ -596,15 +551,15 @@ public class ApplicationFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout messageAndProgressPanelLayout = new javax.swing.GroupLayout(messageAndProgressPanel);
         messageAndProgressPanel.setLayout(messageAndProgressPanelLayout);
         messageAndProgressPanelLayout.setHorizontalGroup(
-            messageAndProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(messageAndProgressPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(messageScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                messageAndProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(messageAndProgressPanelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(messageScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         messageAndProgressPanelLayout.setVerticalGroup(
-            messageAndProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(messageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                messageAndProgressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(messageScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         listScrollPane.setBackground(new java.awt.Color(15, 155, 155));
@@ -659,29 +614,29 @@ public class ApplicationFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(messageAndProgressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(listScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(operationsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                .addComponent(messageAndProgressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(listScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(8, 8, 8))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(operationsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(messageAndProgressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(listScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(operationsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 55, Short.MAX_VALUE))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(messageAndProgressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(listScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(operationsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 55, Short.MAX_VALUE))
         );
 
         mainPanel.add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -729,24 +684,24 @@ public class ApplicationFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lowerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 851, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(lowerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 851, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lowerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lowerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -754,7 +709,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
     private void dropletToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dropletToggleButtonActionPerformed
         boolean hide = !(dropletToggleButton.isSelected());
-        if (!hide){
+        if (!hide) {
             dropletToggleButton.setText("Expand");
         } else {
             dropletToggleButton.setText("Reduce to droplet");
@@ -775,7 +730,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jfc.setDialogTitle("Choose directory");
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int ret = jfc.showOpenDialog(this);
-        if (ret==JFileChooser.APPROVE_OPTION){
+        if (ret == JFileChooser.APPROVE_OPTION) {
             otherDirectoryTextField.setText(jfc.getSelectedFile().getAbsolutePath());
             otherDirectory.setSelected(true);
         }
@@ -811,7 +766,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_showHTMLButtonActionPerformed
 
     private void showXMLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showXMLButtonActionPerformed
-        File f = (File)(teiFilesList.getSelectedValue());
+        File f = (File) (teiFilesList.getSelectedValue());
         Document teidoc;
         try {
             //teidoc = IOUtilities.readDocumentFromLocalFile(f.getAbsolutePath());
@@ -850,22 +805,23 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_showXMLButtonActionPerformed
 
     private void teiFilesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_teiFilesListValueChanged
-        enableOperations(teiFilesList.getSelectedIndex()>=0);
+        enableOperations(teiFilesList.getSelectedIndex() >= 0);
     }//GEN-LAST:event_teiFilesListValueChanged
 
-    void enableOperations(boolean enable){
+    void enableOperations(boolean enable) {
         showXMLButton.setEnabled(enable);
         showHTMLButton.setEnabled(enable);
     }
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
-        try{
+        try {
             System.out.println("Setting system L&F : " + javax.swing.UIManager.getSystemLookAndFeelClassName());
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
