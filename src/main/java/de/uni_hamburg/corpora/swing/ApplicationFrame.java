@@ -151,17 +151,20 @@ public class ApplicationFrame extends javax.swing.JFrame {
             try {
                 if (f.isDirectory()) {
                     message("[Directory " + f.getName() + "]");
+                    System.out.println("[Directory " + f.getName() + "]");
                     //need to use CorpusIO read(URL) method here
                     //that gives back a Colelction of CorpusData Objects
                     URL url = f.toURI().toURL();
                     Collection<File> recursed = cio.getFileURLSRecursively(url);
                     for (File ff : recursed) {
-                        CorpusData cd = cio.toCorpusData(f);
+                        if (!ff.isDirectory()) {
+                        CorpusData cd = cio.toCorpusData(ff);
                         if (cd != null) {
                             allFiles.add(cd);
                             message(cd.getFilename() + " added to list.");
                         } else {
-                            message(f.getName() + " not added to list (data suffix not recognized).");
+                            message(ff.getName() + " not added to list (data suffix not recognized).");
+                        }
                         }
                     }
                 } else {
@@ -199,17 +202,18 @@ public class ApplicationFrame extends javax.swing.JFrame {
 //                            message("["+ f.getName() + "] " + ex.getLocalizedMessage());
 //                            updateProgress(f.getName());
 //                            return;
-// Determine output name
-                        File directory;
-                        if (sameDirectory.isSelected()) {
-                            //directory = f.getParentFile();
+
+                        // Determine errorlist saveing location
+                        URL reportlocation;
+                        if (sameDirectory.isSelected()){
+                            reportlocation = cd.getParentURL();
                         } else {
-                            directory = new File(otherDirectoryTextField.getText());
+                            reportlocation = Paths.get(otherDirectoryTextField.getText()).toUri().toURL();
                         }
-//String name = f.getName().substring(0,index) + suffixTextField.getText();
-//String name = f.getName().substring(0,index);
-//File output = new File(directory, name);
-//String OUTPUT_NAME = output.getAbsolutePath();
+                        URI uri = reportlocation.toURI();
+                        URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+                        String errorlistlocstring = Paths.get(parentURI).toString() + File.separator + "report_output.html";
+                        URL errorlistlocation = Paths.get(errorlistlocstring).toUri().toURL();
 
 // run corpusfunctions
 //find out which function to run
@@ -221,21 +225,23 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
                         Collection<CorpusFunction> cfs = corpusFunctionStrings2Classes();
                         for (CorpusFunction cf : cfs) {
+                            //make sure to run it only on the data the check is allowed for
                             report.merge(corpuma.runCorpusFunction(cd, cf));
                         }
 //TO DO
-                        String reportstring = "C:\\Users\\fsnv625\\Desktop\\test\\report-output.html";
-                        URL reportlocation = Paths.get(reportstring).toUri().toURL();
                         URL basedirectory = cd.getParentURL();
                         String reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
                         String absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
-                        cio.write(absoluteReport, reportlocation);
-                        listModel.addElement(new File(reportstring));
+                        cio.write(absoluteReport, errorlistlocation);
+                        message("Wrote ErrorList at " + errorlistlocation);
+                        listModel.addElement(new File(cd.getFilename()));
                         updateProgress(cd.getFilename());
                     } catch (MalformedURLException ex) {
-                        Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        message("Couldn't write error list - location is incorrect");
                     } catch (IOException ex) {
-                        Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        message("Couldn't write error list - location is incorrect");
+                    } catch (URISyntaxException ex) {
+                        message("Couldn't write error list - location is incorrect");
                     }
                 }
 
@@ -394,7 +400,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         output.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         output.setForeground(new java.awt.Color(255, 255, 255));
         output.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons/enter.png")));
-        output.setText("Write output to");
+        output.setText("Write error report to");
         output.setMaximumSize(new java.awt.Dimension(150, 20));
         output.setMinimumSize(new java.awt.Dimension(150, 20));
         output.setPreferredSize(new java.awt.Dimension(150, 20));
@@ -527,7 +533,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(15, 155, 155));
 
         messageAndProgressPanel.setBackground(new java.awt.Color(15, 155, 155));
-        messageAndProgressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), " Messages", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        messageAndProgressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "   Messages", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         messageAndProgressPanel.setForeground(new java.awt.Color(255, 255, 255));
         messageAndProgressPanel.setToolTipText("");
         messageAndProgressPanel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -536,7 +542,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         messageScrollPane.setBorder(null);
         messageScrollPane.setViewportBorder(null);
         messageScrollPane.setPreferredSize(new java.awt.Dimension(400, 120));
-
+        
         messagesTextArea.setBackground(new java.awt.Color(172, 221, 221));
         messagesTextArea.setColumns(20);
         messagesTextArea.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
@@ -547,7 +553,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         messagesTextArea.setRequestFocusEnabled(false);
         messagesTextArea.setLineWrap(true);
         messageScrollPane.setViewportView(messagesTextArea);
-
+	messageAndProgressPanel.add(messageScrollPane, java.awt.BorderLayout.CENTER);
         javax.swing.GroupLayout messageAndProgressPanelLayout = new javax.swing.GroupLayout(messageAndProgressPanel);
         messageAndProgressPanel.setLayout(messageAndProgressPanelLayout);
         messageAndProgressPanelLayout.setHorizontalGroup(
@@ -563,7 +569,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         );
 
         listScrollPane.setBackground(new java.awt.Color(15, 155, 155));
-        listScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Converted files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        listScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createCompoundBorder(), "Processed files", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         listScrollPane.setForeground(new java.awt.Color(255, 255, 255));
 
         teiFilesList.setBackground(new java.awt.Color(172, 221, 221));
