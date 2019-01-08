@@ -11,14 +11,25 @@
 
 package de.uni_hamburg.corpora.swing;
 
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusIO;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -33,6 +44,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import org.exmaralda.folker.utilities.HTMLDisplayDialog;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 //import org.exmaralda.common.jdomutilities.IOUtilities;
 //import org.exmaralda.folker.utilities.HTMLDisplayDialog;
 //import org.exmaralda.partitureditor.fsm.FSMException;
@@ -47,6 +60,7 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter; 
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -122,63 +136,46 @@ public class ApplicationFrame extends javax.swing.JFrame {
        }
    }
 
-   Vector<File> getFilesFromDirectory(File dir) {
-       Vector<File> result = new Vector<File>();
-       File[] fs = dir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return (name.toLowerCase().endsWith("exb") 
-                        || name.toLowerCase().endsWith("eaf")
-                        || name.toLowerCase().endsWith("trs")
-                        || name.toLowerCase().endsWith("flk")
-                        || name.toLowerCase().endsWith("fln") // issue #83
-                        || name.toLowerCase().endsWith("cha")
-                        );
-            }
-        });
-        for (File f : fs){
-            result.addElement(f);
-        }
-        File[] dirs = dir.listFiles(new FileFilter(){
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-            
-        });        
-        for (File d : dirs){
-            result.addAll(getFilesFromDirectory(d));
-        }
-       return result;
-   }
 
    void handleFileDrop(final File[] files){
-        Vector<File> allFiles = new Vector<File>();
+        CorpusIO cio = new CorpusIO();
+        Collection<CorpusData> allFiles = new ArrayList();
         for (File f : files){
+            try {
             if (f.isDirectory()){
                 message("[Directory "+ f.getName() + "]");
-                Vector<File> filesinthis = getFilesFromDirectory(f);
-                for (File ff : filesinthis){
-                    allFiles.add(ff);
-                    message(ff.getName() + " added to list.");                    
-                }
-            } else {
-                int index = f.getName().lastIndexOf(".");
-                if (index<0){
-                    message("["+ f.getName() + "]" + " Cannot determine file type (missing suffix)");
-                } else {
-                    String suffix = f.getName().substring(index+1).toLowerCase();
-                    // issue #83
-                    if (("exb".equals(suffix) || "eaf".equals(suffix)|| "trs".equals(suffix) || "cha".equals(suffix) 
-                            || "flk".equals(suffix) || "fln".equals(suffix))){
-                        allFiles.add(f);
-                        message(f.getName() + " added to list.");
-                    } else {
-                        message(f.getName() + " not added to list (suffix " + suffix +  " not recognized).");
+                //need to use CorpusIO read(URL) method here
+                //that gives back a Colelction of CorpusData Objects
+                URL url = f.toURI().toURL();
+                Collection<File> recursed = cio.getFileURLSRecursively(url);
+                for (File ff : recursed) {
+                    CorpusData cd = cio.toCorpusData(f);
+                    if (cd != null) {
+                       allFiles.add(cd);                    
+                       message(cd.getFilename() + " added to list."); 
+                    }
+                    else {
+                      message(f.getName() + " not added to list (data suffix not recognized).");  
                     }
                 }
-            }
-        }
+            } else {
+                    CorpusData cd = cio.toCorpusData(f);
+                    if (cd!=null){
+                        allFiles.add(cd);
+                        message(cd.getFilename() + " added to list.");
+                    }
+                    else {
+                        message(f.getName() + " not added to list (data suffix not recognized).");
+                    }
+                }
+            } catch (MalformedURLException ex) {
+                        message(f.getName() + " not added to list (file could not be read).");
+                    } catch (SAXException ex) {
+                        message(f.getName() + " not added to list (file could not be read).");
+                    } catch (JexmaraldaException ex) {
+                        message(f.getName() + " not added to list (file could not be read).");
+                    }
+            }       
         done = 0;
         all = allFiles.size();
         dropPanel.setIcon(activeIcon);
@@ -190,14 +187,16 @@ public class ApplicationFrame extends javax.swing.JFrame {
         }*/
         // to do : recurse into subdirectories
 
-        for (final File f : allFiles){
+        for (final CorpusData cd : allFiles){
             Thread t = new Thread(){
 
                 @Override
                 public void run() {
+                        //now we need to run the correct functions on the correct data
+                        //where do we display which functions are possible on the data?
                         // Determine input type
-                        int index = f.getName().lastIndexOf(".");
-                        String suffix = f.getName().substring(index+1);
+                        //int index = f.getName().lastIndexOf(".");
+                        //String suffix = f.getName().substring(index+1);
                         /*
                         BasicTranscription bt = null;
                         try {
@@ -234,14 +233,14 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         // Determine output name
                         File directory;
                         if (sameDirectory.isSelected()){
-                            directory = f.getParentFile();
+                            //directory = f.getParentFile();
                         } else {
                             directory = new File(otherDirectoryTextField.getText());
                         }
                         //String name = f.getName().substring(0,index) + suffixTextField.getText();
-                        String name = f.getName().substring(0,index);
-                        File output = new File(directory, name);
-                        String OUTPUT_NAME = output.getAbsolutePath();
+                        //String name = f.getName().substring(0,index);
+                        //File output = new File(directory, name);
+                        //String OUTPUT_NAME = output.getAbsolutePath();
 
                         // convert
                         /*
@@ -288,20 +287,14 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }
 
    void displayHelp(){
-        /* HTMLDisplayDialog dialog = new HTMLDisplayDialog(this, false);
-        dialog.setTitle("TEI Drop Help");
-        dialog.setSize(600, 400);
-        dialog.setPreferredSize(dialog.getSize());
-        dialog.setLocationRelativeTo(this);
         try {
-            dialog.loadInternalResource("/org/exmaralda/tei/documentation.html");
-            dialog.setVisible(true);
-        } catch (JDOMException ex) {
-            ex.printStackTrace();
+            //TO DO better website
+            Desktop.getDesktop().browse(new URI("https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator"));
         } catch (IOException ex) {
             ex.printStackTrace();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-       */
 
    }
 
