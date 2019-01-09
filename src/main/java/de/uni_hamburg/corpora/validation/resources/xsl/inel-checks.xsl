@@ -129,6 +129,11 @@
             <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(text(), ';', ':'),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
         </xsl:for-each>
 
+        <xsl:for-each select="$ROOT//*:tier[@category = ('tx')]/*:event[not(ends-with(text(), ' '))]">
+            <!-- Check that in the tx tier no event without whitespace at the end exists (causes ISO TEI errors) -->
+            <xsl:value-of select="concat('CRITICAL;event in tier ', ../@id, ': ', replace(text(), ';', ':'),' does not end with whitespace (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+        </xsl:for-each>
+        
         <xsl:for-each select="$ROOT//*:event">
 
             <!-- Check if event is empty (https://lab.multilingua.uni-hamburg.de/redmine/issues/5885) -->
