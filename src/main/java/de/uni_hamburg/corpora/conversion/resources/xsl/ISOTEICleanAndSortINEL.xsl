@@ -301,9 +301,7 @@
                 <xsl:value-of select="count(preceding::*:seg[@type = 'utterance'])"/>-->
                 <xsl:value-of select="@subtype"/>
             </xsl:attribute>
-            <xsl:attribute name="type">
-                <!--<xsl:text>seg</xsl:text>
-                <xsl:value-of select="count(preceding::*:seg[@type = 'utterance'])"/>-->
+            <xsl:attribute name="type">                
                 <xsl:value-of select="@type"/>
             </xsl:attribute>
             <xsl:apply-templates select="node()"/>
@@ -328,6 +326,9 @@
                 <!--<xsl:text>seg</xsl:text>
                 <xsl:value-of select="count(preceding::*:seg[@type = 'utterance'])"/>-->
                 <xsl:value-of select="@subtype"/>
+                 <xsl:attribute name="type">                
+                <xsl:value-of select="@type"/>
+                </xsl:attribute>
             </xsl:attribute>
             <xsl:apply-templates select="node()"/>
         </xsl:element>
