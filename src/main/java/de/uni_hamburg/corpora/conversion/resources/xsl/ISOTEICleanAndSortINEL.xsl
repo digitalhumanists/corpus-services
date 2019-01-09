@@ -350,14 +350,15 @@
     <!-- templates for things between uncertain-start and uncertain-end -->
     <!-- ************************************************************** -->
 
-    <xsl:template match="*:uncertain-start[following-sibling::*:uncertain-end]">
+    <xsl:template match="*:uncertain-start[following-sibling::*:uncertain-end[1]]">
         <!-- removed uncertain 11-07-2018 -->
         <!-- <xsl:element name="unclear" xmlns="http://www.tei-c.org/ns/1.0"> -->
-        <xsl:apply-templates select="following-sibling::*[count(preceding-sibling::*) &lt; count(current()/following-sibling::*:uncertain-end/preceding-sibling::*)]" mode="grab_em"/>
+        <!-- TO DO: if on uncertain start follows directly after an uncertain end this chooses each element twice -->
+        <xsl:apply-templates select="following-sibling::*[count(preceding-sibling::*) &lt; count(current()/following-sibling::*:uncertain-end[1]/preceding-sibling::*)]" mode="grab_em"/>
         <!-- </xsl:element> -->
     </xsl:template>
 
-    <xsl:template match="*:w[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end]" mode="grab_em">
+    <xsl:template match="*:w[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start[1] and following-sibling::*:uncertain-end[1]]" mode="grab_em">
         <xsl:element name="w">
             <!-- added 11-07-2018 -->
             <xsl:attribute name="xml:id">
@@ -435,7 +436,7 @@
 
     <!--************************-->
 
-    <xsl:template match="*:w">
+    <xsl:template match="*:w[not(not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end)]">
         <xsl:element name="w">
             <xsl:attribute name="xml:id">
                 <xsl:value-of select="@xml:id"/>
