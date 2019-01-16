@@ -182,7 +182,9 @@
     <xsl:template match="*:event">
         <xsl:element name="incident">
             <!-- add an id for references -->
-            <xsl:attribute name="xml:id"/>
+            <xsl:attribute name="xml:id">
+                <xsl:value-of select="@xml:id"/>
+            </xsl:attribute>  
             <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@end"/>
             <xsl:copy-of select="@who"/>
@@ -325,11 +327,11 @@
             <xsl:attribute name="subtype">
                 <!--<xsl:text>seg</xsl:text>
                 <xsl:value-of select="count(preceding::*:seg[@type = 'utterance'])"/>-->
-                <xsl:value-of select="@subtype"/>
-                 <xsl:attribute name="type">                
-                <xsl:value-of select="@type"/>
-                </xsl:attribute>
+                <xsl:value-of select="@subtype"/>                
             </xsl:attribute>
+             <xsl:attribute name="type">                
+                <xsl:value-of select="@type"/>
+             </xsl:attribute>
             <xsl:apply-templates select="node()"/>
         </xsl:element>
     </xsl:template>

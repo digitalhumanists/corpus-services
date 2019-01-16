@@ -221,6 +221,8 @@ public class CorpusMagician {
             report.addException(ex, "An XSLT error occured");
         } catch (JexmaraldaException ex) {
             report.addException(ex, "An Exmaralda file reading error occured");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, "A URI was incorrect");
         }
 
     }
@@ -249,7 +251,7 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException {
         corpus = new Corpus(url);
     }
 
