@@ -38,7 +38,7 @@ import org.xml.sax.ErrorHandler;
  * repository depositing.
  */
 
-public class ExbDTDChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbSchemaChecker extends Checker implements CommandLineable, CorpusFunction {
 
     final String EXB_DTD_CHECKER = "exb-dtd";
 
@@ -75,11 +75,12 @@ public class ExbDTDChecker extends Checker implements CommandLineable, CorpusFun
             throws SAXException, JDOMException, IOException, JexmaraldaException{
         System.out.println("Checking the exb file against DTD...");
         //URL exb_dtd = new URL("C:\\Users\\Ozzy\\Desktop\\exb_schema.xsd");
-        File exb_dtd = new File("C:\\Users\\Ozzy\\Desktop\\exb_schema.xsd");
+        String exbSchemaPath = new File("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\schemas\\exb_schema.xsd").getAbsolutePath();
+        File exbSchema = new File(exbSchemaPath);
         Source xmlStream = new StreamSource(TypeConverter.String2InputStream(cd.toSaveableString()));
         SchemaFactory schemaFactory =
             SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(exb_dtd);
+        Schema schema = schemaFactory.newSchema(exbSchema);
         Validator validator = schema.newValidator();
         ErrorHandler eh = null;
         //ComaErrorReportGenerator eh = new ComaErrorReportGenerator();

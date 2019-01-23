@@ -23,9 +23,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class ExbDTDCheckerTest {
+public class ExbSchemaCheckerTest {
     
-    public ExbDTDCheckerTest() {
+    public ExbSchemaCheckerTest() {
     }
     
     @BeforeClass
@@ -54,7 +54,7 @@ public class ExbDTDCheckerTest {
             String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
             URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
             Corpus corp = new Corpus(corpusURL);
-            ExbDTDChecker instance = new ExbDTDChecker();
+            ExbSchemaChecker instance = new ExbSchemaChecker();
             instance.report = new Report();
             Collection<CorpusData> cdc;
             //what happens when we check exb files
@@ -69,7 +69,7 @@ public class ExbDTDCheckerTest {
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        ExbDTDChecker instance = new ExbDTDChecker();
+        ExbSchemaChecker instance = new ExbSchemaChecker();
         //Collection<Class> expResult = null;
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
