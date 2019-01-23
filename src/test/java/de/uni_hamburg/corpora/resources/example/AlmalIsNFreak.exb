@@ -1,0 +1,1953 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (c) http://www.rrz.uni-hamburg.de/exmaralda -->
+<basic-transcription>
+   <head>
+      <meta-information>
+         <project-name>EXMARaLDA DemoKorpus</project-name>
+         <transcription-name>Almal is n freak</transcription-name>
+         <referenced-file url="AlmalIsNFreak.wav" />
+         <referenced-file url="AlmalIsNFreak.mpg" />
+         <referenced-file url="AlmalIsNFreak.mp3" />
+         <referenced-file url="AlmalIsNFreak.ogg" />
+         <ud-meta-information>
+            <ud-information attribute-name="AutoSave">;C:\Users\HZSK-HK\EXMARaLDA_AutoBackup_2016_01_07_04_39_45.exb at 2016_01_07_05_41_13</ud-information>
+         </ud-meta-information>
+         <comment />
+         <transcription-convention>HIAT (simplified)</transcription-convention>
+      </meta-information>
+      <speakertable>
+         <speaker id="SPK0">
+            <abbreviation>RS</abbreviation>
+            <sex value="m" />
+            <languages-used>
+               <language lang="afr" />
+            </languages-used>
+            <l1 />
+            <l2 />
+            <ud-speaker-information></ud-speaker-information>
+            <comment />
+         </speaker>
+         <speaker id="SPK1">
+            <abbreviation>AS</abbreviation>
+            <sex value="f" />
+            <languages-used></languages-used>
+            <l1 />
+            <l2 />
+            <ud-speaker-information></ud-speaker-information>
+            <comment />
+         </speaker>
+         <speaker id="SPK2">
+            <abbreviation>TA</abbreviation>
+            <sex value="f" />
+            <languages-used></languages-used>
+            <l1 />
+            <l2 />
+            <ud-speaker-information></ud-speaker-information>
+            <comment />
+         </speaker>
+      </speakertable>
+   </head>
+   <basic-body>
+      <common-timeline>
+         <tli id="T140" time="0.013333122680287211" />
+         <tli id="T4" time="1.113315743803982" />
+         <tli id="T142" time="1.419977565450588" />
+         <tli id="T3" time="2.839955130901176" />
+         <tli id="T99" time="2.975508612633198" />
+         <tli id="T5" time="4.4399298525356405" />
+         <tli id="T6" time="5.753242436543931" />
+         <tli id="T7" time="7.4265493329199765" />
+         <tli id="T184" time="8.213203571056921" />
+         <tli id="T144" time="9.013190931874155" />
+         <tli id="T145" time="9.959842642174547" />
+         <tli id="T10" time="11.77981388803375" />
+         <tli id="T148" time="14.046444743682576" />
+         <tli id="T12" time="14.759766807077943" />
+         <tli id="T372" time="15.713085078718478" />
+         <tli id="T373" time="16.13974500448767" />
+         <tli id="T149" time="16.666403350359015" />
+         <tli id="T150" time="18.466374912197786" />
+         <tli id="T152" time="20.39967770083943" />
+         <tli id="T115" time="21.94631993175275" />
+         <tli id="T18" time="25.186268743062538" />
+         <tli id="T154" time="25.866257999757188" />
+         <tli id="T223" time="26.446248836349685" />
+         <tli id="T143" time="28.051936358351313" />
+         <tli id="T19" time="28.47288348375334" />
+         <tli id="T22" time="29.072874004366266" />
+         <tli id="T155" time="29.739530138380626" />
+         <tli id="T182" time="30.166190064149816" />
+         <tli id="T293" time="30.82617963682403" type="intp" />
+         <tli id="T24" time="31.486169209498247" />
+         <tli id="T25" time="33.31947357803774" />
+         <tli id="T26" time="34.699451775447464" />
+         <tli id="T227" time="35.09277889451593" />
+         <tli id="T231" time="36.139429024918485" />
+         <tli id="T29" time="37.29941069810347" />
+         <tli id="T233" time="37.5327403450085" />
+         <tli id="T30" time="38.01273276149884" />
+         <tli id="T156" time="39.026050085200666" />
+         <tli id="T157" time="39.41937720426913" />
+         <tli id="T31" time="40.15936551302508" />
+         <tli id="T34" time="43.332648710933434" />
+         <tli id="T158" time="43.845973934124494" />
+         <tli id="T294" time="44.62862758442597" />
+         <tli id="T159" time="45.37928304235752" />
+         <tli id="T295" time="45.81888547197848" />
+         <tli id="T37" time="46.1859369645149" />
+         <tli id="T160" time="46.77926092378768" />
+         <tli id="T39" time="47.12592211347514" />
+         <tli id="T161" time="49.26588830366125" />
+         <tli id="T41" time="49.78588008819244" />
+         <tli id="T42" time="51.34585544178604" />
+         <tli id="T162" time="52.44583806290974" />
+         <tli id="T43" time="52.8058323752775" />
+         <tli id="T296" time="53.20835531260081" />
+         <tli id="T46" time="54.25247618608866" />
+         <tli id="T238" time="55.552455647416664" />
+         <tli id="T371" time="55.88196852423274" type="intp" />
+         <tli id="T298" time="60.44022998685512" />
+         <tli id="T297" time="60.674575242714305" />
+         <tli id="T48" time="61.95235453395453" />
+         <tli id="T299" time="62.392347582404" />
+         <tli id="T151" time="62.839007192193634" />
+         <tli id="T370" time="65.55229765763208" />
+         <tli id="T163" time="65.95895789938082" />
+         <tli id="T300" time="66.41561735118067" />
+         <tli id="T53" time="67.18560518596725" />
+         <tli id="T51" time="68.33892029781211" />
+         <tli id="T301" time="68.59446964574633" />
+         <tli id="T54" time="69.24557264007163" />
+         <tli id="T261" time="69.8269762147606" />
+         <tli id="T302" time="71.38553883025772" />
+         <tli id="T56" time="72.00552903489108" />
+         <tli id="T303" time="72.39218959261942" type="intp" />
+         <tli id="T55" time="72.77885015034775" />
+         <tli id="T304" time="73.52521205632243" />
+         <tli id="T57" time="74.03883024363488" />
+         <tli id="T305" time="74.55215546682594" />
+         <tli id="T58" time="76.33879390598442" />
+         <tli id="T59" time="77.65877305133286" />
+         <tli id="T61" time="78.90542002193972" />
+         <tli id="T62" time="80.4453956915129" />
+         <tli id="T63" time="82.53202939097784" />
+         <tli id="T165" time="83.09202054354989" />
+         <tli id="T166" time="83.42534861055708" />
+         <tli id="T167" time="84.44533249559905" />
+         <tli id="T67" time="86.23863749609767" />
+         <tli id="T68" time="87.02529173423461" />
+         <tli id="T170" time="87.54528351876583" />
+         <tli id="T171" time="87.97861000587517" />
+         <tli id="T70" time="88.3519374409232" />
+         <tli id="T66" time="88.63193301720924" />
+         <tli id="T306" time="89.03211549671829" />
+         <tli id="T172" time="91.93854744192045" />
+         <tli id="T79" time="98.66510783412537" />
+         <tli id="T307" time="99.3570955991695" />
+         <tli id="T173" time="100.46507939596412" />
+         <tli id="T81" time="102.59841062276699" />
+         <tli id="T82" time="103.84502599541695" />
+         <tli id="T174" time="104.57168118149261" />
+         <tli id="T83" time="106.07832404436505" />
+         <tli id="T175" time="107.00497607064501" />
+         <tli id="T309" time="107.98496058764613" />
+         <tli id="T308" time="108.56042024582774" />
+         <tli id="T85" time="109.9982621123695" />
+         <tli id="T176" time="110.57158638762185" />
+         <tli id="T87" time="111.01157943607132" />
+         <tli id="T88" time="111.89823209431043" />
+         <tli id="T177" time="113.15154562625743" />
+         <tli id="T90" time="114.12486358191839" />
+         <tli id="T179" time="114.89151813603489" />
+         <tli id="T180" time="115.14484746696034" />
+         <tli id="T181" time="118.3914628396103" />
+         <tli id="T310" time="119.10509739806848" />
+         <tli id="T311" time="119.79206571116607" />
+         <tli id="T312" time="120.78150320381748" />
+         <tli id="T95" time="121.31141670659319" />
+         <tli id="T97" time="121.97807284060755" />
+         <tli id="T183" time="124.86469390088973" />
+         <tli id="T313" time="125.3034760309708" />
+         <tli id="T314" time="126.84342565928873" />
+         <tli id="T98" time="127.43798657818516" />
+         <tli id="T100" time="128.43130421786657" />
+         <tli id="T101" time="130.37796617044373" />
+         <tli id="T185" time="130.94043124226312" />
+         <tli id="T102" time="131.42459025959104" />
+         <tli id="T186" time="132.67123723019787" />
+         <tli id="T103" time="133.46455802967498" />
+         <tli id="T187" time="134.1578804090499" />
+         <tli id="T315" time="134.59254802080386" />
+         <tli id="T104" time="135.4978908363757" />
+         <tli id="T368" time="135.91785260284783" />
+         <tli id="T369" time="136.297846599236" />
+         <tli id="T316" time="136.45359934679615" />
+         <tli id="T317" time="139.26446639559992" />
+         <tli id="T106" time="139.66446007600854" />
+         <tli id="T188" time="140.19778498322" />
+         <tli id="T318" time="140.49961615202054" />
+         <tli id="T190" time="141.3377669723846" />
+         <tli id="T319" time="141.59609622431515" />
+         <tli id="T107" time="141.9844234223785" />
+         <tli id="T92" time="142.57341151265467" />
+         <tli id="T108" time="143.44440035586996" />
+         <tli id="T153" time="144.3043867687485" />
+         <tli id="T109" time="146.9643447434658" />
+         <tli id="T320" time="147.4710034053167" type="intp" />
+         <tli id="T192" time="147.9776620671676" />
+         <tli id="T110" time="148.4976538516988" />
+         <tli id="T193" time="149.58430335014222" />
+         <tli id="T321" time="149.82866146863924" />
+         <tli id="T194" time="152.64425500526815" />
+         <tli id="T323" time="153.42090940139485" type="intp" />
+         <tli id="T324" time="154.19756379752158" />
+         <tli id="T195" time="154.42422688308648" />
+         <tli id="T111" time="154.78425279341116" />
+         <tli id="T322" time="155.0975625990686" />
+         <tli id="T0" time="155.29087985730516" />
+         <tli id="T196" time="158.11750186552604" />
+         <tli id="T9" time="158.8774898583024" />
+         <tli id="T8" time="159.35525574747015" />
+         <tli id="T11" time="159.74414283252108" />
+         <tli id="T13" time="160.98412324178778" />
+         <tli id="T15" time="162.77742824228642" />
+         <tli id="T292" time="164.987393326544" type="intp" />
+         <tli id="T14" time="167.19735841080163" />
+         <tli id="T16" time="172.68393839373982" />
+         <tli id="T197" time="173.75725476950294" />
+         <tli id="T325" time="174.317245922075" />
+         <tli id="T17" time="175.35722949113742" />
+         <tli id="T198" time="175.9638865730905" />
+         <tli id="T290" time="178.1571852539977" />
+         <tli id="T291" time="178.70606547100286" type="intp" />
+         <tli id="T20" time="180.07715491995904" />
+         <tli id="T199" time="181.6104640281921" />
+         <tli id="T21" time="182.53044949313193" />
+         <tli id="T23" time="185.43040367609436" />
+         <tli id="T2" time="186.3170563343335" />
+         <tli id="T201" time="188.47702220854" />
+         <tli id="T27" time="188.81701683688735" />
+         <tli id="T367" time="189.7170026178067" />
+         <tli id="T366" time="190.1824119313655" type="intp" />
+         <tli id="T202" time="190.3236596997598" />
+         <tli id="T287" time="191.01698207913472" type="intp" />
+         <tli id="T203" time="191.71030445850965" />
+         <tli id="T288" time="194.1413771605487" type="intp" />
+         <tli id="T289" time="196.57244986258775" type="intp" />
+         <tli id="T28" time="199.00352256462676" />
+         <tli id="T326" time="199.39684968369525" />
+         <tli id="T204" time="199.99684020430817" />
+         <tli id="T32" time="200.38350076203648" />
+         <tli id="T205" time="201.18348812285373" />
+         <tli id="T285" time="202.23680481459644" />
+         <tli id="T286" time="202.5234669522226" />
+         <tli id="T365" time="204.03677637643517" />
+         <tli id="T364" time="204.30343883004093" />
+         <tli id="T33" time="205.08342650683772" />
+         <tli id="T327" time="205.8567476222944" />
+         <tli id="T206" time="206.59006936971016" />
+         <tli id="T35" time="206.87673150733636" />
+         <tli id="T207" time="208.63003713979413" />
+         <tli id="T328" time="209.24336078308733" />
+         <tli id="T36" time="210.55667336709564" />
+         <tli id="T330" time="211.48999195471572" type="intp" />
+         <tli id="T38" time="212.42331054233583" />
+         <tli id="T362" time="214.22994866551477" />
+         <tli id="T363" time="214.63660890726348" />
+         <tli id="T209" time="215.029936026332" />
+         <tli id="T331" time="215.21659974385602" />
+         <tli id="T210" time="216.26324987425855" />
+         <tli id="T40" time="217.5565627742464" />
+         <tli id="T211" time="218.0098889453762" />
+         <tli id="T44" time="219.02320626907797" />
+         <tli id="T45" time="223.56980110305597" />
+         <tli id="T47" time="225.02977803654738" />
+         <tli id="T212" time="225.7964325906639" />
+         <tli id="T213" time="227.26974264683565" />
+         <tli id="T342" time="231.76300499009244" />
+         <tli id="T49" time="232.95631946997815" />
+         <tli id="T214" time="233.37631283440717" />
+         <tli id="T215" time="234.28296517666672" />
+         <tli id="T216" time="235.57627807665457" />
+         <tli id="T50" time="238.99622404414822" />
+         <tli id="T218" time="239.75954531759467" type="intp" />
+         <tli id="T217" time="240.52286659104112" />
+         <tli id="T52" time="241.01619213021178" />
+         <tli id="T60" time="242.41617001164192" />
+         <tli id="T219" time="244.8094655327535" />
+         <tli id="T64" time="245.68278506831228" />
+         <tli id="T220" time="246.36944088634706" />
+         <tli id="T221" time="247.1027626337629" />
+         <tli id="T332" time="247.5960881729335" />
+         <tli id="T65" time="248.30274367498873" />
+         <tli id="T224" time="249.08939791312565" />
+         <tli id="T333" time="249.61605625899702" />
+         <tli id="T69" time="250.0760489914669" />
+         <tli id="T226" time="250.78270449352215" />
+         <tli id="T225" time="252.8693381929871" />
+         <tli id="T229" time="253.1160009625724" />
+         <tli id="T71" time="253.5559940110219" />
+         <tli id="T334" time="253.8226564646276" />
+         <tli id="T335" time="254.46597963395146" type="intp" />
+         <tli id="T72" time="255.10930280327534" />
+         <tli id="T336" time="255.8292914280109" />
+         <tli id="T337" time="256.669278156869" />
+         <tli id="T73" time="258.3092522465443" />
+         <tli id="T230" time="260.06922444034217" />
+         <tli id="T74" time="260.4758846820909" />
+         <tli id="T232" time="261.48253544445265" />
+         <tli id="T338" time="261.8891956862014" />
+         <tli id="T234" time="263.04251079804624" />
+         <tli id="T75" time="265.79580063152554" />
+         <tli id="T236" time="266.26912648667576" />
+         <tli id="T237" time="267.255777565017" />
+         <tli id="T76" time="270.135732063959" />
+         <tli id="T77" time="271.5690427520899" />
+         <tli id="T339" time="272.3690301129072" />
+         <tli id="T284" time="276.4156328463743" />
+         <tli id="T239" time="277.1956205231711" />
+         <tli id="T240" time="278.80226180614574" />
+         <tli id="T164" time="279.37558608139807" type="intp" />
+         <tli id="T178" time="279.9489103566504" />
+         <tli id="T241" time="281.2888891860193" />
+         <tli id="T80" time="283.9755134060972" />
+         <tli id="T242" time="284.72883483753344" />
+         <tli id="T283" time="285.0234916405167" />
+         <tli id="T84" time="285.688819670514" />
+         <tli id="T282" time="285.98303377215836" />
+         <tli id="T243" time="286.3154764364876" />
+         <tli id="T281" time="287.1487966040055" />
+         <tli id="T86" time="287.50879091637324" />
+         <tli id="T340" time="287.80211961533956" />
+         <tli id="T78" time="288.7221050802794" />
+         <tli id="T146" time="289.24579472305396" />
+         <tli id="T89" time="289.955418928206" />
+         <tli id="T91" time="290.96206969056766" />
+         <tli id="T147" time="292.228716345195" />
+         <tli id="T93" time="292.602043780243" />
+         <tli id="T341" time="293.78535841811845" type="intp" />
+         <tli id="T169" time="294.968673055994" />
+         <tli id="T94" time="299.0819414028626" />
+         <tli id="T360" time="299.3819366631691" />
+         <tli id="T361" time="299.76793056476333" type="intp" />
+         <tli id="T189" time="300.3885874255307" />
+         <tli id="T96" time="301.8352312363419" />
+         <tli id="T191" time="303.67520216622154" />
+         <tli id="T280" time="305.98183238991123" />
+         <tli id="T358" time="306.38849263166" />
+         <tli id="T359" time="306.5018241744424" />
+         <tli id="T200" time="307.70847177700836" />
+         <tli id="T105" time="311.38174707542754" />
+         <tli id="T208" time="312.62532117791665" />
+         <tli id="T222" time="313.29505018004875" />
+         <tli id="T112" time="314.1750362769477" />
+         <tli id="T357" time="314.52169746663515" />
+         <tli id="T279" time="314.7416939908599" />
+         <tli id="T228" time="315.48834886095597" />
+         <tli id="T113" time="316.12169822952484" />
+         <tli id="T118" time="317.06165733722986" />
+         <tli id="T278" time="317.4216516495976" type="intp" />
+         <tli id="T235" time="317.78164596196535" />
+         <tli id="T119" time="318.1483068356733" />
+         <tli id="T120" time="319.43495317432104" />
+         <tli id="T244" time="320.33161869519796" type="intp" />
+         <tli id="T356" time="320.7799514556364" type="intp" />
+         <tli id="T121" time="321.2282842160749" />
+         <tli id="T245" time="322.76156728305267" />
+         <tli id="T246" time="323.148227840781" />
+         <tli id="T248" time="323.7748846067545" />
+         <tli id="T247" time="324.24821046190465" />
+         <tli id="T277" time="324.9015334732387" type="intp" />
+         <tli id="T122" time="325.55485648457284" />
+         <tli id="T249" time="326.3615104067302" />
+         <tli id="T123" time="329.04146806546794" />
+         <tli id="T124" time="330.0947847572106" />
+         <tli id="T126" time="330.6014434190615" />
+         <tli id="T276" time="332.9196620013308" />
+         <tli id="T114" time="333.2947342004796" />
+         <tli id="T250" time="333.5813963381057" type="intp" />
+         <tli id="T343" time="333.86805847573186" />
+         <tli id="T116" time="334.28805184016096" />
+         <tli id="T251" time="335.1801992032546" />
+         <tli id="T117" time="335.7480287736524" />
+         <tli id="T253" time="336.14802245406105" />
+         <tli id="T252" time="336.88134420147685" />
+         <tli id="T254" time="337.8146627890969" />
+         <tli id="T344" time="338.56131765919304" />
+         <tli id="T131" time="340.2079583102085" />
+         <tli id="T275" time="340.974612864325" />
+         <tli id="T127" time="341.37460654473364" />
+         <tli id="T255" time="341.7212677344211" />
+         <tli id="T256" time="342.1212614148297" />
+         <tli id="T125" time="344.1078966941925" />
+         <tli id="T257" time="344.67455440810465" />
+         <tli id="T345" time="345.2345455606768" />
+         <tli id="T128" time="346.31452849778" />
+         <tli id="T129" time="347.0478502451958" />
+         <tli id="T258" time="347.5478423457066" />
+         <tli id="T274" time="350.2877990565056" />
+         <tli id="T130" time="351.20111796010525" />
+         <tli id="T346" time="351.4344476070103" />
+         <tli id="T259" time="351.8277747260788" />
+         <tli id="T260" time="352.8677582951412" />
+         <tli id="T355" time="354.65439673429967" />
+         <tli id="T262" time="354.97439167862655" />
+         <tli id="T168" time="355.3887080494144" />
+         <tli id="T273" time="356.27192326196246" />
+         <tli id="T263" time="360.474304784245" />
+         <tli id="T132" time="361.05429562083754" />
+         <tli id="T347" time="361.7076186321716" />
+         <tli id="T134" time="363.6942539115344" />
+         <tli id="T264" time="364.0609147852423" />
+         <tli id="T265" time="364.94756744348143" />
+         <tli id="T135" time="365.2275630197674" />
+         <tli id="T353" time="366.4542103063538" />
+         <tli id="T354" time="366.7742052506807" />
+         <tli id="T136" time="367.86085474912414" />
+         <tli id="T266" time="368.87417207282596" />
+         <tli id="T351" time="369.3166342180681" type="intp" />
+         <tli id="T352" time="369.7590963633102" type="intp" />
+         <tli id="T267" time="370.3674818130182" />
+         <tli id="T329" time="372.00162266152086" type="intp" />
+         <tli id="T350" time="372.220785865578" />
+         <tli id="T138" time="372.8407760702114" />
+         <tli id="T348" time="373.59409750164764" />
+         <tli id="T268" time="373.8007609031921" />
+         <tli id="T137" time="375.280737520704" />
+         <tli id="T269" time="376.2473889150248" />
+         <tli id="T270" time="376.5940501047123" />
+         <tli id="T271" time="377.00071034646106" />
+         <tli id="T349" time="377.3940374655295" />
+         <tli id="T139" time="377.94736205676145" />
+         <tli id="T133" time="381.70730265260244" />
+         <tli id="T272" time="382.42729127733793" />
+         <tli id="T141" time="383.1539464634136" />
+         <tli id="T1" time="384.38" />
+      </common-timeline>
+      <tier id="TIE0" speaker="SPK0" category="v" type="t" display-name="RS [v]" >
+         <event start="T142" end="T3">Is jy nou bang van die Afrikaans? </event>
+         <event start="T99" end="T5">(Hoor jy, bietjie Afrikaans) ((onverstaanbaar)) </event>
+         <event start="T5" end="T6">So, wat ek gaan vra is, </event>
+         <event start="T6" end="T7">• • wanneer gaan jy terug Namibië toe? </event>
+         <event start="T7" end="T184">• • • </event>
+         <event start="T184" end="T144">Gaan jy Desember? </event>
+         <event start="T10" end="T148">• • • Ha, 'n bietjie van die vakansie, ag</event>
+         <event start="T148" end="T12">tiende Desember.</event>
+         <event start="T12" end="T372">So, saam met die familie </event>
+         <event start="T372" end="T373">Christmas </event>
+         <event start="T373" end="T149">hou en? </event>
+         <event start="T18" end="T154">• Ag lekker, ry </event>
+         <event start="T154" end="T223">jy Kaapstad toe?</event>
+         <event start="T143" end="T19">• Is jou</event>
+         <event start="T19" end="T22"> tweede  huis. </event>
+         <event start="T155" end="T182">Tweede huis. </event>
+         <event start="T24" end="T25">Almal sien, so jy kan Ara sien, </event>
+         <event start="T25" end="T26">en Louis sien.</event>
+         <event start="T227" end="T231">Ara, ek is so lief vir Ara.</event>
+         <event start="T231" end="T29"> Hy/ </event>
+         <event start="T29" end="T233">• </event>
+         <event start="T233" end="T30">Want hy is…  </event>
+         <event start="T30" end="T156">Ara is, eh, the/ </event>
+         <event start="T156" end="T157">the dude that </event>
+         <event start="T157" end="T31">• ban/ banjo speler </event>
+         <event start="T31" end="T34">• • van/ van Crimson House Blues. ((onverstaanbaar))  </event>
+         <event start="T34" end="T158">Oh, Ara. </event>
+         <event start="T37" end="T160">Ja, hierdie klein hobb</event>
+         <event start="T160" end="T39">it. </event>
+         <event start="T39" end="T161">• • Hy is altyd so fokken belaglik, hy is. </event>
+         <event start="T41" end="T42">Hy wil net party en drink. </event>
+         <event start="T42" end="T162">En as hy begin, hy kan </event>
+         <event start="T162" end="T43">nie/ </event>
+         <event start="T43" end="T296">jy kan nie </event>
+         <event start="T296" end="T46">hom, • • • jesus. </event>
+         <event start="T46" end="T238">((onverstaanbaar)) </event>
+         <event start="T48" end="T299">• • Ek is </event>
+         <event start="T299" end="T151">so lief vir Ara.</event>
+         <event start="T163" end="T53">((lag)) </event>
+         <event start="T51" end="T301">Ja. </event>
+         <event start="T301" end="T54">((lag)) </event>
+         <event start="T54" end="T261">Ja, des waar. </event>
+         <event start="T261" end="T302">Hy druk/ hy druk jy so as </event>
+         <event start="T302" end="T56">((onverstaanbaar)) </event>
+         <event start="T56" end="T303">all dié… </event>
+         <event start="T55" end="T304">• • So a </event>
+         <event start="T304" end="T57">lekker oukie. </event>
+         <event start="T57" end="T305">• En as hy </event>
+         <event start="T305" end="T58">drink almal/ al/ • almal is lief vir Ara. </event>
+         <event start="T58" end="T59">((onverstaabbaar)) </event>
+         <event start="T59" end="T61">((onverstaanbaar)) </event>
+         <event start="T61" end="T62">• • • Hy is so a tipe ou. </event>
+         <event start="T62" end="T63">• • • Hy v/ speel die fok uit a banjo, ne. </event>
+         <event start="T165" end="T166">DeDenge Dele</event>
+         <event start="T166" end="T167"> LengDeng Deledelelde Leng. </event>
+         <event start="T167" end="T67">Jy het nog nie die bande live gesien nie? </event>
+         <event start="T67" end="T68">• • Ek het… </event>
+         <event start="T68" end="T170">• Het jy nou </event>
+         <event start="T170" end="T171">ons kla </event>
+         <event start="T171" end="T70">gesien? </event>
+         <event start="T66" end="T306">By die witte… </event>
+         <event start="T79" end="T307">Oh, </event>
+         <event start="T307" end="T173">dié klein fokken…  </event>
+         <event start="T81" end="T82">• Oh ja, ja. </event>
+         <event start="T82" end="T174">• • • Kan jy… </event>
+         <event start="T174" end="T83">det was mos so twenty/</event>
+         <event start="T83" end="T175">so twenty ten? </event>
+         <event start="T85" end="T176">Laaste jaar? </event>
+         <event start="T87" end="T88">Okay, • fuck it. </event>
+         <event start="T88" end="T177">• • • Ja, ma begin </event>
+         <event start="T177" end="T90">van die jaar. </event>
+         <event start="T90" end="T179">• • Mmh. </event>
+         <event start="T180" end="T181">• • En ja, sy het nou ook seeve maande Europa begin/ </event>
+         <event start="T181" end="T310">gedoen en </event>
+         <event start="T310" end="T311">Afrika gedoen. </event>
+         <event start="T95" end="T97">• • Ye/ha.  </event>
+         <event start="T97" end="T183">• • Sy is so dun nou, • fok, sy is s/ • • fokken </event>
+         <event start="T183" end="T313"> ma</event>
+         <event start="T313" end="T314">er, sy is so maer. </event>
+         <event start="T98" end="T100">• • Ah, sy lyk goed. </event>
+         <event start="T100" end="T101">Eh, jy/ eh, • onthou jy vir Joe?</event>
+         <event start="T101" end="T185">Of Joe?</event>
+         <event start="T102" end="T186">• • Ja, sy/ hulle is mos </event>
+         <event start="T186" end="T103">((onverstaanbaar)) </event>
+         <event start="T103" end="T187">Hulle bly </event>
+         <event start="T187" end="T315">saam. </event>
+         <event start="T104" end="T316">Yeah. </event>
+         <event start="T106" end="T188">Presies, </event>
+         <event start="T188" end="T318">en nou </event>
+         <event start="T318" end="T190">is hulle saam en dis  </event>
+         <event start="T190" end="T319">so… </event>
+         <event start="T107" end="T92">Ja, dis lekker. </event>
+         <event start="T92" end="T108">Ja, dis so mooi. </event>
+         <event start="T108" end="T153">• • Is.</event>
+         <event start="T153" end="T109">• • Ey, sy skryf nou vir die/ erm, soos a journalist. </event>
+         <event start="T320" end="T192">En sy </event>
+         <event start="T192" end="T110">vat die/ </event>
+         <event start="T110" end="T193">• • en sy neem die fotos,</event>
+         <event start="T193" end="T321">so. </event>
+         <event start="T194" end="T323">Ja, ja, ((onverstaanbaar)) </event>
+         <event start="T323" end="T324">City </event>
+         <event start="T324" end="T195">Varsi</event>
+         <event start="T195" end="T111">ty toe. </event>
+         <event start="T111" end="T322">Okay. </event>
+         <event start="T0" end="T196">((1,0s)) Julle twee het, wat, twee of drie jaare af? </event>
+         <event start="T9" end="T8">• • Twee? </event>
+         <event start="T8" end="T11">• Okay. </event>
+         <event start="T11" end="T13">((1,3s)) </event>
+         <event start="T13" end="T15">Jy/ jy/ dink jy • as 'n</event>
+         <event start="T15" end="T292">• • Deutschland/ </event>
+         <event start="T292" end="T14">• dink jy is better hier as jy ge/ • • (geswat) het hier? </event>
+         <event start="T16" end="T197">• • • Ja dis </event>
+         <event start="T197" end="T325">die selfde…</event>
+         <event start="T17" end="T198">Nie, is waar. </event>
+         <event start="T20" end="T199">Ja, bietjie van die/ • van die • • teorie. </event>
+         <event start="T21" end="T23">((lag)) </event>
+         <event start="T23" end="T2">Maar is lekker ((onverstaanbaar)). </event>
+         <event start="T2" end="T201">Jy werk hier en jy vat mooi fotos. </event>
+         <event start="T27" end="T367">• • On/ ons vind </event>
+         <event start="T367" end="T366">connections </event>
+         <event start="T366" end="T202">in </event>
+         <event start="T202" end="T287">almale </event>
+         <event start="T287" end="T203">((onverstaanbaar)). </event>
+         <event start="T28" end="T326">All dié pleke </event>
+         <event start="T326" end="T204">gesien. </event>
+         <event start="T32" end="T205">• • ((onverstaanbar)) </event>
+         <event start="T33" end="T327">'N plek om te/ </event>
+         <event start="T327" end="T206">• • ´n plek om te bly, ja. </event>
+         <event start="T35" end="T207">• • So is dit nou in Hamburg, jy het 'n plek om te bly </event>
+         <event start="T207" end="T328">saam met</event>
+         <event start="T328" end="T36"> Tara hier.</event>
+         <event start="T36" end="T330">((lag)) </event>
+         <event start="T330" end="T38">• • • Nie, is lekker. </event>
+         <event start="T38" end="T362">• • • En, hoe lang bly jy mos in </event>
+         <event start="T362" end="T363">Munich, </event>
+         <event start="T363" end="T209">is </event>
+         <event start="T209" end="T331">• </event>
+         <event start="T331" end="T210">so nou a jaar, of?</event>
+         <event start="T40" end="T211">Ampa `n jaar?</event>
+         <event start="T44" end="T45">• • • Kwaai, en jy is tehuis, jy voel so as/ as jou nuwe huis, of</event>
+         <event start="T45" end="T47">nog net? </event>
+         <event start="T47" end="T212">Ampa? </event>
+         <event start="T49" end="T214">Okay. </event>
+         <event start="T50" end="T218">• • Jou plek, jou huis,</event>
+         <event start="T218" end="T217"> ja.</event>
+         <event start="T52" end="T60">Nog nie gevind nie, ja. </event>
+         <event start="T60" end="T219">Dink jy, jy saal een dag, ah, terug • Namibië • toe • gaan? </event>
+         <event start="T64" end="T220">• • Nie? </event>
+         <event start="T220" end="T221">Is nie/ is nie </event>
+         <event start="T221" end="T332">jou plek nie?</event>
+         <event start="T65" end="T224">• • Ja, as jy so </event>
+         <event start="T224" end="T333">'n par het.</event>
+         <event start="T69" end="T226">Ja, dis waat ek praat, </event>
+         <event start="T226" end="T225">so S/ Swakopmund as jy sestig is, sit rond, doen </event>
+         <event start="T225" end="T229">fokol.   </event>
+         <event start="T334" end="T335">Ja. </event>
+         <event start="T72" end="T336">((lag)) </event>
+         <event start="T336" end="T337">• • ((lag)) </event>
+         <event start="T73" end="T230">Ah, ek dink es saal een dag da toe gaan.</event>
+         <event start="T74" end="T232">Maar fokken laater, </event>
+         <event start="T232" end="T338">da is </event>
+         <event start="T338" end="T234">better goed of ietsi. </event>
+         <event start="T75" end="T236">• Mmh.</event>
+         <event start="T76" end="T77">((1,4s))</event>
+         <event start="T77" end="T339">En dan maak. </event>
+         <event start="T239" end="T240">• • Ja, as jy/ as jy • klaar is/  </event>
+         <event start="T240" end="T164">• • </event>
+         <event start="T164" end="T178">as jy klaar is.</event>
+         <event start="T80" end="T242">• • Ah, jy kan… </event>
+         <event start="T84" end="T282">Misken </event>
+         <event start="T282" end="T243">Sweden? </event>
+         <event start="T243" end="T281">Ha, is dit, is dit… </event>
+         <event start="T86" end="T340">Ja? </event>
+         <event start="T78" end="T146">• • Dié </event>
+         <event start="T146" end="T89">mense is mal. </event>
+         <event start="T89" end="T91">((lag)) </event>
+         <event start="T91" end="T147">Hulle luister goeie musiek • en… </event>
+         <event start="T93" end="T341">• • Ja. </event>
+         <event start="T94" end="T360">Ja? </event>
+         <event start="T96" end="T191">Hmm, met drie jaar Rock 'n Roll. </event>
+         <event start="T208" end="T222">Ja, what's with her? </event>
+         <event start="T112" end="T357">Ja, what's </event>
+         <event start="T357" end="T279">fuckt </event>
+         <event start="T279" end="T228">met jou koppe, kyk </event>
+         <event start="T228" end="T113">hoe lyk jy. </event>
+         <event start="T113" end="T118">Maar so is dit in Berlin. </event>
+         <event start="T118" end="T278">Almal is 'n </event>
+         <event start="T278" end="T235">freak. </event>
+         <event start="T119" end="T120">((lag)) Okay. </event>
+         <event start="T120" end="T244">Almal van </event>
+         <event start="T244" end="T356">hulle is </event>
+         <event start="T356" end="T121">strange. </event>
+         <event start="T121" end="T245">Sien net mense met fokken hare</event>
+         <event start="T245" end="T246">• </event>
+         <event start="T246" end="T248">en tattooes. </event>
+         <event start="T247" end="T277"> • • • They're all </event>
+         <event start="T277" end="T122">mal. </event>
+         <event start="T122" end="T249">• • • Ja. </event>
+         <event start="T124" end="T126">Ja, ja, ja. </event>
+         <event start="T126" end="T276">• • • Dis wat ek/ erm/ wat ek hoe van </event>
+         <event start="T276" end="T114">Spain.  </event>
+         <event start="T114" end="T250">is </event>
+         <event start="T250" end="T343">alles</event>
+         <event start="T343" end="T116"> is net, </event>
+         <event start="T116" end="T251">• • fuck, it's </event>
+         <event start="T251" end="T117">summer. </event>
+         <event start="T117" end="T253">• • ((lag)) </event>
+         <event start="T252" end="T254">Somer die hele,</event>
+         <event start="T254" end="T344"> hele jaare. </event>
+         <event start="T127" end="T255">Mmh,</event>
+         <event start="T255" end="T256">• • </event>
+         <event start="T256" end="T125">ek was nog nie daar nie, maar ek wil/ wil nog gaan. </event>
+         <event start="T125" end="T257">• • En </event>
+         <event start="T257" end="T345">Greece. </event>
+         <event start="T128" end="T129">• Florence? </event>
+         <event start="T129" end="T258">Okay. </event>
+         <event start="T130" end="T346">'N maand en </event>
+         <event start="T346" end="T259">'n… </event>
+         <event start="T355" end="T262">Fuck, </event>
+         <event start="T262" end="T168">ek kan so (dink). </event>
+         <event start="T263" end="T132">Ok cool. </event>
+         <event start="T132" end="T347">Dis/ a/ </event>
+         <event start="T347" end="T134">dis mos ook op die/ op die Euro? </event>
+         <event start="T264" end="T265">• Dis ook op die</event>
+         <event start="T265" end="T135"> Euro? </event>
+         <event start="T135" end="T353">• • Ja, maar ek dink, erm, </event>
+         <event start="T353" end="T354">Greece </event>
+         <event start="T354" end="T136">is nou die een wat so/</event>
+         <event start="T136" end="T266">• • Le/ Hulle kak </event>
+         <event start="T266" end="T267">af, hulle kak af nou.</event>
+         <event start="T138" end="T348">((lag)) </event>
+         <event start="T348" end="T268">Ja.</event>
+         <event start="T137" end="T269">It's like, o god, here / there's </event>
+         <event start="T269" end="T270">die ((onverstaanbaar)) </event>
+         <event start="T270" end="T271">mense,</event>
+         <event start="T271" end="T349"> • yeah. </event>
+         <event start="T349" end="T139">((lag)) </event>
+         <event start="T139" end="T133">• • • Maar,eh, • is ook, eh, • die mense wat • • • y/• • </event>
+         <event start="T133" end="T272">keeping it alive. </event>
+         <event start="T141" end="T1">• • • Okay. </event>
+      </tier>
+      <tier id="TIE3" speaker="SPK0" category="en" type="a" display-name="RS [en]" >
+         <event start="T142" end="T3">Are you afraid of Afrikaans now? </event>
+         <event start="T99" end="T5">(Listen, a little Afrikaans) ((incomprehensible)) </event>
+         <event start="T5" end="T6">So, what I can ask is, </event>
+         <event start="T6" end="T7">• • when are you going back to Namibia? </event>
+         <event start="T7" end="T184">• • • </event>
+         <event start="T184" end="T144">Are you going in December? </event>
+         <event start="T10" end="T148">• • • Ha, a little vacation, eigh</event>
+         <event start="T148" end="T12">teenth of December.</event>
+         <event start="T12" end="T149">So, spending Christmas with the family and? </event>
+         <event start="T18" end="T154">• Oh nice, are </event>
+         <event start="T154" end="T223">you driving to Cape Town? </event>
+         <event start="T143" end="T19">• It's your </event>
+         <event start="T19" end="T22">second home. </event>
+         <event start="T155" end="T182">Second home. </event>
+         <event start="T24" end="T25">See everyone, so you can see Ara, </event>
+         <event start="T25" end="T26">and Louis. </event>
+         <event start="T227" end="T231">Ara, I'm so fond of Ara. </event>
+         <event start="T231" end="T29">He/ </event>
+         <event start="T29" end="T233">• </event>
+         <event start="T233" end="T30">Because he is… </event>
+         <event start="T30" end="T156">Ara is, um, the/ </event>
+         <event start="T156" end="T157">the dude that </event>
+         <event start="T157" end="T31">• ban/ banjo player </event>
+         <event start="T31" end="T34">• • from/ from Crimson House Blues. ((incomprehensible))  </event>
+         <event start="T34" end="T158">Oh, Ara. </event>
+         <event start="T37" end="T160">Yes, that little hobb</event>
+         <event start="T160" end="T39">it. </event>
+         <event start="T39" end="T161">• • He's always so fucking rididculous, he is. </event>
+         <event start="T41" end="T42">He only wants to party and drink. </event>
+         <event start="T42" end="T162">And when he starts, he can'</event>
+         <event start="T162" end="T43">t/ </event>
+         <event start="T43" end="T296">you can't </event>
+         <event start="T296" end="T46">him, • • • Jesus. </event>
+         <event start="T46" end="T238">((incomprehensible)) </event>
+         <event start="T48" end="T299">• • I'm </event>
+         <event start="T299" end="T151">so fond of Ara. </event>
+         <event start="T163" end="T53">((laughs)) </event>
+         <event start="T301" end="T54">((laughs)) </event>
+         <event start="T54" end="T261">Yeah, that's true. </event>
+         <event start="T261" end="T302">He hugs/ he hugs you like </event>
+         <event start="T302" end="T56">((incromprehensible)) </event>
+         <event start="T56" end="T303">all those… </event>
+         <event start="T55" end="T304">• • Such a </event>
+         <event start="T304" end="T57">great guy. </event>
+         <event start="T57" end="T305">• And when he </event>
+         <event start="T305" end="T58">drinks, every/ ev/ • everybody loves Ara. </event>
+         <event start="T58" end="T59">((incomprehensible)) </event>
+         <event start="T59" end="T61">((incomprehensible)) </event>
+         <event start="T61" end="T62">• • • He's that kind of guy. </event>
+         <event start="T62" end="T63">• • • Hy v/ plays the shit out of a banjo, ne. </event>
+         <event start="T165" end="T166">DeDenge Dele</event>
+         <event start="T166" end="T167"> LengDeng Deledelelde Leng. </event>
+         <event start="T167" end="T67">You haven't seen the band live yet? </event>
+         <event start="T67" end="T68">• • I've…</event>
+         <event start="T68" end="T170">• You've </event>
+         <event start="T170" end="T171">already </event>
+         <event start="T171" end="T70">seen us? </event>
+         <event start="T66" end="T306">At the white… </event>
+         <event start="T79" end="T307">Oh, </event>
+         <event start="T307" end="T173">that fucking small… </event>
+         <event start="T81" end="T82">• Oh yeah, yeah. </event>
+         <event start="T82" end="T174">• • • Can you… </event>
+         <event start="T174" end="T83">that was like twenty/ </event>
+         <event start="T83" end="T175">like twenty ten? </event>
+         <event start="T85" end="T176">Last year? </event>
+         <event start="T87" end="T88">Okay, • fuck it. </event>
+         <event start="T88" end="T177">• • • Yes, but beginning </event>
+         <event start="T177" end="T90">of the year. </event>
+         <event start="T90" end="T179">• • Mmh. </event>
+         <event start="T180" end="T181">• • And yes, she also started/ did seven months of Europe </event>
+         <event start="T181" end="T310">and she did </event>
+         <event start="T310" end="T311">Afrika. </event>
+         <event start="T95" end="T97">• • Ye/ha. </event>
+         <event start="T97" end="T183">• • She is so thin now, • fuck, she is s/ • • fucking </event>
+         <event start="T183" end="T313">skin</event>
+         <event start="T313" end="T314">ny, she is so skinny. </event>
+         <event start="T98" end="T100">• • Ah, she looks good. </event>
+         <event start="T100" end="T101">Eh, you/ eh • do you remember Joe? </event>
+         <event start="T101" end="T185">Joe? </event>
+         <event start="T102" end="T186">• • Yes, she/ they are now </event>
+         <event start="T186" end="T103">((incomprehensible)) </event>
+         <event start="T103" end="T187">They live </event>
+         <event start="T187" end="T315">together. </event>
+         <event start="T104" end="T316">Yeah. </event>
+         <event start="T106" end="T188">Exactly, </event>
+         <event start="T188" end="T318">and now </event>
+         <event start="T318" end="T190">they're together and it's </event>
+         <event start="T190" end="T319">so… </event>
+         <event start="T107" end="T92">Yeah, it's great. </event>
+         <event start="T92" end="T108">Yeah, it's so nice. </event>
+         <event start="T108" end="T153">• • It is. </event>
+         <event start="T153" end="T109">• • Ey, she's writing for the/ um, as a journalist now. </event>
+         <event start="T320" end="T192">And she </event>
+         <event start="T192" end="T110">takes the/ </event>
+         <event start="T110" end="T193">• • and she takes the fotos, </event>
+         <event start="T193" end="T321">so. </event>
+         <event start="T194" end="T323">Yes, yes ((incomprehensible)) </event>
+         <event start="T323" end="T324">City </event>
+         <event start="T324" end="T195">Varsi</event>
+         <event start="T195" end="T111">ty to. </event>
+         <event start="T111" end="T322">Okay. </event>
+         <event start="T0" end="T196">((1,0s)) You two are, what, two or three years apart? </event>
+         <event start="T9" end="T8">• • Two? </event>
+         <event start="T8" end="T11">• Okay. </event>
+         <event start="T13" end="T15">You/ you/ do you think that</event>
+         <event start="T15" end="T292">• • Deutschland/ </event>
+         <event start="T292" end="T14">• do you think it's better here when you l/ • • (learned) here? </event>
+         <event start="T16" end="T197">• • • Yes that is</event>
+         <event start="T197" end="T325">the same… </event>
+         <event start="T17" end="T198">No, it's true. </event>
+         <event start="T20" end="T199">Yes, a bit of the/ • of the • • theory. </event>
+         <event start="T21" end="T23">((laughs)) </event>
+         <event start="T23" end="T2">But it's great ((incomprehensible)).</event>
+         <event start="T2" end="T201">You're working here and taking great fotos. </event>
+         <event start="T27" end="T367">• • We/ we find </event>
+         <event start="T367" end="T366">connections </event>
+         <event start="T366" end="T202">in </event>
+         <event start="T202" end="T287">all </event>
+         <event start="T287" end="T203">((incomprehensible)). </event>
+         <event start="T28" end="T326">Seen all of those </event>
+         <event start="T326" end="T204">places. </event>
+         <event start="T32" end="T205">• • ((incomprehensible)) </event>
+         <event start="T33" end="T327">A place to/ </event>
+         <event start="T327" end="T206">• • a place to stay, yes. </event>
+         <event start="T35" end="T207">• • That's the way it is in Hamburg now, you've got a place to stay </event>
+         <event start="T207" end="T328">here with</event>
+         <event start="T328" end="T36"> Tara. </event>
+         <event start="T36" end="T330">((laughs)) </event>
+         <event start="T330" end="T38">• • • No, it's great. </event>
+         <event start="T38" end="T362">• • • And how long are you staying in </event>
+         <event start="T362" end="T363">Munich, </event>
+         <event start="T363" end="T209">it's </event>
+         <event start="T209" end="T331">• </event>
+         <event start="T331" end="T210">like a year now, right? </event>
+         <event start="T40" end="T211">Almost a year? </event>
+         <event start="T44" end="T45">• • • Wow, and you are at home, you feel like it's your new home, or </event>
+         <event start="T45" end="T47">not yet?</event>
+         <event start="T47" end="T212">Almost? </event>
+         <event start="T49" end="T214">Okay. </event>
+         <event start="T50" end="T218">• • Your place, your home, </event>
+         <event start="T218" end="T217">yeah. </event>
+         <event start="T52" end="T60">Haven't found it yet, yeah. </event>
+         <event start="T60" end="T219">Do you think you'll, ah, go back • to • Namibia • one day? </event>
+         <event start="T64" end="T220">• • No? </event>
+         <event start="T220" end="T221">It's not/ it's not </event>
+         <event start="T221" end="T332">your place?</event>
+         <event start="T65" end="T224">• • Yes, when you </event>
+         <event start="T224" end="T333">have a few. </event>
+         <event start="T69" end="T226">Yeah, that's what I'm saying, </event>
+         <event start="T226" end="T225">like S/ Swakopmund when you're sixty, sit around, do </event>
+         <event start="T225" end="T229">nothing. </event>
+         <event start="T334" end="T335">Yes. </event>
+         <event start="T72" end="T336">((laughs))</event>
+         <event start="T336" end="T337">• • ((laughs)) </event>
+         <event start="T73" end="T230">Ah, I think I'll go there one day. </event>
+         <event start="T74" end="T232">But fucking later, </event>
+         <event start="T232" end="T338">there are </event>
+         <event start="T338" end="T234">better things now. </event>
+         <event start="T75" end="T236">• Mmh.</event>
+         <event start="T77" end="T339">And then do it. </event>
+         <event start="T239" end="T240">• • Yes, when you/ when you're • done / </event>
+         <event start="T240" end="T164">• • </event>
+         <event start="T164" end="T178">when you're done. </event>
+         <event start="T80" end="T242">• • Ah, you can… </event>
+         <event start="T84" end="T282">Maybe </event>
+         <event start="T282" end="T243">Sweden? </event>
+         <event start="T243" end="T281">Ha, really, really… </event>
+         <event start="T86" end="T340">Yes? </event>
+         <event start="T78" end="T146">• • Those </event>
+         <event start="T146" end="T89">people are crazy. </event>
+         <event start="T89" end="T91">((laughs)) </event>
+         <event start="T91" end="T147">They listen to good music • and… </event>
+         <event start="T93" end="T341">• • Yes. </event>
+         <event start="T94" end="T360">Yes? </event>
+         <event start="T96" end="T191">Hmm, Rock 'n Roll with three years. </event>
+         <event start="T208" end="T222">Yeah, what's with her? </event>
+         <event start="T112" end="T279">Yeah, what's fuckt </event>
+         <event start="T279" end="T228">with your head, look </event>
+         <event start="T228" end="T113">how you look. </event>
+         <event start="T113" end="T118">But that's the way it is in Berlin. </event>
+         <event start="T118" end="T278">Everybody's a </event>
+         <event start="T278" end="T235">freak. </event>
+         <event start="T119" end="T120">((laughs)) Okay. </event>
+         <event start="T120" end="T244">All of </event>
+         <event start="T244" end="T356">them are </event>
+         <event start="T356" end="T121">strange. </event>
+         <event start="T121" end="T245">You only see people with fucking hair </event>
+         <event start="T245" end="T246">• </event>
+         <event start="T246" end="T248">and tattooes. </event>
+         <event start="T247" end="T277">• • • They're all </event>
+         <event start="T277" end="T122">crazy. </event>
+         <event start="T122" end="T249">• • • Yes. </event>
+         <event start="T124" end="T126">Yes, yes, yes. </event>
+         <event start="T126" end="T276">• • • That's what I/ um/ what I like about </event>
+         <event start="T276" end="T114">Spain </event>
+         <event start="T114" end="T250">is </event>
+         <event start="T250" end="T343">everything</event>
+         <event start="T343" end="T116"> is just, </event>
+         <event start="T116" end="T251">• • fuck, it's </event>
+         <event start="T251" end="T117">summer. </event>
+         <event start="T117" end="T253">((laughs))</event>
+         <event start="T252" end="T254">Summer the entire, </event>
+         <event start="T254" end="T344">entire year. </event>
+         <event start="T127" end="T255">Mmh,</event>
+         <event start="T255" end="T256">• • </event>
+         <event start="T256" end="T125">I haven't been there yet, but I still wan/ want to go. </event>
+         <event start="T125" end="T257">• • </event>
+         <event start="T257" end="T345">Greece. </event>
+         <event start="T128" end="T129">• Florence? </event>
+         <event start="T129" end="T258">Okay. </event>
+         <event start="T130" end="T346">A month and </event>
+         <event start="T346" end="T259">a… </event>
+         <event start="T355" end="T262">Fuck,</event>
+         <event start="T262" end="T168">I can (imagine).</event>
+         <event start="T263" end="T132">Ok cool. </event>
+         <event start="T132" end="T347">It/ a / </event>
+         <event start="T347" end="T134">it's also on the Euro, right? </event>
+         <event start="T264" end="T265">• They also have the </event>
+         <event start="T265" end="T135"> Euro? </event>
+         <event start="T135" end="T353">• • Yes, but I though, um, </event>
+         <event start="T353" end="T354">Greece </event>
+         <event start="T354" end="T136">are the one's now that are so/ </event>
+         <event start="T136" end="T266">• • le/ they are in the shit, </event>
+         <event start="T266" end="T267">they're in the shit now. </event>
+         <event start="T138" end="T348">((laughs)) </event>
+         <event start="T348" end="T268">Yes. </event>
+         <event start="T137" end="T269">It's like, o god, here / there's</event>
+         <event start="T269" end="T270">the ((incomprehensible)) </event>
+         <event start="T270" end="T271">people, </event>
+         <event start="T271" end="T349">• yeah. </event>
+         <event start="T349" end="T139">((laughs))</event>
+         <event start="T139" end="T133">• • • But, eh • it's also, eh, • the people that • • • y/ • • </event>
+         <event start="T133" end="T272">keeping it alive. </event>
+         <event start="T141" end="T1">• • • Okay. </event>
+      </tier>
+      <tier id="TIE4" speaker="SPK0" category="de" type="a" display-name="RS [de]" >
+         <event start="T142" end="T3">Hast du jetzt Angst vor dem Afrikaans? </event>
+         <event start="T99" end="T5">(Hör mal, bisschen Afrikaans) ((unverständlich)) </event>
+         <event start="T5" end="T6">Also, was ich fragen kann ist, </event>
+         <event start="T6" end="T7">• • wann gehst du wieder zurück nach Namibia? </event>
+         <event start="T7" end="T184">• • • </event>
+         <event start="T184" end="T144">Gehst du im Dezember? </event>
+         <event start="T10" end="T148">• • • Ha, ein bisschen Urlaub, acht</event>
+         <event start="T148" end="T12">zenter Dezember. </event>
+         <event start="T12" end="T149">Also, Weihnachten mit der Familie verbringen und? </event>
+         <event start="T18" end="T154">• Oh schön, fährst </event>
+         <event start="T154" end="T223">du nach Kapstadt? </event>
+         <event start="T143" end="T19">• Ist dein </event>
+         <event start="T19" end="T22">zweites zu Hause. </event>
+         <event start="T155" end="T182">Zweites zu Hause.  </event>
+         <event start="T24" end="T25">Alle sehen, also kannst du Ara sehen, </event>
+         <event start="T25" end="T26">und Louis sehen. </event>
+         <event start="T227" end="T231">Ara, ich habe Ara so gern. </event>
+         <event start="T231" end="T29">Er/ </event>
+         <event start="T29" end="T233">• </event>
+         <event start="T233" end="T30">Weil, er ist… </event>
+         <event start="T30" end="T156">Ara ist, um, der/ </event>
+         <event start="T156" end="T157">der Typ, der </event>
+         <event start="T157" end="T31">• Ban/ Banjo Spieler</event>
+         <event start="T31" end="T34">• • von/ von Crimson House Blues. ((unverständlich)) </event>
+         <event start="T34" end="T158">Oh, Ara. </event>
+         <event start="T37" end="T160">Ja, dieser kleine hobb</event>
+         <event start="T160" end="T39">it. </event>
+         <event start="T39" end="T161">• • Er ist immer so verdammt lächerlich, das ist er. </event>
+         <event start="T41" end="T42">Er will nur Feiern und Trinken. </event>
+         <event start="T42" end="T162">Und wenn er anfängt, kann er </event>
+         <event start="T162" end="T43">nicht/ </event>
+         <event start="T43" end="T296">du kannst ihn </event>
+         <event start="T296" end="T46">nicht • • • Jesus</event>
+         <event start="T46" end="T238">((unverständlich)) </event>
+         <event start="T48" end="T299">• • Ich habe </event>
+         <event start="T299" end="T151">Ara so lieb. </event>
+         <event start="T163" end="T53">((lacht)) </event>
+         <event start="T301" end="T54">((lacht)) </event>
+         <event start="T54" end="T261">Ja, das ist wahr. </event>
+         <event start="T261" end="T302">Er umarmt/ er umarmt dich als ob </event>
+         <event start="T302" end="T56">((unverständlich)) </event>
+         <event start="T56" end="T303">alle diese… </event>
+         <event start="T55" end="T304">• • So ein </event>
+         <event start="T304" end="T57">toller Typ. </event>
+         <event start="T57" end="T305">• Und wenn er </event>
+         <event start="T305" end="T58">trinkt, hat jed/ je • jeder Ara gern. </event>
+         <event start="T58" end="T59">((unverständlich)) </event>
+         <event start="T59" end="T61">((unverständlich)) </event>
+         <event start="T61" end="T62">• • • Er ist diese Art von Typ. </event>
+         <event start="T62" end="T63">• • • Er spielt verdammt gut Banjo, ne. </event>
+         <event start="T165" end="T166">DeDenge Dele</event>
+         <event start="T166" end="T167"> LengDeng Deledelelde Leng. </event>
+         <event start="T167" end="T67">Du hast die Band noch nicht live gesehen? </event>
+         <event start="T67" end="T68">• • Ich habe… </event>
+         <event start="T68" end="T170">• Hast du uns </event>
+         <event start="T170" end="T171">schon </event>
+         <event start="T171" end="T70">gesehen? </event>
+         <event start="T66" end="T306">Bei der weißen… </event>
+         <event start="T79" end="T307">Oh, </event>
+         <event start="T307" end="T173">diese verdammt kleine… </event>
+         <event start="T81" end="T82">• Oh ja, ja. </event>
+         <event start="T82" end="T174">• • • Kannst du… </event>
+         <event start="T174" end="T83">das war doch so zweitausend/</event>
+         <event start="T83" end="T175">so zweitausendundzehn? </event>
+         <event start="T85" end="T176">Letzes Jahr? </event>
+         <event start="T87" end="T88">Okay, • verdammt. </event>
+         <event start="T88" end="T177">• • • Ja, aber zu Anfang </event>
+         <event start="T177" end="T90">des Jahres. </event>
+         <event start="T90" end="T179">• • Mmh. </event>
+         <event start="T180" end="T181">• • Und ja, sie hat jetzt auch sieben Monate Europa begonnen/ </event>
+         <event start="T181" end="T310">gemacht und </event>
+         <event start="T310" end="T311">Afrika gemacht. </event>
+         <event start="T95" end="T97">• • Ja/ha. </event>
+         <event start="T97" end="T183">• • Sie ist jetzt so dünn, verdammt, sie ist s/ • • verdammt </event>
+         <event start="T183" end="T313">ma</event>
+         <event start="T313" end="T314">ger, sie ist so mager. </event>
+         <event start="T98" end="T100">• • Ah, sie sieht gut aus. </event>
+         <event start="T100" end="T101">Äh, du/ äh • erinnerst du dich an Joe? </event>
+         <event start="T101" end="T185">An Joe? </event>
+         <event start="T102" end="T186">• • Ja, sie/ sie sind doch </event>
+         <event start="T186" end="T103">((unverständlich)) </event>
+         <event start="T103" end="T187">Sie wohnen </event>
+         <event start="T187" end="T315">zusammen. </event>
+         <event start="T104" end="T316">Ja. </event>
+         <event start="T106" end="T188">Genau, </event>
+         <event start="T188" end="T318">und jetzt </event>
+         <event start="T318" end="T190">sind sie zusammen und das ist </event>
+         <event start="T190" end="T319">so… </event>
+         <event start="T107" end="T92">Ja, es ist toll. </event>
+         <event start="T92" end="T108">Ja, das ist so schön. </event>
+         <event start="T108" end="T153">• • Ist es. </event>
+         <event start="T153" end="T109">• • Ey, sie schreibt jetzt für die/ ähm, als Journalist. </event>
+         <event start="T320" end="T192">Und sie </event>
+         <event start="T192" end="T110">nimmt die/ </event>
+         <event start="T110" end="T193">• • und sie nimmt die fotos, </event>
+         <event start="T193" end="T321">also. </event>
+         <event start="T194" end="T323">Ja, ja ((unverständlich)) </event>
+         <event start="T323" end="T324">City </event>
+         <event start="T324" end="T195">Varsi</event>
+         <event start="T195" end="T111">ty zu. </event>
+         <event start="T111" end="T322">Okay. </event>
+         <event start="T0" end="T196">((1,0s)) Ihr zwei seit, was, zwei oder drei Jahre auseinander? </event>
+         <event start="T9" end="T8">• • Zwei? </event>
+         <event start="T8" end="T11">• Okay. </event>
+         <event start="T13" end="T15">Du/ du/ denkst du, dass </event>
+         <event start="T15" end="T292">• • Deutschland/ </event>
+         <event start="T292" end="T14">• denkst du es ist besser hier als du hier (gelernt) hast? </event>
+         <event start="T16" end="T197">• • • Ja, das ist </event>
+         <event start="T197" end="T325">das Gleiche…</event>
+         <event start="T17" end="T198">Nein, das ist wahr. </event>
+         <event start="T20" end="T199">Ja, ein bisschen von der/ • von der • • Theorie. </event>
+         <event start="T21" end="T23">((lacht)) </event>
+         <event start="T23" end="T2">Aber es ist toll ((unverständlich)). </event>
+         <event start="T2" end="T201">Du arbeitest hier und machst tolle Fotos. </event>
+         <event start="T27" end="T367">• • Wi/ wir finden </event>
+         <event start="T367" end="T366">connections </event>
+         <event start="T366" end="T202">in </event>
+         <event start="T202" end="T287">allen </event>
+         <event start="T287" end="T203">((unverständlich)). </event>
+         <event start="T28" end="T326">All diese Orte </event>
+         <event start="T326" end="T204">gesehen. </event>
+         <event start="T32" end="T205">• • ((unverständlich)) </event>
+         <event start="T33" end="T327">Einen Platz zum/ </event>
+         <event start="T327" end="T206">• • einen Platz zum Übernachten, ja. </event>
+         <event start="T35" end="T207">• • So ist das nun auch in Hamburg, du hast einen Platz zum Übernachten </event>
+         <event start="T207" end="T328">hier bei</event>
+         <event start="T328" end="T36"> Tara.</event>
+         <event start="T36" end="T330">((lacht)) </event>
+         <event start="T330" end="T38">• • • Nein, es ist toll. </event>
+         <event start="T38" end="T362">• • • Und wie lange wohnst du in </event>
+         <event start="T362" end="T363">München, </event>
+         <event start="T363" end="T209">es ist </event>
+         <event start="T209" end="T331">• </event>
+         <event start="T331" end="T210">jetzt ein Jahr, oder? </event>
+         <event start="T40" end="T211">Fast ein Jahr? </event>
+         <event start="T44" end="T45">• • • Krass, und du bist zu Hause, du fühlst dich als ob es dein neues zu Hause ist, oder </event>
+         <event start="T45" end="T47">noch nicht? </event>
+         <event start="T47" end="T212">Fast? </event>
+         <event start="T49" end="T214">Okay. </event>
+         <event start="T50" end="T218">• • Deinen Ort, dein zu Hause, </event>
+         <event start="T218" end="T217">ja. </event>
+         <event start="T52" end="T60">Noch nicht gefunden, ja. </event>
+         <event start="T60" end="T219">Denkst du, dass du eines Tages, ah, zurück • nach • Namibia • gehen wirst? </event>
+         <event start="T64" end="T220">• • Nein? </event>
+         <event start="T220" end="T221">Ist es nicht/ ist es nicht </event>
+         <event start="T221" end="T332">dein Ort?</event>
+         <event start="T65" end="T224">• • Ja, wenn du so </event>
+         <event start="T224" end="T333">ein paar hast. </event>
+         <event start="T69" end="T226">Ja, so meine ich das, </event>
+         <event start="T226" end="T225">so S/ Swakopmund wenn du sechzig bist, rumsitzen, nichts </event>
+         <event start="T225" end="T229">tun. </event>
+         <event start="T334" end="T335">Ja. </event>
+         <event start="T72" end="T336">((lacht))</event>
+         <event start="T336" end="T337">• • ((lacht)) </event>
+         <event start="T73" end="T230">Ah, ich glaube ich werde da eines Tages hingehen. </event>
+         <event start="T74" end="T232">Aber verdammt nochmal später, </event>
+         <event start="T232" end="T338">jetzt gibt </event>
+         <event start="T338" end="T234">es Besseres. </event>
+         <event start="T75" end="T236">• Mmh.</event>
+         <event start="T77" end="T339">Und es dann machen. </event>
+         <event start="T239" end="T240">• • Ja, wenn du/ wenn du • fertig bist / </event>
+         <event start="T240" end="T164">• • </event>
+         <event start="T164" end="T178">fertig bist. </event>
+         <event start="T80" end="T242">• • Ah, du kannst… </event>
+         <event start="T84" end="T282">Vielleicht </event>
+         <event start="T282" end="T243">Sweden? </event>
+         <event start="T243" end="T281">Ha, wirklich, wirklich… </event>
+         <event start="T86" end="T340">Ja? </event>
+         <event start="T78" end="T146">• • Diese </event>
+         <event start="T146" end="T89">Leute sind verrückt. </event>
+         <event start="T89" end="T91">((lacht)) </event>
+         <event start="T91" end="T147">Sie hören gute Musik • und… </event>
+         <event start="T93" end="T341">• • Ja. </event>
+         <event start="T94" end="T360">Ja? </event>
+         <event start="T96" end="T191">Hmm. mit drei Jahren Rock 'n Roll. </event>
+         <event start="T208" end="T222">Ja, what's with her? </event>
+         <event start="T112" end="T279">Ja, was ist in </event>
+         <event start="T279" end="T228">deinem Kopf kaputt, guck mal </event>
+         <event start="T228" end="T113">wie du aussiehst. </event>
+         <event start="T113" end="T118">Aber so ist das auch in Berlin. </event>
+         <event start="T118" end="T278">Jeder ist ein </event>
+         <event start="T278" end="T235">freak. </event>
+         <event start="T119" end="T120">((lacht)) Okay.</event>
+         <event start="T120" end="T244">Sie sind </event>
+         <event start="T244" end="T356">alle </event>
+         <event start="T356" end="T121">komisch. </event>
+         <event start="T121" end="T245">Man siehrt nur leute mit krassen Haaren </event>
+         <event start="T245" end="T246">• </event>
+         <event start="T246" end="T248">und Tattooes. </event>
+         <event start="T247" end="T277">• • • They're all </event>
+         <event start="T277" end="T122">verrückt. </event>
+         <event start="T122" end="T249">• • • Ja. </event>
+         <event start="T124" end="T126">Ja, ja, ja. </event>
+         <event start="T126" end="T276">• • • Das ist was ich/ ähm/ was Ich an </event>
+         <event start="T276" end="T114">Spain mag </event>
+         <event start="T114" end="T250">ist</event>
+         <event start="T250" end="T343">alles</event>
+         <event start="T343" end="T116"> ist einfach </event>
+         <event start="T116" end="T251">• • fuck, it's </event>
+         <event start="T251" end="T117">summer. </event>
+         <event start="T117" end="T253">((lacht)) </event>
+         <event start="T252" end="T254">Sommer das ganze, </event>
+         <event start="T254" end="T344">ganze Jahr. </event>
+         <event start="T127" end="T255">Mmh,</event>
+         <event start="T255" end="T256">• • </event>
+         <event start="T256" end="T125">ich war noch nicht da, aber ich will/ will noch dahin gehen. </event>
+         <event start="T125" end="T257">• • Und </event>
+         <event start="T257" end="T345">Greece. </event>
+         <event start="T128" end="T129">• Florence? </event>
+         <event start="T129" end="T258">Okay. </event>
+         <event start="T130" end="T346">Einen Monat und </event>
+         <event start="T346" end="T259">e… </event>
+         <event start="T355" end="T262">Fuck,</event>
+         <event start="T262" end="T168">das kann ich mir (vorstellen). </event>
+         <event start="T263" end="T132">Ok cool. </event>
+         <event start="T132" end="T347">D/ a / </event>
+         <event start="T347" end="T134">die haben auch den Euro, oder? </event>
+         <event start="T264" end="T265">• Die haben euch den </event>
+         <event start="T265" end="T135"> Euro? </event>
+         <event start="T135" end="T353">• • Ja, aber ich dachte, ähm, </event>
+         <event start="T353" end="T354">Griechenland </event>
+         <event start="T354" end="T136">ist jetzt so/ </event>
+         <event start="T136" end="T266">• • le/ denen geht's beschissen, </event>
+         <event start="T266" end="T267">denen geht's jetzt beschissen. </event>
+         <event start="T138" end="T348">((lacht)) </event>
+         <event start="T348" end="T268">Ja. </event>
+         <event start="T137" end="T269">It's like, o god, here / there's </event>
+         <event start="T269" end="T270">die ((unverständlich)) </event>
+         <event start="T270" end="T271">Leute, </event>
+         <event start="T271" end="T349">• ja. </event>
+         <event start="T349" end="T139">((lacht)) </event>
+         <event start="T139" end="T133">• • • Aber, eh, • es sind auch, eh, • die Leute die • • • y/ • • </event>
+         <event start="T133" end="T272">keeping it alive. </event>
+         <event start="T141" end="T1">• • • Okay. </event>
+      </tier>
+      <tier id="TIE9" speaker="SPK0" category="cs" type="a" display-name="RS [cs]" >
+         <event start="T372" end="T373">eng </event>
+         <event start="T30" end="T156">eng </event>
+         <event start="T156" end="T157">eng </event>
+         <event start="T87" end="T88">eng </event>
+         <event start="T15" end="T292">deu </event>
+         <event start="T367" end="T366">eng </event>
+         <event start="T362" end="T363">eng </event>
+         <event start="T282" end="T243">eng </event>
+         <event start="T208" end="T222">eng </event>
+         <event start="T112" end="T279">eng </event>
+         <event start="T278" end="T235">eng </event>
+         <event start="T356" end="T121">eng </event>
+         <event start="T247" end="T277">eng </event>
+         <event start="T276" end="T114">eng </event>
+         <event start="T116" end="T251">eng </event>
+         <event start="T251" end="T117">eng </event>
+         <event start="T257" end="T345">eng </event>
+         <event start="T355" end="T262">eng </event>
+         <event start="T353" end="T354">eng </event>
+         <event start="T137" end="T269">eng </event>
+         <event start="T133" end="T272">eng </event>
+      </tier>
+      <tier id="TIE1" speaker="SPK1" category="v" type="t" display-name="AS [v]" >
+         <event start="T140" end="T4">• • Ek is nou bang. </event>
+         <event start="T4" end="T99">((lag)) </event>
+         <event start="T7" end="T184">• • • Er</event>
+         <event start="T184" end="T144">m, </event>
+         <event start="T144" end="T145"> • eers Desember. </event>
+         <event start="T145" end="T10">Eerm, agtiende Desember. </event>
+         <event start="T148" end="T12">Ja! </event>
+         <event start="T149" end="T150">• Ja, • • net/ net met my Pa. </event>
+         <event start="T150" end="T152">• • Erm,• erm. </event>
+         <event start="T152" end="T115">((1,6s)) </event>
+         <event start="T115" end="T18">Ek sal twee weke Namibië doen en dan • twee weke Suid-Afrika.</event>
+         <event start="T154" end="T223">Want/ •want, </event>
+         <event start="T223" end="T143">ja, want Kaapstad is nou my </event>
+         <event start="T143" end="T19">((0,4s))</event>
+         <event start="T19" end="T22">tweede/ </event>
+         <event start="T22" end="T155">tweede huis s/ </event>
+         <event start="T155" end="T182">so </event>
+         <event start="T182" end="T293">is, ek moet daar gaan. </event>
+         <event start="T293" end="T24">((lag))  </event>
+         <event start="T25" end="T26">Ja! Oh! Ara! </event>
+         <event start="T26" end="T227">((lag)) </event>
+         <event start="T231" end="T29">• • Oh. </event>
+         <event start="T156" end="T157">Arno. </event>
+         <event start="T158" end="T294">• Die klein man. </event>
+         <event start="T294" end="T159">((lag)) </event>
+         <event start="T159" end="T295">Hobbit. </event>
+         <event start="T295" end="T37">((lag))  </event>
+         <event start="T160" end="T39">Ja.</event>
+         <event start="T161" end="T41">• Ja. </event>
+         <event start="T162" end="T43">Ja! </event>
+         <event start="T43" end="T296">No. </event>
+         <event start="T46" end="T238">• • Want, hy is so </event>
+         <event start="T238" end="T371">cute, </event>
+         <event start="T371" end="T298">want • • as hy/ as hy dronk is, dan is hy so •  lieflek en hy: "Ah, ek is lief vir </event>
+         <event start="T298" end="T297">jou!". </event>
+         <event start="T297" end="T48">I'm like: "Ah!" </event>
+         <event start="T299" end="T151">En hy is so </event>
+         <event start="T151" end="T370">kort as hy nou • vir my hug, dann is sy kop hierso en </event>
+         <event start="T370" end="T163">like: </event>
+         <event start="T163" end="T300">"Ahh." </event>
+         <event start="T300" end="T53">• ((lag))</event>
+         <event start="T53" end="T51">"Jy gee die beste hug</event>
+         <event start="T51" end="T301">s!" </event>
+         <event start="T301" end="T302">((lag)) </event>
+         <event start="T302" end="T56">Ja. </event>
+         <event start="T56" end="T304">((lag)) </event>
+         <event start="T57" end="T305">((lag)) </event>
+         <event start="T58" end="T59">Ja. </event>
+         <event start="T59" end="T61">Ja, • ja, hy is. </event>
+         <event start="T63" end="T165">• Ja. </event>
+         <event start="T166" end="T167">Ding Dili Ling Dililing. </event>
+         <event start="T67" end="T68">• • Ek het! </event>
+         <event start="T170" end="T171">Ja. </event>
+         <event start="T70" end="T66">Erm, </event>
+         <event start="T66" end="T306">• by/ </event>
+         <event start="T306" end="T172">by, erm,• •  Barn/ die Barn? </event>
+         <event start="T172" end="T79"> Da bui/ • • buite,• erm • • tussen Stellenbosch, dié, </event>
+         <event start="T79" end="T307">dié… </event>
+         <event start="T173" end="T81">Da het jy mos dié/ • dié kompetisie gehou.</event>
+         <event start="T174" end="T83">Dié/ dié Blues kompetisie.  </event>
+         <event start="T175" end="T309">• • • No! </event>
+         <event start="T309" end="T308">Nie, nie, nie. </event>
+         <event start="T308" end="T85">• • Was laa/ laaste jaar? </event>
+         <event start="T85" end="T176">Laaste jaar? </event>
+         <event start="T176" end="T87">• Ja. </event>
+         <event start="T177" end="T90">Dominique was still there. </event>
+         <event start="T179" end="T180">Ja. </event>
+         <event start="T181" end="T310">Ja, ja, ja. </event>
+         <event start="T310" end="T311">Sy het mos </event>
+         <event start="T311" end="T312">afgestap en… </event>
+         <event start="T312" end="T95">((lag)) </event>
+         <event start="T313" end="T314">Ek het haar nog ni/nog net/ nog nie </event>
+         <event start="T314" end="T98">gesien nie.</event>
+         <event start="T185" end="T102">Ja,• ja!</event>
+         <event start="T186" end="T103">Is hulle nog/ </event>
+         <event start="T103" end="T187">nog steeds? </event>
+         <event start="T187" end="T315">Want/ want </event>
+         <event start="T315" end="T104">hulle was mos so:  </event>
+         <event start="T104" end="T368">"Oah </event>
+         <event start="T368" end="T369">shit, </event>
+         <event start="T369" end="T316">• nou/ </event>
+         <event start="T316" end="T317">nou gaan sy, nou, • ek is entlik lief vir har, • maar…"  </event>
+         <event start="T317" end="T188">((lag)) </event>
+         <event start="T188" end="T318">Ja.</event>
+         <event start="T190" end="T319">Oah, </event>
+         <event start="T319" end="T107">des mo</event>
+         <event start="T107" end="T92">oi.  </event>
+         <event start="T92" end="T108">Ja, dis mooi. </event>
+         <event start="T109" end="T320">• • O</event>
+         <event start="T320" end="T192">ah!</event>
+         <event start="T193" end="T321">Ja, </event>
+         <event start="T321" end="T194">maar • e/ek/ ek was mos me/ dieselfde klas mit haar.  </event>
+         <event start="T323" end="T324">Ja. </event>
+         <event start="T195" end="T111">Ja. </event>
+         <event start="T322" end="T0">Ja. </event>
+         <event start="T196" end="T9">• • • Twee. </event>
+         <event start="T8" end="T11">Mhm. </event>
+         <event start="T14" end="T16">• • • Ermmmm, • • nie, • • want die swatting het entlig niks gedoen nie. </event>
+         <event start="T197" end="T325">Dis net </event>
+         <event start="T325" end="T17">experience and </event>
+         <event start="T17" end="T198">jy moet… </event>
+         <event start="T198" end="T290">• • • Net so bietjie, mi/ miskien, die </event>
+         <event start="T290" end="T291">theory </event>
+         <event start="T291" end="T20">en dié goed, maar… ((lag))  </event>
+         <event start="T199" end="T21">Ja, teorie. </event>
+         <event start="T21" end="T23">((lag))</event>
+         <event start="T201" end="T27">Ja. </event>
+         <event start="T202" end="T287">Ja, baie, baie </event>
+         <event start="T287" end="T203">connections. </event>
+         <event start="T203" end="T288">Ek/ ek het nou </event>
+         <event start="T288" end="T289">• Sweden and erm • Switzerland and </event>
+         <event start="T289" end="T28">• • ja,  England en all dié p/ all dié p/ erm </event>
+         <event start="T28" end="T326">• • </event>
+         <event start="T326" end="T204">pleke. </event>
+         <event start="T204" end="T32">Ja. </event>
+         <event start="T205" end="T285">• As/ as ek nou </event>
+         <event start="T285" end="T286">Sweden </event>
+         <event start="T286" end="T365">toe gaan, dan wiet ek: "Ah, ek het a </event>
+         <event start="T365" end="T364">place </event>
+         <event start="T364" end="T33">s/ om te </event>
+         <event start="T33" end="T327">te bly, ja."</event>
+         <event start="T206" end="T35">Ja. </event>
+         <event start="T207" end="T328">Ja, ja! </event>
+         <event start="T328" end="T330">((lag))</event>
+         <event start="T209" end="T331">Ja. </event>
+         <event start="T210" end="T40">• • • Ampa 'n jaar. </event>
+         <event start="T40" end="T211">Is nou a/ </event>
+         <event start="T211" end="T44">erm • agt maande. </event>
+         <event start="T45" end="T47">Prrrrfff. </event>
+         <event start="T47" end="T212">Nie, nog</event>
+         <event start="T212" end="T213">nie so baie. </event>
+         <event start="T213" end="T342">• • Ek sal daar nou vir • • die/ is nog • drie jaare wat ek moet da bly,• • </event>
+         <event start="T342" end="T49">my contract • </event>
+         <event start="T49" end="T214">• • </event>
+         <event start="T214" end="T215">gaan so lang. </event>
+         <event start="T215" end="T216">Maar, ek wiet nog nie. </event>
+         <event start="T216" end="T50">• •Ja, • •ek het nog nie my/ • my • • eintlike… </event>
+         <event start="T218" end="T217">Ja.</event>
+         <event start="T217" end="T52">Ek weet  </event>
+         <event start="T52" end="T60">nog nie waar dit is nie. ((lag))</event>
+         <event start="T219" end="T64">• •  Nie. </event>
+         <event start="T220" end="T221">Nie om te bly nie. </event>
+         <event start="T221" end="T332">• • M/ Miskin </event>
+         <event start="T332" end="T65">as ek nou </event>
+         <event start="T65" end="T224">• • • </event>
+         <event start="T224" end="T333">sestig is </event>
+         <event start="T333" end="T69">of iets.</event>
+         <event start="T69" end="T226"> ((lag)) </event>
+         <event start="T225" end="T229">Ja, </event>
+         <event start="T229" end="T71">• ja, • ja.</event>
+         <event start="T71" end="T334">Ek sit </event>
+         <event start="T334" end="T335"> dan </event>
+         <event start="T335" end="T72">op my pa se </event>
+         <event start="T72" end="T336">plaas, like: </event>
+         <event start="T336" end="T337">• • "Ahhh, </event>
+         <event start="T337" end="T73">des mooi." • • ((lag))</event>
+         <event start="T230" end="T74">Ja. </event>
+         <event start="T232" end="T338">Ja. </event>
+         <event start="T234" end="T75">Ja, ek wil/ ek wil baie • van die wêreld gaan sien. </event>
+         <event start="T236" end="T237">• • Baie, baie. </event>
+         <event start="T237" end="T76">• • • Maar ek moet eers die geld hê. </event>
+         <event start="T77" end="T339">Maar as ek/as ek </event>
+         <event start="T339" end="T284">• vinnig/ e/erm vinnig • • • erm • •  waat is dy woord </event>
+         <event start="T284" end="T239">• • finished? </event>
+         <event start="T240" end="T164">Klaar is, ja.</event>
+         <event start="T164" end="T178"> ((lag)) </event>
+         <event start="T178" end="T241">As ek nou klaar ist met/ met/ met</event>
+         <event start="T241" end="T80">• • • hierdie plek, daan, ek wiet nog nie. </event>
+         <event start="T242" end="T283">Misken </event>
+         <event start="T283" end="T84">Sweden. </event>
+         <event start="T84" end="T282">Ek/ ek </event>
+         <event start="T282" end="T243">• </event>
+         <event start="T243" end="T281">hoe baie van </event>
+         <event start="T281" end="T86">Sweden. </event>
+         <event start="T86" end="T340">Dié/ </event>
+         <event start="T340" end="T78">dié mense is </event>
+         <event start="T78" end="T146">• • </event>
+         <event start="T146" end="T89">fucking awesome. </event>
+         <event start="T89" end="T91">((lag)) </event>
+         <event start="T147" end="T93">Ja. </event>
+         <event start="T93" end="T341">• • En hulle is </event>
+         <event start="T341" end="T169">alle / • almal is Rock 'n Roll. </event>
+         <event start="T169" end="T94">Da is klein/ klein • meisies, hulle sit oop die skouer met/ met spikes en</event>
+         <event start="T94" end="T360">hulle </event>
+         <event start="T360" end="T361">is like. </event>
+         <event start="T361" end="T189">((maak iets)) </event>
+         <event start="T189" end="T96">En hy is drie jaar oud of iets. </event>
+         <event start="T96" end="T191">((lag)) And he's like: "Weeeh!" ((lag)) </event>
+         <event start="T191" end="T280">• • But it's / it's/ it's • • it's </event>
+         <event start="T280" end="T358">baie/ </event>
+         <event start="T358" end="T359">it's </event>
+         <event start="T359" end="T200">baie, baie cool. </event>
+         <event start="T200" end="T105">En • niemand kyk vir jou en like: "Uhh, • • wat is/ wat is det? </event>
+         <event start="T105" end="T208">• Wat/ wa/ wat</event>
+         <event start="T208" end="T222"> • wat dra </event>
+         <event start="T222" end="T112">sy?" en: "Uaaaa, </event>
+         <event start="T112" end="T357">slut." </event>
+         <event start="T357" end="T279"> of iets. </event>
+         <event start="T228" end="T113">Ja, ja. </event>
+         <event start="T113" end="T118">I was like. </event>
+         <event start="T235" end="T119">• Ja. </event>
+         <event start="T119" end="T120">((lag))</event>
+         <event start="T244" end="T121">((lag))</event>
+         <event start="T245" end="T246">Ja. </event>
+         <event start="T248" end="T247">Ja. </event>
+         <event start="T122" end="T249">• • • Dis,</event>
+         <event start="T249" end="T123">baie cool, maar die/ die weer is nie so baie cool nie,  </event>
+         <event start="T123" end="T124">((1,1s)) </event>
+         <event start="T124" end="T126">tee koud. </event>
+         <event start="T250" end="T343">Ja. </event>
+         <event start="T251" end="T117">Perfect. </event>
+         <event start="T253" end="T252">Ja. ((lag))</event>
+         <event start="T254" end="T344">Of I/ I </event>
+         <event start="T344" end="T131">hm • • • </event>
+         <event start="T131" end="T275">Italia/ </event>
+         <event start="T275" end="T127">• Italy? </event>
+         <event start="T255" end="T256">Ja. </event>
+         <event start="T257" end="T345">Ja, jy moet </event>
+         <event start="T345" end="T128">Florence toe gaan. </event>
+         <event start="T128" end="T129">• Ek / jaa</event>
+         <event start="T129" end="T258">a!</event>
+         <event start="T258" end="T274">• Ek/ ek was mos daar •• 'n maand/ m / m / </event>
+         <event start="T274" end="T130">month </event>
+         <event start="T130" end="T346">• </event>
+         <event start="T346" end="T259">terug. </event>
+         <event start="T259" end="T260">((1,0s)) </event>
+         <event start="T260" end="T355">Erm, • det was so mooi. • • </event>
+         <event start="T262" end="T168">Ek het ook </event>
+         <event start="T168" end="T273">street musicians </event>
+         <event start="T273" end="T263">gaan kyk en • • • erm • • ek wiet nou ook mense in Florence, so ek wiet ek </event>
+         <event start="T263" end="T132">kan ook da </event>
+         <event start="T132" end="T347">so gaan. </event>
+         <event start="T134" end="T264">Mh?</event>
+         <event start="T265" end="T135">Ja. </event>
+         <event start="T266" end="T351">Ja, dis </event>
+         <event start="T351" end="T352">Greece, </event>
+         <event start="T352" end="T267">ja, jy/ jy </event>
+         <event start="T267" end="T329">kan nie/ a/as jy duits is jy kan nie </event>
+         <event start="T329" end="T350">Greece </event>
+         <event start="T350" end="T138">to gaan nie.</event>
+         <event start="T138" end="T268">((lag)) </event>
+         <event start="T268" end="T137">Hulle sal vir jou vloek. </event>
+         <event start="T269" end="T270">Ja. </event>
+         <event start="T271" end="T349">Ja. </event>
+         <event start="T272" end="T141">Ja, ja. </event>
+      </tier>
+      <tier id="TIE5" speaker="SPK1" category="en" type="a" display-name="AS [en]" >
+         <event start="T140" end="T4">• • Now I'm scared. </event>
+         <event start="T4" end="T99">((laughs)) </event>
+         <event start="T7" end="T184">• • • U</event>
+         <event start="T184" end="T144">m, </event>
+         <event start="T144" end="T145">• only in December. </event>
+         <event start="T145" end="T10">Um, on the eighteenth of December. </event>
+         <event start="T148" end="T12">Yes! </event>
+         <event start="T149" end="T150">• Yes, • • only/ only with my dad. </event>
+         <event start="T150" end="T152">• • Um, • um. </event>
+         <event start="T152" end="T115">((1,6s)) </event>
+         <event start="T115" end="T18">I'll do two weeks of Namibia and then two weeks of South Africa. </event>
+         <event start="T154" end="T223">Because/ • because, </event>
+         <event start="T223" end="T143">yes, because Cape Town now is my </event>
+         <event start="T143" end="T19">((0,4s))</event>
+         <event start="T19" end="T22">second/ </event>
+         <event start="T22" end="T155">second home, s/ </event>
+         <event start="T155" end="T182">so, </event>
+         <event start="T182" end="T293">I need to go there. </event>
+         <event start="T293" end="T24">((laughs)) </event>
+         <event start="T25" end="T26">Yes! Oh! Ara! </event>
+         <event start="T26" end="T227">((laughs)) </event>
+         <event start="T231" end="T29">• • Oh. </event>
+         <event start="T156" end="T157">Arno. </event>
+         <event start="T158" end="T294">• The small man. </event>
+         <event start="T294" end="T159">((laughs)) </event>
+         <event start="T159" end="T295">Hobbit. </event>
+         <event start="T295" end="T37">((laughs)) </event>
+         <event start="T160" end="T39">Yes. </event>
+         <event start="T161" end="T41">• Yes. </event>
+         <event start="T162" end="T43">Yes! </event>
+         <event start="T43" end="T296">No. </event>
+         <event start="T46" end="T238">• • Because he is so </event>
+         <event start="T238" end="T371">cute, </event>
+         <event start="T371" end="T298">because • • when he/ when he's drunk then he's so • lovable and he: "Ah, I love </event>
+         <event start="T298" end="T297">you!". </event>
+         <event start="T297" end="T48">I'm like: "Ah!"</event>
+         <event start="T299" end="T151">And he's so </event>
+         <event start="T151" end="T370">short now when he • hugs me, then his head is here and </event>
+         <event start="T370" end="T163">like: </event>
+         <event start="T163" end="T300">"Ahh." </event>
+         <event start="T300" end="T53">• ((laughs)) </event>
+         <event start="T53" end="T51">"You give the best hug</event>
+         <event start="T51" end="T301">s!" </event>
+         <event start="T301" end="T302">((laughs))</event>
+         <event start="T302" end="T56">Yes. </event>
+         <event start="T56" end="T304">((laughs)) </event>
+         <event start="T57" end="T305">((laughs)) </event>
+         <event start="T58" end="T59">Yes. </event>
+         <event start="T59" end="T61">Yes, • yes, he is. </event>
+         <event start="T63" end="T165">• Ja. </event>
+         <event start="T166" end="T167">Ding Dili Ling Dililing. </event>
+         <event start="T67" end="T68">• • I have! </event>
+         <event start="T170" end="T171">Yes. </event>
+         <event start="T70" end="T66">Um, </event>
+         <event start="T66" end="T306">• at/ </event>
+         <event start="T306" end="T172">at, um, • • Barn/ the Barn? </event>
+         <event start="T172" end="T79">There out/ • • outside, • um • • between Stellenbosch, that, </event>
+         <event start="T79" end="T307">that… </event>
+         <event start="T173" end="T81">You held that/ • that competition there. </event>
+         <event start="T174" end="T83">That/ that Blues competition. </event>
+         <event start="T175" end="T309">• • • No! </event>
+         <event start="T309" end="T308">No, no, no. </event>
+         <event start="T308" end="T85">• • It was la/ last year? </event>
+         <event start="T85" end="T176">Last year? </event>
+         <event start="T176" end="T87">• Yes. </event>
+         <event start="T177" end="T90">Dominique was still there. </event>
+         <event start="T179" end="T180">Yes. </event>
+         <event start="T181" end="T310">Yes, yes, yes. </event>
+         <event start="T310" end="T311">She like </event>
+         <event start="T311" end="T312">stopped off and… </event>
+         <event start="T312" end="T95">((laughs))</event>
+         <event start="T313" end="T314">I haven/ have no/ haven't seen </event>
+         <event start="T314" end="T98">her yet. </event>
+         <event start="T185" end="T102">Yes, • yes! </event>
+         <event start="T186" end="T103">Are they/ </event>
+         <event start="T103" end="T187">they still? </event>
+         <event start="T187" end="T315">Because/ because </event>
+         <event start="T315" end="T104">he was like: </event>
+         <event start="T104" end="T368">"Oh </event>
+         <event start="T368" end="T369">shit, </event>
+         <event start="T369" end="T316">• now/ </event>
+         <event start="T316" end="T317">now she's leaving, now, • I'm acctually into her, • but…" </event>
+         <event start="T317" end="T188">((laughs)) </event>
+         <event start="T188" end="T318">Yes. </event>
+         <event start="T190" end="T319">Oh, </event>
+         <event start="T319" end="T107">that's ni</event>
+         <event start="T107" end="T92">ce. </event>
+         <event start="T92" end="T108">Yes, it's nice. </event>
+         <event start="T109" end="T320">• • O</event>
+         <event start="T320" end="T192">h! </event>
+         <event start="T193" end="T321">Yes, </event>
+         <event start="T321" end="T194">but • I/ I/ I was in the same class with her. </event>
+         <event start="T323" end="T324">Yes. </event>
+         <event start="T195" end="T111">Yes. </event>
+         <event start="T322" end="T0">Yes. </event>
+         <event start="T196" end="T9">• • • Two. </event>
+         <event start="T8" end="T11">Mhm. </event>
+         <event start="T14" end="T16">• • • Uummmmm, • • no, • • because the learning hasn't really done anything. </event>
+         <event start="T197" end="T325">It's only </event>
+         <event start="T325" end="T17">experience and </event>
+         <event start="T17" end="T198">you have to… </event>
+         <event start="T198" end="T290">• • • Just a little, m/ maybe, the </event>
+         <event start="T290" end="T291">theory </event>
+         <event start="T291" end="T20">those things, but… ((laughs))</event>
+         <event start="T199" end="T21">Yes, theory. </event>
+         <event start="T21" end="T23">((laughs)) </event>
+         <event start="T201" end="T27">Yes. </event>
+         <event start="T202" end="T287">Yes, many, many </event>
+         <event start="T287" end="T203">connections. </event>
+         <event start="T203" end="T288">I/ I now have </event>
+         <event start="T288" end="T289">• Sweden and um • Switzerland and </event>
+         <event start="T289" end="T28">• • yes, England and all those p/ all those p/ um </event>
+         <event start="T28" end="T326">• • </event>
+         <event start="T326" end="T204">places. </event>
+         <event start="T204" end="T32">Yes. </event>
+         <event start="T205" end="T285">• If/ if I go to </event>
+         <event start="T285" end="T286">Sweden </event>
+         <event start="T286" end="T365">now then I know: "Ah, I have a </event>
+         <event start="T365" end="T364">place </event>
+         <event start="T364" end="T33">s/ </event>
+         <event start="T33" end="T327">to stay, yeah. "</event>
+         <event start="T206" end="T35">Yes. </event>
+         <event start="T207" end="T328">Yes, yes! </event>
+         <event start="T328" end="T330">((laughs))</event>
+         <event start="T209" end="T331">Yes. </event>
+         <event start="T210" end="T40">• • • Almost a year. </event>
+         <event start="T40" end="T211">It now is e/ </event>
+         <event start="T211" end="T44">um • eight months. </event>
+         <event start="T45" end="T47">Prrrrfff. </event>
+         <event start="T47" end="T212">No, not </event>
+         <event start="T212" end="T213">that much yet. </event>
+         <event start="T213" end="T342">• • I'll stay there now for • • the/ it's still • three years that I have to stay there, • • </event>
+         <event start="T342" end="T49">my contract • </event>
+         <event start="T49" end="T214">• • </event>
+         <event start="T214" end="T215">last till then. </event>
+         <event start="T215" end="T216">But, I don't know yet. </event>
+         <event start="T216" end="T50">• • Yes, • • I don't have my/ • my • • real… </event>
+         <event start="T218" end="T217">Yes. </event>
+         <event start="T217" end="T52">I don't </event>
+         <event start="T52" end="T60">know where it is yet. ((laughs)) </event>
+         <event start="T219" end="T64">• • No. </event>
+         <event start="T220" end="T221">Not to stay. </event>
+         <event start="T221" end="T332">• • M/ Maybe </event>
+         <event start="T332" end="T65">when I'm </event>
+         <event start="T65" end="T224">• • • </event>
+         <event start="T224" end="T333">sixty </event>
+         <event start="T333" end="T69">or something. </event>
+         <event start="T69" end="T226">((laughs))</event>
+         <event start="T225" end="T229">Yes, </event>
+         <event start="T229" end="T71">• yes, • yes.</event>
+         <event start="T71" end="T334">I'll sit </event>
+         <event start="T334" end="T335"> on </event>
+         <event start="T335" end="T72">my father's</event>
+         <event start="T72" end="T336">farm, like: </event>
+         <event start="T336" end="T337">• • "Ahhh, </event>
+         <event start="T337" end="T73">this is nice." • • ((laughs))</event>
+         <event start="T230" end="T74">Yes. </event>
+         <event start="T232" end="T338">Yes. </event>
+         <event start="T234" end="T75">Yeah, I want/ I want to see a lot • of the world. </event>
+         <event start="T236" end="T237">• • A lot, a lot. </event>
+         <event start="T237" end="T76">• • • But first I need to have money. </event>
+         <event start="T77" end="T339">But when I'm/ when I'm </event>
+         <event start="T339" end="T284">• quick/ u / um quick / • • • um • • what's that word </event>
+         <event start="T284" end="T239">• • finished? </event>
+         <event start="T240" end="T164">Done, yes. </event>
+         <event start="T164" end="T178">((laughs)) </event>
+         <event start="T178" end="T241">When I'm done with/ with/ with </event>
+         <event start="T241" end="T80">• • • this place, then I don't now yet. </event>
+         <event start="T242" end="T283">Maybe </event>
+         <event start="T283" end="T84">Sweden. </event>
+         <event start="T84" end="T282">I/ I </event>
+         <event start="T282" end="T243">• </event>
+         <event start="T243" end="T281">like </event>
+         <event start="T281" end="T86">Sweden a lot. </event>
+         <event start="T86" end="T340">Those/ </event>
+         <event start="T340" end="T78">those people are</event>
+         <event start="T78" end="T146">• • </event>
+         <event start="T146" end="T89">fucking awesome. </event>
+         <event start="T89" end="T91">((laughs)) </event>
+         <event start="T147" end="T93">Yes. </event>
+         <event start="T93" end="T341">• • And they're </event>
+         <event start="T341" end="T169">all/ • everybody is Rock 'n Roll. </event>
+         <event start="T169" end="T94">There are small/ small • girls, they're sitting up on shoulders with/ with spikes and </event>
+         <event start="T94" end="T360">they're </event>
+         <event start="T360" end="T361">like. </event>
+         <event start="T361" end="T189">((does somethings)) </event>
+         <event start="T189" end="T96">And they're like three years old or something. </event>
+         <event start="T96" end="T191">((laughs)) And he's like: "Weeeh!" ((laughs)) </event>
+         <event start="T191" end="T280">• • But it's / it's/ it's • • it's </event>
+         <event start="T280" end="T358">very/ </event>
+         <event start="T358" end="T359">it's </event>
+         <event start="T359" end="T200">very, very cool. </event>
+         <event start="T200" end="T105">And • no one looks at you funny like: "Uhh, • • what is/ what is that? </event>
+         <event start="T105" end="T208">• What/ wha/ what </event>
+         <event start="T208" end="T222">• what is she</event>
+         <event start="T222" end="T112">wearing?" and: "Uaaa, </event>
+         <event start="T112" end="T357">slut." </event>
+         <event start="T357" end="T279"> or something. </event>
+         <event start="T228" end="T113">Yes. yes. </event>
+         <event start="T113" end="T118">I was like. </event>
+         <event start="T235" end="T119">• Yes. </event>
+         <event start="T119" end="T120">((laughs))</event>
+         <event start="T244" end="T121">((laughs))</event>
+         <event start="T245" end="T246">Yes. </event>
+         <event start="T248" end="T247">Yes. </event>
+         <event start="T122" end="T249">• • • That is </event>
+         <event start="T249" end="T123">really cool, but the/ the weather is not very cool though, </event>
+         <event start="T124" end="T126">too cold. </event>
+         <event start="T250" end="T343">Yes. </event>
+         <event start="T251" end="T117">Perfect. </event>
+         <event start="T253" end="T252">Yes. ((laughs))</event>
+         <event start="T254" end="T344">Or I/ I </event>
+         <event start="T344" end="T131">hm • • • </event>
+         <event start="T131" end="T275">Italia/ </event>
+         <event start="T275" end="T127">• Italy? </event>
+         <event start="T255" end="T256">Yes. </event>
+         <event start="T257" end="T345">Yes, you have to </event>
+         <event start="T345" end="T128">go to Florence. </event>
+         <event start="T128" end="T129">• I / Ye</event>
+         <event start="T129" end="T258">s! </event>
+         <event start="T258" end="T274">• I/ I was there • • a month/ m/ m/ </event>
+         <event start="T274" end="T130">month </event>
+         <event start="T130" end="T346">• </event>
+         <event start="T346" end="T259">ago. </event>
+         <event start="T260" end="T355">Um, • it was so great. • • </event>
+         <event start="T262" end="T168">I also watched </event>
+         <event start="T168" end="T273">strees musicians </event>
+         <event start="T273" end="T263">and • • • um • • I now also know people in Florence, so I know I </event>
+         <event start="T263" end="T132">can also go </event>
+         <event start="T132" end="T347">there. </event>
+         <event start="T134" end="T264">Mh?</event>
+         <event start="T265" end="T135">Yes. </event>
+         <event start="T266" end="T267">Yes, that's Greece, yes, you/ you </event>
+         <event start="T267" end="T138">can't/ i/if you're german you can't go to Greece. </event>
+         <event start="T138" end="T268">((laughs))</event>
+         <event start="T268" end="T137">They're gonna swear at you. </event>
+         <event start="T269" end="T270">Yes. </event>
+         <event start="T271" end="T349">Yes. </event>
+         <event start="T272" end="T141">Yes, yes. </event>
+      </tier>
+      <tier id="TIE6" speaker="SPK1" category="de" type="a" display-name="AS [de]" >
+         <event start="T140" end="T4">• • Jetzt habe ich Angst. </event>
+         <event start="T4" end="T99">((lacht)) </event>
+         <event start="T7" end="T184">• • • Äh</event>
+         <event start="T184" end="T144">m, </event>
+         <event start="T144" end="T145">• erst im Dezember. </event>
+         <event start="T145" end="T10">Ähm, am achtzehnten Dezember. </event>
+         <event start="T148" end="T12">Ja! </event>
+         <event start="T149" end="T150">• Ja, • • nur/ nur mit meinem Vater. </event>
+         <event start="T150" end="T152">• • Ähm, • ähm. </event>
+         <event start="T152" end="T115">((1,6s)) </event>
+         <event start="T115" end="T18">Ich werde zwei Wochen in Namibia sein und dann zwei in Südafrika. </event>
+         <event start="T154" end="T223">Weil/ • weil, </event>
+         <event start="T223" end="T143">ja, weil Kapstadt ist jetzt mein </event>
+         <event start="T143" end="T19">((0,4s))</event>
+         <event start="T19" end="T22">zweites/ </event>
+         <event start="T22" end="T155">zweites zu Hause, als/ </event>
+         <event start="T155" end="T182">also </event>
+         <event start="T182" end="T293">muss ich da hin gehen. </event>
+         <event start="T293" end="T24">((lacht)) </event>
+         <event start="T25" end="T26">Ja! Oh! Ara! </event>
+         <event start="T26" end="T227">((lacht)) </event>
+         <event start="T231" end="T29">• • Oh. </event>
+         <event start="T156" end="T157">Arno. </event>
+         <event start="T158" end="T294">• Der kleine Mann. </event>
+         <event start="T294" end="T159">((lacht)) </event>
+         <event start="T159" end="T295">Hobbit. </event>
+         <event start="T295" end="T37">((lacht)) </event>
+         <event start="T160" end="T39">Ja. </event>
+         <event start="T161" end="T41">• Ja. </event>
+         <event start="T162" end="T43">Ja! </event>
+         <event start="T43" end="T296">Nein. </event>
+         <event start="T46" end="T238">• • Weil, er ist so </event>
+         <event start="T238" end="T371">niedlich, </event>
+         <event start="T371" end="T298">weil • • wenn er/ wenn er betrunken ist, dann ist er so • liebenswert und er: "Ah, ich liebe </event>
+         <event start="T298" end="T297">dich!". </event>
+         <event start="T297" end="T48">Und ich dann: "Ah!" </event>
+         <event start="T299" end="T151">Und er ist so </event>
+         <event start="T151" end="T370">klein, wenn er mich dann • umarmt, dann ist sein Kopf hier und er </event>
+         <event start="T370" end="T163">dann so: </event>
+         <event start="T163" end="T300">"Ahh." </event>
+         <event start="T300" end="T53">• ((lacht)) </event>
+         <event start="T53" end="T51">"Du gibst die besten Umarmung</event>
+         <event start="T51" end="T301">en!" </event>
+         <event start="T301" end="T302">((lacht))</event>
+         <event start="T302" end="T56">Ja. </event>
+         <event start="T56" end="T304">((lacht)) </event>
+         <event start="T57" end="T305">((lacht)) </event>
+         <event start="T58" end="T59">Ja. </event>
+         <event start="T59" end="T61">Ja, • ja, das ist er. </event>
+         <event start="T63" end="T165">• Ja. </event>
+         <event start="T166" end="T167">Ding Dili Ling Dililing. </event>
+         <event start="T67" end="T68">• • Doch, habe ich! </event>
+         <event start="T170" end="T171">Ja. </event>
+         <event start="T70" end="T66">Ähm, </event>
+         <event start="T66" end="T306">• bei/ </event>
+         <event start="T306" end="T172">bei, ähm, • • Barn/ der Barn? </event>
+         <event start="T172" end="T79">Da dra/ • • draußen, • ähm • • zwischen Stellenbosch, diese </event>
+         <event start="T79" end="T307">diese… </event>
+         <event start="T173" end="T81">Da habt ihr doch diese/ • diesen Wettbewerb gemacht. </event>
+         <event start="T174" end="T83">Dieser/ dieser Blues Wettbewerb. </event>
+         <event start="T175" end="T309">• • • Nein! </event>
+         <event start="T309" end="T308">Nein, nein, nein. </event>
+         <event start="T308" end="T85">• • Das war le/ letztes Jahr? </event>
+         <event start="T85" end="T176">Letztes Jahr? </event>
+         <event start="T176" end="T87">• Ja. </event>
+         <event start="T177" end="T90">Dominique war noch da. </event>
+         <event start="T179" end="T180">Ja. </event>
+         <event start="T181" end="T310">Ja, ja, ja. </event>
+         <event start="T310" end="T311">Sie ist doch </event>
+         <event start="T311" end="T312">abgestiegen und… </event>
+         <event start="T312" end="T95">((lacht)) </event>
+         <event start="T313" end="T314">Ich hab sie noch ni/ noch nich/ noch </event>
+         <event start="T314" end="T98">nicht gesehen. </event>
+         <event start="T185" end="T102">Ja,• ja!</event>
+         <event start="T186" end="T103">Sind sie immer/  </event>
+         <event start="T103" end="T187">immer noch? </event>
+         <event start="T187" end="T315">Weil/ weil </event>
+         <event start="T315" end="T104">er war doch so: </event>
+         <event start="T104" end="T368">" Oh </event>
+         <event start="T368" end="T369">scheiße, </event>
+         <event start="T369" end="T316">• jetzt/ </event>
+         <event start="T316" end="T317">jetzt geht sie, nun, • ich steh eigentlich auf sie, • aber…"</event>
+         <event start="T317" end="T188">((lacht)) </event>
+         <event start="T188" end="T318">Ja. </event>
+         <event start="T190" end="T319">Oh, </event>
+         <event start="T319" end="T107">das ist sch</event>
+         <event start="T107" end="T92">ön. </event>
+         <event start="T92" end="T108">Ja, das ist schön. </event>
+         <event start="T109" end="T320">• • O</event>
+         <event start="T320" end="T192">h! </event>
+         <event start="T193" end="T321">Ja, </event>
+         <event start="T321" end="T194">aber • i/ i/ ich war doch in der selben Klasse mit ihr. </event>
+         <event start="T323" end="T324">Ja. </event>
+         <event start="T195" end="T111">Ja. </event>
+         <event start="T322" end="T0">Ja. </event>
+         <event start="T196" end="T9">• • • Zwei. </event>
+         <event start="T8" end="T11">Mhm. </event>
+         <event start="T14" end="T16">• • • Ähmmmmm, • • nein, • • weil das Lernen eigentlich nichts gemacht hat.  </event>
+         <event start="T197" end="T325">Es ist nur </event>
+         <event start="T325" end="T17">Erfahrung und </event>
+         <event start="T17" end="T198">du musst… </event>
+         <event start="T198" end="T290">• • • Nur ein bisschen, vi/ vielleicht, die </event>
+         <event start="T290" end="T291">theory </event>
+         <event start="T291" end="T20">und diese Dinge, aber… ((lacht)) </event>
+         <event start="T199" end="T21">Ja, Theorie. </event>
+         <event start="T21" end="T23">((lacht)) </event>
+         <event start="T201" end="T27">Ja. </event>
+         <event start="T202" end="T287">Ja, viele, viele </event>
+         <event start="T287" end="T203">connections. </event>
+         <event start="T203" end="T288">I habe jetzt </event>
+         <event start="T288" end="T289">• Schweden  ähm • Schweiz und</event>
+         <event start="T289" end="T28">• • ja, England und all diese/ all diese O/ um </event>
+         <event start="T28" end="T326">• • </event>
+         <event start="T326" end="T204">Orte. </event>
+         <event start="T204" end="T32">Ja. </event>
+         <event start="T205" end="T285">• Wenn/ wenn ich jetzt nach </event>
+         <event start="T285" end="T286">Sweden </event>
+         <event start="T286" end="T365">gehe, dann weiss ich: "Ah, ich habe einen </event>
+         <event start="T365" end="T364">Platz </event>
+         <event start="T364" end="T33">s/ </event>
+         <event start="T33" end="T327">zum Übernachten, ja." </event>
+         <event start="T206" end="T35">Ja. </event>
+         <event start="T207" end="T328">Ja, ja! </event>
+         <event start="T328" end="T330">((lacht)) </event>
+         <event start="T209" end="T331">Ja. </event>
+         <event start="T210" end="T40">• • • Fast ein Jahr. </event>
+         <event start="T40" end="T211">Es sind jetzt a/ </event>
+         <event start="T211" end="T44">ähm • acht Monate. </event>
+         <event start="T45" end="T47">Prrrrfff. </event>
+         <event start="T47" end="T212">Nein, noch </event>
+         <event start="T212" end="T213">nict so richtig. </event>
+         <event start="T213" end="T342">• • Ich werde da jetzt für • • die / es sind noch • drei Jahre die ich da bleiben muss, • • </event>
+         <event start="T342" end="T49">mein Vertrag • </event>
+         <event start="T49" end="T214">• • </event>
+         <event start="T214" end="T215">läuft bis dann. </event>
+         <event start="T215" end="T216">Aber, ich weiss es noch nicht. </event>
+         <event start="T216" end="T50">• • Ja, • • ich hab mein/ • mein • • richtiges… </event>
+         <event start="T218" end="T217">Ja. </event>
+         <event start="T217" end="T52">Ich weiss </event>
+         <event start="T52" end="T60">noch nicht wo er ist. ((lacht)) </event>
+         <event start="T219" end="T64">• • Nein. </event>
+         <event start="T220" end="T221">Nicht auf Dauer. </event>
+         <event start="T221" end="T332">• • V/ Vielleicht </event>
+         <event start="T332" end="T65">wenn ich </event>
+         <event start="T65" end="T224">• • • </event>
+         <event start="T224" end="T333">sechzig bin </event>
+         <event start="T333" end="T69">oder so. </event>
+         <event start="T69" end="T226">((lacht)) </event>
+         <event start="T225" end="T229">Ja, </event>
+         <event start="T229" end="T71">• ja, • ja.</event>
+         <event start="T71" end="T334">Ich werde </event>
+         <event start="T334" end="T335"> dann </event>
+         <event start="T335" end="T72">auf der Farm meines</event>
+         <event start="T72" end="T336">Vaters sitzen und dann so: </event>
+         <event start="T336" end="T337">• • "Ahhh, </event>
+         <event start="T337" end="T73">das ist schön." • • ((lacht))</event>
+         <event start="T230" end="T74">Ja. </event>
+         <event start="T232" end="T338">Ja. </event>
+         <event start="T234" end="T75">Ja, ich möchte / ich möchte viel • von der Welt sehen. </event>
+         <event start="T236" end="T237">• • Viel, viel. </event>
+         <event start="T237" end="T76">• • • Aber zuerst muss ich Geld haben. </event>
+         <event start="T77" end="T339">Aber wenn ich /wenn ich </event>
+         <event start="T339" end="T284">• schnell / ä/ähm schnell • • • ähm • •  wie heisst dieses Wort </event>
+         <event start="T284" end="T239">• •  finished? </event>
+         <event start="T240" end="T164">Fertig, ja. </event>
+         <event start="T164" end="T178">((lacht)) </event>
+         <event start="T178" end="T241">Wenn ich mit/ mit/ mit/ </event>
+         <event start="T241" end="T80">• • • diesem Ort fertig bin, dann, ich weiss noch nicht. </event>
+         <event start="T242" end="T283">Vielleicht </event>
+         <event start="T283" end="T84">Sweden. </event>
+         <event start="T84" end="T282">Ich/ Ich </event>
+         <event start="T282" end="T243">• </event>
+         <event start="T243" end="T281">mag </event>
+         <event start="T281" end="T86">Sweden sehr. </event>
+         <event start="T86" end="T340">Diese/ </event>
+         <event start="T340" end="T78">diese Leute sind </event>
+         <event start="T78" end="T146">• • </event>
+         <event start="T146" end="T89">fucking awesome. </event>
+         <event start="T89" end="T91">((lacht)) </event>
+         <event start="T147" end="T93">Ja. </event>
+         <event start="T93" end="T341">• • Und sie sind </event>
+         <event start="T341" end="T169">alle/ • jeder ist Rock 'n Roll. </event>
+         <event start="T169" end="T94">Da sind kleine/ kleine • Mädchen, die sitzen auf den Schultern mit/ mit Spikes und </event>
+         <event start="T94" end="T360">sie </event>
+         <event start="T360" end="T361">machen. </event>
+         <event start="T361" end="T189">((macht etwas)) </event>
+         <event start="T189" end="T96">Und sie sind drei Jahre alt oder so. </event>
+         <event start="T96" end="T191">((lacht)) And he's like: "Weeeh!" ((lacht)) </event>
+         <event start="T191" end="T280">• • Aber es ist/ es ist/ es ist/ • • es ist </event>
+         <event start="T280" end="T358">sehr/ </event>
+         <event start="T358" end="T359">es ist </event>
+         <event start="T359" end="T200">sehr, sehr cool. </event>
+         <event start="T200" end="T105">Und • niemand guckt dich komisch an und : "Uhh, • • was ist/ was ist das? </event>
+         <event start="T105" end="T208">• Was/ wa/ was </event>
+         <event start="T208" end="T222">• was hat sie </event>
+         <event start="T222" end="T112">an?" und: "Uaaa, </event>
+         <event start="T112" end="T357">slut." </event>
+         <event start="T357" end="T279"> oder sowas </event>
+         <event start="T228" end="T113">Ja, ja. </event>
+         <event start="T113" end="T118">I was like.  </event>
+         <event start="T235" end="T119">• Ja. </event>
+         <event start="T119" end="T120">((lacht)) </event>
+         <event start="T244" end="T121">((lacht)) </event>
+         <event start="T245" end="T246">Ja. </event>
+         <event start="T248" end="T247">Ja. </event>
+         <event start="T122" end="T249">• • • Das ist </event>
+         <event start="T249" end="T123">total cool, aber das/ das Wetter ist nicht besonders toll, </event>
+         <event start="T124" end="T126">zu kalt. </event>
+         <event start="T250" end="T343">Ja. </event>
+         <event start="T251" end="T117">Perfect. </event>
+         <event start="T253" end="T252">Ja. ((lacht)) </event>
+         <event start="T254" end="T344">Oder I/ I </event>
+         <event start="T344" end="T131">hm • • • </event>
+         <event start="T131" end="T275">Italien/ </event>
+         <event start="T275" end="T127">• Italy? </event>
+         <event start="T255" end="T256">Ja. </event>
+         <event start="T257" end="T345">Ja, du musst </event>
+         <event start="T345" end="T128">nach Florence gehen. </event>
+         <event start="T128" end="T129">• Ich / Ja</event>
+         <event start="T129" end="T258">a! </event>
+         <event start="T258" end="T274">• Ich/ ich war vor • • einem Moant/ m/ m/ </event>
+         <event start="T274" end="T130">month </event>
+         <event start="T130" end="T346">• </event>
+         <event start="T346" end="T259">da. </event>
+         <event start="T260" end="T355">Ähm, • es war so schön. • • </event>
+         <event start="T262" end="T168">I habe mir auch </event>
+         <event start="T168" end="T273">street musicians </event>
+         <event start="T273" end="T263">angeschaut und • • • ähm • • ich kenne jetzt auch Leute in Florence, also weiss ich, dass ich </event>
+         <event start="T263" end="T132">da auch bleiben </event>
+         <event start="T132" end="T347">kann. </event>
+         <event start="T134" end="T264">Mh?</event>
+         <event start="T265" end="T135">Ja. </event>
+         <event start="T266" end="T267">Ja, das ist Griechenland, ja, du/ du </event>
+         <event start="T267" end="T138">kannst nicht/ w/wenn du deutsch bist kannst du nicht nach Griechenland gehen. </event>
+         <event start="T138" end="T268">((lacht)) </event>
+         <event start="T268" end="T137">Die werden dich beschimpfen. </event>
+         <event start="T269" end="T270">Ja.  </event>
+         <event start="T271" end="T349">Ja. </event>
+         <event start="T272" end="T141">Ja, ja. </event>
+      </tier>
+      <tier id="TIE10" speaker="SPK1" category="cs" type="a" display-name="AS [cs]" >
+         <event start="T238" end="T371">eng </event>
+         <event start="T297" end="T48">eng </event>
+         <event start="T370" end="T163">eng </event>
+         <event start="T175" end="T309">eng </event>
+         <event start="T177" end="T90">eng </event>
+         <event start="T368" end="T369">eng </event>
+         <event start="T325" end="T17">eng </event>
+         <event start="T290" end="T291">eng </event>
+         <event start="T287" end="T203">eng </event>
+         <event start="T288" end="T289">eng </event>
+         <event start="T285" end="T286">eng </event>
+         <event start="T365" end="T364">eng </event>
+         <event start="T342" end="T49">eng </event>
+         <event start="T284" end="T239">eng </event>
+         <event start="T283" end="T84">eng </event>
+         <event start="T281" end="T86">eng </event>
+         <event start="T146" end="T89">eng </event>
+         <event start="T360" end="T361">eng </event>
+         <event start="T96" end="T191">eng </event>
+         <event start="T191" end="T280">eng </event>
+         <event start="T358" end="T359">eng </event>
+         <event start="T112" end="T357">eng </event>
+         <event start="T113" end="T118">eng </event>
+         <event start="T251" end="T117">eng </event>
+         <event start="T131" end="T275">ita </event>
+         <event start="T275" end="T127">eng </event>
+         <event start="T274" end="T130">eng </event>
+         <event start="T168" end="T273">eng </event>
+         <event start="T351" end="T352">eng </event>
+         <event start="T329" end="T350">eng </event>
+      </tier>
+      <tier id="TIE2" speaker="SPK2" category="v" type="t" display-name="TA [v]" >
+         <event start="T29" end="T233">• Wie </event>
+         <event start="T233" end="T30">is Ara? </event>
+         <event start="T298" end="T48">((lag)) </event>
+         <event start="T167" end="T67">((lag)) </event>
+         <event start="T69" end="T226"> ((lag)) </event>
+         <event start="T119" end="T120">((lag))</event>
+         <event start="T244" end="T121">((lag))</event>
+      </tier>
+      <tier id="TIE7" speaker="SPK2" category="en" type="a" display-name="TA [en]" >
+         <event start="T29" end="T233">• Who </event>
+         <event start="T233" end="T30">is Ara? </event>
+         <event start="T298" end="T48">((laughs)) </event>
+         <event start="T167" end="T67">((laughs)) </event>
+         <event start="T69" end="T226">((laughs))</event>
+         <event start="T119" end="T120">((laughs))</event>
+         <event start="T244" end="T121">((laughs))</event>
+      </tier>
+      <tier id="TIE8" speaker="SPK2" category="de" type="a" display-name="TA [de]" >
+         <event start="T29" end="T233">• Wer </event>
+         <event start="T233" end="T30">ist Ara? </event>
+         <event start="T298" end="T48">((lacht)) </event>
+         <event start="T167" end="T67">((lacht)) </event>
+         <event start="T69" end="T226">((lacht)) </event>
+         <event start="T119" end="T120">((lacht)) </event>
+         <event start="T244" end="T121">((lacht)) </event>
+      </tier>
+   </basic-body>
+</basic-transcription>
