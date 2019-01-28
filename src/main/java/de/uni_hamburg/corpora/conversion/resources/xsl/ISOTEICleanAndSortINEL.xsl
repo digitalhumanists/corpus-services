@@ -489,7 +489,7 @@
         <xsl:variable name="annValue" select="./@value"/>
         <xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
         <!-- check if the splitting creates the same number of tokens in each tier/annotation -->
-        <xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
+        <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
             <xsl:message terminate="yes">
                 the annotations with dashes in different tiers don't match
                 fix <xsl:value-of select="$annValue"/> vs  <xsl:value-of
@@ -501,10 +501,10 @@
         <xsl:variable name="position">
             <!-- need to use the correct mb node here -->
             <xsl:value-of
-                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-')) + 1)"
+                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '[-=]')) + 1)"
             />
         </xsl:variable>
-        <xsl:variable name="tokenizedann" select="tokenize($annValue, '-')"/>
+        <xsl:variable name="tokenizedann" select="tokenize($annValue, '[-=]')"/>
         <xsl:for-each select="$tokenizedann">
             <xsl:choose>
                 <xsl:when test="contains(., '.[')">
@@ -587,9 +587,9 @@
     <xsl:template name="morph-segmentation">
         <xsl:variable name="mbValue" select="./@value"/>
         <xsl:variable name="position">
-            <xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-'))) + 1"/>
+            <xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"/>
         </xsl:variable>
-        <xsl:variable name="tokenizedMb" select="tokenize($mbValue, '-')"/>
+        <xsl:variable name="tokenizedMb" select="tokenize($mbValue, '[-=]')"/>
         <xsl:for-each select="$tokenizedMb">
             <xsl:variable name="realposition">
                 <xsl:value-of select="($position) + (position() - 1)"/>
