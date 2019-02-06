@@ -48,7 +48,7 @@ public class ComaXsdCheckerTest {
      * Test of check method, of class ComaXsdChecker.
      */
     @Test
-public void testCheck() throws Exception {
+    public void testCheck() throws Exception {
             
             System.out.println("check");
             String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
