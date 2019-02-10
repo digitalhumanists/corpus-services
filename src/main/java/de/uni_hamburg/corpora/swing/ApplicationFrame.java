@@ -81,7 +81,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     DefaultListModel listModel = new DefaultListModel();
     int done = 0;
     int all = 0;
-    LineBorder dragBorder = new LineBorder(Color.RED, 3, true);
+    LineBorder dragBorder = new LineBorder(Color.BLUE, 3, true);
 
     ImageIcon inactiveIcon;
     ImageIcon activeIcon;
