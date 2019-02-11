@@ -74,7 +74,8 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     there is mismatch of annotation in the exb file that happens after the segmentation:
-                    probably a missing whitespace after a word
+                    annotationstart <xsl:value-of select="$annotationstart"/> cannot be matched to a word id or event.
+                    Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
         </xsl:choose>
@@ -98,7 +99,8 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     there is mismatch of annotation in the exb file that happens after the segmentation:
-                    probably a missing whitespace after a word
+                    annotationend <xsl:value-of select="$annotationend"/> cannot be matched to a word id or event.
+                    Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
         </xsl:choose>
