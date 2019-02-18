@@ -18,10 +18,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import net.sf.saxon.Configuration;
 import net.sf.saxon.Controller;
 import net.sf.saxon.event.ReceiverOptions;
 import net.sf.saxon.expr.instruct.TerminationException;
 import net.sf.saxon.jaxp.TransformerImpl;
+import net.sf.saxon.serialize.MessageEmitter;
 import net.sf.saxon.serialize.MessageWarner;
 import net.sf.saxon.serialize.XMLEmitter;
 import net.sf.saxon.trans.XPathException;
@@ -39,6 +41,7 @@ public class XSLTransformer {
     private Transformer transformer;
     private String transformerFactoryImpl = "net.sf.saxon.TransformerFactoryImpl";
     private Map<String, Object> parameters = new HashMap<>();
+
     /**
      * Class constructor.
      */
@@ -80,7 +83,7 @@ public class XSLTransformer {
      * @return the result of the XSLT transformation as String object
      */
     public String transform(StreamSource xmlSource, StreamSource xslSource) throws TransformerConfigurationException, TransformerException, TerminationException {
-
+        final StringWriter messageOut = new StringWriter();
         String result = null;
         try {
             transformer = tranformerFactory.newTransformer(xslSource);
@@ -88,17 +91,30 @@ public class XSLTransformer {
             for (Map.Entry<String, Object> param : parameters.entrySet()) {
                 transformer.setParameter(param.getKey(), param.getValue());
             }
+            //trying to get xsl:message into error reports
+            ((net.sf.saxon.jaxp.TransformerImpl) transformer).getUnderlyingController().setRecoveryPolicy(Configuration.DO_NOT_RECOVER);
+            ((net.sf.saxon.jaxp.TransformerImpl) transformer).getUnderlyingController().setMessageEmitter(new MessageEmitter() {
+                @Override
+                public void open() throws XPathException {
+                    setWriter(messageOut);
+                    super.open();
+                }
+            });
             //transform and fetch result
             StringWriter resultWriter = new StringWriter();
             transformer.transform(xmlSource, new StreamResult(resultWriter));
             result = resultWriter.toString();
 
         } catch (TransformerException e) {
-            System.out.println("Message: " + e.getLocalizedMessage());
-            //throw e;
-            //throw new TerminationException(e.getLocalizedMessage());
+            //System.out.println("Message: " + e.getLocalizedMessage());
+            System.out.println("THIS IS EXCEPTION: " + e.getMessage() + " <<<");
+            String message = messageOut.toString(); // this is the "exception message\n" that you want
+            // not sure why it has a \n on it
+            System.out.println("THIS IS THE MESSAGE WE WANT: " + message);
+            throw new TransformerException(message, e); // rethrow using the captured message, if you really want that "exception message" available to a caller in e.getMessage()
+
         }
-        
+
         return result;
     }
 
@@ -166,7 +182,5 @@ public class XSLTransformer {
     public String getTransformerFactoryImpl() {
         return transformerFactoryImpl;
     }
-
-
 
 }
