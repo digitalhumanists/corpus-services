@@ -175,6 +175,18 @@
             <xsl:if test="empty($ROOT//*:tier-format[@tierref = current()/@id])">
                 <xsl:value-of select="concat('CRITICAL;no tier-format found for tier ''', @id, ''';', @id, ';', $NEWLINE)"/>
             </xsl:if>
+            
+            <!-- check if there is no utterance end symbol with a whitespace before (same or preceding event) -->
+            <xsl:variable name="concatenatedtext">
+                <xsl:for-each select="event">
+                    <xsl:value-of select="."/>
+                </xsl:for-each>
+            </xsl:variable>
+            
+            <xsl:if test="matches($concatenatedtext, ' [.,!?…]')">
+                <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol ''', @id, ''';', @id, ';', $NEWLINE)"/>
+            </xsl:if>
+            
         </xsl:for-each>
 
     </xsl:template>
