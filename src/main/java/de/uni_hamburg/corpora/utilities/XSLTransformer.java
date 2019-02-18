@@ -67,7 +67,7 @@ public class XSLTransformer {
      * @param xsl XSLT stylesheet as String object
      * @return the result of the XSLT transformation as String object
      */
-    public String transform(String xml, String xsl) throws TerminationException, TransformerException {
+    public String transform(String xml, String xsl) throws TransformerException {
         StreamSource xslSource = TypeConverter.String2StreamSource(xsl);
         StreamSource xmlSource = TypeConverter.String2StreamSource(xml);
         return transform(xmlSource, xslSource);
@@ -82,7 +82,7 @@ public class XSLTransformer {
      * @param xsl XSLT stylesheet as StreamSource object
      * @return the result of the XSLT transformation as String object
      */
-    public String transform(StreamSource xmlSource, StreamSource xslSource) throws TransformerConfigurationException, TransformerException, TerminationException {
+    public String transform(StreamSource xmlSource, StreamSource xslSource) throws TransformerException {
         final StringWriter messageOut = new StringWriter();
         String result = null;
         try {
@@ -107,12 +107,9 @@ public class XSLTransformer {
 
         } catch (TransformerException e) {
             //System.out.println("Message: " + e.getLocalizedMessage());
-            System.out.println("THIS IS EXCEPTION: " + e.getMessage() + " <<<");
             String message = messageOut.toString(); // this is the "exception message\n" that you want
-            // not sure why it has a \n on it
-            System.out.println("THIS IS THE MESSAGE WE WANT: " + message);
+            System.out.println("MESSAGE: " + message);
             throw new TransformerException(message, e); // rethrow using the captured message, if you really want that "exception message" available to a caller in e.getMessage()
-
         }
 
         return result;

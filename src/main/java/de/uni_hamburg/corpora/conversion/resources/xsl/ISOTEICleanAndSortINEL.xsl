@@ -73,7 +73,7 @@
                 <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
                 <xsl:message terminate="yes">
                     <!-- Error message -->
-                    there is mismatch of annotation in the exb file that happens after the segmentation:
+                    mismatch of annotation in the exb file that happens after the segmentation:
                     annotationstart <xsl:value-of select="$annotationstart"/> cannot be matched to a word id or event.
                     Could be a missing whitespace after a word.
                 </xsl:message>
@@ -98,7 +98,7 @@
             <xsl:otherwise>
                 <xsl:message terminate="yes">
                     <!-- Error message -->
-                    there is mismatch of annotation in the exb file that happens after the segmentation:
+                    mismatch of annotation in the exb file that happens after the segmentation:
                     annotationend <xsl:value-of select="$annotationend"/> cannot be matched to a word id or event.
                     Could be a missing whitespace after a word.
                 </xsl:message>

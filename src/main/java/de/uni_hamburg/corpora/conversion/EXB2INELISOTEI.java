@@ -125,7 +125,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Document teiDoc = SegmentedTranscriptionToTEITranscription(stdoc,
                     nameOfDeepSegmentation,
                     nameOfFlategmentation,
-                    includeFullText);
+                    includeFullText, cd);
             if (teiDoc != null) {
                 System.out.println("Merged");
                 //so is the language of the doc
@@ -137,9 +137,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
                 System.out.println("document written.");
                 report.addCorrect(ISO_CONV, cd, "ISO TEI conversion of file was successful");
-            }
-            else {
-                 report.addCritical(ISO_CONV, cd, "ISO TEI conversion of file was not possible because of unknown error");
+            } else {
+                report.addCritical(ISO_CONV, cd, "ISO TEI conversion of file was not possible because of unknown error");
             }
 
         } catch (SAXException ex) {
@@ -152,8 +151,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (IOException ex) {
             report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
-        } catch (TerminationException ex) {
-            report.addException(ex, ISO_CONV, cd, "Terminated because of XSL message - check structure of input file");
         } catch (TransformerException ex) {
             report.addException(ex, ISO_CONV, cd, "XSL transformer error");
         }
@@ -163,7 +160,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
             String nameOfDeepSegmentation,
             String nameOfFlatSegmentation,
-            boolean includeFullText) throws JDOMException, IOException, TransformerConfigurationException, TransformerException, TerminationException {
+            boolean includeFullText, CorpusData cd) throws JDOMException, IOException, TransformerException {
 
         Document finalDocument = null;
         String skeleton_stylesheet = cio.readInternalResourceAsString(TEI_SKELETON_STYLESHEET_ISO);
@@ -347,26 +344,26 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                         + "/ts[@s='" + start + "' and @e='" + end + "']/ts";
                 XPath xp3 = XPath.newInstance(xpath3);
                 List transannos = xp3.selectNodes(segmentedTranscription);
-                for (Object transanno1 : transannos){
-                Element transanno = (Element) transanno1;
-                String transaStart = transanno.getAttributeValue("s");
-                String transaEnd = transanno.getAttributeValue("e");
-                int transas = ((Integer) (timelineItems.get(transaStart)));
-                int transae = ((Integer) (timelineItems.get(transaEnd)));
-                boolean transannotationBelongsToThisElement = (transas >= s && transas <= e) || (transae >= s && transae <= e);
-                if (transannotationBelongsToThisElement) {
-                    Element annotationsElement = mergedElement.getChild("annotations");
-                    if (annotationsElement == null) {
-                        annotationsElement = new Element("annotations");
-                        mergedElement.addContent(annotationsElement);
+                for (Object transanno1 : transannos) {
+                    Element transanno = (Element) transanno1;
+                    String transaStart = transanno.getAttributeValue("s");
+                    String transaEnd = transanno.getAttributeValue("e");
+                    int transas = ((Integer) (timelineItems.get(transaStart)));
+                    int transae = ((Integer) (timelineItems.get(transaEnd)));
+                    boolean transannotationBelongsToThisElement = (transas >= s && transas <= e) || (transae >= s && transae <= e);
+                    if (transannotationBelongsToThisElement) {
+                        Element annotationsElement = mergedElement.getChild("annotations");
+                        if (annotationsElement == null) {
+                            annotationsElement = new Element("annotations");
+                            mergedElement.addContent(annotationsElement);
+                        }
+                        Element annotation = new Element("annotation");
+                        annotation.setAttribute("start", transaStart);
+                        annotation.setAttribute("end", transaEnd);
+                        annotation.setAttribute("level", transanno.getParentElement().getParentElement().getAttributeValue("name"));
+                        annotation.setAttribute("value", transanno.getText());
+                        annotationsElement.addContent(annotation);
                     }
-                    Element annotation = new Element("annotation");
-                    annotation.setAttribute("start", transaStart);
-                    annotation.setAttribute("end", transaEnd);
-                    annotation.setAttribute("level", transanno.getParentElement().getParentElement().getAttributeValue("name"));
-                    annotation.setAttribute("value", transanno.getText());
-                    annotationsElement.addContent(annotation);
-                }
                 }
                 // now take care of the corresponding annotations
                 String xpath5 = "//segmented-tier[@id='" + tierref + "']/annotation/ta";
