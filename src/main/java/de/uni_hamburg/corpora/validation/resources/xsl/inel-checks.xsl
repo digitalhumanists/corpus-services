@@ -167,7 +167,7 @@
             </xsl:if>
             
             <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
-            <xsl:if test="matches(., ' [.,!?…]')">
+            <xsl:if test="(../@category = ('ts', 'tx', 'mb', 'mp', 'ge', 'gg', 'gr', 'mc')) and matches(., ' [.,!?…]')">
                 <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
             
