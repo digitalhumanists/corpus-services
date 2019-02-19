@@ -101,7 +101,7 @@
             <xsl:variable name="morpheme-annotation-end" select="./@end"/>
             <xsl:variable name="annotation-name" select="../@category"/>
             <xsl:variable name="mbValue" select="//*:tier[@category = 'mb']/*:event[@start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/text()"/>
-            <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-='))">
+            <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
                 <xsl:value-of
                     select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue, ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, ';', ../@id, ';', $morpheme-annotation-start, $NEWLINE)"
                 />
@@ -165,6 +165,26 @@
             <xsl:if test="matches(., '§')">
                 <xsl:value-of select="concat('CRITICAL;found ''§'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
+            
+            <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
+            <xsl:if test="matches(., ' [.,!?…]')">
+                <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+            </xsl:if>
+            
+            <!-- Check if there is no utterance end symbol with a whitespace before (preceding event) -->         
+            <xsl:if test="(../@category = ('ts', 'tx', 'mb', 'mp', 'ge', 'gg', 'gr', 'mc')) and matches(., '^[.,!?…]')">
+                <xsl:choose>
+                    <xsl:when test="ends-with(preceding-sibling::text()[1], ' ')">
+                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="concat('WARNING;utterance end symbol appearing alone  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+               
+            </xsl:if>
+           
+            
 
         </xsl:for-each>
         
@@ -174,17 +194,6 @@
             <!-- check if every tier has a tier-format in the tier-format-table -->
             <xsl:if test="empty($ROOT//*:tier-format[@tierref = current()/@id])">
                 <xsl:value-of select="concat('CRITICAL;no tier-format found for tier ''', @id, ''';', @id, ';', $NEWLINE)"/>
-            </xsl:if>
-            
-            <!-- check if there is no utterance end symbol with a whitespace before (same or preceding event) -->
-            <xsl:variable name="concatenatedtext">
-                <xsl:for-each select="event">
-                    <xsl:value-of select="."/>
-                </xsl:for-each>
-            </xsl:variable>
-            
-            <xsl:if test="matches($concatenatedtext, ' [.,!?…]')">
-                <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol ''', @id, ''';', @id, ';', $NEWLINE)"/>
             </xsl:if>
             
         </xsl:for-each>
