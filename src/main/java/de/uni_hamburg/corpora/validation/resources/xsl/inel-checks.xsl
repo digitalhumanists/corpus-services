@@ -34,12 +34,12 @@
 
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
         <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''',  replace(text(), ';', ':'), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''',  replace(replace(text(), ';', ':'), $NEWLINE, ''), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
         <!-- check for multiple whitespaces in text content of non-mixed content elements -->
         <xsl:for-each select="//*[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''',  replace(text(), ';', ':'), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''',  replace(replace(replace(text(), ';', ':'), $NEWLINE, ''), $NEWLINE, ''), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
 
@@ -75,7 +75,7 @@
 
             <!-- check if paths are relative -->
             <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
-                <xsl:value-of select="concat('WARNING;The file reference ''', replace(text(), ';', ':'), ''' appears to be an absolute path;;', $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;The file reference ''', replace(replace(text(), ';', ':'), $NEWLINE, ''), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
 
         </xsl:for-each>
@@ -126,12 +126,12 @@
         
         <xsl:for-each select="$ROOT//*:tier[@category = ('mc')]/*:event[contains(text(), '&lt;NotSure&gt;')]">
             <!-- Check that in the mc tier no <NotSure> exists -->
-            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(text(), ';', ':'),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(replace(text(), ';', ':'), $NEWLINE, ''),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
         </xsl:for-each>
 
         <xsl:for-each select="$ROOT//*:tier[@category = ('tx')]/*:event[not(ends-with(text(), ' '))]">
             <!-- Check that in the tx tier no event without whitespace at the end exists (causes ISO TEI errors) -->
-            <xsl:value-of select="concat('CRITICAL;event in tier ', ../@id, ': ', replace(text(), ';', ':'),' does not end with whitespace (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+            <xsl:value-of select="concat('CRITICAL;event in tier ', ../@id, ': ', replace(replace(text(), ';', ':'), $NEWLINE, ''),' does not end with whitespace (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
         </xsl:for-each>
         
         <xsl:for-each select="$ROOT//*:event">
