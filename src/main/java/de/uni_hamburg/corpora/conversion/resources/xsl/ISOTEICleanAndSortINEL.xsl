@@ -59,22 +59,31 @@
     <!-- returns the word id for given annotation start -->
     <xsl:function name="tei:word-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
+        <xsl:variable name="annotationstartminone">
+            <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
             <xsl:when test="($words[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$words[@s = $annotationstart]/@xml:id"/>
-            </xsl:when>
+            </xsl:when>     
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
             <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
                 <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($words[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$words[@s = $annotationstartminone]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="$events[@s = $annotationstartminone]/@xml:id != ''">
+                <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <xsl:otherwise>
                 <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     mismatch of annotation in the exb file that happens after the segmentation:
-                    annotationstart <xsl:value-of select="$annotationstart"/> cannot be matched to a word id or event.
+                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) cannot be matched to a word id or event.
                     Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
@@ -84,6 +93,9 @@
     <!-- returns the word id for given annotation end -->
     <xsl:function name="tei:word-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
+        <xsl:variable name="annotationendplusone">
+            <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
@@ -94,12 +106,18 @@
             <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
                 <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
             </xsl:when>
+            <xsl:when test="($words[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$words[@e = $annotationendplusone]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($events[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$events[@e = $annotationendplusone]/@xml:id"/>
+            </xsl:when>
             <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
             <xsl:otherwise>
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     mismatch of annotation in the exb file that happens after the segmentation:
-                    annotationend <xsl:value-of select="$annotationend"/> cannot be matched to a word id or event.
+                    annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>)cannot be matched to a word id or event.
                     Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
@@ -109,11 +127,24 @@
     <!-- returns the seg id for given annotation start -->
     <xsl:function name="tei:seg-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
+        <xsl:variable name="annotationstartminone">
+            <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
             <xsl:when test="($segs[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
+            <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
+                <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($segs[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="$events[@s = $annotationstartminone]/@xml:id != ''">
+                <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
             <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
@@ -124,6 +155,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     there is mismatch of annotation in the exb file that happens after the segmentation:
+                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) cannot be matched to a seg id or event.
                     probably a missing whitespace after a word
                 </xsl:message>
             </xsl:otherwise>
@@ -133,11 +165,24 @@
     <!-- returns the seg id for given annotation end -->
     <xsl:function name="tei:seg-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
+        <xsl:variable name="annotationendplusone">
+            <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
             <xsl:when test="($segs[@e = $annotationend]/@xml:id) != ''">
                 <xsl:value-of select="$segs[@e = $annotationend]/@xml:id"/>
+            </xsl:when>
+            <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
+            <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
+                <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($segs[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$segs[@e = $annotationendplusone]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($events[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$events[@e = $annotationendplusone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
     <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
@@ -148,6 +193,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                 there is mismatch of annotation in the exb file that happens after the segmentation:
+                annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>)cannot be matched to a seg id or event.
                 probably a missing whitespace after a word
             </xsl:message>
             </xsl:otherwise>

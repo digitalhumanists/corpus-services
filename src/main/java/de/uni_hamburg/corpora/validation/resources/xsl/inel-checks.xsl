@@ -167,18 +167,18 @@
             </xsl:if>
             
             <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
-            <xsl:if test="(../@category = ('ts', 'tx', 'mb', 'mp', 'ge', 'gg', 'gr', 'mc')) and matches(., ' [.,!?…]')">
+            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., ' [.,!?…]')">
                 <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
             
             <!-- Check if there is no utterance end symbol with a whitespace before (preceding event) -->         
-            <xsl:if test="(../@category = ('ts', 'tx', 'mb', 'mp', 'ge', 'gg', 'gr', 'mc')) and matches(., '^[.,!?…]')">
+            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., '^[.,!?…]')">
                 <xsl:choose>
-                    <xsl:when test="ends-with(preceding-sibling::text()[1], ' ')">
-                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
+                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="concat('WARNING;utterance end symbol appearing alone  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('WARNING;utterance end symbol appearing alone in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:otherwise>
                 </xsl:choose>
                
