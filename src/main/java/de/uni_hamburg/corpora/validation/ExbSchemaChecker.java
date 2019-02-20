@@ -17,6 +17,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -74,23 +75,17 @@ public class ExbSchemaChecker extends Checker implements CommandLineable, Corpus
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, JDOMException, IOException, JexmaraldaException{
         System.out.println("Checking the exb file against DTD...");
-        //URL exb_dtd = new URL("C:\\Users\\Ozzy\\Desktop\\exb_schema.xsd");
         String exbSchemaPath = new File("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\schemas\\exb_schema.xsd").getAbsolutePath();
-        File exbSchema = new File(exbSchemaPath);
+        URL exbSchema = Paths.get(exbSchemaPath).toUri().toURL();//;new URL(exbSchemaPath);
         Source xmlStream = new StreamSource(TypeConverter.String2InputStream(cd.toSaveableString()));
         SchemaFactory schemaFactory =
             SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(exbSchema);
         Validator validator = schema.newValidator();
-        ErrorHandler eh = null;
-        //ComaErrorReportGenerator eh = new ComaErrorReportGenerator();
-        //validator.setErrorHandler(eh);
+        ExbErrorReportGenerator eh = new ExbErrorReportGenerator(cd.getFilename());
         validator.setErrorHandler(eh);
         validator.validate(xmlStream);
-
-        Report stats = new Report();
-        //stats.getErrorReport(validator.toString());
-        return stats;
+        return eh.getErrors();
     }
     
     /**
