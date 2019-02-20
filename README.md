@@ -21,7 +21,7 @@ https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-t
 
 The usable functions can be found in the help output:
 
-java -Xmx6g -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.CorpusMagician -h
+`java -Xmx6g -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.CorpusMagician -h`
 
 # Compilation
 
