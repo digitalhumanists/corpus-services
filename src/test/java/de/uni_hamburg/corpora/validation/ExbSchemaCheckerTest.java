@@ -23,9 +23,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class ComaXsdCheckerTest {
+public class ExbSchemaCheckerTest {
     
-    public ComaXsdCheckerTest() {
+    public ExbSchemaCheckerTest() {
     }
     
     @BeforeClass
@@ -54,11 +54,11 @@ public class ComaXsdCheckerTest {
             String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
             URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
             Corpus corp = new Corpus(corpusURL);
-            ComaXsdChecker instance = new ComaXsdChecker();
+            ExbSchemaChecker instance = new ExbSchemaChecker();
             instance.report = new Report();
             Collection<CorpusData> cdc;
-            //what happens when we check coma files
-            for (CorpusData cd : corp.getMetadata()){
+            //what happens when we check exb files
+            for (CorpusData cd : corp.getContentdata()){
                 assertNotNull(instance.check(cd));
             }
     }
@@ -69,7 +69,7 @@ public class ComaXsdCheckerTest {
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        ComaXsdChecker instance = new ComaXsdChecker();
+        ExbSchemaChecker instance = new ExbSchemaChecker();
         //Collection<Class> expResult = null;
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
