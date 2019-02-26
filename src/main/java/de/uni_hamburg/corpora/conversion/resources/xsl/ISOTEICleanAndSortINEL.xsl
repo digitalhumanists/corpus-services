@@ -59,6 +59,7 @@
     <!-- returns the word id for given annotation start -->
     <xsl:function name="tei:word-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
+        <xsl:param name="tierid"/>
         <xsl:variable name="annotationstartminone">
             <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
         </xsl:variable>
@@ -83,7 +84,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     mismatch of annotation in the exb file that happens after the segmentation:
-                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) cannot be matched to a word id or event.
+                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) in tier <xsl:value-of select="$tierid"/> cannot be matched to a word id or event.
                     Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
@@ -93,6 +94,7 @@
     <!-- returns the word id for given annotation end -->
     <xsl:function name="tei:word-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
+        <xsl:param name="tierid"/>
         <xsl:variable name="annotationendplusone">
             <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
         </xsl:variable>
@@ -117,7 +119,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     mismatch of annotation in the exb file that happens after the segmentation:
-                    annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>)cannot be matched to a word id or event.
+                    annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>) in tier <xsl:value-of select="$tierid"/> cannot be matched to a word id or event.
                     Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
@@ -127,6 +129,7 @@
     <!-- returns the seg id for given annotation start -->
     <xsl:function name="tei:seg-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
+        <xsl:param name="tierid"/>
         <xsl:variable name="annotationstartminone">
             <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
         </xsl:variable>
@@ -155,7 +158,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     there is mismatch of annotation in the exb file that happens after the segmentation:
-                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) cannot be matched to a seg id or event.
+                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) in tier <xsl:value-of select="$tierid"/> cannot be matched to a seg id or event.
                     probably a missing whitespace after a word
                 </xsl:message>
             </xsl:otherwise>
@@ -165,6 +168,7 @@
     <!-- returns the seg id for given annotation end -->
     <xsl:function name="tei:seg-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
+        <xsl:param name="tierid"/>
         <xsl:variable name="annotationendplusone">
             <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
         </xsl:variable>
@@ -193,7 +197,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                 there is mismatch of annotation in the exb file that happens after the segmentation:
-                annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>)cannot be matched to a seg id or event.
+                annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>) in tier <xsl:value-of select="$tierid"/>  cannot be matched to a seg id or event.
                 probably a missing whitespace after a word
             </xsl:message>
             </xsl:otherwise>
@@ -284,12 +288,12 @@
                                     <xsl:attribute name="from">
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@start"/> -->
-                                        <xsl:value-of select="tei:word-annotation-from(@start)"/>
+                                        <xsl:value-of select="tei:word-annotation-from(@start, @level)"/>
                                     </xsl:attribute>
                                     <xsl:attribute name="to">
                                         <!--<xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@end"/> -->
-                                        <xsl:value-of select="tei:word-annotation-to(@end)"/>
+                                        <xsl:value-of select="tei:word-annotation-to(@end, @level)"/>
                                     </xsl:attribute>
                                     <!-- the further morpheme based segmentation and references here -->
                                     <!-- we need to throw an error message when the morpheme annotations aren't consistent -->
@@ -319,12 +323,12 @@
                                 <xsl:element name="span">
                                     <!-- we want to refer to the seg element here (=sentence) -->
                                     <xsl:attribute name="from">
-                                        <xsl:value-of select="tei:seg-annotation-from(@start)"/>
+                                        <xsl:value-of select="tei:seg-annotation-from(@start, @level)"/>
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@start"/> -->
                                     </xsl:attribute>
                                     <xsl:attribute name="to">
-                                        <xsl:value-of select="tei:seg-annotation-to(@end)"/>
+                                        <xsl:value-of select="tei:seg-annotation-to(@end, @level)"/>
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@end"/> -->
                                     </xsl:attribute>
