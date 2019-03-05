@@ -8,8 +8,8 @@
         <xsl:text>
 </xsl:text>
     </xsl:variable>
-    <xsl:variable name="UTTERANCEENDSYMBOL" select="'[.,!?…:]'"/>
-    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="'.*[.,!?…:]&quot;*\s*&quot;*\s*'"/>
+    <xsl:variable name="UTTERANCEENDSYMBOL" select="'[.!?…:]'"/>
+    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="'(.+[.!?…:]&quot;*\s*&quot;*\s*|\(\(.+\)\)\s*)'"/>
     <xsl:key name="tierids" match="*[@id]" use="@id"/>
     <xsl:variable name="duplicateids">
         <xsl:for-each-group select="$ROOT//*:tier" group-by="@id">
@@ -186,11 +186,12 @@
             </xsl:if>
            
             <!-- Check if there is an utterance end symbol in the tx tier at the end of each matching ref event -->         
-            <xsl:if test="(../@category = ('ref')) and matches (., '^.+$')">
+            <xsl:if test="(../@category = ('ref'))">
                 <xsl:variable name="END" select="@end"/>
+                <xsl:variable name="SPK" select="../@speaker"/>
                 <xsl:choose>
-                    <xsl:when test="matches(../../tier[@category='tx']/event[@end=$END]/text(), $UTTERANCEENDSYMBOLWHITESPACE)">
-                        <!-- <xsl:value-of select="concat('CRITICAL;sentence in tx tier IS ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/> -->                       
+                    <xsl:when test="matches(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), $UTTERANCEENDSYMBOLWHITESPACE)">
+                        <!--<xsl:value-of select="concat('CRITICAL;sentence in tx tier IS ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>  -->                    
                     </xsl:when>      
                     <xsl:otherwise>
                         <xsl:value-of select="concat('CRITICAL;sentence in tx tier not ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
