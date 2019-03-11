@@ -639,7 +639,7 @@
     <xsl:template name="morph-segmentation">
         <xsl:variable name="mbValue" select="./@value"/>
         <xsl:variable name="position">
-            <xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"/>
+            <xsl:value-of select="(count(preceding::annotation[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"/>
         </xsl:variable>
         <xsl:variable name="tokenizedMb" select="tokenize($mbValue, '[-=]')"/>
         <xsl:for-each select="$tokenizedMb">
