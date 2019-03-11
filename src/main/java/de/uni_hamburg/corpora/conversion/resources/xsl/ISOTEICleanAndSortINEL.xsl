@@ -70,13 +70,13 @@
                 <xsl:value-of select="$words[@s = $annotationstart]/@xml:id"/>
             </xsl:when>     
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
+            <xsl:when test="($events[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
             <xsl:when test="($words[@s = $annotationstartminone]/@xml:id) != ''">
                 <xsl:value-of select="$words[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="$events[@s = $annotationstartminone]/@xml:id != ''">
+            <xsl:when test="($events[@s = $annotationstartminone]/@xml:id) != ''">
                 <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <xsl:otherwise>
@@ -140,13 +140,13 @@
                 <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
+            <xsl:when test="($events[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
             <xsl:when test="($segs[@s = $annotationstartminone]/@xml:id) != ''">
                 <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="$events[@s = $annotationstartminone]/@xml:id != ''">
+            <xsl:when test="($events[@s = $annotationstartminone]/@xml:i) != ''">
                 <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
