@@ -169,12 +169,12 @@
             </xsl:if>
             
             <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
-            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., ' $UTTERANCEENDSYMBOL')">
+            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat(' ',$UTTERANCEENDSYMBOL))">
                 <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
             
             <!-- Check if there is no utterance end symbol with a whitespace before (preceding event) -->         
-            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., '^$UTTERANCEENDSYMBOL')">
+            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat('^',$UTTERANCEENDSYMBOL))">
                 <xsl:choose>
                     <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
                         <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
@@ -196,8 +196,21 @@
                     <xsl:otherwise>
                         <xsl:value-of select="concat('CRITICAL;sentence in tx tier not ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:otherwise>
-                </xsl:choose>
-                                                      
+                </xsl:choose>                                                     
+            </xsl:if>
+            
+            <!-- Check if each utterance end symbol in the tx tier is only at the end of each matching ref event -->         
+            <xsl:if test="(../@category = ('tx')) and matches(., concat('.*', $UTTERANCEENDSYMBOL, '.*'))">
+                <xsl:variable name="SPK" select="../@speaker"/>
+                <xsl:variable name="END" select="@end"/>
+                <xsl:choose>
+                    <xsl:when test="../../tier[@category='ref' and @speaker=$SPK]/event[@end=$END]">
+                        <!--<xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier IS appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>                -->
+                    </xsl:when>      
+                    <xsl:otherwise>
+                        <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:otherwise>
+                </xsl:choose>                                                     
             </xsl:if>
 
         </xsl:for-each>
