@@ -205,13 +205,20 @@
                 <xsl:variable name="END" select="@end"/>
                 <xsl:choose>
                     <xsl:when test="../../tier[@category='ref' and @speaker=$SPK]/event[@end=$END]">
-                        <!--<xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier IS appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>                -->
-                    </xsl:when>      
+                        <!--<xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier IS appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/> -->
+                    </xsl:when> 
+                    <!-- Test if it is a colon but should be a vowel length marker -->
+                    <xsl:when test=" matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;]+.*')">
+                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should be a vowel length marker ː ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:when> 
                     <xsl:otherwise>
                         <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:otherwise>
                 </xsl:choose>                                                     
             </xsl:if>
+            
+            
+            
 
         </xsl:for-each>
         
