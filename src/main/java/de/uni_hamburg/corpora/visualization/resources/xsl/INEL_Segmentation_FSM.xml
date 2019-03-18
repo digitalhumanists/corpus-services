@@ -23,6 +23,8 @@
 		<char>…</char>
 		<!-- Dot above -->
 		<char>&#x02D9;</char>
+		<!-- Colon for INEL -->
+		<char>:</char>
 	</char-set>
 	<char-set id="SpaceSymbols">
 		<comment>Characters that follow a word, an utterance end symbol or a miscellaneous punctuation symbol</comment>
@@ -33,6 +35,8 @@
 		<comment>Characters in which reported speech is embedded. Between these, utterance terminators will be ignored</comment>
 		<!-- Double quote symbol (quotation mark) -->
 		<char>&#x0022;</char>
+		<char>&#x201D;</char>
+		<char>&#x201C;</char>
 	</char-set>
 	<char-set id="OpenParenthesis">
 		<comment>Characters whose double appearance signals the beginning of a non-phonological segment.  Between these, utterance terminators will be ignored</comment>
@@ -52,7 +56,8 @@
 		<!-- <char>&apos;</char> -->
 		<!-- Removed because it is part of word (glottal stop in interjections) -->
 		<!-- Colon -->
-		<char>:</char>
+		<!--<char>:</char>-->
+		<!-- Removed because it is utterance end symbol (in INEL) -->
 		<!-- Semicolon -->
 		<char>;</char>
 		<!-- Comma -->
@@ -64,9 +69,10 @@
 		<char>_</char>
 		<!-- Ligatur sign -->
 		<char>&#x203F;</char>
-		<!-- Removed because it is part of word (in INEL) -->
 		<!-- m-Dash -->
-		<!--<char>&#x2014;</char>-->
+		<char>&#x2014;</char>
+		<!-- n-Dash -->
+		<char>&#x2013;</char>
 		<!-- Forward slash -->
 		<char>/</char>
 		<!-- Inverted question mark (Spanish orthography) -->
