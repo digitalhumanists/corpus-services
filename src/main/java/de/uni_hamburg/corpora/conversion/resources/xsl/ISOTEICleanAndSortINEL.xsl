@@ -59,22 +59,33 @@
     <!-- returns the word id for given annotation start -->
     <xsl:function name="tei:word-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
+        <xsl:param name="tierid"/>
+        <xsl:variable name="annotationstartminone">
+            <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
             <xsl:when test="($words[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$words[@s = $annotationstart]/@xml:id"/>
-            </xsl:when>
+            </xsl:when>     
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
+            <xsl:when test="($events[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($words[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$words[@s = $annotationstartminone]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($events[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <xsl:otherwise>
                 <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
                 <xsl:message terminate="yes">
                     <!-- Error message -->
-                    there is mismatch of annotation in the exb file that happens after the segmentation:
-                    probably a missing whitespace after a word
+                    mismatch of annotation in the exb file that happens after the segmentation:
+                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) in tier <xsl:value-of select="$tierid"/> cannot be matched to a word id or event.
+                    Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
         </xsl:choose>
@@ -83,6 +94,10 @@
     <!-- returns the word id for given annotation end -->
     <xsl:function name="tei:word-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
+        <xsl:param name="tierid"/>
+        <xsl:variable name="annotationendplusone">
+            <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
@@ -93,12 +108,19 @@
             <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
                 <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
             </xsl:when>
+            <xsl:when test="($words[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$words[@e = $annotationendplusone]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($events[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$events[@e = $annotationendplusone]/@xml:id"/>
+            </xsl:when>
             <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
             <xsl:otherwise>
                 <xsl:message terminate="yes">
                     <!-- Error message -->
-                    there is mismatch of annotation in the exb file that happens after the segmentation:
-                    probably a missing whitespace after a word
+                    mismatch of annotation in the exb file that happens after the segmentation:
+                    annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>) in tier <xsl:value-of select="$tierid"/> cannot be matched to a word id or event.
+                    Could be a missing whitespace after a word.
                 </xsl:message>
             </xsl:otherwise>
         </xsl:choose>
@@ -107,11 +129,25 @@
     <!-- returns the seg id for given annotation start -->
     <xsl:function name="tei:seg-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
+        <xsl:param name="tierid"/>
+        <xsl:variable name="annotationstartminone">
+            <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
             <xsl:when test="($segs[@s = $annotationstart]/@xml:id) != ''">
                 <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
+            <xsl:when test="($events[@s = $annotationstart]/@xml:id) != ''">
+                <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($segs[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($events[@s = $annotationstartminone]/@xml:i) != ''">
+                <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
             <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
@@ -122,6 +158,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                     there is mismatch of annotation in the exb file that happens after the segmentation:
+                    annotationstart <xsl:value-of select="$annotationstart"/> (or minus one <xsl:value-of select="$annotationstartminone"/>) in tier <xsl:value-of select="$tierid"/> cannot be matched to a seg id or event.
                     probably a missing whitespace after a word
                 </xsl:message>
             </xsl:otherwise>
@@ -131,11 +168,25 @@
     <!-- returns the seg id for given annotation end -->
     <xsl:function name="tei:seg-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
+        <xsl:param name="tierid"/>
+        <xsl:variable name="annotationendplusone">
+            <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
+        </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
             <xsl:when test="($segs[@e = $annotationend]/@xml:id) != ''">
                 <xsl:value-of select="$segs[@e = $annotationend]/@xml:id"/>
+            </xsl:when>
+            <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
+            <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
+                <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($segs[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$segs[@e = $annotationendplusone]/@xml:id"/>
+            </xsl:when>
+            <xsl:when test="($events[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$events[@e = $annotationendplusone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
     <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
@@ -146,6 +197,7 @@
                 <xsl:message terminate="yes">
                     <!-- Error message -->
                 there is mismatch of annotation in the exb file that happens after the segmentation:
+                annotationend <xsl:value-of select="$annotationend"/> (or plus one <xsl:value-of select="$annotationendplusone"/>) in tier <xsl:value-of select="$tierid"/>  cannot be matched to a seg id or event.
                 probably a missing whitespace after a word
             </xsl:message>
             </xsl:otherwise>
@@ -182,7 +234,9 @@
     <xsl:template match="*:event">
         <xsl:element name="incident">
             <!-- add an id for references -->
-            <xsl:attribute name="xml:id"/>
+            <xsl:attribute name="xml:id">
+                <xsl:value-of select="@xml:id"/>
+            </xsl:attribute>  
             <xsl:copy-of select="@start"/>
             <xsl:copy-of select="@end"/>
             <xsl:copy-of select="@who"/>
@@ -234,12 +288,12 @@
                                     <xsl:attribute name="from">
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@start"/> -->
-                                        <xsl:value-of select="tei:word-annotation-from(@start)"/>
+                                        <xsl:value-of select="tei:word-annotation-from(@start, @level)"/>
                                     </xsl:attribute>
                                     <xsl:attribute name="to">
                                         <!--<xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@end"/> -->
-                                        <xsl:value-of select="tei:word-annotation-to(@end)"/>
+                                        <xsl:value-of select="tei:word-annotation-to(@end, @level)"/>
                                     </xsl:attribute>
                                     <!-- the further morpheme based segmentation and references here -->
                                     <!-- we need to throw an error message when the morpheme annotations aren't consistent -->
@@ -269,12 +323,12 @@
                                 <xsl:element name="span">
                                     <!-- we want to refer to the seg element here (=sentence) -->
                                     <xsl:attribute name="from">
-                                        <xsl:value-of select="tei:seg-annotation-from(@start)"/>
+                                        <xsl:value-of select="tei:seg-annotation-from(@start, @level)"/>
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@start"/> -->
                                     </xsl:attribute>
                                     <xsl:attribute name="to">
-                                        <xsl:value-of select="tei:seg-annotation-to(@end)"/>
+                                        <xsl:value-of select="tei:seg-annotation-to(@end, @level)"/>
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@end"/> -->
                                     </xsl:attribute>
@@ -301,6 +355,9 @@
                 <xsl:value-of select="count(preceding::*:seg[@type = 'utterance'])"/>-->
                 <xsl:value-of select="@subtype"/>
             </xsl:attribute>
+            <xsl:attribute name="type">                
+                <xsl:value-of select="@type"/>
+            </xsl:attribute>
             <xsl:apply-templates select="node()"/>
         </xsl:element>
         <xsl:element name="anchor">
@@ -322,8 +379,11 @@
             <xsl:attribute name="subtype">
                 <!--<xsl:text>seg</xsl:text>
                 <xsl:value-of select="count(preceding::*:seg[@type = 'utterance'])"/>-->
-                <xsl:value-of select="@subtype"/>
+                <xsl:value-of select="@subtype"/>                
             </xsl:attribute>
+             <xsl:attribute name="type">                
+                <xsl:value-of select="@type"/>
+             </xsl:attribute>
             <xsl:apply-templates select="node()"/>
         </xsl:element>
     </xsl:template>
@@ -344,14 +404,15 @@
     <!-- templates for things between uncertain-start and uncertain-end -->
     <!-- ************************************************************** -->
 
-    <xsl:template match="*:uncertain-start[following-sibling::*:uncertain-end]">
+    <xsl:template match="*:uncertain-start[following-sibling::*:uncertain-end[1]]">
         <!-- removed uncertain 11-07-2018 -->
         <!-- <xsl:element name="unclear" xmlns="http://www.tei-c.org/ns/1.0"> -->
-        <xsl:apply-templates select="following-sibling::*[count(preceding-sibling::*) &lt; count(current()/following-sibling::*:uncertain-end/preceding-sibling::*)]" mode="grab_em"/>
+        <!-- TO DO: if on uncertain start follows directly after an uncertain end this chooses each element twice -->
+        <xsl:apply-templates select="following-sibling::*[count(preceding-sibling::*) &lt; count(current()/following-sibling::*:uncertain-end[1]/preceding-sibling::*)]" mode="grab_em"/>
         <!-- </xsl:element> -->
     </xsl:template>
 
-    <xsl:template match="*:w[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end]" mode="grab_em">
+    <xsl:template match="*:w[not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start[1] and following-sibling::*:uncertain-end[1]]" mode="grab_em">
         <xsl:element name="w">
             <!-- added 11-07-2018 -->
             <xsl:attribute name="xml:id">
@@ -429,7 +490,7 @@
 
     <!--************************-->
 
-    <xsl:template match="*:w">
+    <xsl:template match="*:w[not(not(self::*:uncertain-start) and preceding-sibling::*:uncertain-start and following-sibling::*:uncertain-end)]">
         <xsl:element name="w">
             <xsl:attribute name="xml:id">
                 <xsl:value-of select="@xml:id"/>
@@ -480,7 +541,7 @@
         <xsl:variable name="annValue" select="./@value"/>
         <xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
         <!-- check if the splitting creates the same number of tokens in each tier/annotation -->
-        <xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
+        <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
             <xsl:message terminate="yes">
                 the annotations with dashes in different tiers don't match
                 fix <xsl:value-of select="$annValue"/> vs  <xsl:value-of
@@ -492,10 +553,10 @@
         <xsl:variable name="position">
             <!-- need to use the correct mb node here -->
             <xsl:value-of
-                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-')) + 1)"
+                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '[-=]')) + 1)"
             />
         </xsl:variable>
-        <xsl:variable name="tokenizedann" select="tokenize($annValue, '-')"/>
+        <xsl:variable name="tokenizedann" select="tokenize($annValue, '[-=]')"/>
         <xsl:for-each select="$tokenizedann">
             <xsl:choose>
                 <xsl:when test="contains(., '.[')">
@@ -578,9 +639,9 @@
     <xsl:template name="morph-segmentation">
         <xsl:variable name="mbValue" select="./@value"/>
         <xsl:variable name="position">
-            <xsl:value-of select="(count(preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '-'))) + 1"/>
+            <xsl:value-of select="(count(preceding::annotation[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"/>
         </xsl:variable>
-        <xsl:variable name="tokenizedMb" select="tokenize($mbValue, '-')"/>
+        <xsl:variable name="tokenizedMb" select="tokenize($mbValue, '[-=]')"/>
         <xsl:for-each select="$tokenizedMb">
             <xsl:variable name="realposition">
                 <xsl:value-of select="($position) + (position() - 1)"/>
