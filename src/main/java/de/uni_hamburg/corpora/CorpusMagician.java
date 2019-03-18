@@ -201,9 +201,8 @@ public class CorpusMagician {
             cio.write(absoluteReport, reportlocation);
             }
             //create the error list file
-            //needs to be OS independent
-            //There is an error for me when running on windows: \null gets created
-            URL errorlistlocation = new URL(basedirectory + "/" + "CorpusServices_Errors.xml");            
+            System.out.println("Basedirectory is " + basedirectory);
+            URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");            
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             if (exmaErrorList != null){
             cio.write(exmaErrorList, errorlistlocation);
