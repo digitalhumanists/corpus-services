@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import static java.lang.System.out;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -166,6 +167,7 @@ public class CorpusIO {
         Set<String> recursionBlackList = new HashSet<String>();
         recursionBlackList.add(".git");
         recursionBlackList.add(".gitignore");
+        //TODO And here we create Files again...
         Set<File> recursed = new HashSet<File>();
         Stack<File> dirs = new Stack();
         File d = new File(directoryURL.getFile());
@@ -217,13 +219,15 @@ public class CorpusIO {
         }
     }
 
-    public Collection<CorpusData> read(URL url) throws MalformedURLException, SAXException, SAXException, JexmaraldaException {
+    public Collection<CorpusData> read(URL url) throws MalformedURLException, SAXException, SAXException, JexmaraldaException, URISyntaxException {
         Collection<CorpusData> cdc = new ArrayList();
         ArrayList<CorpusData> acdc;
         acdc = (ArrayList) cdc;
         if (isLocalFile(url)) {
             //if the url points to a directory
-            if (new File(url.getFile()).isDirectory()) {
+            //I think we create more heap space usage because even for non-corpus-data objects we create File Objects!!
+            //probably check if the URL ends with one of our used file endings here first
+            if (isDirectory(url)) {
                 //we need to iterate
                 //and add everything to the cdc list
                 Collection<File> recursed = getFileURLSRecursively(url);
@@ -238,6 +242,8 @@ public class CorpusIO {
             } //if the url points to a file
             else {
                 //we need to read this file as some implementation of corpusdata
+                //I think we create more heap space usage because even for non-corpus-data objects we create File Objects!!
+                //probably check if the URL ends with one of our used file endings here first
                 File f = new File(url.getFile());
                 CorpusData cd = toCorpusData(f);
                 if (cd != null) {
@@ -260,6 +266,13 @@ public class CorpusIO {
     public static boolean isLocalFile(java.net.URL url) {
         String scheme = url.getProtocol();
         return "file".equalsIgnoreCase(scheme) && !hasHost(url);
+    }
+    
+    /**
+     * Whether the URL is a directory in the local file system.
+     */
+    public static boolean isDirectory(java.net.URL url) throws URISyntaxException{
+        return new File(url.toURI()).isDirectory();
     }
 
     public static boolean hasHost(java.net.URL url) {
