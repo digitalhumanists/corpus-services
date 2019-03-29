@@ -12,6 +12,7 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.io.File;
@@ -19,6 +20,7 @@ import java.util.Hashtable;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -37,6 +39,8 @@ import org.w3c.dom.Text;
 
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.exmaralda.partitureditor.jexmaralda.segment.AbstractSegmentation;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.jdom.JDOMException;
 
 /**
@@ -47,6 +51,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
     static String filename;
     static BasicTranscription bt;
     static File exbfile;
+    AbstractSegmentation segmentation;
     static ValidatorSettings settings;
     final String EXB_SEG = "exb-segmentation-checker";
 
@@ -99,12 +104,12 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
             }
         }
     }
-    
+
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
-    * checks for parser configuration, SAXE and IO exceptions.
-    */   
+     * Default check function which calls the exceptionalCheck function so that
+     * the primal functionality of the feature can be implemented, and
+     * additionally checks for parser configuration, SAXE and IO exceptions.
+     */
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
@@ -121,110 +126,47 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
         }
         return stats;
     }
-    
+
     /**
-    * Main feature of the class: Checks Exmaralda .exb file for segmentation problems.
-    */  
+     * Main feature of the class: Checks Exmaralda .exb file for segmentation
+     * problems.
+     */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         Report stats = new Report();
-        File f = new File(cd.getURL().toString());
-        filename = f.getPath().substring(6);
+        filename = cd.getURL().getFile();
         bt = new BasicTranscription(filename);
-
-        /** TODO: actually check the file:
-         * Code snippet from Exmaralda:
-         * 
-         * exmaralda\src\org\exmaralda\common\corpusbuild\comafunctions\SegmentationErrorsChecker.java
-         * 
-         * 
-         * package org.exmaralda.common.corpusbuild.comafunctions;
-
-import java.net.URISyntaxException;
-import java.util.Vector;
-import org.exmaralda.common.corpusbuild.AbstractCorpusChecker;
-import org.exmaralda.partitureditor.fsm.FSMException;
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.segment.AbstractSegmentation;
-import org.xml.sax.SAXException;
-
-
-public class SegmentationErrorsChecker extends AbstractCorpusChecker {
-
-    AbstractSegmentation segmentation;
-
-    public SegmentationErrorsChecker(String segmentationName){
-        this(segmentationName, "");
-    }
-    
-    public SegmentationErrorsChecker(String segmentationName, String customFSMPath){
-        super();
-        if (customFSMPath==null || customFSMPath.length()==0){
-            if (segmentationName.equals("HIAT")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation();
-            } else if (segmentationName.equals("GAT")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GATSegmentation();
-            } else if (segmentationName.equals("cGAT_MINIMAL")) {
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.cGATMinimalSegmentation();
-            } else if (segmentationName.equals("CHAT")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation();
-            } else if (segmentationName.equals("CHAT_MINIMAL")) {
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.CHATMinimalSegmentation();
-            } else if (segmentationName.equals("DIDA")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.DIDASegmentation();
-            } else if (segmentationName.equals("IPA")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.IPASegmentation();
-            } else {
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GenericSegmentation();
-            }
+        String segmentationName = "";
+        if (segmentationName.equals("HIAT")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation();
+        } else if (segmentationName.equals("GAT")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GATSegmentation();
+        } else if (segmentationName.equals("cGAT_MINIMAL")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.cGATMinimalSegmentation();
+        } else if (segmentationName.equals("CHAT")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation();
+        } else if (segmentationName.equals("CHAT_MINIMAL")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.CHATMinimalSegmentation();
+        } else if (segmentationName.equals("DIDA")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.DIDASegmentation();
+        } else if (segmentationName.equals("IPA")) {
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.IPASegmentation();
         } else {
-            if (segmentationName.equals("HIAT")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation(customFSMPath);
-            } else if (segmentationName.equals("GAT")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GATSegmentation(customFSMPath);
-            } else if (segmentationName.equals("cGAT_MINIMAL")) {
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.cGATMinimalSegmentation(customFSMPath);
-            } else if (segmentationName.equals("CHAT")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation(customFSMPath);
-            } else if (segmentationName.equals("CHAT_MINIMAL")) {
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.CHATMinimalSegmentation(customFSMPath);
-            } else if (segmentationName.equals("DIDA")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.DIDASegmentation(customFSMPath);
-            } else if (segmentationName.equals("IPA")){
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.IPASegmentation(customFSMPath);
-            } else {
-                segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GenericSegmentation(customFSMPath);
-            }            
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GenericSegmentation();
         }
-
-    }
-
-    @Override
-    public void processTranscription(BasicTranscription bt, String currentFilename) throws URISyntaxException, SAXException {
-        Vector v = segmentation.getSegmentationErrors(bt);
-        for (Object o : v){
-            FSMException fsme = (FSMException)o;
+        List v = segmentation.getSegmentationErrors(bt);
+        for (Object o : v) {
+            FSMException fsme = (FSMException) o;
             String text = fsme.getMessage();
-            addError(currentFilename, fsme.getTierID(), fsme.getTLI(), text);
+            stats.addCritical(EXB_SEG, cd.getFilename() + ": " + text);
+            exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
         }
-    }
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-        }                                    
-    }
-         */
         return stats;
     }
-    
+
     /**
-    * No fix is applicable for this feature.
-    */
+     * No fix is applicable for this feature.
+     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         report.addCritical(EXB_SEG,
