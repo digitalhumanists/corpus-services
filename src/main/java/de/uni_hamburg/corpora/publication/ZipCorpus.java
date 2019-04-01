@@ -58,14 +58,14 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      *
      * @param zipFile output ZIP file location
      */
-    public Report zipIt(String zipFile, Boolean AUDIO) {
+    public Report zipIt(CorpusData comadata, String zipFile, Boolean AUDIO) {
         //get name of folder
         if (zipFile.equals("")){
-        String SOURCE_FOLDER_NAME = SOURCE_FOLDER.substring(SOURCE_FOLDER.lastIndexOf(File.separator) + 1);
+        String SOURCE_FOLDER_NAME = comadata.getFilenameWithoutFileEnding();
         if (AUDIO) {
-            zipFile = SOURCE_FOLDER + File.separator + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
+            zipFile = SOURCE_FOLDER + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
         } else {
-            zipFile = SOURCE_FOLDER + File.separator + "resources" + File.separator + SOURCE_FOLDER_NAME + "NoAudio.zip";
+            zipFile = SOURCE_FOLDER + "resources" + File.separator + SOURCE_FOLDER_NAME + "NoAudio.zip";
         }
         }
         byte[] buffer = new byte[1024];
@@ -84,7 +84,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 zos.putNextEntry(ze);
 
                 FileInputStream in
-                        = new FileInputStream(SOURCE_FOLDER + File.separator + file);
+                        = new FileInputStream(file);
 
                 int len;
                 while ((len = in.read(buffer)) > 0) {
@@ -97,9 +97,8 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
             zos.closeEntry();
             //remember close it
             zos.close();
-
             System.out.println("Done");
-            stats.addCorrect(zc, comadata, "Successfully created zip file at " + OUTPUT_ZIP_FILE);
+            stats.addCorrect(zc, comadata, "Successfully created zip file at " + zipFile);
         } catch (IOException ex) {
             stats.addException(ex, zc, comadata, "Unknown IO exception");
         }
@@ -116,11 +115,13 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         if (node.isFile()) {
             if (AUDIO) {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf") || node.getName().endsWith(".mp3")) {
+                    System.out.println(node.getName());
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
                     stats.addCorrect(zc, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
             } else {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf")) {
+                    System.out.println(node.getName());
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
                     stats.addCorrect(zc, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
@@ -129,6 +130,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         if (node.isDirectory()) {
             String[] subNote = node.list();
             for (String filename : subNote) {
+                System.out.println(node.getName());
                 generateFileList(new File(node, filename));
             }
         }
@@ -142,14 +144,16 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      * @return Formatted file path
      */
     private String generateZipEntry(String file) {
-        return file.substring(SOURCE_FOLDER.length() + 1, file.length());
+        //return file.substring(SOURCE_FOLDER.length() + 1, file.length());
+        return file;
     }
 
     @Override
     public Report publish(CorpusData cd) {
         comadata = cd;
+        SOURCE_FOLDER = cd.getParentURL().getPath();
         stats = generateFileList(new File(SOURCE_FOLDER));
-        stats.merge(zipIt(OUTPUT_ZIP_FILE, AUDIO));
+        stats.merge(zipIt(cd, OUTPUT_ZIP_FILE, AUDIO));
         return stats;
     }
 
