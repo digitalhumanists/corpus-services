@@ -18,7 +18,7 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 //import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
-//import de.uni_hamburg.corpora.validation.ExbStructureChecker;
+import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
@@ -273,6 +273,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
+        allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("FileCoverageCheckerInel");
         allExistingCFs.add("NormalizeEXB");
@@ -281,7 +282,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");      
         allExistingCFs.add("ComaAddTiersFromExbsCorrector");
-		allExistingCFs.add("ComaXsdChecker");
+	allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
@@ -359,7 +360,11 @@ public class CorpusMagician {
                 case "exbannotationpanelcheck":
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
                     corpusfunctions.add(eapc);
-                    break;    
+                    break; 
+                case "exbstructurechecker":
+                    ExbStructureChecker esc = new ExbStructureChecker ();
+                    corpusfunctions.add(esc);
+                    break; 
                 case "filecoveragechecker":
                     FileCoverageChecker fcc = new FileCoverageChecker();
                     corpusfunctions.add(fcc);
