@@ -1,0 +1,6 @@
+[submodule "exmaralda"]
+	path = exmaralda
+	url = https://github.com/EXMARaLDA/exmaralda.git
+[submodule "corpus-curation"]
+	path = corpus-curation
+	url = git@gitlab.rrz.uni-hamburg.de:hzsk/corpus-curation.git

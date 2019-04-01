@@ -8,6 +8,8 @@
         <xsl:text>
 </xsl:text>
     </xsl:variable>
+    <xsl:variable name="UTTERANCEENDSYMBOL" select="'[.!?&#x2026;:]'"/>
+    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="'.*[.!?&#x2026;:]&quot;*\s*&quot;*\s*'"/>
     <xsl:key name="tierids" match="*[@id]" use="@id"/>
     <xsl:variable name="duplicateids">
         <xsl:for-each-group select="$ROOT//*:tier" group-by="@id">
@@ -34,12 +36,12 @@
 
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
         <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''',  replace(text(), ';', ':'), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''',  replace(replace(text(), ';', ':'), $NEWLINE, ''), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
         <!-- check for multiple whitespaces in text content of non-mixed content elements -->
         <xsl:for-each select="//*[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''',  replace(text(), ';', ':'), ''';;', $NEWLINE)"/>
+            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''',  replace(replace(replace(text(), ';', ':'), $NEWLINE, ''), $NEWLINE, ''), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
 
@@ -75,7 +77,7 @@
 
             <!-- check if paths are relative -->
             <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
-                <xsl:value-of select="concat('WARNING;The file reference ''', replace(text(), ';', ':'), ''' appears to be an absolute path;;', $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;The file reference ''', replace(replace(text(), ';', ':'), $NEWLINE, ''), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
 
         </xsl:for-each>
@@ -101,7 +103,7 @@
             <xsl:variable name="morpheme-annotation-end" select="./@end"/>
             <xsl:variable name="annotation-name" select="../@category"/>
             <xsl:variable name="mbValue" select="//*:tier[@category = 'mb']/*:event[@start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/text()"/>
-            <xsl:if test="count(tokenize($annValue, '-')) != count(tokenize($mbValue, '-'))">
+            <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
                 <xsl:value-of
                     select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue, ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, ';', ../@id, ';', $morpheme-annotation-start, $NEWLINE)"
                 />
@@ -126,9 +128,14 @@
         
         <xsl:for-each select="$ROOT//*:tier[@category = ('mc')]/*:event[contains(text(), '&lt;NotSure&gt;')]">
             <!-- Check that in the mc tier no <NotSure> exists -->
-            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(text(), ';', ':'),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+            <xsl:value-of select="concat('CRITICAL;mc tier ', ../@id, ': ', replace(replace(text(), ';', ':'), $NEWLINE, ''),' contains NotSure replace with %% (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
         </xsl:for-each>
 
+        <xsl:for-each select="$ROOT//*:tier[@category = ('tx')]/*:event[not(ends-with(text(), ' '))]">
+            <!-- Check that in the tx tier no event without whitespace at the end exists (causes ISO TEI errors) -->
+            <xsl:value-of select="concat('CRITICAL;event in tier ', ../@id, ': ', replace(replace(text(), ';', ':'), $NEWLINE, ''),' does not end with whitespace (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>     
+        </xsl:for-each>
+        
         <xsl:for-each select="$ROOT//*:event">
 
             <!-- Check if event is empty (https://lab.multilingua.uni-hamburg.de/redmine/issues/5885) -->
@@ -160,6 +167,58 @@
             <xsl:if test="matches(., '§')">
                 <xsl:value-of select="concat('CRITICAL;found ''§'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
+            
+            <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
+            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat(' ',$UTTERANCEENDSYMBOL))">
+                <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+            </xsl:if>
+            
+            <!-- Check if there is no utterance end symbol with a whitespace before (preceding event) -->         
+            <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat('^',$UTTERANCEENDSYMBOL))">
+                <xsl:choose>
+                    <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
+                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="concat('WARNING;utterance end symbol appearing alone in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:otherwise>
+                </xsl:choose>              
+            </xsl:if>
+           
+            <!-- Check if there is an utterance end symbol in the tx tier at the end of each matching ref event -->         
+            <xsl:if test="(../@category = ('ref'))">
+                <xsl:variable name="END" select="@end"/>
+                <xsl:variable name="SPK" select="../@speaker"/>
+                <xsl:choose>
+                    <xsl:when test="matches(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), $UTTERANCEENDSYMBOLWHITESPACE)">
+                        <!--<xsl:value-of select="concat('CRITICAL;sentence in tx tier IS ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>  -->                    
+                    </xsl:when>      
+                    <xsl:otherwise>
+                        <xsl:value-of select="concat('CRITICAL;sentence in tx tier not ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:otherwise>
+                </xsl:choose>                                                     
+            </xsl:if>
+            
+            <!-- Check if each utterance end symbol in the tx tier is only at the end of each matching ref event -->         
+            <xsl:if test="(../@category = ('tx')) and matches(., concat('.*', $UTTERANCEENDSYMBOL, '.*'))">
+                <xsl:variable name="SPK" select="../@speaker"/>
+                <xsl:variable name="END" select="@end"/>
+                <xsl:choose>
+                    <xsl:when test="../../tier[@category='ref' and @speaker=$SPK]/event[@end=$END]">
+                        <!--<xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier IS appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/> -->
+                    </xsl:when> 
+                    <!-- Test if it is a colon but should be a vowel length marker -->
+                    <xsl:when test=" matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;]+.*')">
+                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should be a vowel length marker ː ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:when> 
+                    <xsl:otherwise>
+                        <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:otherwise>
+                </xsl:choose>                                                     
+            </xsl:if>
+            
+            
+            
 
         </xsl:for-each>
         
@@ -170,6 +229,7 @@
             <xsl:if test="empty($ROOT//*:tier-format[@tierref = current()/@id])">
                 <xsl:value-of select="concat('CRITICAL;no tier-format found for tier ''', @id, ''';', @id, ';', $NEWLINE)"/>
             </xsl:if>
+            
         </xsl:for-each>
 
     </xsl:template>
