@@ -32,10 +32,10 @@
         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Transcription</xsl:with-param>
         </xsl:call-template>
-       <xsl:call-template name="GET_DESCRIPTIONS">
+        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Recording</xsl:with-param>
         </xsl:call-template>
-       <xsl:call-template name="GET_DESCRIPTIONS">
+        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">AsocFile</xsl:with-param>
         </xsl:call-template>
         <xsl:call-template name="GET_KEYS_LOC">
@@ -400,7 +400,7 @@
                                 <th>Country</th>
                             </xsl:if>
                             <xsl:if
-                                test="(//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodStart) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodExact) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodDuration)">
+                                test="(//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Period/PeriodStart) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Period/PeriodExact) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Period/PeriodDuration)">
                                 <th>PeriodStart</th>
                                 <th>PeriodExcact</th>
                                 <th>PeriodDuration</th>
@@ -451,7 +451,7 @@
                                     </td>
                                 </xsl:if>
                                 <xsl:if
-                                    test="(//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodStart) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodExact) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/PeriodDuration)">
+                                    test="(//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Period/PeriodStart) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Period/PeriodExact) or (//*[name() = $PARENT]/Location[@Type = current-grouping-key()]/Period/PeriodDuration)">
                                     <td>
                                         <xsl:value-of select="./Period/PeriodStart"/>
                                     </td>
@@ -576,17 +576,17 @@
                 </xsl:variable>
                 <thead>
                     <tr>
-                        <th> <xsl:choose> <xsl:when test="$PARENT = 'Speaker' or $PARENT = 'Communication'"> <xsl:value-of select="$PARENT"/></xsl:when>
-                            </xsl:choose>
-                          
-                            
-                            Name</th>
+                        <th> <xsl:choose> <xsl:when test="$PARENT = 'Speaker' or $PARENT = 'Communication'"> <xsl:value-of select="$PARENT"/></xsl:when> </xsl:choose> Name</th>
                         <xsl:for-each-group select="//*[name() = $PARENT]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
                             <xsl:sort select="current-grouping-key()"/>
                             <th>
                                 <xsl:value-of select="current-grouping-key()"/>
                             </th>
                         </xsl:for-each-group>
+                        <xsl:if test="$PARENT = 'Speaker'">
+                            <th>Pseudo</th>
+                            <th>Sex</th>
+                        </xsl:if>
                     </tr>
                 </thead>
                 <tbody>
@@ -625,6 +625,10 @@
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:for-each>
+                            <xsl:if test="$PARENT = 'Speaker'">
+                                <td><xsl:value-of select="$commElement/Pseudo/text()"/></td>
+                                <td><xsl:value-of select="$commElement/Sex/text()"/></td>
+                            </xsl:if>
                         </tr>
                     </xsl:for-each>
                 </tbody>

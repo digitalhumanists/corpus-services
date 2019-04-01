@@ -201,9 +201,8 @@ public class CorpusMagician {
             cio.write(absoluteReport, reportlocation);
             }
             //create the error list file
-            //needs to be OS independent
-            //There is an error for me when running on windows: \null gets created
-            URL errorlistlocation = new URL(basedirectory + "/" + "CorpusServices_Errors.xml");            
+            System.out.println("Basedirectory is " + basedirectory);
+            URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");            
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             if (exmaErrorList != null){
             cio.write(exmaErrorList, errorlistlocation);
@@ -220,7 +219,9 @@ public class CorpusMagician {
         } catch (SAXException ex) {
             report.addException(ex, "An XSLT error occured");
         } catch (JexmaraldaException ex) {
-            report.addException(ex, "A Exmaralda file reading error occured");
+            report.addException(ex, "An Exmaralda file reading error occured");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, "A URI was incorrect");
         }
 
     }
@@ -249,7 +250,7 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException {
         corpus = new Corpus(url);
     }
 
