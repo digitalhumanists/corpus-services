@@ -1,3 +1,6 @@
-/target/
-/doc/
-Doxygen.config
+*
+!*/
+!.gitignore
+*.java
+*.xsl
+*.xml
