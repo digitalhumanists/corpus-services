@@ -145,6 +145,8 @@ public class CorpusMagician {
             if (!(corpus.getMetadata().isEmpty())) {
                 Metadata md = corpus.getMetadata().iterator().next();
                 basedirectory = md.getParentURL();
+            } else {
+                basedirectory = url;
             }
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
@@ -560,6 +562,17 @@ public class CorpusMagician {
                     break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker eseg = new ExbSegmentationChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("SEGMENTATION")) {
+                            eseg.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        }
+                        if (cfProperties.containsKey("FSM")) {
+                            eseg.setExternalFSM(cfProperties.getProperty("FSM"));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        }
+                    }
                     corpusfunctions.add(eseg);
                     break;
                 default:
