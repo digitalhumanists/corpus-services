@@ -9,6 +9,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -50,10 +51,13 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
 
     static String filename;
     static BasicTranscription bt;
+    static BasicTranscriptionData btd;
     static File exbfile;
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
     final String EXB_SEG = "exb-segmentation-checker";
+    String segmentationName = "HIAT";
+    String path2ExternalFSM = "";
 
     public static Report check(File f) {
         Report stats = new Report();
@@ -134,9 +138,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         Report stats = new Report();
-        filename = cd.getURL().getFile();
-        bt = new BasicTranscription(filename);
-        String segmentationName = "";
+        btd = new BasicTranscriptionData(cd.getURL());
         if (segmentationName.equals("HIAT")) {
             segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation();
         } else if (segmentationName.equals("GAT")) {
@@ -154,11 +156,15 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
         } else {
             segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GenericSegmentation();
         }
-        List v = segmentation.getSegmentationErrors(bt);
+        if (!path2ExternalFSM.equals("")) {
+            //segmentation.pathToExternalFSM = path2ExternalFSM;
+            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation(path2ExternalFSM);
+        }
+        List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
         for (Object o : v) {
             FSMException fsme = (FSMException) o;
             String text = fsme.getMessage();
-            stats.addCritical(EXB_SEG, cd.getFilename() + ": " + text);
+            stats.addCritical(EXB_SEG, cd, text);
             exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
         }
         return stats;
@@ -190,4 +196,11 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
         return IsUsableFor;
     }
 
+    public void setSegmentation(String s) {
+        segmentationName = s;
+    }
+
+    public void setExternalFSM(String s) {
+        path2ExternalFSM = s;
+    }
 }
