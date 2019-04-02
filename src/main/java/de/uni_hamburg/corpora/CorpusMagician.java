@@ -277,6 +277,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
+        allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("FileCoverageCheckerInel");
         allExistingCFs.add("NormalizeEXB");
