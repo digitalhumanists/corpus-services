@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (c) http://www.rrz.uni-hamburg.de/exmaralda -->
+<basic-transcription>
+<head>
+<meta-information><project-name>EXMARaLDA DemoKorpus</project-name><transcription-name>HARDtalk</transcription-name><referenced-file url="HardTalk.avi"/><referenced-file url="HardTalk.wav"/><referenced-file url="HardTalk.mp3"/><referenced-file url="HardTalk.ogg"/><referenced-file url="HardTalk.webm"/><ud-meta-information><ud-information attribute-name="AutoSave">;C:\Users\hzsk\EXMARaLDA_AutoBackup_2013_06_12_02_47_48.exb at 2013_06_12_03_48_56;C:\Users\hzsk\EXMARaLDA_AutoBackup_2013_06_12_02_47_48.exb at 2013_06_12_04_49_56;C:\Users\hzsk\EXMARaLDA_AutoBackup_2013_06_12_02_47_48.exb at 2013_06_12_05_50_56;C:\Users\hzsk-hk\EXMARaLDA_AutoBackup_2013_07_11_01_38_03.exb at 2013_07_11_02_39_06;C:\Users\hzsk-hk\EXMARaLDA_AutoBackup_2013_07_11_01_38_03.exb at 2013_07_11_03_40_06</ud-information></ud-meta-information><comment></comment><transcription-convention>HIAT (simplified)</transcription-convention></meta-information><speakertable><speaker id="SPK0">
+<abbreviation>StS</abbreviation>
+<sex value="m"/>
+<languages-used><language lang="eng"/></languages-used>
+<l1></l1>
+<l2></l2>
+<ud-speaker-information>
+<ud-information attribute-name="Name">Stephen Sackur</ud-information><ud-information attribute-name="Occupation">journalist, TV presenter</ud-information></ud-speaker-information>
+<comment></comment>
+</speaker>
+<speaker id="SPK1">
+<abbreviation>DD</abbreviation>
+<sex value="m"/>
+<languages-used><language lang="eng"/></languages-used>
+<l1></l1>
+<l2></l2>
+<ud-speaker-information>
+<ud-information attribute-name="Name">Daniel Dennett</ud-information><ud-information attribute-name="Occupation">philosopher, neuroscientist</ud-information></ud-speaker-information>
+<comment></comment>
+</speaker>
+</speakertable></head>
+<basic-body>
+<common-timeline>
+<tli id="T0" time="0.0"/>
+<tli id="T1" time="1.3745447380711044"/>
+<tli id="T2" time="3.7466614125214335"/>
+<tli id="T3" time="5.1359810154495875"/>
+<tli id="T4" time="5.443673124623174"/>
+<tli id="T5" time="7.443673124623174"/>
+<tli id="T6" time="8.043671447140028"/>
+<tli id="T7" time="11.462900010331552"/>
+<tli id="T8" time="13.462900010331552"/>
+<tli id="T9" time="14.899973410454308"/>
+<tli id="T10" time="17.32443469008848"/>
+<tli id="T11" time="18.96674132280252"/>
+<tli id="T12" time="20.893663156502143"/>
+<tli id="T13" time="22.893663156502143"/>
+<tli id="T14" time="25.716736967798184"/>
+<tli id="T15" time="27.532120411922378"/>
+<tli id="T16" time="28.61288894539463"/>
+<tli id="T17" time="29.89340176046612"/>
+<tli id="T18" time="31.985963692210106"/>
+<tli id="T19" time="34.38211599239948"/>
+<tli id="T20" time="37.705190771474264"/>
+<tli id="T21" time="39.705190771474264"/>
+<tli id="T22" time="42.139803294938645"/>
+<tli id="T23" time="44.98595530479437"/>
+<tli id="T24" time="48.22826090521109"/>
+<tli id="T25" time="50.10133661980534"/>
+<tli id="T26" time="50.862874590009966"/>
+<tli id="T27" time="53.712872751230364"/>
+<tli id="T28" time="54.95902579338342"/>
+<tli id="T29" time="59.13210002405026"/>
+<tli id="T30" time="61.42440623739351"/>
+<tli id="T31" time="63.69363554254873"/>
+<tli id="T32" time="65.10132694201793"/>
+<tli id="T33" time="67.47440233401925"/>
+<tli id="T34" time="69.34363189724881"/>
+<tli id="T35" time="71.2782460336778"/>
+<tli id="T36" time="73.2782460336778"/>
+<tli id="T37" time="73.84362899391259"/>
+<tli id="T38" time="73.98978274577006"/>
+<tli id="T39" time="76.18208902363189"/>
+<tli id="T40" time="78.16285826680856"/>
+<tli id="T41" time="80.25516331881731"/>
+<tli id="T42" time="83.56285349243343"/>
+<tli id="T43" time="85.28592930380553"/>
+<tli id="T44" time="88.59361947742165"/>
+<tli id="T45" time="88.80515780247849"/>
+<tli id="T46" time="91.38977151953667"/>
+<tli id="T47" time="94.32053885941512"/>
+<tli id="T48" time="96.60515277002905"/>
+<tli id="T49" time="99.10515115706447"/>
+<tli id="T50" time="101.87053398826212"/>
+<tli id="T51" time="104.0320710552066"/>
+<tli id="T52" time="105.93976213208289"/>
+<tli id="T53" time="108.2128375886028"/>
+<tli id="T54" time="110.83206666794298"/>
+<tli id="T55" time="114.6205257621428"/>
+<tli id="T56" time="115.96283258841261"/>
+<tli id="T57" time="116.37052463306763"/>
+<tli id="T58" time="118.77052308462167"/>
+<tli id="T59" time="119.20513818882934"/>
+<tli id="T60" time="120.0974453054328"/>
+<tli id="T61" time="120.42436817142972"/>
+<tli id="T62" time="122.49744375698678"/>
+<tli id="T63" time="126.08205682885914"/>
+<tli id="T64" time="128.6282090322706"/>
+<tli id="T65" time="130.97436136471924"/>
+<tli id="T66" time="132.63589875425663"/>
+<tli id="T67" time="135.75512751100393"/>
+<tli id="T68" time="136.95512673678093"/>
+<tli id="T69" time="139.68589420569657"/>
+<tli id="T70" time="141.79358515353562"/>
+<tli id="T71" time="143.95512222048012"/>
+<tli id="T72" time="147.85896585562006"/>
+<tli id="T73" time="149.95896450072985"/>
+<tli id="T74" time="151.18204063469489"/>
+<tli id="T75" time="153.65896211354226"/>
+<tli id="T76" time="157.0935752821925"/>
+<tli id="T77" time="158.5474204980377"/>
+<tli id="T78" time="161.6051108329503"/>
+<tli id="T79" time="163.85510938128215"/>
+<tli id="T80" time="165.85510938128215"/>
+<tli id="T81" time="167.77433762188082"/>
+<tli id="T82" time="170.1127976516001"/>
+<tli id="T83" time="174.4666409964064"/>
+<tli id="T84" time="177.6089466613417"/>
+<tli id="T85" time="177.88586955959795"/>
+<tli id="T86" time="178.374330782911"/>
+<tli id="T87" time="179.562791554594"/>
+<tli id="T88" time="181.74355937836185"/>
+<tli id="T89" time="183.05894314507896"/>
+<tli id="T90" time="186.9474021747602"/>
+<tli id="T91" time="188.7781702243431"/>
+<tli id="T92" time="191.07432258905106"/>
+<tli id="T93" time="193.33585959147695"/>
+<tli id="T94" time="196.08970396858058"/>
+<tli id="T95" time="198.61277926380404"/>
+<tli id="T96" time="200.38970119428154"/>
+<tli id="T97" time="202.61277926380404"/>
+<tli id="T98" time="206.46662035045995"/>
+<tli id="T99" time="210.3281563205885"/>
+<tli id="T100" time="211.05507892851114"/>
+<tli id="T101" time="211.87430916918584"/>
+<tli id="T102" time="213.87430916918584"/>
+<tli id="T103" time="217.64738236755534"/>
+<tli id="T104" time="219.01276610201313"/>
+<tli id="T105" time="220.02045775955668"/>
+<tli id="T106" time="220.9012264220661"/>
+<tli id="T107" time="222.81660980167163"/>
+<tli id="T108" time="224.67045604981416"/>
+<tli id="T109" time="228.72429958817634"/>
+<tli id="T110" time="230.1204512431798"/>
+<tli id="T111" time="230.72814315879765"/>
+<tli id="T112" time="231.37045043669752"/>
+<tli id="T113" time="232.73583417115537"/>
+<tli id="T114" time="233.53198750364203"/>
+<tli id="T115" time="234.92429429765252"/>
+<tli id="T116" time="235.9589090147487"/>
+<tli id="T117" time="237.32429274920656"/>
+<tli id="T118" time="237.68583097748552"/>
+<tli id="T119" time="239.88967570944135"/>
+<tli id="T120" time="243.56659641406577"/>
+<tli id="T121" time="246.14351782839458"/>
+<tli id="T122" time="247.81274752066133"/>
+<tli id="T123" time="249.67428478116153"/>
+<tli id="T124" time="252.38582149325384"/>
+<tli id="T125" time="254.24735875375404"/>
+<tli id="T126" time="257.35889520777204"/>
+<tli id="T127" time="259.2627401332836"/>
+<tli id="T128" time="261.8935076667178"/>
+<tli id="T129" time="264.82812115796094"/>
+<tli id="T130" time="266.82812115796094"/>
+<tli id="T131" time="269.6011950015163"/>
+<tli id="T132" time="271.6011950015163"/>
+<tli id="T133" time="274.7704224356326"/>
+<tli id="T134" time="276.7704224356326"/>
+<tli id="T135" time="280.08964977297114"/>
+<tli id="T136" time="282.08964977297114"/>
+<tli id="T137" time="285.5819539217197"/>
+<tli id="T138" time="288.43579823430474"/>
+<tli id="T139" time="291.07041191910366"/>
+<tli id="T140" time="294.8511787105742"/>
+<tli id="T141" time="296.8511787105742"/>
+<tli id="T142" time="298.96656067077095"/>
+<tli id="T143" time="302.32040466076313"/>
+<tli id="T144" time="305.18578742744216"/>
+<tli id="T145" time="308.8973234943486"/>
+<tli id="T146" time="312.6665518317251"/>
+<tli id="T147" time="316.53193401773694"/>
+<tli id="T148" time="319.4127242350687"/>
+<tli id="T149" time="324.4860478635366"/>
+<tli id="T150" time="328.80603979102716"/>
+<tli id="T151" time="330.03270391989065"/>
+<tli id="T152" time="1348.9331054017835"/>
+</common-timeline>
+<tier id="TIE0" speaker="SPK0" category="v" type="t" display-name="StS [v]"><event start="T1" end="T2">Daniel Dennett, welcome to Hard Talk. </event>
+<event start="T4" end="T5">Now you are an atheist. </event>
+<event start="T6" end="T7">Is it fair to say that you believe the world would be a much </event>
+<event start="T7" end="T8">better place if we were all </event>
+<event start="T8" end="T9">atheists? </event>
+<event start="T15" end="T16">((unint.)) </event>
+<event start="T16" end="T17">Okay, (I), ah ah˙ </event>
+<event start="T17" end="T18">((2s))</event>
+<event start="T18" end="T19">No God, no belief in God? </event>
+<event start="T23" end="T24">Right, so no creed no, no ehm </event>
+<event start="T24" end="T25">supernatural deity </event>
+<event start="T25" end="T26">and and </event>
+<event start="T26" end="T27">if if I wanna be just clear about this then </event>
+<event start="T27" end="T28">in your view </event>
+<event start="T28" end="T29">religions as we currently see them in our world are harmful? </event>
+<event start="T29" end="T30">Yes? </event>
+<event start="T38" end="T39">But overall a force for harm, they are </event>
+<event start="T39" end="T40">a net negative in your view? </event>
+<event start="T41" end="T42">Alright, cause you see I wanted to start there because I want to get </event>
+<event start="T42" end="T43">eh to grips with your, </event>
+<event start="T43" end="T44">your alliance of, of philosophy and evolutionary theory. </event>
+<event start="T45" end="T46">It seems to me you posit the idea </event>
+<event start="T46" end="T47">that, that religions ehm </event>
+<event start="T47" end="T48">• are evolving, and that in essence </event>
+<event start="T48" end="T49">they are evolving in/ in a way which is gonna leave them extinct </event>
+<event start="T49" end="T50">cause they are no longer necessary or useful </event>
+<event start="T50" end="T51">for human beings, am I right? </event>
+<event start="T55" end="T56">So that's </event>
+<event start="T56" end="T57">I </event>
+<event start="T57" end="T58">mean Richard Dorkings talks of religion in a way as/ as eh </event>
+<event start="T58" end="T59">to think of it </event>
+<event start="T59" end="T60">almost like a virus </event>
+<event start="T60" end="T61">that that… </event>
+<event start="T73" end="T74">And, and in that sense </event>
+<event start="T74" end="T75">in the intellectual sense, in/ in the ideas' </event>
+<event start="T75" end="T76">sense, religion is bad for us and therefore, we need a cure. </event>
+<event start="T76" end="T77">Is that what you're saying? </event>
+<event start="T82" end="T83">But I/ I, again to just apply the evolutionary (test), obviously </event>
+<event start="T83" end="T84">if one goes back to the origins of us, of </event>
+<event start="T84" end="T85">our sp</event>
+<event start="T85" end="T86">ecies </event>
+<event start="T86" end="T87">you know there was no religion </event>
+<event start="T87" end="T88">and we developed religion over time. </event>
+<event start="T89" end="T90">• • Assuming that we developed it because it/ it was useful </event>
+<event start="T90" end="T91">to us </event>
+<event start="T91" end="T92">((0.9s)) eh wh/ why why why would anything </event>
+<event start="T92" end="T93">anything (exist) unless it were useful. </event>
+<event start="T100" end="T101">Every, every e </event>
+<event start="T101" end="T102">xample you've just chosen is, is a material </event>
+<event start="T102" end="T103">or substance, I mean eh religion isn/ is a set of ideas, it's </event>
+<event start="T103" end="T104">it's not something you/ you can </event>
+<event start="T104" end="T105">smoke or drink </event>
+<event start="T105" end="T106">it is </event>
+<event start="T106" end="T107">and in the end, it's something in our heads. </event>
+<event start="T109" end="T110">((1.3s)) That's the way you see it? </event>
+<event start="T110" end="T111">You see, I'm just wond/ </event>
+<event start="T111" end="T112">I/ I </event>
+<event start="T112" end="T113">wonder because people around the world </event>
+<event start="T113" end="T114">will be watching this </event>
+<event start="T114" end="T115">as we develop your ideas </event>
+<event start="T115" end="T116">I think they'll be wondering how </event>
+<event start="T116" end="T117">much they can connect with what you </event>
+<event start="T117" end="T118">say </event>
+<event start="T118" end="T119">and I am imagining already a lot of people </event>
+<event start="T119" end="T120">who're watching this will feel that your view of what religion is </event>
+<event start="T120" end="T121">is a very very long way from theirs. </event>
+<event start="T145" end="T146">Yeah, but you in essence, you don't think it is. I just wonder whether you've erestimated </event>
+<event start="T146" end="T147">religion in a way, cause I, (don't know, 'bout) five years ago you said this, you said: </event>
+<event start="T147" end="T148">"In about 25 years almost all</event>
+<event start="T148" end="T149">religions will have evolved — that word again — evolved into very different phenomena and in most </event>
+<event start="T149" end="T150">quarters religion will no longer command the ore </event>
+<event start="T150" end="T151">that it does today." </event>
+</tier><tier id="TIE3" speaker="SPK0" category="nv" type="d" display-name="StS [nv]"></tier><tier id="TIE1" speaker="SPK1" category="v" type="t" display-name="DD [v]"><event start="T2" end="T3">Glad to be here Stephen. </event>
+<event start="T5" end="T6">Yes, I am.</event>
+<event start="T9" end="T10">((0.9s)) If we were all atheists, yes, </event>
+<event start="T10" end="T11">but that • • might leave </event>
+<event start="T11" end="T12">• room for succesor </event>
+<event start="T12" end="T13">institutions which were </event>
+<event start="T13" end="T14">clearly recognizable as the descendants of/ </event>
+<event start="T14" end="T15">of ah religions. </event>
+<event start="T15" end="T16">((unint.)) </event>
+<event start="T16" end="T17">((1.2s))</event>
+<event start="T17" end="T18">Secular, secular institutions. </event>
+<event start="T19" end="T20">No, just ehm all the ceremony and pomp and </event>
+<event start="T20" end="T21">community and art and music </event>
+<event start="T21" end="T22">ah eh and good works </event>
+<event start="T22" end="T23">and community but/ but no, no creed. </event>
+<event start="T25" end="T26">No, no˙ </event>
+<event start="T30" end="T31">((1.8s)) Overall, I think they do more harm than good. </event>
+<event start="T31" end="T32">They do some good </event>
+<event start="T32" end="T33">• and that I'd be happy to preserve, I think </event>
+<event start="T33" end="T34">there are already some </event>
+<event start="T34" end="T35">denominations, some churches </event>
+<event start="T35" end="T36">that are basically forces for good. </event>
+<event start="T36" end="T37">((0.5s))</event>
+<event start="T37" end="T38">Eh… </event>
+<event start="T40" end="T41">Ah, round the world, yes. </event>
+<event start="T44" end="T45">Ya.</event>
+<event start="T51" end="T52">Well, first of all, eh </event>
+<event start="T52" end="T53">even if they're no longer necessary or useful </event>
+<event start="T53" end="T54">they might not go extint. ((laughs)) </event>
+<event start="T54" end="T55">The common cold is not necessarily useful, it's not going extinct, is it? </event>
+<event start="T56" end="T57">It's… </event>
+<event start="T57" end="T58">((2.4s))</event>
+<event start="T58" end="T59">Eh˙ </event>
+<event start="T59" end="T60">((0.9s))</event>
+<event start="T60" end="T61">Em that's </event>
+<event start="T61" end="T62">why I use that example, yes </event>
+<event start="T62" end="T63">ehm • • • there are lots of symbionts, </event>
+<event start="T63" end="T64">lots of ehm parasites </event>
+<event start="T64" end="T65">and viruses and bacteria </event>
+<event start="T65" end="T66">that thrive on us </event>
+<event start="T66" end="T67">and other species and some of them are very useful to us </event>
+<event start="T67" end="T68">we couldn't live without them </event>
+<event start="T68" end="T69">the flora in our guts for instance, </event>
+<event start="T69" end="T70">couldn't digest our food without it </event>
+<event start="T70" end="T71">some are just along for the ride, they don't hurt </event>
+<event start="T71" end="T72">and there are few of them • • • a small minority are really harmful, </event>
+<event start="T72" end="T73">are bad for us, but ehm </event>
+<event start="T73" end="T74">ah they're… </event>
+<event start="T77" end="T78">A cure ehm yes, (wue) </event>
+<event start="T78" end="T79">yes indeed, I think a lot of people </event>
+<event start="T79" end="T80">are, are really afflicted </event>
+<event start="T80" end="T81">by their religion and </event>
+<event start="T81" end="T82">ah I would love to see them cured. </event>
+<event start="T84" end="T85">Mhm. </event>
+<event start="T86" end="T87">Yeah, yeah. </event>
+<event start="T88" end="T89">Yeah. </event>
+<event start="T91" end="T92">No, I'm not gonna make that assumption. </event>
+<event start="T92" end="T93">((laughs))</event>
+<event start="T93" end="T94">Oh, for the same reason that tobacco exists </event>
+<event start="T94" end="T95">and alcohol exists and </event>
+<event start="T95" end="T96">recreational drugs exist. </event>
+<event start="T96" end="T97">‿They're useful in a sense they're pleasant </event>
+<event start="T97" end="T98">er eh eh they're great for getting high on but doesn't mean that they </event>
+<event start="T98" end="T99">they make us b/ biologically fitter or even </event>
+<event start="T99" end="T100">fitter in the ev </event>
+<event start="T100" end="T101">eryday sense. </event>
+<event start="T104" end="T105">Well, alright. </event>
+<event start="T105" end="T106">((laughs))</event>
+<event start="T106" end="T107">Well, it's a/ </event>
+<event start="T107" end="T108">it's a, it's a drug </event>
+<event start="T108" end="T109">that you take in just by the eyes and ears. </event>
+<event start="T111" end="T112">No, no, no˙ </event>
+<event start="T112" end="T113">((laughs))</event>
+<event start="T113" end="T114">Yea, yo˙ </event>
+<event start="T115" end="T116">Yo, yo˙ </event>
+<event start="T117" end="T118">Yo˙ </event>
+<event start="T121" end="T122">Well ehm </event>
+<event start="T122" end="T123">• when I first wrote about this </event>
+<event start="T123" end="T124">• • I wanted to imagine how they felt </event>
+<event start="T124" end="T125">• and so I imagined that </event>
+<event start="T125" end="T126">I learned from the the scientists of MIT and (Caltec) </event>
+<event start="T126" end="T127">(that it) turned out religion was bad for you, </event>
+<event start="T127" end="T128">I mean not religion, music, music was bad for you </event>
+<event start="T128" end="T129">how would I react, if/ if a scientific </event>
+<event start="T129" end="T130">corus rose up and said: </event>
+<event start="T130" end="T131">"Music, small doses okay but </event>
+<event start="T131" end="T132">for heaven's sake, don't devote your life to music </event>
+<event start="T132" end="T133">eh ehr only, only a few hours a day, max. </event>
+<event start="T133" end="T134">otherwise you'll (rott ) your brain". </event>
+<event start="T134" end="T135">Eh, well first of all, I/ I'd have a really hard time believing it </event>
+<event start="T135" end="T136">and part of me would want to say: </event>
+<event start="T136" end="T137">"Well, over my dead body, we are gonna have music and that's all there is to it. </event>
+<event start="T137" end="T138">‿I don't care how much harm it does, it's that wonderful." </event>
+<event start="T138" end="T139">And I know that's the way a lot of people </event>
+<event start="T139" end="T140">feel about religion and I don't blame them for feeling that way, they've/ </event>
+<event start="T140" end="T141">it's been the centre of their lives </event>
+<event start="T141" end="T142">and, and that's very important </event>
+<event start="T142" end="T143">and I don't wanna destroy </event>
+<event start="T143" end="T144">the meaning in their lives if that meaning </event>
+<event start="T144" end="T145">is ((1s)) in balance a healthy meaning. </event>
+</tier><tier id="TIE2" speaker="SPK1" category="nv" type="d" display-name="DD [nv]"><event start="T36" end="T37">breathes in heavily </event>
+</tier><tier id="TIE4" category="nn" type="d" display-name="[nn]"><event start="T0" end="T1">((1,4s)) </event>
+<event start="T3" end="T4">clicking noise</event>
+</tier></basic-body>
+</basic-transcription>
