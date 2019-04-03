@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import static java.lang.System.out;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -133,6 +134,7 @@ public class CorpusIO {
 
     //TODO
     public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
+        //at some point we will need to use correct mimetypes here....
         if (f.getName().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
             //bt.loadFile(f);
@@ -141,18 +143,18 @@ public class CorpusIO {
             ComaData cm = new ComaData(f.toURI().toURL());
             //TODO
             return cm;
-        } else if (f.getName().endsWith("xml") && (f.getName().contains("Annotation") || f.getName().contains("annotation"))) {
+        } else if (f.getName().endsWith("xml") && ((f.getName().contains("Annotation") || f.getName().contains("annotation")))) {
             AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
             return as;
+        } else if ((f.getName().endsWith("xml") && f.getName().contains("cmdi")) || f.getName().endsWith("cmdi")) {
+            CmdiData cmdi = new CmdiData(f.toURI().toURL());
+            return cmdi;
         } else if (f.getName().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
             return usd;
         } else if (f.getName().endsWith("exs")) {
             SegmentedTranscriptionData setd = new SegmentedTranscriptionData(f.toURI().toURL());
             return setd;
-        } else if (f.getName().endsWith("cmdi")) {
-            CmdiData cmdi = new CmdiData(f.toURI().toURL());
-            return cmdi;
         } else {
             System.out.println(f.getName() + " is not xml CorpusData");
             CorpusData cd = null;
@@ -165,6 +167,7 @@ public class CorpusIO {
         Set<String> recursionBlackList = new HashSet<String>();
         recursionBlackList.add(".git");
         recursionBlackList.add(".gitignore");
+        //TODO And here we create Files again...
         Set<File> recursed = new HashSet<File>();
         Stack<File> dirs = new Stack();
         File d = new File(directoryURL.getFile());
@@ -189,7 +192,8 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (new File(url.getFile()).isDirectory()) {
-                //we need to iterate
+                //we need to iterate    
+
                 //and add everything to the list
                 Collection<File> recursed = getFileURLSRecursively(url);
                 for (File f : recursed) {
@@ -210,18 +214,20 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later
+            //TODO later          
             return null;
         }
     }
 
-    public Collection<CorpusData> read(URL url) throws MalformedURLException, SAXException, SAXException, JexmaraldaException {
+    public Collection<CorpusData> read(URL url) throws MalformedURLException, SAXException, SAXException, JexmaraldaException, URISyntaxException {
         Collection<CorpusData> cdc = new ArrayList();
         ArrayList<CorpusData> acdc;
         acdc = (ArrayList) cdc;
         if (isLocalFile(url)) {
             //if the url points to a directory
-            if (new File(url.getFile()).isDirectory()) {
+            //I think we create more heap space usage because even for non-corpus-data objects we create File Objects!!
+            //probably check if the URL ends with one of our used file endings here first
+            if (isDirectory(url)) {
                 //we need to iterate
                 //and add everything to the cdc list
                 Collection<File> recursed = getFileURLSRecursively(url);
@@ -236,6 +242,8 @@ public class CorpusIO {
             } //if the url points to a file
             else {
                 //we need to read this file as some implementation of corpusdata
+                //I think we create more heap space usage because even for non-corpus-data objects we create File Objects!!
+                //probably check if the URL ends with one of our used file endings here first
                 File f = new File(url.getFile());
                 CorpusData cd = toCorpusData(f);
                 if (cd != null) {
@@ -247,7 +255,7 @@ public class CorpusIO {
             }
         } else {
             //it's a datastream in the repo
-            //TODO later
+            //TODO later          
             return null;
         }
     }
@@ -258,6 +266,13 @@ public class CorpusIO {
     public static boolean isLocalFile(java.net.URL url) {
         String scheme = url.getProtocol();
         return "file".equalsIgnoreCase(scheme) && !hasHost(url);
+    }
+    
+    /**
+     * Whether the URL is a directory in the local file system.
+     */
+    public static boolean isDirectory(java.net.URL url) throws URISyntaxException{
+        return new File(url.toURI()).isDirectory();
     }
 
     public static boolean hasHost(java.net.URL url) {
