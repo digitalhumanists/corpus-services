@@ -525,6 +525,12 @@ public class CorpusMagician {
                     break;
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("CORPUSNAME")) {
+                            shtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        }
+                    }
                     corpusfunctions.add(shtml);
                     break;
                 case "corpushtml":
@@ -538,6 +544,10 @@ public class CorpusMagician {
                         if (cfProperties.containsKey("SEGMENTATION")) {
                             lhtml.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
                             System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        }
+                        if (cfProperties.containsKey("CORPUSNAME")) {
+                            lhtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
                         }
                     }
                     corpusfunctions.add(lhtml);
