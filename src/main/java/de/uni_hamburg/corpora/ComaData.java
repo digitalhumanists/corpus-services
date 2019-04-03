@@ -30,12 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author fsnv625
  */
-public class ComaData implements Metadata, CorpusData {
+public class ComaData implements Metadata, CorpusData, XMLData {
 
     //TODO
     //private Coma coma;
@@ -43,6 +44,8 @@ public class ComaData implements Metadata, CorpusData {
     URL url;
     Document readcomaasjdom = new Document();
     String originalstring;
+    String filename;
+    String filenamewithoutending;
 
     public URL CORPUS_BASEDIRECTORY;
     
@@ -67,6 +70,8 @@ public class ComaData implements Metadata, CorpusData {
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             CORPUS_BASEDIRECTORY = parentURI.toURL();
+            filename = FilenameUtils.getName(url.getPath());
+            filenamewithoutending = FilenameUtils.getBaseName(url.getPath());
         } catch (JDOMException ex) {
             Logger.getLogger(UnspecifiedXMLData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -155,5 +160,50 @@ public class ComaData implements Metadata, CorpusData {
     
     public URL getBasedirectory() {
         return CORPUS_BASEDIRECTORY;
+    }
+
+    @Override
+    public URL getParentURL() {
+        return CORPUS_BASEDIRECTORY;
+    }
+
+    @Override
+    public void setURL(URL nurl) {
+        url = nurl;
+    }
+
+    @Override
+    public void setParentURL(URL url) {
+        CORPUS_BASEDIRECTORY = url;
+    }
+
+    @Override
+    public String getFilename() {
+        return filename;
+    }
+
+    @Override
+    public void setFilename(String s) {
+        filename = s;
+    }
+
+    @Override
+    public String getFilenameWithoutFileEnding() {
+        return filenamewithoutending;
+    }
+
+    @Override
+    public void setFilenameWithoutFileEnding(String s) {
+        filenamewithoutending = s;
+    }
+
+    @Override
+    public Document getJdom() {
+        return readcomaasjdom;
+    }
+
+    @Override
+    public void setJdom(Document jdom) {
+        readcomaasjdom = jdom;
     }
 }

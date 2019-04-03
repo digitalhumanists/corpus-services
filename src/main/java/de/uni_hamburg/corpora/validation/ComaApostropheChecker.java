@@ -13,10 +13,10 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
- * A class that checks whether or not the coma file contains an apostrophe ’. If
- * it does then these all apostrophes ’ are changed to apostrophes '.
+ * A class that checks whether or not the coma file contains an apostrophe ’.
+ * If it does then these all apostrophes ’ are changed to apostrophes '.
  */
-public class ComaApostropheChecker extends Checker implements CorpusFunction {
+public class ComaApostropheChecker extends Checker implements CorpusFunction{
 
     String comaLoc = "";
     String comaFile = "";

@@ -21,7 +21,6 @@ public Report execute(Collection<CorpusData> cdc);
 
 public Report execute(CorpusData cd, boolean fix);
 
-
 public Report execute(Collection<CorpusData> cdc, boolean fix);
 
 public Collection<Class<? extends CorpusData>> getIsUsableFor();
