@@ -1,6 +1,9 @@
 package de.uni_hamburg.corpora.conversion;
 
 import com.opencsv.CSVReader;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.Report;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
 import java.io.BufferedWriter;
@@ -11,6 +14,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +33,7 @@ import org.jdom.xpath.XPath;
  * information in the columns the first line has to consist of the sigle of the
  * speaker or name of the communication the metadata should be assigned to
  */
-public class AddCSVMetadataToComa //extends AbstractCorpusProcessor 
+public class AddCSVMetadataToComa extends Converter implements CorpusFunction
 {
 
     private String comaFile;
@@ -170,5 +174,20 @@ public class AddCSVMetadataToComa //extends AbstractCorpusProcessor
         } catch (IOException ex) {
             Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
