@@ -10,7 +10,6 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import de.uni_hamburg.corpora.utilities.segmentation.HIATSegmentation;
 import java.io.File;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -37,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 
 /**
  *
@@ -176,7 +176,6 @@ public class ListHTML extends Visualizer {
                 }
                 case "HIATINEL": {
                     File file = null;
-                    
                     HIATSegmentation hSi = new HIATSegmentation(INEL_FSM);
                     //hSi.utteranceFSM = INEL_FSM;
                     ListTranscription lt = hSi.BasicToUtteranceList(basicTranscription);
