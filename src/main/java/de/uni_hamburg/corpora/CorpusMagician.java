@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora;
 
+import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
@@ -16,8 +17,8 @@ import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
-//import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
-//import de.uni_hamburg.corpora.validation.ExbStructureChecker;
+import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
@@ -144,39 +145,41 @@ public class CorpusMagician {
             if (!(corpus.getMetadata().isEmpty())) {
                 Metadata md = corpus.getMetadata().iterator().next();
                 basedirectory = md.getParentURL();
+            } else {
+                basedirectory = url;
             }
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
             /*
-            if (cmd.hasOption("s")) {
-                corpuma.initCorpusWithURL(url);
-                //and here is another problem, all the corpusfiles are given as objects
-                report = corpuma.runChosencorpusfunctions();
-            } else {
-                //if we don't have so much heap space, we want things to be slower
-                //so we just save a string array lsit of all the available files/urls/datastreams
-                alldata = corpuma.createListofData(url);
-                for (URL allurl : alldata) {
-                    try {
-                        File f = new File(allurl.getFile());
-                        CorpusData cd;
-                        cd = cio.toCorpusData(f);
-                        if (cd != null) {
-                            if (fixing) {
-                                report.merge(runCorpusFunctions(cd, corpusfunctions, true));
-                            } else {
-                                report.merge(runCorpusFunctions(cd, corpusfunctions));
-                            }
-                        }
-                    } catch (SAXException ex) {
-                        Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (JexmaraldaException ex) {
-                        Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+             if (cmd.hasOption("s")) {
+             corpuma.initCorpusWithURL(url);
+             //and here is another problem, all the corpusfiles are given as objects
+             report = corpuma.runChosencorpusfunctions();
+             } else {
+             //if we don't have so much heap space, we want things to be slower
+             //so we just save a string array lsit of all the available files/urls/datastreams
+             alldata = corpuma.createListofData(url);
+             for (URL allurl : alldata) {
+             try {
+             File f = new File(allurl.getFile());
+             CorpusData cd;
+             cd = cio.toCorpusData(f);
+             if (cd != null) {
+             if (fixing) {
+             report.merge(runCorpusFunctions(cd, corpusfunctions, true));
+             } else {
+             report.merge(runCorpusFunctions(cd, corpusfunctions));
+             }
+             }
+             } catch (SAXException ex) {
+             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+             } catch (JexmaraldaException ex) {
+             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
+             }
 
-                }
-            }
+             }
+             }
              */
             System.out.println(report.getFullReports());
             String reportOutput;
@@ -200,9 +203,8 @@ public class CorpusMagician {
                 cio.write(absoluteReport, reportlocation);
             }
             //create the error list file
-            //needs to be OS independent
-            //There is an error for me when running on windows: \null gets created
-            URL errorlistlocation = new URL(basedirectory + "/" + "CorpusServices_Errors.xml");
+            System.out.println("Basedirectory is " + basedirectory);
+            URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             if (exmaErrorList != null) {
                 cio.write(exmaErrorList, errorlistlocation);
@@ -219,7 +221,9 @@ public class CorpusMagician {
         } catch (SAXException ex) {
             report.addException(ex, "An XSLT error occured");
         } catch (JexmaraldaException ex) {
-            report.addException(ex, "A Exmaralda file reading error occured");
+            report.addException(ex, "An Exmaralda file reading error occured");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, "A URI was incorrect");
         }
 
     }
@@ -248,7 +252,7 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException {
         corpus = new Corpus(url);
     }
 
@@ -273,6 +277,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
+        allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
         allExistingCFs.add("FileCoverageCheckerInel");
         allExistingCFs.add("NormalizeEXB");
@@ -280,6 +285,7 @@ public class CorpusMagician {
         allExistingCFs.add("RemoveAbsolutePaths");
         allExistingCFs.add("RemoveAutoSaveExb");
         allExistingCFs.add("XSLTChecker");
+        allExistingCFs.add("ComaAddTiersFromExbsCorrector");
         allExistingCFs.add("ComaXsdChecker");
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
@@ -297,6 +303,8 @@ public class CorpusMagician {
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
         allExistingCFs.add("MakeTimelineConsistent");
+        allExistingCFs.add("ExbStructureChecker");
+        allExistingCFs.add("ExbSegmentationChecker");
         return allExistingCFs;
     }
 
@@ -378,6 +386,10 @@ public class CorpusMagician {
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     corpusfunctions.add(xc);
+                    break;
+                case "comaaddtiersfromexbscorrector":
+                    ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
+                    corpusfunctions.add(catfec);
                     break;
                 case "comaxsdchecker":
                     ComaXsdChecker cxsd = new ComaXsdChecker();
@@ -555,6 +567,25 @@ public class CorpusMagician {
                     }
                     corpusfunctions.add(emtc);
                     break;
+                case "exbstructurechecker":
+                    ExbStructureChecker esc = new ExbStructureChecker();
+                    corpusfunctions.add(esc);
+                    break;
+                case "exbsegmentationchecker":
+                    ExbSegmentationChecker eseg = new ExbSegmentationChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("SEGMENTATION")) {
+                            eseg.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        }
+                        if (cfProperties.containsKey("FSM")) {
+                            eseg.setExternalFSM(cfProperties.getProperty("FSM"));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        }
+                    }
+                    corpusfunctions.add(eseg);
+                    break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
@@ -726,9 +757,9 @@ public class CorpusMagician {
         options.addOption(corpusfunction);
 
         /*
-        Option speed = new Option("s", "speed", false, "faster but more heap space");
-        speed.setRequired(false);
-        options.addOption(speed);
+         Option speed = new Option("s", "speed", false, "faster but more heap space");
+         speed.setRequired(false);
+         options.addOption(speed);
          */
         Option propertyOption = Option.builder("p")
                 .longOpt("property")
@@ -777,11 +808,11 @@ public class CorpusMagician {
             cfProperties = cmd.getOptionProperties("p");
         }
         /*
-        String inputFilePath = cmd.getOptionValue("input");
-        String outputFilePath = cmd.getOptionValue("output");
+         String inputFilePath = cmd.getOptionValue("input");
+         String outputFilePath = cmd.getOptionValue("output");
 
-        System.out.println(inputFilePath);
-        System.out.println(outputFilePath);
+         System.out.println(inputFilePath);
+         System.out.println(outputFilePath);
          */
 
     }
