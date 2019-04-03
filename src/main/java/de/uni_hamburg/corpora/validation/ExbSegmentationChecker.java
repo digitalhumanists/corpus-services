@@ -157,8 +157,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
             segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.GenericSegmentation();
         }
         if (!path2ExternalFSM.equals("")) {
-            //segmentation.pathToExternalFSM = path2ExternalFSM;
-            segmentation = new org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation(path2ExternalFSM);
+            segmentation.pathToExternalFSM = path2ExternalFSM;
         }
         List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
         for (Object o : v) {
