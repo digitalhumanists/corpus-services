@@ -52,6 +52,7 @@ public class ScoreHTML extends Visualizer {
     Report stats;
     URL targeturl;
     CorpusData cd;
+    String corpusname = "";
 
     public ScoreHTML() {
 
@@ -159,6 +160,10 @@ public class ScoreHTML extends Visualizer {
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
             xt.setParameter("STYLES", styles);
+            xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
+            if(!corpusname.equals("")){
+            xt.setParameter("CORPUS_NAME", corpusname);
+            }
 
             // perform XSLT transformation
             result = xt.transform(xml, xsl);
@@ -281,5 +286,9 @@ public class ScoreHTML extends Visualizer {
 
     public URL getTargetURL() {
         return targeturl;
+    }
+    
+    public void setCorpusName(String s) {
+        corpusname = s;
     }
 }
