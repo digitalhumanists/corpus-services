@@ -4,3 +4,4 @@
 *.java
 *.xsl
 *.xml
+!/src/test/java/de/uni_hamburg/corpora/resources/**
