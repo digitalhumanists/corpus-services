@@ -10,6 +10,7 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
+import java.io.File;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.exmaralda.common.corpusbuild.FileIO;
@@ -20,7 +21,6 @@ import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation;
 import org.exmaralda.partitureditor.jexmaralda.segment.GATSegmentation;
 import org.exmaralda.partitureditor.jexmaralda.segment.GenericSegmentation;
-import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 import org.exmaralda.partitureditor.jexmaralda.segment.IPASegmentation;
 import org.exmaralda.partitureditor.jexmaralda.segment.SegmentedToListInfo;
 import org.jdom.Document;
@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 
 /**
  *
@@ -52,10 +53,13 @@ public class ListHTML extends Visualizer {
     private static final String GAT_STYLESHEET_PATH = "/xsl/GAT2ListHTML.xsl";
     private static final String GENERIC_STYLESHEET_PATH = "/xsl/Generic2ListHTML.xsl";
     private static final String SERVICE_NAME = "ListHTML";
-    static String INEL_FSM = "/xsl/INEL_Segmentation_FSM.xml";
+    //static String INEL_FSM = "/de/uni_hamburg/corpora/utilities/segmentation/INEL_Segmentation_FSM.xml";
+    static String INEL_FSM = "/org/exmaralda/partitureditor/fsm/xml/HIAT_UtteranceWord.xml";
+    
     Report stats;
     URL targeturl;
     CorpusData cd;
+    String corpusname = "";
 
     public ListHTML() {
 
@@ -83,7 +87,7 @@ public class ListHTML extends Visualizer {
 
             // create an utterance list as XML basis for transformation
             createUtteranceList();
-
+            if (getUtteranceList()!=null){
             // get the XSLT stylesheet
             String xsl = "";
             if (segmAlgorithm.equals("HIAT")) {
@@ -110,7 +114,9 @@ public class ListHTML extends Visualizer {
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
             xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
             //xt.setParameter("CORPUS_NAME", cd.getFilenameWithoutFileEnding());
-            xt.setParameter("CORPUS_NAME", "Selkup");
+            if(!corpusname.equals("")){
+            xt.setParameter("CORPUS_NAME", corpusname);
+            }
             // perform XSLT transformation
             result = xt.transform(getUtteranceList(), xsl);
             if (result != null) {
@@ -131,9 +137,11 @@ public class ListHTML extends Visualizer {
                     stats.addException(SERVICE_NAME, e, "JS/CSS exception");
                 }
             } else {
-                stats.addCritical(SERVICE_NAME, cd, "Visualization of file was not possible! (empty utterance list)");
+                stats.addCritical(SERVICE_NAME, cd, "Visualization of file was not possible! (empty result)");
             }
-
+            } else {
+                 stats.addCritical(SERVICE_NAME, cd, "Visualization of file was not possible! (empty utterance list)");
+            }
         } catch (TransformerConfigurationException ex) {
             stats.addException(SERVICE_NAME, ex, "Transformer exception");
         } catch (TransformerException ex) {
@@ -167,9 +175,10 @@ public class ListHTML extends Visualizer {
                     break;
                 }
                 case "HIATINEL": {
-                    HIATSegmentation hS = new HIATSegmentation();
-                    hS.utteranceFSM = INEL_FSM;
-                    ListTranscription lt = hS.BasicToUtteranceList(basicTranscription);
+                    File file = null;
+                    HIATSegmentation hSi = new HIATSegmentation(INEL_FSM);
+                    //hSi.utteranceFSM = INEL_FSM;
+                    ListTranscription lt = hSi.BasicToUtteranceList(basicTranscription);
                     //System.out.println("ListTranscription:" + lt.toXML());
                     final Document listXML = FileIO.readDocumentFromString(lt.toXML());
                     list = IOUtilities.documentToString(listXML);
@@ -319,5 +328,9 @@ public class ListHTML extends Visualizer {
     
     public void setSegmentation(String s) {
         segmentationAlgorithm = s;
+    }
+    
+    public void setCorpusName(String s) {
+        corpusname = s;
     }
 }
