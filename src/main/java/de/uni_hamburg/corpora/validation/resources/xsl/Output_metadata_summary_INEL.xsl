@@ -18,7 +18,7 @@
         </html>
 
         <xsl:call-template name="GET_STATISTICAL_INFO_ON_WHOLE_CORPUS"/>
-        <!--<xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>-->
+        <xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>
         <xsl:call-template name="GET_DESCRIPTIONS_WITH_ADDITIONAL_INFO"/>
         <!--        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
@@ -29,15 +29,15 @@
         <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Speaker</xsl:with-param>
         </xsl:call-template>
-        <xsl:call-template name="GET_DESCRIPTIONS">
+        <!--        <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Transcription</xsl:with-param>
-        </xsl:call-template>
-        <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>-->
+        <!--  <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">Recording</xsl:with-param>
-        </xsl:call-template>
-        <xsl:call-template name="GET_DESCRIPTIONS">
+        </xsl:call-template>-->
+        <!--    <xsl:call-template name="GET_DESCRIPTIONS">
             <xsl:with-param name="PARENT">AsocFile</xsl:with-param>
-        </xsl:call-template>
+        </xsl:call-template>-->
         <xsl:call-template name="GET_KEYS_LOC">
             <xsl:with-param name="PARENT">Communication</xsl:with-param>
         </xsl:call-template>
@@ -576,14 +576,18 @@
                 </xsl:variable>
                 <thead>
                     <tr>
-                        <th> <xsl:choose> <xsl:when test="$PARENT = 'Speaker' or $PARENT = 'Communication'"> <xsl:value-of select="$PARENT"/></xsl:when> </xsl:choose> Name</th>
+                        <th> <xsl:choose> <xsl:when test="$PARENT = 'Speaker' or $PARENT = 'Communication'"> <xsl:value-of select="$PARENT"/></xsl:when>
+                            </xsl:choose>
+                          
+                            
+                            Name</th>
                         <xsl:for-each-group select="//*[name() = $PARENT]/Description/Key[not(starts-with(@Name, '#'))]" group-by="@Name">
                             <xsl:sort select="current-grouping-key()"/>
                             <th>
                                 <xsl:value-of select="current-grouping-key()"/>
                             </th>
                         </xsl:for-each-group>
-                        <xsl:if test="$PARENT = 'Speaker'">
+                    <xsl:if test="$PARENT = 'Speaker'">
                             <th>Pseudo</th>
                             <th>Sex</th>
                         </xsl:if>
@@ -625,7 +629,7 @@
                                     </xsl:otherwise>
                                 </xsl:choose>
                             </xsl:for-each>
-                            <xsl:if test="$PARENT = 'Speaker'">
+                        <xsl:if test="$PARENT = 'Speaker'">
                                 <td><xsl:value-of select="$commElement/Pseudo/text()"/></td>
                                 <td><xsl:value-of select="$commElement/Sex/text()"/></td>
                             </xsl:if>

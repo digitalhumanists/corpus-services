@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.Report;
-import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -23,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class ComaXsdCheckerTest {
+public class ExbSegmentationCheckerTest {
     
-    public ComaXsdCheckerTest() {
+    public ExbSegmentationCheckerTest() {
     }
     
     @BeforeClass
@@ -44,32 +38,32 @@ public class ComaXsdCheckerTest {
     public void tearDown() {
     }
 
+
     /**
-     * Test of check method, of class ComaXsdChecker.
+     * Test of check method, of class ExbSegmentationChecker.
      */
     @Test
     public void testCheck() throws Exception {
-            
-            System.out.println("check");
-            String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
-            URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
-            Corpus corp = new Corpus(corpusURL);
-            ComaXsdChecker instance = new ComaXsdChecker();
-            instance.report = new Report();
-            Collection<CorpusData> cdc;
-            //what happens when we check coma files
-            for (CorpusData cd : corp.getMetadata()){
-                assertNotNull(instance.check(cd));
-            }
+        System.out.println("check");
+        String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
+        Corpus corp = new Corpus(corpusURL);
+        ExbSegmentationChecker instance = new ExbSegmentationChecker();
+        instance.report = new Report();
+        Collection<CorpusData> cdc;
+        //what happens when we check exb files
+        for (CorpusData cd : corp.getContentdata()) {
+            assertNotNull(instance.check(cd));
+        }
     }
 
     /**
-     * Test of getIsUsableFor method, of class ComaXsdChecker.
+     * Test of getIsUsableFor method, of class ExbSegmentationChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        ComaXsdChecker instance = new ComaXsdChecker();
+        ExbSegmentationChecker instance = new ExbSegmentationChecker();
         //Collection<Class> expResult = null;
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
