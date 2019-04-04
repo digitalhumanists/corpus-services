@@ -17,6 +17,7 @@ import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
+import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
@@ -305,6 +306,7 @@ public class CorpusMagician {
         allExistingCFs.add("MakeTimelineConsistent");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
+        allExistingCFs.add("CalculateAnnotatedTime");
         return allExistingCFs;
     }
 
@@ -585,6 +587,10 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(eseg);
+                    break;
+                case "calculateannotatedtime":
+                    CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
+                    corpusfunctions.add(cat);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
