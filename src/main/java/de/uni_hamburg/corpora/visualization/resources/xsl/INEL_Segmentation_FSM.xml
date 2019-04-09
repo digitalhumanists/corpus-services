@@ -20,7 +20,7 @@
 		<!-- Question mark -->
 		<char>?</char>
 		<!-- Three dots (ellipsis) -->
-		<char>…</char>
+		<char>&#x2026;</char>
 		<!-- Dot above -->
 		<char>&#x02D9;</char>
 		<!-- Colon for INEL -->
