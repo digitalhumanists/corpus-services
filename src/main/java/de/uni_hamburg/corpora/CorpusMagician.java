@@ -132,7 +132,6 @@ public class CorpusMagician {
             //now add the functionsstrings to array
             String[] corpusfunctionarray = cmd.getOptionValues("c");
             for (String cf : corpusfunctionarray) {
-                //corpuma.chosencorpusfunctions.add("test");
                 CorpusMagician.chosencorpusfunctions.add(cf);
                 System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             }
@@ -141,13 +140,8 @@ public class CorpusMagician {
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
-            //get the basedirectory if there is a coma file
-            if (!(corpus.getMetadata().isEmpty())) {
-                Metadata md = corpus.getMetadata().iterator().next();
-                basedirectory = md.getParentURL();
-            } else {
-                basedirectory = url;
-            }
+            //get the basedirectory
+            basedirectory = url;
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
@@ -204,8 +198,14 @@ public class CorpusMagician {
             }
             //create the error list file
             System.out.println("Basedirectory is " + basedirectory);
+            System.out.println("BasedirectoryPath is " + basedirectory.getPath());
             URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
+            String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
+            if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
+                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
+                exmaErrorList = TypeConverter.String2JdomDocument(exmaErrorListString);
+            }
             if (exmaErrorList != null) {
                 cio.write(exmaErrorList, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);

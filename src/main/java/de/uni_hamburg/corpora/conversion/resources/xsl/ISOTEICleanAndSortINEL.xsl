@@ -47,37 +47,41 @@
         <xsl:value-of select="$timeline-positions/descendant::*:item[@id = $timeline-id]/@position"/>
     </xsl:function>
 
-    <!-- the word nodes -->
+   <!-- <!-\- the word nodes -\->
     <xsl:variable name="words" select="//*:w"/>
 
-    <!-- the word nodes -->
+    <!-\- the word nodes -\->
     <xsl:variable name="segs" select="//*:seg"/>
 
-    <!-- the event nodes -->
-    <xsl:variable name="events" select="//*:event"/>
+    <!-\- the event nodes -\->
+    <xsl:variable name="events" select="//*:event"/>-->
+    
+    <!-- the word nodes -->
+    <xsl:variable name="teibody" select="//*:body"/>
 
     <!-- returns the word id for given annotation start -->
     <xsl:function name="tei:word-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
         <xsl:param name="tierid"/>
+        <xsl:param name="speaker"/>
         <xsl:variable name="annotationstartminone">
             <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
         </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
-            <xsl:when test="($words[@s = $annotationstart]/@xml:id) != ''">
-                <xsl:value-of select="$words[@s = $annotationstart]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:w[@s = $annotationstart]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:w[@s = $annotationstart]/@xml:id"/>
             </xsl:when>     
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="($events[@s = $annotationstart]/@xml:id) != ''">
-                <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstart]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($words[@s = $annotationstartminone]/@xml:id) != ''">
-                <xsl:value-of select="$words[@s = $annotationstartminone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:w[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:w[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($events[@s = $annotationstartminone]/@xml:id) != ''">
-                <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <xsl:otherwise>
                 <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
@@ -95,24 +99,25 @@
     <xsl:function name="tei:word-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
         <xsl:param name="tierid"/>
+        <xsl:param name="speaker"/>
         <xsl:variable name="annotationendplusone">
             <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
         </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
-            <xsl:when test="($words[@e = $annotationend]/@xml:id) != ''">
-                <xsl:value-of select="$words[@e = $annotationend]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:w[@e = $annotationend]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:w[@e = $annotationend]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
-                <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationend]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationend]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($words[@e = $annotationendplusone]/@xml:id) != ''">
-                <xsl:value-of select="$words[@e = $annotationendplusone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:w[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:w[@e = $annotationendplusone]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($events[@e = $annotationendplusone]/@xml:id) != ''">
-                <xsl:value-of select="$events[@e = $annotationendplusone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationendplusone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
             <xsl:otherwise>
@@ -130,28 +135,29 @@
     <xsl:function name="tei:seg-annotation-from" as="xs:string">
         <xsl:param name="annotationstart"/>
         <xsl:param name="tierid"/>
+        <xsl:param name="speaker"/>
         <xsl:variable name="annotationstartminone">
             <xsl:value-of select="concat('T',(number(substring($annotationstart, 2, 100))-1))"/>
         </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
-            <xsl:when test="($segs[@s = $annotationstart]/@xml:id) != ''">
-                <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg[@s = $annotationstart]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
-            <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="($events[@s = $annotationstart]/@xml:id) != ''">
-                <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            <!-- the corresponding seg cannot be found - this happens if the annotation corresponds to an incident -->
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstart]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($segs[@s = $annotationstartminone]/@xml:id) != ''">
-                <xsl:value-of select="$segs[@s = $annotationstart]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg[@s = $annotationstartminone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg[@s = $annotationstart]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($events[@s = $annotationstartminone]/@xml:i) != ''">
-                <xsl:value-of select="$events[@s = $annotationstartminone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstartminone]/@xml:i) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstartminone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
-            <xsl:when test="$events[@s = $annotationstart]/@xml:id != ''">
-                    <xsl:value-of select="$events[@s = $annotationstart]/@xml:id"/>
+            <xsl:when test="$teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstart]/@xml:id != ''">
+                    <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@s = $annotationstart]/@xml:id"/>
             </xsl:when> -->
             <xsl:otherwise>
                 <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
@@ -169,28 +175,29 @@
     <xsl:function name="tei:seg-annotation-to" as="xs:string">
         <xsl:param name="annotationend"/>
         <xsl:param name="tierid"/>
+        <xsl:param name="speaker"/>
         <xsl:variable name="annotationendplusone">
             <xsl:value-of select="concat('T',(number(substring($annotationend, 2, 100))+1))"/>
         </xsl:variable>
         <!-- we use the annotation, find the start and the end and find the word with the same start and end -->
         <!-- the case when there is no "normal" timeline id needs to be checked too -->
         <xsl:choose>
-            <xsl:when test="($segs[@e = $annotationend]/@xml:id) != ''">
-                <xsl:value-of select="$segs[@e = $annotationend]/@xml:id"/>
+            <xsl:when test="$teibody/*:u[@who=$speaker]/*:seg[@e = $annotationend]/@xml:id">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg[@e = $annotationend]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident -->
-            <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
-                <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationend]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationend]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($segs[@e = $annotationendplusone]/@xml:id) != ''">
-                <xsl:value-of select="$segs[@e = $annotationendplusone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg[@e = $annotationendplusone]/@xml:id"/>
             </xsl:when>
-            <xsl:when test="($events[@e = $annotationendplusone]/@xml:id) != ''">
-                <xsl:value-of select="$events[@e = $annotationendplusone]/@xml:id"/>
+            <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationendplusone]/@xml:id) != ''">
+                <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationendplusone]/@xml:id"/>
             </xsl:when>
             <!-- the corresponding word cannot be found - this happens if the annotation corresponds to an incident 
-    <xsl:when test="($events[@e = $annotationend]/@xml:id) != ''">
-            <xsl:value-of select="$events[@e = $annotationend]/@xml:id"/> 
+    <xsl:when test="($teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationend]/@xml:id) != ''">
+            <xsl:value-of select="$teibody/*:u[@who=$speaker]/*:seg/*:event[@e = $annotationend]/@xml:id"/> 
         </xsl:when>-->
             <!-- the corresponding word cannot be found and it's not an incident either - there is an error in the exb-->
             <xsl:otherwise>
@@ -288,12 +295,12 @@
                                     <xsl:attribute name="from">
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@start"/> -->
-                                        <xsl:value-of select="tei:word-annotation-from(@start, @level)"/>
+                                        <xsl:value-of select="tei:word-annotation-from(@start, @level, ../../@who)"/>
                                     </xsl:attribute>
                                     <xsl:attribute name="to">
                                         <!--<xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@end"/> -->
-                                        <xsl:value-of select="tei:word-annotation-to(@end, @level)"/>
+                                        <xsl:value-of select="tei:word-annotation-to(@end, @level, ../../@who)"/>
                                     </xsl:attribute>
                                     <!-- the further morpheme based segmentation and references here -->
                                     <!-- we need to throw an error message when the morpheme annotations aren't consistent -->
@@ -323,12 +330,12 @@
                                 <xsl:element name="span">
                                     <!-- we want to refer to the seg element here (=sentence) -->
                                     <xsl:attribute name="from">
-                                        <xsl:value-of select="tei:seg-annotation-from(@start, @level)"/>
+                                        <xsl:value-of select="tei:seg-annotation-from(@start, @level, ../../@who)"/>
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@start"/> -->
                                     </xsl:attribute>
                                     <xsl:attribute name="to">
-                                        <xsl:value-of select="tei:seg-annotation-to(@end, @level)"/>
+                                        <xsl:value-of select="tei:seg-annotation-to(@end, @level, ../../@who)"/>
                                         <!-- <xsl:value-of select="$XPOINTER_HASH"/>
                                         <xsl:value-of select="@end"/> -->
                                     </xsl:attribute>
