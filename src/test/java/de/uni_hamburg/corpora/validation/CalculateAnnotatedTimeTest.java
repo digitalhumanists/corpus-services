@@ -11,14 +11,12 @@ import de.uni_hamburg.corpora.Report;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.w3c.dom.NodeList;
 
 /**
  *
