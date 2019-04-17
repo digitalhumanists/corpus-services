@@ -57,10 +57,10 @@ public class CalculateAnnotatedTimeTest {
         Collection<CorpusData> cdc;
         //what happens when we check exb files
         for (CorpusData cd : corp.getContentdata()) {
-            assertNotNull(instance.check(cd));
+            if(cd.getFilename().endsWith(".exb"))
+                assertNotNull(instance.check(cd));
         }
-
-    }
+    }       
 
 
 
