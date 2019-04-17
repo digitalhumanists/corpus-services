@@ -39,7 +39,7 @@
             <Key Name="Surname">Nina (Нина)</Key>
             <Key Name="Patronymic">Dentumejevna (Дентумеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">Tətymjaku, Təty, Tuty</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -100,7 +100,7 @@
             <Key Name="Patronymic">Molkovich (Молкович)</Key>
             <Key Name="Surname">Alksej (Алексей)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -165,7 +165,7 @@
             <Key Name="Patronymic">Bintaleevna (Бинталеевна)</Key>
             <Key Name="Surname">Valentina (Валентина)</Key>
             <Key Name="Vulgo (Ngan. name)">Boðuamuə [Боǯуамуо]</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1972</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1972</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1972</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -220,7 +220,7 @@
             <Key Name="Surname">Syku (Сыку)</Key>
             <Key Name="Patronymic">Modyureevna (Модюреевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -279,7 +279,7 @@
             <Key Name="Surname">Maria (Мария)</Key>
             <Key Name="Patronymic">Dyuntovna (Дюнтовна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1969</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1969</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1969</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -338,7 +338,7 @@
             <Key Name="Surname">Nobyaku ( Нобяку )</Key>
             <Key Name="Patronymic">Sogumovich ( Согумович )</Key>
             <Key Name="Vulgo (Ngan. name)">Syarsuo (СярсуɁə)</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -397,7 +397,7 @@
             <Key Name="Surname">Dintade (Динтаде)</Key>
             <Key Name="Patronymic">-</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -456,7 +456,7 @@
             <Key Name="Surname">Denchude (Деньчуде) </Key>
             <Key Name="Patronymic">Nuteevich (Нутеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1955</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1955</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1955</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
          <Language Type="L1">
             <LanguageCode>enf</LanguageCode>
             <Description>
@@ -525,7 +525,7 @@
             <Key Name="Surname">Ukoj</Key>
             <Key Name="Patronymic">Chutovich</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -590,7 +590,7 @@
             <Key Name="Surname">Ekaterina (Екатерина)</Key>
             <Key Name="Patronymic">Nikolaevna (Николаевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -699,7 +699,7 @@
             <Key Name="Surname">Julija (Юлия)</Key>
             <Key Name="Patronymic">Modyureevna (Модюреевна)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1995</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1995</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1995</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key></Description>
       </Speaker>
       <Speaker Id="SID2CA84D75-D9EA-5DC1-7861-ECF12CACE8A9">
          <Sigle>PKK</Sigle>
@@ -761,7 +761,7 @@
             <Key Name="Surname">Kondakovich (Кондакович)</Key>
             <Key Name="Patronymic">Katamu (Катаму)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1968</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1968</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1968</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
       </Speaker>
       <Speaker Id="SID2F5772FF-7D4A-374B-75AE-2518A8BDB315">
          <Sigle>TLN</Sigle>
@@ -822,7 +822,7 @@
             <Key Name="Surname">Ladun (Ладун)</Key>
             <Key Name="Patronymic">Ngadeevna (Нгадеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1953</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1953</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1953</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
       </Speaker>
       <Speaker Id="SID312D6333-9374-28B5-23B1-3843B44F4679">
          <Sigle>MACh</Sigle>
@@ -834,7 +834,7 @@
             <Key Name="Surname">Alesandr (Александ)</Key>
             <Key Name="Patronymic">Cheleevich (Челеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">HündüɁmaku</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1982</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1982</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1982</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -944,7 +944,7 @@
             <Key Name="Patronymic">Komsobteevich</Key>
             <Key Name="Surname">Toloma</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1957</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1957</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1957</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
       </Speaker>
       <Speaker Id="SID371552C3-B7A7-F0F8-B936-61A7D13FF578">
          <Sigle>KH</Sigle>
@@ -956,7 +956,7 @@
             <Key Name="Surname">Holyamte (Холямта)</Key>
             <Key Name="Patronymic">-</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1060,7 +1060,7 @@
             <Key Name="Patronymic">Jandipteevna (Яндиптеевна)</Key>
             <Key Name="Surname">Larisa (Лариса)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
       </Speaker>
       <Speaker Id="SID44247D3F-68C1-49A1-CCAA-E6D07A8C0F01">
          <Sigle>PGF</Sigle>
@@ -1121,7 +1121,7 @@
             <Key Name="Surname">Galina</Key>
             <Key Name="Patronymic">Fenakovna</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
       </Speaker>
       <Speaker Id="SID49EFE751-2C0B-8D20-57B9-4BD94FD6C1E7">
          <Sigle>MST</Sigle>
@@ -1133,7 +1133,7 @@
             <Key Name="Surname">Sajbore</Key>
             <Key Name="Patronymic">Tugobteevich</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1971</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1198,7 +1198,7 @@
             <Key Name="Surname">Zoya (Зоя)</Key>
             <Key Name="Patronymic">Dentumeevna</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1263,7 +1263,7 @@
             <Key Name="Surname">Ekaterina (Екатерина)</Key>
             <Key Name="Patronymic">Subobteevna (Субобтеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">Kohimjaku</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1964</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1964</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1964</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1331,7 +1331,7 @@
             <Key Name="Surname">Molitasi (Молитаси)</Key>
             <Key Name="Patronymic">Singimeevich (Сингимеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1390,7 +1390,7 @@
             <Key Name="Surname">Fenakovich (Фенакович)</Key>
             <Key Name="Patronymic">Vasilij (Василий)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1455,7 +1455,7 @@
             <Key Name="Surname">Dyalamte (Дяламте)</Key>
             <Key Name="Patronymic"> Horabteevich (Хорабтеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1992</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1514,7 +1514,7 @@
             <Key Name="Surname">Kyudapte (Кюдапте)</Key>
             <Key Name="Patronymic">Morychesovich (Морычесович)</Key>
             <Key Name="Vulgo (Ngan. name)">Küziabtüe</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1967</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1967</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1967</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1575,7 +1575,7 @@
             <Key Name="Surname">Boris (Борис)</Key>
             <Key Name="Patronymic">Dyuhodevich (Дюходевич)</Key>
             <Key Name="Vulgo (Ngan. name)">Bendimyaku</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1962</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1962</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1962</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1641,7 +1641,7 @@
             <Key Name="Surname">Hella (Хелла)</Key>
             <Key Name="Patronymic">Lajmoreevna (Лаймореевнa)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1703,7 +1703,7 @@
             <Key Name="Surname">Serafima (Серафима)</Key>
             <Key Name="Patronymic">Mudimeevna (Нудимеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">Simbja</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1764,7 +1764,7 @@
             <Key Name="Surname">Nadezhda (Надежда)</Key>
             <Key Name="Patronymic">Tubjakovna (Тубяковна)</Key>
             <Key Name="Vulgo (Ngan. name)">D’iŋi</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -1878,7 +1878,7 @@
             <Key Name="Patronymic">Sochubteevna ( Сочуптеевна)</Key>
             <Key Name="Surname">Dilimyaku (Дилимяк)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">4551</Key><Key Name="PLZ">31785</Key><Key Name="Ort">Hameln</Key></Description>
       </Speaker>
       <Speaker Id="SID8EFF5321-CDDC-0F54-E5FB-2838D92BA0E8">
          <Sigle>KK</Sigle>
@@ -1939,7 +1939,7 @@
             <Key Name="Surname">Korore</Key>
             <Key Name="Patronymic">...</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1958</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1958</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1958</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
       </Speaker>
       <Speaker Id="SID98B6C318-C483-4B60-FACD-5C7C645309A0">
          <Sigle>KD</Sigle>
@@ -2000,7 +2000,7 @@
             <Key Name="Patronymic">...</Key>
             <Key Name="Surname">Dasha (Даша)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
       </Speaker>
       <Speaker Id="SID9B3529E0-AC21-3DEA-7B55-444BC9F2A60F">
          <Sigle>PED</Sigle>
@@ -2012,7 +2012,7 @@
             <Key Name="Surname">Evdokiya (Евдокия)</Key>
             <Key Name="Patronymic">Demnimeevna (Демнимеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">Dyuzymmyaku</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1962</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1962</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1962</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2072,7 +2072,7 @@
             <Key Name="Surname">Kurumaku (Курумаку)</Key>
             <Key Name="Patronymic">Fjodorovich (Федорович)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1978</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1978</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1978</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
          <Language Type="L1">
             <LanguageCode>enf</LanguageCode>
             <Description>
@@ -2141,7 +2141,7 @@
             <Key Name="Surname">Vera (Вера)</Key>
             <Key Name="Patronymic">Lajmoreevna (Лаймореевна)</Key>
             <Key Name="Vulgo (Ngan. name)">BejkiɁmiaɁku</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2245,7 +2245,7 @@
             <Key Name="Patronymic">Sygakovna</Key>
             <Key Name="Surname">Svetlana</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
       </Speaker>
       <Speaker Id="SIDAD37A3CF-C7D4-0053-BB70-FB1CBAAD9A46">
          <Sigle>ChZS</Sigle>
@@ -2257,7 +2257,7 @@
             <Key Name="Surname">Zinaida (Зинаида)</Key>
             <Key Name="Patronymic">Soloboteevna (Солоботеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">3208</Key><Key Name="PLZ">16816</Key><Key Name="Ort">Neuruppin</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2316,7 +2316,7 @@
             <Key Name="Surname">Tamara (Тамара)</Key>
             <Key Name="Patronymic">Sochubteevna (Сочубтеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2375,7 +2375,7 @@
             <Key Name="Surname">Lomkaj (Ломкай)</Key>
             <Key Name="Patronymic">Hursabtevich</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1952</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1952</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1952</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2440,7 +2440,7 @@
             <Key Name="Surname">Tubjaku (Тубяку)</Key>
             <Key Name="Patronymic">Djuhodevich (Дюходевич)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2505,7 +2505,7 @@
             <Key Name="Surname">Tatyana (Татьяна)</Key>
             <Key Name="Patronymic">Demnimeevna (Демнимеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">5332</Key><Key Name="PLZ">42549</Key><Key Name="Ort">Velbert</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2572,7 +2572,7 @@
             <Key Name="Surname">Kejkumte</Key>
             <Key Name="Patronymic">Dyalevich</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1978</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1978</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1978</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2637,7 +2637,7 @@
             <Key Name="Surname">Tatjana (Татьяна)</Key>
             <Key Name="Patronymic">Tońďuleevna (Тоньдюлеевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1980</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2702,7 +2702,7 @@
             <Key Name="Surname">Nikolaj (Николай)</Key>
             <Key Name="Patronymic">Ysaevich (Ысаевич)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1955</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1955</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1955</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2763,7 +2763,7 @@
             <Key Name="Surname">Nadezhda (Надежда)</Key>
             <Key Name="Patronymic">Kayboreevna (Кайбюреевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1969</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1969</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1969</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2873,7 +2873,7 @@
             <Key Name="Patronymic">...</Key>
             <Key Name="Surname">Torunte (Торунтэ)</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">6124</Key><Key Name="PLZ">55469</Key><Key Name="Ort">Simmern/ HunsrÃ¼ck</Key></Description>
       </Speaker>
       <Speaker Id="SIDD18B9F94-184B-B837-2EE9-197389764AFA">
          <Sigle>THL</Sigle>
@@ -2885,7 +2885,7 @@
             <Key Name="Patronymic">Lamkaevich (Ламкаевич)</Key>
             <Key Name="Surname">Honyaku (Хоняку)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">18495</Key><Key Name="PLZ">39012</Key><Key Name="Ort">Merano/Meran</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -2946,7 +2946,7 @@
             <Key Name="Surname">Ekaterina (Екатерина)</Key>
             <Key Name="Patronymic">Chubovna (Чубовна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1993</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -3011,7 +3011,7 @@
             <Key Name="Surname">Igor (Игорь)</Key>
             <Key Name="Patronymic">Demnimeevich (Демнимеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">Ngutyamaku</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1957</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1957</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1957</Key><Key Name="ErhebungsortID">20710</Key><Key Name="PLZ">9490</Key><Key Name="Ort">Vaduz</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -3075,7 +3075,7 @@
             <Key Name="Surname">Zoya (Зоя)</Key>
             <Key Name="Patronymic"> Chuboevna (Чубоевна)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1968</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1968</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1968</Key><Key Name="ErhebungsortID">18525</Key><Key Name="PLZ">39042</Key><Key Name="Ort">Bressanone/Brixen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -3184,7 +3184,7 @@
             <Key Name="Surname">Maria</Key>
             <Key Name="Patronymic">...</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
       </Speaker>
       <Speaker Id="SIDE43AB187-062F-5F90-A0D9-41206EA4213C">
          <Sigle>MHCh</Sigle>
@@ -3196,7 +3196,7 @@
             <Key Name="Surname">Hosyu (Хосю)</Key>
             <Key Name="Patronymic">Chaleevich (Чaлеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1994</Key><Key Name="ErhebungsortID">5963</Key><Key Name="PLZ">53937</Key><Key Name="Ort">Schleiden</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -3257,7 +3257,7 @@
             <Key Name="Surname">Nikolaj (Николай)</Key>
             <Key Name="Patronymic">Sankevich (Санкевич)</Key>
             <Key Name="Vulgo (Ngan. name)">Hojmyumaku [Хоймюмаку]</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1949</Key><Key Name="ErhebungsortID">7688</Key><Key Name="PLZ">75031</Key><Key Name="Ort">Eppingen</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -3316,7 +3316,7 @@
             <Key Name="Surname">Numumu (Нумуму)</Key>
             <Key Name="Patronymic">Hursabteevich (Хурсаптеевич)</Key>
             <Key Name="Vulgo (Ngan. name)">Kohy</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1954</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>
@@ -3423,7 +3423,7 @@
             <Key Name="Surname">...</Key>
             <Key Name="Patronymic">...</Key>
             <Key Name="Vulgo (Ngan. name)">...</Key>
-         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
+         <Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key><Key Name="Geschlecht">m</Key><Key Name="Geburtsjahr">1951</Key><Key Name="ErhebungsortID">18514</Key><Key Name="PLZ">39031</Key><Key Name="Ort">Brunico/Bruneck</Key></Description>
       </Speaker>
       <Speaker Id="SIDF5FAAB3A-EAD8-4005-B16D-0651701C9C1F">
          <Sigle>PSM</Sigle>
@@ -3435,7 +3435,7 @@
             <Key Name="Surname">Salira (Салира)</Key>
             <Key Name="Patronymic">Mydovich (Мыдович)</Key>
             <Key Name="Vulgo (Ngan. name)">-</Key>
-         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1982</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
+         <Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1982</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key><Key Name="Geschlecht">w</Key><Key Name="Geburtsjahr">1982</Key><Key Name="ErhebungsortID">10110</Key><Key Name="PLZ">96450</Key><Key Name="Ort">Coburg</Key></Description>
          <Language Type="L1">
             <LanguageCode>nio</LanguageCode>
             <Description>

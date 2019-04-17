@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.uni_hamburg.corpora.utilities;
+package de.uni_hamburg.corpora.conversion;
 
 import com.opencsv.CSVReader;
 import de.uni_hamburg.corpora.Corpus;
