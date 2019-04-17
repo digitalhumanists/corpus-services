@@ -117,20 +117,20 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                     SS = SS.substring(0, 5);
                 }
                 tierH.put(tierDisplay, MM + ":" + SS); // add total duration of each tier into the hash map
-                report.addNote("calculate-annotated-time", tierDisplay + "  " + MM + ":" + SS); // display it on the report
+                stats.addNote("calculate-annotated-time", tierDisplay + "  " + MM + ":" + SS); // display it on the report
             }
         }
         // show the annotation time for each label in every tier
-        report.addNote("calculate-annotated-time", "Labels per Tier");
+        stats.addNote("calculate-annotated-time", "Labels per Tier");
         Set perTier = eventMap.keySet();
         for(Object per: perTier){
             String tierName = (String) per;
-            report.addNote("calculate-annotated-time", tierName);
+            stats.addNote("calculate-annotated-time", tierName);
             HashMap map = new HashMap(eventMap.get(tierName));
             Set perMap = map.keySet();
             for(Object obj: perMap){
                 String label = (String) obj;
-                report.addNote("calculate-annotated-time", label + "    " + map.get(label));
+                stats.addNote("calculate-annotated-time", label + "    " + map.get(label));
             }
         }
         tierMap.put(transcriptName, tierH);  // finally add the annotations of the transcript
