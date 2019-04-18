@@ -22,10 +22,9 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * The class that calculates annotated time for exb files. 
+ * The class that calculates annotated time for exb files.
  *
  */
-
 public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
 
     String annotLoc = "";
@@ -48,12 +47,13 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         } catch (IOException ioe) {
             stats.addException(ioe, annotLoc + ": Unknown file reading error");
         }
-        return stats;   
+        return stats;
     }
-    
+
     /**
-     * The primary functionality of the class; it accepts the basic transcription files of the
-     * corpus one by one and computes the duration of each annotation in the exb.
+     * The primary functionality of the class; it accepts the basic
+     * transcription files of the corpus one by one and computes the duration of
+     * each annotation in the exb.
      */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
@@ -62,7 +62,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
         // get the name of the transcription
-        String transcriptName; 
+        String transcriptName;
         if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
             transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
         } else {
@@ -78,11 +78,11 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript
         NodeList items = doc.getElementsByTagName("tli"); // get all timeline items of the transcript
         HashMap<String, Float> timelineItems = getTimelineItems(items); // container for the tl items
-        HashMap<String, String> tierH = new HashMap<>(); 
+        HashMap<String, String> tierH = new HashMap<>();
         for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);  // get one tier at a time
-            if (tier.getAttribute("type").equals("a") && !(tier.getAttribute("category").equals("en") || 
-                    tier.getAttribute("category").equals("de"))) {  // handle annotation tiers exclusively
+            if (tier.getAttribute("type").equals("a") && !(tier.getAttribute("category").equals("en")
+                    || tier.getAttribute("category").equals("de"))) {  // handle annotation tiers exclusively
                 HashMap<String, String> eventH = new HashMap<>(); // hashmap for dealing with events
                 String tierDisplay = tier.getAttribute("display-name"); // get tier name
                 float tierDuration = 0;  // time the tier duration
@@ -90,41 +90,44 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                 boolean notAnnotation = false; // in case the tier is yet not an annotation
                 for (int j = 0; j < events.getLength(); j++) {  // handle each event 
                     float eventDuration = 0; // time the event duration
-                    Element event = (Element) events.item(j); 
+                    Element event = (Element) events.item(j);
                     String eventLabel = event.getTextContent(); // acquire the content of the event
                     String eventStart = event.getAttribute("start"); // acquire the starting tl item for the event
                     String eventEnd = event.getAttribute("end"); // acquire the ending tl item for the event
-                    if(eventLabel.length()>20){ //if an event in the tier is suspiciously lengthy
+                    if (eventLabel.length() > 20) { //if an event in the tier is suspiciously lengthy
                         notAnnotation = true;
                         break;
                     }
                     eventDuration = timelineItems.get(eventEnd) - timelineItems.get(eventStart); // calculate the event duration
                     tierDuration += timelineItems.get(eventEnd) - timelineItems.get(eventStart); // add it up to the total tier duration
                     // sort the format out for putting it on the report
-                    float secondsLeft = eventDuration % 60; 
+                    float secondsLeft = eventDuration % 60;
                     int minutes = (int) Math.floor(eventDuration / 60);
                     String MM = (String) (minutes < 10 ? "0" + minutes : minutes);
                     String SS = (String) (secondsLeft < 10 ? "0" + Float.toString(secondsLeft) : Float.toString(secondsLeft));
                     if (SS.length() > 5) {
                         SS = SS.substring(0, 5);
                     }
-                    if(eventH.containsKey(eventLabel)){ // in case the label has already been found in the tier 
+                    if (eventH.containsKey(eventLabel)) { // in case the label has already been found in the tier 
                         String durOfEvent = eventH.get(eventLabel);
                         int minute = Integer.parseInt(durOfEvent.substring(0, durOfEvent.indexOf(":")));
-                        float second = Float.parseFloat(durOfEvent.substring(durOfEvent.indexOf(":")+1));
+                        float second = Float.parseFloat(durOfEvent.substring(durOfEvent.indexOf(":") + 1));
                         float totalSecond = secondsLeft + second;
-                        if(totalSecond/60>1.0){
+                        if (totalSecond / 60 > 1.0) {
                             minute++;
                         }
                         int totalMin = minute + minutes;
-                        String totalMM  = (String) (totalMin < 10 ? "0" + totalMin : totalMin);
+                        String totalMM = (String) (totalMin < 10 ? "0" + totalMin : totalMin);
                         String totalSS = (String) (totalSecond < 10 ? "0" + Float.toString(totalSecond) : Float.toString(totalSecond));
+                        if (totalSS.length() > 5) {
+                            totalSS = totalSS.substring(0, 5);
+                        }
                         eventH.put(eventLabel, totalMM + ":" + totalSS);
-                    }else{
+                    } else {
                         eventH.put(eventLabel, MM + ":" + SS);
                     }
                 }
-                if(notAnnotation){// if the tier is not an annotation
+                if (notAnnotation) {// if the tier is not an annotation
                     continue;  // then do not save this tier or its events
                 }
                 // put the events for each tier in the hashmap so long as there is an event under that tier
@@ -146,12 +149,12 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         // show the annotation time for each label in every tier
         stats.addNote("calculate-annotated-time", "Labels per Tier");
         Set perTier = eventMap.keySet();
-        for(Object per: perTier){
+        for (Object per : perTier) {
             String tierName = (String) per;
             stats.addNote("calculate-annotated-time", tierName);
             HashMap map = new HashMap(eventMap.get(tierName));
             Set perMap = map.keySet();
-            for(Object obj: perMap){
+            for (Object obj : perMap) {
                 String label = (String) obj;
                 stats.addNote("calculate-annotated-time", label + "    " + map.get(label));
             }
@@ -159,7 +162,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         tierMap.put(transcriptName, tierH);  // finally add the annotations of the transcript
         return stats;
     }
-    
+
     /**
      * A method for obtaining the time line items with their IDs and time.
      */
@@ -169,12 +172,14 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
             Element item = (Element) items.item(i);
             String itemID = item.getAttribute("id");
             Float time = null;
-            if(h.get("T"+Integer.toString(Integer.valueOf(itemID.substring(1))-1))!=null)
-                time = h.get("T"+Integer.toString(Integer.valueOf(itemID.substring(1))-1));
-            else
+            if (h.get("T" + Integer.toString(Integer.valueOf(itemID.substring(1)) - 1)) != null) {
+                time = h.get("T" + Integer.toString(Integer.valueOf(itemID.substring(1)) - 1));
+            } else {
                 time = new Float(0.0);
-            if(!item.getAttribute("time").equals(""))
+            }
+            if (!item.getAttribute("time").equals("")) {
                 time = new Float(item.getAttribute("time"));
+            }
             h.put(itemID, time);
         }
         return h;
