@@ -108,7 +108,21 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                     if (SS.length() > 5) {
                         SS = SS.substring(0, 5);
                     }
-                    eventH.put(eventLabel, MM + ":" + SS);
+                    if(eventH.containsKey(eventLabel)){ // in case the label has already been found in the tier 
+                        String durOfEvent = eventH.get(eventLabel);
+                        int minute = Integer.parseInt(durOfEvent.substring(0, durOfEvent.indexOf(":")));
+                        float second = Float.parseFloat(durOfEvent.substring(durOfEvent.indexOf(":")+1));
+                        float totalSecond = secondsLeft + second;
+                        if(totalSecond/60>1.0){
+                            minute++;
+                        }
+                        int totalMin = minute + minutes;
+                        String totalMM  = (String) (totalMin < 10 ? "0" + totalMin : totalMin);
+                        String totalSS = (String) (totalSecond < 10 ? "0" + Float.toString(totalSecond) : Float.toString(totalSecond));
+                        eventH.put(eventLabel, totalMM + ":" + totalSS);
+                    }else{
+                        eventH.put(eventLabel, MM + ":" + SS);
+                    }
                 }
                 if(notAnnotation){// if the tier is not an annotation
                     continue;  // then do not save this tier or its events
