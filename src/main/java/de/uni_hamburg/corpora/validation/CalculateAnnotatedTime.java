@@ -81,17 +81,23 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         HashMap<String, String> tierH = new HashMap<>(); 
         for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);  // get one tier at a time
-            if (tier.getAttribute("type").equals("a")) {  // handle annotation tiers exclusively
+            if (tier.getAttribute("type").equals("a") && !(tier.getAttribute("category").equals("en") || 
+                    tier.getAttribute("category").equals("de"))) {  // handle annotation tiers exclusively
                 HashMap<String, String> eventH = new HashMap<>(); // hashmap for dealing with events
                 String tierDisplay = tier.getAttribute("display-name"); // get tier name
                 float tierDuration = 0;  // time the tier duration
                 NodeList events = tier.getElementsByTagName("event"); // get all events for the tier
+                boolean notAnnotation = false; // in case the tier is yet not an annotation
                 for (int j = 0; j < events.getLength(); j++) {  // handle each event 
                     float eventDuration = 0; // time the event duration
                     Element event = (Element) events.item(j); 
                     String eventLabel = event.getTextContent(); // acquire the content of the event
                     String eventStart = event.getAttribute("start"); // acquire the starting tl item for the event
                     String eventEnd = event.getAttribute("end"); // acquire the ending tl item for the event
+                    if(eventLabel.length()>20){ //if an event in the tier is suspiciously lengthy
+                        notAnnotation = true;
+                        break;
+                    }
                     eventDuration = timelineItems.get(eventEnd) - timelineItems.get(eventStart); // calculate the event duration
                     tierDuration += timelineItems.get(eventEnd) - timelineItems.get(eventStart); // add it up to the total tier duration
                     // sort the format out for putting it on the report
@@ -103,6 +109,9 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                         SS = SS.substring(0, 5);
                     }
                     eventH.put(eventLabel, MM + ":" + SS);
+                }
+                if(notAnnotation){// if the tier is not an annotation
+                    continue;  // then do not save this tier or its events
                 }
                 // put the events for each tier in the hashmap so long as there is an event under that tier
                 if (!eventH.isEmpty()) {
