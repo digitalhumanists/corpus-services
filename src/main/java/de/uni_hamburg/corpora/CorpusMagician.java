@@ -37,6 +37,7 @@ import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
+import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -305,6 +306,7 @@ public class CorpusMagician {
         allExistingCFs.add("MakeTimelineConsistent");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
+        allExistingCFs.add("AddCSVMetadataToComa");
         return allExistingCFs;
     }
 
@@ -585,6 +587,21 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(eseg);
+                    break;
+                case "addcsvmetadatatocoma":
+                    AddCSVMetadataToComa acmtc = new AddCSVMetadataToComa();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("CSV")) {
+                            acmtc.setCSVFilePath(cfProperties.getProperty("CSV"));
+                            System.out.println("CSV file path set to " + cfProperties.getProperty("CSV"));
+                        }
+                        if (cfProperties.containsKey("SPEAKER")) {
+                            acmtc.setSpeakerOrCommunication(cfProperties.getProperty("SPEAKER"));
+                            System.out.println("CSV file set for " + cfProperties.getProperty("SPEAKER"));
+                        }
+                    }
+                    corpusfunctions.add(acmtc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
