@@ -37,6 +37,7 @@ import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
+import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import java.io.File;
 import java.io.IOException;
@@ -307,6 +308,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("AddCSVMetadataToComa");
+        allExistingCFs.add("ComaKmlForLocations");
         return allExistingCFs;
     }
 
@@ -480,6 +482,10 @@ public class CorpusMagician {
                     fcci.addWhiteListString("Segmentation_Errors.xml");
                     fcci.addWhiteListString("Structure_Errors.xml");
                     corpusfunctions.add(fcci);
+                    break;
+                case "comakmlforlocations":
+                    ComaKmlForLocations ckml = new ComaKmlForLocations();
+                    corpusfunctions.add(ckml);
                     break;
                 case "corpusdataregexreplacer":
                     //ToDo                   
