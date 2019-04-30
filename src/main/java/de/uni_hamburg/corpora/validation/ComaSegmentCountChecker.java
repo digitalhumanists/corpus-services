@@ -20,19 +20,19 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * A class that checks whether there are more than one segmentation algorithms used 
- * in the corpus. If that is the case, it issues warnings.
+ * A class that checks whether there are more than one segmentation algorithms
+ * used in the corpus. If that is the case, it issues warnings.
  */
-public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
-    
+public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
+
     String comaLoc = "";
     String cscc = "ComaSegmentCountChecker";
-    
+
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
-    * checks for parser configuration, SAXE and IO exceptions.
-    */   
+     * Default check function which calls the exceptionalCheck function so that
+     * the primal functionality of the feature can be implemented, and
+     * additionally checks for parser configuration, SAXE and IO exceptions.
+     */
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
@@ -48,12 +48,12 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
         }
         return stats;
     }
-    
+
     /**
-    * Main functionality of the feature; checks the coma file whether or not 
-    * there are more than one segmentation algorithms used in the corpus. Issues 
-    * warnings and returns report which is composed of errors. 
-    */
+     * Main functionality of the feature; checks the coma file whether or not
+     * there are more than one segmentation algorithms used in the corpus.
+     * Issues warnings and returns report which is composed of errors.
+     */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -67,65 +67,67 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction{
             NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication     
             for (int j = 0; j < transcriptions.getLength(); j++) {   // iterate through transcriptions 
                 Element transcription = (Element) transcriptions.item(j);
-                NodeList keys =  transcription.getElementsByTagName("Key");  // get keys of current transcription
+                NodeList keys = transcription.getElementsByTagName("Key");  // get keys of current transcription
                 boolean segmented = false;   // flag for distinguishing basic file from segmented file 
-                for (int k = 0; k < keys.getLength(); k++){  // look for the key with "segmented" attribute 
+                for (int k = 0; k < keys.getLength(); k++) {  // look for the key with "segmented" attribute 
                     Element key = (Element) keys.item(k);
-                    if (key.getAttribute("Name").equals("segmented")){
+                    if (key.getAttribute("Name").equals("segmented")) {
                         String seg = key.getTextContent();
-                        if (seg.equals("true"))      // check if transcription is segmented or not
+                        if (seg.equals("true")) // check if transcription is segmented or not
+                        {
                             segmented = true;        // if segmented transcription then turn the flag true
+                        }
                         break;
                     }
                 }
-                if (segmented){ // get the names of the segmentation algorithms in the coma file
-                    for (int k = 0; k < keys.getLength(); k++){  // look for the keys with algorithm 
+                if (segmented) { // get the names of the segmentation algorithms in the coma file
+                    for (int k = 0; k < keys.getLength(); k++) {  // look for the keys with algorithm 
                         Element key = (Element) keys.item(k);
-                        if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")){
+                        if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")) {
                             String text = key.getAttribute("Name");
                             int colonIndex = key.getAttribute("Name").lastIndexOf(':');
                             int hashIndex = key.getAttribute("Name").indexOf('#');
-                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex+2, colonIndex));
+                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex));
                         }
                     }
                 }
             }
         }
         String algorithmName = "";
-        if(!algorithmNames.isEmpty()){
+        if (!algorithmNames.isEmpty()) {
             algorithmName = algorithmNames.get(0);
 
-        boolean error = false;
-        for(int i = 1; i < algorithmNames.size(); i++){ // check if coma file contains different seg algorithms
-            if(!algorithmName.equals(algorithmNames.get(i))){
-                error = true;
-                System.err.println("Coma file contains different segmentation algorithms: " + algorithmNames.get(i));
-                stats.addCritical(cscc, cd, "More than one segmentation algorithm: " + algorithmNames.get(i) + " and " + algorithmName);
-                break;
-            } 
-        }
-        if(!error){
-        stats.addCorrect(cscc, cd, "Only segmentation " + algorithmNames.get(1));
-        }
+            boolean error = false;
+            for (int i = 1; i < algorithmNames.size(); i++) { // check if coma file contains different seg algorithms
+                if (!algorithmName.equals(algorithmNames.get(i))) {
+                    error = true;
+                    System.err.println("Coma file contains different segmentation algorithms: " + algorithmNames.get(i));
+                    stats.addCritical(cscc, cd, "More than one segmentation algorithm: " + algorithmNames.get(i) + " and " + algorithmName);
+                    break;
                 }
-        else{
-        stats.addWarning(cscc, cd, "No segment counts added yet. Use Coma > Maintenance > Update segment counts to add them. ");    
+            }
+            if (!error) {
+                stats.addCorrect(cscc, cd, "Only segmentation " + algorithmNames.get(1));
+            }
+        } else {
+            stats.addWarning(cscc, cd, "No segment counts added yet. Use Coma > Maintenance > Update segment counts to add them. ");
         }
         return stats; // return the report with warnings
     }
-    
+
     /**
-    * This feature does not have fix functionality yet.
-    */
+     * This feature does not have fix functionality yet.
+     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         return check(cd);
     }
-    
+
     /**
-    * Default function which determines for what type of files (basic transcription, 
-    * segmented transcription, coma etc.) this feature can be used.
-    */
+     * Default function which determines for what type of files (basic
+     * transcription, segmented transcription, coma etc.) this feature can be
+     * used.
+     */
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
