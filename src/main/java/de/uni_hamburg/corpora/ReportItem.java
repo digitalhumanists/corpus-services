@@ -516,15 +516,15 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td>" +
+            report += "<td><pre>" +
                 error.getWhat() +
-                "</td>";
-            report += "<td>" +
+                "</pre></td>";
+            report += "<td><pre>" +
                 error.getHowto() +
-                "</td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+                "</pre></td>";
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'><pre>(" +
                 error.getLocalisedMessage() +
-                ")</td>\n";
+                ")</pre></td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
             report += "</tr>";
         }
