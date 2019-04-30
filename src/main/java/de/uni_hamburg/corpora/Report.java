@@ -341,7 +341,7 @@ public class Report {
         String rv = "";
         for (Map.Entry<String, Collection<ReportItem>> kv
                 : statistics.entrySet()) {
-            rv += getSummaryLine(kv.getKey());
+            rv += getSummaryLine(kv.getKey()) + "\n";
         }
         return rv;
     }
