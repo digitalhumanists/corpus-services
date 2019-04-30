@@ -438,13 +438,13 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td style='border: red solid 1px'>" +
+            report += "<td style='border: red solid 1px; white-space: pre'>" +
                 error.getWhat() +
                 "</td>";
-            report += "<td style='border: green solid 1px'>" +
+            report += "<td style='border: green solid 1px; white-space: pre'>" +
                 error.getHowto() +
                 "</td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px; white-space: pre'>(" +
                 error.getLocalisedMessage() +
                 ")</td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
@@ -516,15 +516,15 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td><pre>" +
+            report += "<td>" +
                 error.getWhat() +
-                "</pre></td>";
-            report += "<td><pre>" +
+                "</td>";
+            report += "<td>" +
                 error.getHowto() +
-                "</pre></td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'><pre>(" +
+                "</td>";
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
                 error.getLocalisedMessage() +
-                ")</pre></td>\n";
+                ")</td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
             report += "</tr>";
         }
