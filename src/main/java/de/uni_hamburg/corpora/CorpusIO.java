@@ -10,6 +10,8 @@ import static java.lang.System.out;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -187,22 +189,18 @@ public class CorpusIO {
         return recursed;
     }
 
-    public ArrayList<URL> URLtoList(URL url) {
+    public ArrayList<URL> URLtoList(URL url) throws URISyntaxException {
         ArrayList<URL> alldata = new ArrayList();
         if (isLocalFile(url)) {
             //if the url points to a directory
-            if (new File(url.getFile()).isDirectory()) {
+            if (isDirectory(url)) {
                 //we need to iterate    
 
                 //and add everything to the list
-                Collection<File> recursed = getFileURLSRecursively(url);
-                for (File f : recursed) {
-                    if (!f.isDirectory()) {
-                        try {
-                            alldata.add(f.toURI().toURL());
-                        } catch (MalformedURLException ex) {
-                            Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                Collection<URL> recursed = URLtoList(url);
+                for (URL urlread : recursed) {
+                    if (!isDirectory(urlread)) {
+                        alldata.add(urlread);
                     }
                 }
                 return alldata;
@@ -272,7 +270,8 @@ public class CorpusIO {
      * Whether the URL is a directory in the local file system.
      */
     public static boolean isDirectory(java.net.URL url) throws URISyntaxException{
-        return new File(url.toURI()).isDirectory();
+        //return new File(url.toURI()).isDirectory();
+        return Files.isDirectory(Paths.get(url.getPath()));
     }
 
     public static boolean hasHost(java.net.URL url) {

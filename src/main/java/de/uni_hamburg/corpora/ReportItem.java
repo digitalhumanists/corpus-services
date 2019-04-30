@@ -516,15 +516,15 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td>" +
+            report += "<td style='white-space: pre'>" +
                 error.getWhat() +
                 "</td>";
-            report += "<td>" +
+            report += "<td style='white-space: pre'>" +
                 error.getHowto() +
                 "</td>";
             report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
                 error.getLocalisedMessage() +
-                ")</td>\n";
+                ")</td style='white-space: pre'>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
             report += "</tr>";
         }
@@ -535,7 +535,7 @@ public class ReportItem {
                   "    $('table').DataTable({ 'iDisplayLength': 50 });\n" +
                   "} );</script>";
         
-        report += "   <footer>" + summarylines + "</footer>";
+        report += "   <footer style='white-space: pre'>" + summarylines + "</footer>";
         report += "   </body>\n</html>";
         
         return report;
