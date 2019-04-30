@@ -209,7 +209,7 @@
                     </xsl:when> 
                     <!-- Test if it is a colon but should be a vowel length marker -->
                     <xsl:when test=" matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;]+.*')">
-                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should be a vowel length marker ː ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should maybe be a vowel length marker &#x2D0; or needs a following whitespace', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when> 
                     <xsl:otherwise>
                         <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>

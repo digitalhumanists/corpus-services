@@ -335,13 +335,13 @@ public class Report {
     }
 
     /**
-     * Genereate summaries for all buckets.
+     * Generate summaries for all buckets.
      */
     public String getSummaryLines() {
         String rv = "";
         for (Map.Entry<String, Collection<ReportItem>> kv
                 : statistics.entrySet()) {
-            rv += getSummaryLine(kv.getKey()) + "\n";
+            rv += getSummaryLine(kv.getKey());
         }
         return rv;
     }
