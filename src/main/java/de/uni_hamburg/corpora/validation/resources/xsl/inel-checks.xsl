@@ -177,7 +177,7 @@
             <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat('^',$UTTERANCEENDSYMBOL))">
                 <xsl:choose>
                     <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
-                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event ', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="concat('WARNING;utterance end symbol appearing alone in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
