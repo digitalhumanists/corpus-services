@@ -76,27 +76,22 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
                         if (seg.equals("true")) // check if transcription is segmented or not
                         {
                             segmented = true;        // if segmented transcription then turn the flag true
-                        }
-                        break;
-                    }
-                }
-                if (segmented) { // get the names of the segmentation algorithms in the coma file
-                    for (int k = 0; k < keys.getLength(); k++) {  // look for the keys with algorithm 
-                        Element key = (Element) keys.item(k);
                         if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")) {
-                            String text = key.getAttribute("Name");
+                            //String text = key.getAttribute("Name");
                             int colonIndex = key.getAttribute("Name").lastIndexOf(':');
                             int hashIndex = key.getAttribute("Name").indexOf('#');
-                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex));
+                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex)); 
                         }
-                    }
+                        }
+                        break;                    
+                }
                 }
             }
         }
+        System.out.println(algorithmNames);
         String algorithmName = "";
         if (!algorithmNames.isEmpty()) {
             algorithmName = algorithmNames.get(0);
-
             boolean error = false;
             for (int i = 1; i < algorithmNames.size(); i++) { // check if coma file contains different seg algorithms
                 if (!algorithmName.equals(algorithmNames.get(i))) {
