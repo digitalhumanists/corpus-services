@@ -485,6 +485,13 @@ public class CorpusMagician {
                     break;
                 case "comakmlforlocations":
                     ComaKmlForLocations ckml = new ComaKmlForLocations();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("KML")) {
+                            ckml.setKMLFilePath(cfProperties.getProperty("KML"));
+                            System.out.println("KML file path set to " + cfProperties.getProperty("KML"));
+                        }
+                    }
                     corpusfunctions.add(ckml);
                     break;
                 case "corpusdataregexreplacer":
