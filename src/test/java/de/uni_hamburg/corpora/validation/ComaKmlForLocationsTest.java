@@ -23,22 +23,22 @@ import static org.junit.Assert.*;
  * @author Ozzy
  */
 public class ComaKmlForLocationsTest {
-    
+
     public ComaKmlForLocationsTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -50,20 +50,19 @@ public class ComaKmlForLocationsTest {
     public void testCheck() throws Exception {
         System.out.println("check");
         //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
-        String corpusFolder = "C:\\Users\\Ozzy\\Desktop\\DolganCorpus";
+        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\DolganCorpus";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
         ComaKmlForLocations instance = new ComaKmlForLocations();
+        instance.setKMLFilePath("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\INEL_LangsRecolored.kml");
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check coma files
-        for (CorpusData cd : corp.getMetadata() ) {
+        for (CorpusData cd  : corp.getMetadata()) {
             assertNotNull(instance.check(cd));
         }
 
     }
-
-
 
     /**
      * Test of getIsUsableFor method, of class ComaKmlForLocations.
@@ -78,5 +77,4 @@ public class ComaKmlForLocationsTest {
         //no null object here
         assertNotNull(result);
     }
-
 }
