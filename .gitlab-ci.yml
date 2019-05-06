@@ -1,9 +1,11 @@
-run_jar:
-       image: openjdk:8-jdk-stretch
-       script:
-           - java -cp hzsk-corpus-services-0.1-jar-with-dependencies.jar de.uni_hamburg.corpora.CorpusMagician -i file:/builds/hzsk/exmaralda-demo-corpus -o prettyprint-report-output.html -c PrettyPrintData -f
-           
-       artifacts:
-           expire_in: 5 week
-           paths:
-            - builds/hzsk/exmaralda-demo-corpus/prettyprint-report-output.html
+compile_withmaven:
+  image: maven:latest
+  script:
+    - mvn install:install-file -Dfile=lib/EXMARaLDA.jar -DgroupId=org.exmaralda -DartifactId=exmaralda -Dversion=1.10 -Dpackaging=jar  -DgeneratePom=true
+    - mvn clean compile assembly:single
+    
+  artifacts:
+    expire_in: 5 week
+    paths:
+    
+      - target/hzsk-corpus-services-0.1-jar-with-dependencies.jar
