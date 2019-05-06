@@ -38,6 +38,7 @@ import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -311,6 +312,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("AddCSVMetadataToComa");
+        allExistingCFs.add("RemoveEmptyEvents");
         return allExistingCFs;
     }
 
@@ -606,6 +608,10 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(acmtc);
+                    break;
+                case "removeemptyevents":
+                    RemoveEmptyEvents ree = new RemoveEmptyEvents();
+                    corpusfunctions.add(ree);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
