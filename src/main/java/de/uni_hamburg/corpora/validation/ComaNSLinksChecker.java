@@ -227,7 +227,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                 }
                 comaLoc = f.getName();
                 CorpusIO cio = new CorpusIO();
-                CorpusData cd = cio.readFile(f.toURI().toURL());
+                CorpusData cd = cio.readFileURL(f.toURI().toURL());
                 stats = check(cd);
             } catch (FileNotFoundException fnfe) {
                 fnfe.printStackTrace();
