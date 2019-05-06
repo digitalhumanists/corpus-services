@@ -13,30 +13,26 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
-import java.util.Hashtable;
 import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 /**
  * A validator for EXB-file's references.
@@ -158,6 +154,10 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             stats.addException(pce, "Unknown parsing error");
         } catch (SAXException saxe) {
             stats.addException(saxe, "Unknown parsing error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, "Unknown parsing error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, "Unknown parsing error");
         }
         return stats;
     }
@@ -167,7 +167,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
      * references, if a referenced file does not exist, issues a warning.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document

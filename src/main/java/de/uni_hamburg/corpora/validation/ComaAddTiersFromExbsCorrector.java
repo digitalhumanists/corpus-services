@@ -11,12 +11,14 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +27,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.BasicBody;
@@ -414,14 +419,16 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
             }
         }
         try {
-            XMLOutputter xmlout = new XMLOutputter();
-           
-            String corpusString = xmlout.outputString(corpus);
-            corpusString = indent(corpusString, "event");
-            corpus = TypeConverter.String2JdomDocument(corpusString);
-            xmlout.output(corpus, new FileOutputStream(settings.getOutputFile()));
-        } catch (java.util.NoSuchElementException nsee) {
-            stats.addCritical(ADD_TIERS, "Could not write fixes!");
+            CorpusIO cio = new CorpusIO();
+            cio.write(corpus, settings.getOutputFile().toURI().toURL());           
+        } catch (TransformerException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+        } catch (UnsupportedEncodingException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
         }
         return stats;
     }
@@ -787,15 +794,16 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
             }
         }
         try {
-            XMLOutputter xmlout = new XMLOutputter();
-           
-            String corpusString = xmlout.outputString(corpus);
-            corpusString = indent(corpusString, "event");
-            corpus = TypeConverter.String2JdomDocument(corpusString);
-            comafile = new File(str);
-            xmlout.output(corpus, new FileOutputStream(comafile));
-        } catch (java.util.NoSuchElementException nsee) {
-            stats.addCritical(ADD_TIERS, "Could not write fixes!");
+            CorpusIO cio = new CorpusIO();
+            cio.write(corpus, settings.getOutputFile().toURI().toURL());                      
+        } catch (TransformerException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+        } catch (UnsupportedEncodingException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
         }
         return stats;
     }
