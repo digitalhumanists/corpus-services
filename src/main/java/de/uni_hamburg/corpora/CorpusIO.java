@@ -202,12 +202,15 @@ public class CorpusIO {
     }
 
     void listFiles(Path path) throws IOException {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, "*.{exb, exs, coma, xml, cmdi, eaf, flextext, esa, tei, xsl}")) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
             for (Path entry : stream) {
                 if (Files.isDirectory(entry)) {
                     listFiles(entry);
                 }
-                recursed.add(entry.toUri().toURL());
+                String sentry = entry.getFileName().toString().toLowerCase();
+                if (sentry.endsWith(".exb") || sentry.endsWith(".exs") || sentry.endsWith(".coma") || sentry.endsWith(".xml") || sentry.endsWith(".cmdi") || sentry.endsWith(".eaf") || sentry.endsWith(".flextext") || sentry.endsWith(".esa") || sentry.endsWith(".tei") || sentry.endsWith(".xsl")) {
+                    recursed.add(entry.toUri().toURL());
+                }
             }
         }
     }

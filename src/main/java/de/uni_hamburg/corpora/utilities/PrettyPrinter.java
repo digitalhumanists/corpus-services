@@ -96,6 +96,14 @@ public class PrettyPrinter {
             // insert explicit CDATA section for specific elements
             Pattern r2b = Pattern.compile("<ts([^>]*)>([\\s]+)</ts>", Pattern.DOTALL);
             prettyXmlString = r2b.matcher(prettyXmlString).replaceAll("<ts$1><![CDATA[$2]]></ts>");
+            
+            // insert explicit CDATA section for specific elements
+            Pattern r2c = Pattern.compile("<ta([^>]*)>([\\s]+)</ta>", Pattern.DOTALL);
+            prettyXmlString = r2c.matcher(prettyXmlString).replaceAll("<ta$1><![CDATA[$2]]></ta>");
+            
+            // insert explicit CDATA section for specific elements
+            Pattern r2d = Pattern.compile("<ats([^>]*)>([\\s]+)</ats>", Pattern.DOTALL);
+            prettyXmlString = r2d.matcher(prettyXmlString).replaceAll("<ats$1><![CDATA[$2]]></ats>");
 
             // re-sort attributes for EXBs from alphabetic to EXB style
             Pattern r3 = Pattern.compile("<event\\s*(end=\"[^\">]*\")\\s+(start=\"[^\">]*\")\\s*>", Pattern.DOTALL);
