@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +27,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -65,6 +67,12 @@ public class ExbSchemaChecker extends Checker implements CommandLineable, Corpus
             stats.addException(saxe, "Unknown parsing error");
         } catch(IOException ioe) {
             stats.addException(ioe, "Reading/writing error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, "Reading/writing error");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(ex, "Reading/writing error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, "Reading/writing error");
         }
         return stats;
     }
@@ -73,7 +81,7 @@ public class ExbSchemaChecker extends Checker implements CommandLineable, Corpus
     * Main functionality of the feature; validates an exb file with a DTD file.
     */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, JDOMException, IOException, JexmaraldaException{
+            throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, XPathExpressionException{
         System.out.println("Checking the exb file against DTD...");
         String exbSchemaPath = new File("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\schemas\\exb_schema.xsd").getAbsolutePath();
         URL exbSchema = Paths.get(exbSchemaPath).toUri().toURL();//;new URL(exbSchemaPath);

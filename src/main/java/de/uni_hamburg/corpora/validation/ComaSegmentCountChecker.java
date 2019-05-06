@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -45,6 +47,10 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
             stats.addException(ioe, cscc, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
             stats.addException(ex, cscc, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, cscc, cd, "Transformer Exception");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, cscc, cd, "XPath Exception");
         }
         return stats;
     }
@@ -55,7 +61,7 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
      * Issues warnings and returns report which is composed of errors.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document

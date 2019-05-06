@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,6 +24,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Attr;
@@ -124,6 +127,8 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
             stats.addException(ex, GAP, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
             stats.addException(ex, GAP, cd, "Unknown parsing error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, GAP, cd, "Unknown XPath error");
         }
         return stats;
     }
@@ -132,7 +137,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
      * Main feature of the class: Adds annotation tags from exb files to a list.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
+            throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
