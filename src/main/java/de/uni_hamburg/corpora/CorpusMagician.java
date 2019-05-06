@@ -40,6 +40,7 @@ import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -61,6 +62,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.xml.sax.SAXException;
@@ -225,6 +227,8 @@ public class CorpusMagician {
             report.addException(ex, "An Exmaralda file reading error occured");
         } catch (URISyntaxException ex) {
             report.addException(ex, "A URI was incorrect");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, "An Xpath expression was incorrect");
         }
 
     }
@@ -253,12 +257,12 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         corpus = new Corpus(url);
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
-    public ArrayList<URL> createListofData(URL url) {
+    public Collection<URL> createListofData(URL url) throws URISyntaxException, IOException {
         //add just that url if its a file
         //adds the urls recursively if its a directory
         return cio.URLtoList(url);

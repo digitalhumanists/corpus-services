@@ -24,6 +24,7 @@ import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -37,8 +38,12 @@ import org.jdom.Text;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import net.sf.saxon.expr.instruct.TerminationException;
 import org.exmaralda.common.corpusbuild.TextFilter;
 
@@ -156,6 +161,10 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
             report.addException(ex, ISO_CONV, cd, "XSL transformer error");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, ISO_CONV, cd, "Parser error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, ISO_CONV, cd, "XPath error");
         }
         return report;
     }
