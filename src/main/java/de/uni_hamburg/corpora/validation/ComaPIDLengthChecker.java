@@ -32,6 +32,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
@@ -178,6 +180,10 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
             stats.addException(saxe, COMA_PID_LENGTH, cd, "Unknown parsing error");
         } catch(IOException ioe) {
             stats.addException(ioe, COMA_PID_LENGTH, cd, "Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, COMA_PID_LENGTH, cd, "Unknown XPath error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, COMA_PID_LENGTH, cd, "Unknown Transformer error");
         }
         return stats;
     }
@@ -187,7 +193,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
     * ID's that violate Fedora's PID limits.
     */  
      private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException{
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException{
         Report stats = new Report();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();

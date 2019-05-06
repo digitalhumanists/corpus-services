@@ -35,6 +35,10 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
@@ -71,12 +75,16 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         } catch (URISyntaxException ex) {
             ex.printStackTrace();
             stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
+        } catch (TransformerException ex) {
+            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
         }
         return stats;
     }
 
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Document doc = TypeConverter.JdomDocument2W3cDocument(TypeConverter.String2JdomDocument(cd.toSaveableString()));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
         Report stats = new Report();

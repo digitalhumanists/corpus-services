@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -26,7 +28,7 @@ import org.xml.sax.SAXException;
  */
 public class ComaNameChecker extends Checker implements CorpusFunction {
 
-    String comaLoc = "";
+    String comaLoc = "ComaNameChecker";
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -45,6 +47,10 @@ public class ComaNameChecker extends Checker implements CorpusFunction {
             stats.addException(ioe, comaLoc + ": Unknown file reading error");
         } catch (URISyntaxException ex) {
             stats.addException(ex, comaLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, comaLoc, cd, "Unknown file reading error.");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, comaLoc, cd, "Unknown file reading error.");
         }
         return stats;
     }
@@ -56,7 +62,7 @@ public class ComaNameChecker extends Checker implements CorpusFunction {
      * those warnings to the report which it returns.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
