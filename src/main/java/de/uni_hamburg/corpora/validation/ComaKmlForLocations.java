@@ -2,6 +2,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.BufferedWriter;
@@ -102,10 +103,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 Element location = (Element) locations.item(j);
                 if (location.getAttribute("Type").equals("Basic biogr. data")) {
                     NodeList keys = location.getElementsByTagName("Key");
-                    String placeOfBirth = null;
+                    String placeOfBirth = "";
                     String region = null;
                     String country = null;
-                    String domicileStr = null;
+                    String domicileStr = "";
                     boolean coorFlag = false;
                     boolean domCoor = false;
                     Element ref = null;
@@ -137,19 +138,51 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 break;
                         }
                     }
-                    if (coorFlag == false && lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
-                        Element coordinatesKey = doc.createElement("Key");
-                        coordinatesKey.setAttribute("name", "1c Place of birth (LngLat)");
-                        coordinatesKey.setTextContent(lngLat.get(placeOfBirth + "-" + languageCode));
-                        Element loc = (Element) location.getElementsByTagName("Description").item(0);
-                        loc.insertBefore(coordinatesKey, ref);
+                    if (!placeOfBirth.equals("...") && !placeOfBirth.equals("")) {
+                        if (placeOfBirth.endsWith("(?)")) {
+                            placeOfBirth = placeOfBirth.substring(0, placeOfBirth.indexOf(" (?)"));
+                        }
+                        if (placeOfBirth.endsWith("`")) {
+                            placeOfBirth = placeOfBirth.substring(0, placeOfBirth.indexOf("`"));
+                        }
+                        if (coorFlag == false && lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
+                            Element coordinatesKey = doc.createElement("Key");
+                            coordinatesKey.setAttribute("Name", "1c Place of birth (LngLat)");
+                            coordinatesKey.setTextContent(lngLat.get(placeOfBirth + "-" + languageCode));
+                            Element loc = (Element) location.getElementsByTagName("Description").item(0);
+                            loc.insertBefore(coordinatesKey, ref);
+                        } else if (!lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
+                            System.out.println("The KML file does not contain the birthplace '" + placeOfBirth + "' "
+                                    + "of the speaker '" + sigleString + "' as a place mark!");
+                            stats.addWarning("coma-kml-for-loc", "The KML file does not contain the birthplace '"
+                                    + placeOfBirth + "' of the speaker '" + sigleString + "' as a place mark!");
+                            exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does "
+                                    + "not contain the birthplace '" + placeOfBirth + "' of the speaker '" + sigleString
+                                    + "' as a place mark!");
+                        }
                     }
-                    if (domCoor == false && lngLat.containsKey(domicile + "-" + languageCode)) {
-                        Element coordinatesKey = doc.createElement("Key");
-                        coordinatesKey.setAttribute("name", "7c Domicile (LngLat)");
-                        coordinatesKey.setTextContent(lngLat.get(domicile + "-" + languageCode));
-                        Element loc = (Element) location.getElementsByTagName("Description").item(0);
-                        loc.insertBefore(coordinatesKey, domRef);
+                    if (!domicileStr.equals("...") && !domicileStr.equals("")) {
+                        if (domicileStr.endsWith("(?)")) {
+                            domicileStr = domicileStr.substring(0, domicileStr.indexOf(" (?)"));
+                        }
+                        if (domicileStr.endsWith("`")) {
+                            domicileStr = domicileStr.substring(0, domicileStr.indexOf("`"));
+                        }
+                        if (domCoor == false && lngLat.containsKey(domicileStr + "-" + languageCode)) {
+                            Element coordinatesKey = doc.createElement("Key");
+                            coordinatesKey.setAttribute("Name", "7c Domicile (LngLat)");
+                            coordinatesKey.setTextContent(lngLat.get(domicileStr + "-" + languageCode));
+                            Element loc = (Element) location.getElementsByTagName("Description").item(0);
+                            loc.insertBefore(coordinatesKey, domRef);
+                        } else if (!lngLat.containsKey(domicileStr + "-" + languageCode)) {
+                            System.out.println("The KML file does not contain the domicile '" + domicileStr + "' "
+                                    + "of the speaker '" + sigleString + "' as a place mark!");
+                            stats.addWarning("coma-kml-for-loc", "The KML file does not contain the domicile '"
+                                    + domicileStr + "' of the speaker '" + sigleString + "' as a place mark!");
+                            exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does "
+                                    + "not contain the domicile '" + domicileStr + "' of the speaker '" + sigleString
+                                    + "' as a place mark!");
+                        }
                     }
                     birthPlace.put(sigleString, new String(placeOfBirth + ", " + region + ", " + country));
                     domicile.put(sigleString, domicileStr);
@@ -161,7 +194,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             Element communication = (Element) communications.item(i);
             Element location = (Element) communication.getElementsByTagName("Location").item(0); // get the location of the communication
             String communicationID = communication.getAttribute("Id"); // get communication id 
-            //String communicationName = communication.getAttribute("Name"); // get communication name 
+            String communicationName = communication.getAttribute("Name"); // get communication name 
             NodeList keys = location.getElementsByTagName("Key");
             String country = "";
             String region = "";
@@ -185,12 +218,28 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                         break;
                 }
             }
-            if (coorFlag == false && lngLat.containsKey(settlement + "-" + languageCode)) {
-                Element coordinatesKey = doc.createElement("Key");
-                coordinatesKey.setAttribute("name", "Settlement (LngLat)");
-                coordinatesKey.setTextContent(lngLat.get(settlement + "-" + languageCode));
-                Element loc = (Element) location.getElementsByTagName("Description").item(0);
-                loc.appendChild(coordinatesKey);
+            if (!settlement.equals("...") && !settlement.equals("")) {
+                if (settlement.endsWith("(?)")) {
+                    settlement = settlement.substring(0, settlement.indexOf(" (?)"));
+                }
+                if (settlement.endsWith("`")) {
+                    settlement = settlement.substring(0, settlement.indexOf("`"));
+                }
+                if (coorFlag == false && lngLat.containsKey(settlement + "-" + languageCode)) {
+                    Element coordinatesKey = doc.createElement("Key");
+                    coordinatesKey.setAttribute("Name", "Settlement (LngLat)");
+                    coordinatesKey.setTextContent(lngLat.get(settlement + "-" + languageCode));
+                    Element loc = (Element) location.getElementsByTagName("Description").item(0);
+                    loc.appendChild(coordinatesKey);
+                } else if (!lngLat.containsKey(settlement + "-" + languageCode)) {
+                    System.out.println("The KML file does not contain the settlement '" + settlement + "' "
+                            + " where the communication '" + communicationName + "' takes place as a place mark!");
+                    stats.addWarning("coma-kml-for-loc", "The KML file does not contain the settlement '" + settlement + "' "
+                            + " where the communication '" + communicationName + "' takes place as a place mark!");
+                    exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does not "
+                            + "contain the settlement '" + settlement + "' "
+                            + " where the communication '" + communicationName + "' takes place as a place mark!");
+                }
             }
             commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
         }
@@ -207,6 +256,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         this.kmlFile = path;
     }
 
+    // the method for getting coordinates of locations in the kml file
     public void getCoordinates() throws ParserConfigurationException, SAXException, IOException {
         File fXmlFile = new File(kmlFile);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
