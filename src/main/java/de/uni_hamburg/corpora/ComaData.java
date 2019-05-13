@@ -127,7 +127,6 @@ public class ComaData implements Metadata, CorpusData, XMLData {
 
     public ArrayList<URL> getAllBasicTranscriptionURLs() throws MalformedURLException, URISyntaxException {
         try {
-            ArrayList<String> result = new ArrayList<>();
             URL resulturl;
             ArrayList<URL> resulturls = new ArrayList<>();
             XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
@@ -149,8 +148,6 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     public ArrayList<String> getAllBasicTranscriptionFilenames() {
         try {
             ArrayList<String> result = new ArrayList<>();
-            String resulturl;
-            ArrayList<URL> resulturls = new ArrayList<>();
             XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
             List transcriptionList = xpath.selectNodes(readcomaasjdom);
             for (int pos = 0; pos < transcriptionList.size(); pos++) {
