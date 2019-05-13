@@ -125,10 +125,31 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         return referencedCorpusDataURLs;
     }
 
-    public ArrayList<URL> getAllBasicTranscriptionFilenames() throws MalformedURLException {
+    public ArrayList<URL> getAllBasicTranscriptionURLs() throws MalformedURLException, URISyntaxException {
         try {
             ArrayList<String> result = new ArrayList<>();
             URL resulturl;
+            ArrayList<URL> resulturls = new ArrayList<>();
+            XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
+            List transcriptionList = xpath.selectNodes(readcomaasjdom);
+            for (int pos = 0; pos < transcriptionList.size(); pos++) {
+                Element nslink = (Element) (transcriptionList.get(pos));
+                //String fullTranscriptionName = CORPUS_BASEDIRECTORY.toURI().getPath() + nslink.getText();
+                resulturl = new URL (CORPUS_BASEDIRECTORY + nslink.getText()); 
+                //Paths.get(fullTranscriptionName).toUri().toURL();
+                resulturls.add(resulturl);
+            }
+            return resulturls;
+        } catch (JDOMException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    public ArrayList<String> getAllBasicTranscriptionFilenames() {
+        try {
+            ArrayList<String> result = new ArrayList<>();
+            String resulturl;
             ArrayList<URL> resulturls = new ArrayList<>();
             XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
             List transcriptionList = xpath.selectNodes(readcomaasjdom);
@@ -138,10 +159,10 @@ public class ComaData implements Metadata, CorpusData, XMLData {
                 // String fullTranscriptionName = CORPUS_BASEDIRECTORY + "\\" +
                 // nslink.getText();
                 result.add(nslink.getText());
-                resulturl = Paths.get(nslink.getText()).toUri().toURL();
-                resulturls.add(resulturl);
+                //resulturl = Paths.get(nslink.getText()).toUri().toURL();
+                //resulturls.add(resulturl);
             }
-            return resulturls;
+            return result;
         } catch (JDOMException ex) {
             ex.printStackTrace();
         }

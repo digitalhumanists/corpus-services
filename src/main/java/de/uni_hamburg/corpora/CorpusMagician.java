@@ -38,6 +38,7 @@ import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import java.io.File;
 import java.io.IOException;
@@ -313,6 +314,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("AddCSVMetadataToComa");
         allExistingCFs.add("RemoveEmptyEvents");
+        allExistingCFs.add("ComaTierOverviewCreator");
         return allExistingCFs;
     }
 
@@ -612,6 +614,10 @@ public class CorpusMagician {
                 case "removeemptyevents":
                     RemoveEmptyEvents ree = new RemoveEmptyEvents();
                     corpusfunctions.add(ree);
+                    break;
+                 case "comatieroverviewcreator":
+                    ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
+                    corpusfunctions.add(ctoc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");

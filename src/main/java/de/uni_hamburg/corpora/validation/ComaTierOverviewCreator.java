@@ -16,6 +16,10 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -70,7 +74,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         CorpusIO cio = new CorpusIO();
         ArrayList<URL> resulturls = new ArrayList<>();
         ArrayList<Tier> tiers = new ArrayList<>();
-        resulturls = ccd.getAllBasicTranscriptionFilenames();
+        resulturls = ccd.getAllBasicTranscriptionURLs();
         for (URL resulturl : resulturls) {
             CorpusData cdexb = cio.readFileURL(resulturl);
             BasicTranscriptionData btexb = (BasicTranscriptionData) cdexb;
@@ -80,29 +84,43 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                 tiers.add(t);
             }
         }
-        System.out.println(tiers);
+        //System.out.println(tiers);
         //now we have all the existing tiers from the exbs, we need to make a table out of it
+        //use the html template and add the content into id
         if (!tiers.isEmpty()) {
-             // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Tier_Overview.xsl"));
+            // get the HTML stylesheet
+            String htmltemplate = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/tier_overview_datatable_template.html"));
+            String h1 = "<h1> Tier Overview over Whole Corpus (" + resulturls.size() +" exbs) </h1>";
+            String tables = h1 + "<table id=\"\" class=\"compact\">\n"
+                    + "   <thead>\n"
+                    + "      <tr>\n"
+                    + "         <th class=\"compact\">Category-Type-DisplayName</th>\n"
+                    + "         <th class=\"compact\">Number of Tiers</th>\n"
+                    + "      </tr>\n"
+                    + "   </thead>\n"
+                    + "   <tbody>\n";
+            List<String> stringtiers = new ArrayList<String>();
+            for (Tier tier : tiers) {
+                stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
+            }
+            Set<String> hash_Set = new HashSet<String>(stringtiers);
+            // add the tables to the html
+            //first table: one column with categories, one with count
+//            
+            for (String s : hash_Set) {
+                tables = tables + "<tr><td class=\"compact\">" + s + "</td><td class=\"compact\">" + Collections.frequency(stringtiers, s) + "</td></tr>";
+            }
+            tables = tables + " </tr>\n"
+                    + "   </tbody>\n"
+                    + "</table>";
+            String result = htmltemplate + tables;
 
-            // create XSLTransformer and set the parameters 
-            XSLTransformer xt = new XSLTransformer();
-        
-            // perform XSLT transformation
-            String result = xt.transform(cd.toSaveableString(), xsl);
-            Path path = Paths.get(cd.getURL().toURI()); 
-            Path pathwithoutfilename = path.getParent();
-            URI overviewuri = pathwithoutfilename.toUri();
-            URL overviewurl1 = overviewuri.toURL();
-            System.out.println(overviewurl1);
-            //TODO systemindependent!!
-            URL overviewurl = new URL(overviewurl1, "tier_overview.html");
+            URL overviewurl = new URL(cd.getParentURL(), "tier_overview.html");
             cio.write(result, overviewurl);
-            
-            stats.addCorrect(cscc, cd, "created html tier overview at " + overviewurl);
+
+            stats.addCorrect(cscc, cd, "created tier overview at " + overviewurl);
         } else {
-            stats.addWarning(cscc, cd, "No segment counts added yet. Use Coma > Maintenance > Update segment counts to add them. ");
+            stats.addWarning(cscc, cd, "No tiers found in the linked exbs. ");
         }
         return stats; // return the report with warnings
     }
