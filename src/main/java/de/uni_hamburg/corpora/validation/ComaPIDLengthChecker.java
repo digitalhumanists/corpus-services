@@ -125,7 +125,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
             //test length of Fedora PID and report
             if (fedoraPID.length() >= 64) {
                 stats.addCritical(COMA_PID_LENGTH, comaLoc + ": " +
-                    "Communication name (" + fedoraPID.length() + " chars) too long for Fedora PID generation (max. 64): " + fedoraPID );
+                    "Fedora PID would be too long (max. 64) for communication name (" + fedoraPID.length() + " chars): " + fedoraPID );
                     // + " You could shorten it to: " + shortenedCommuniationName + ", or change the corpus prefix");
             } else {
                 stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
