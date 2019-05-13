@@ -51,11 +51,11 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     String filenamewithoutending;
 
     public URL CORPUS_BASEDIRECTORY;
-    
+
     public static String SEGMENTED_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='true']/NSLink";
     public static String BASIC_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='false']/NSLink";
     public static String ALL_FILE_XPATH = "//Transcription/NSLink";
-    
+
     public ArrayList<URL> referencedCorpusDataURLs;
 
     public ComaData() {
@@ -67,8 +67,7 @@ public class ComaData implements Metadata, CorpusData, XMLData {
             SAXBuilder builder = new SAXBuilder();
             readcomaasjdom = builder.build(url);
             File f = new File(url.toURI());
-           originalstring = new
-                String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
+            originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
             //loadFile(f);
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
@@ -107,7 +106,7 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         return toPrettyPrintedXML();
     }
 
-    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
@@ -118,50 +117,49 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         return originalstring;
     }
 
+    //TODO!
     public Collection<URL> getReferencedCorpusDataURLs() {
-        try {
-            URI uri = url.toURI();
-            URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
-            CORPUS_BASEDIRECTORY = parentURI.toURL();
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(ComaData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ComaData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //now add the URLs from the files
-        //do we need to have different ArrayLists for exb, exs, audio, pdf?
-        //TODO! Waht happened here?
+        //now read the NSLinks and add the URLs from the files
+        //we need to have different ArrayLists for exb, exs, audio, pdf
+        //TODO! 
         return referencedCorpusDataURLs;
     }
-    
-    public ArrayList<String> getAllFilenames() {
-		try {
-			ArrayList<String> result = new ArrayList<>();
-			XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
-			List transcriptionList = xpath.selectNodes(readcomaasjdom);
-			for (int pos = 0; pos < transcriptionList.size(); pos++) {
-				Element nslink = (Element) (transcriptionList.get(pos));
-				// currentElement = nslink;
-				// String fullTranscriptionName = CORPUS_BASEDIRECTORY + "\\" +
-				// nslink.getText();
-				result.add(nslink.getText());
-			}
-			return result;
-		} catch (JDOMException ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
+
+    public ArrayList<URL> getAllBasicTranscriptionFilenames() throws MalformedURLException {
+        try {
+            ArrayList<String> result = new ArrayList<>();
+            URL resulturl;
+            ArrayList<URL> resulturls = new ArrayList<>();
+            XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
+            List transcriptionList = xpath.selectNodes(readcomaasjdom);
+            for (int pos = 0; pos < transcriptionList.size(); pos++) {
+                Element nslink = (Element) (transcriptionList.get(pos));
+                // currentElement = nslink;
+                // String fullTranscriptionName = CORPUS_BASEDIRECTORY + "\\" +
+                // nslink.getText();
+                result.add(nslink.getText());
+                resulturl = Paths.get(nslink.getText()).toUri().toURL();
+                resulturls.add(resulturl);
+            }
+            return resulturls;
+        } catch (JDOMException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     public void updateUnformattedString(String newUnformattedString) {
         originalstring = newUnformattedString;
     }
-    
+
     public void setBaseDirectory(URL url) {
         CORPUS_BASEDIRECTORY = url;
     }
-    
-    public URL getBasedirectory() {
+
+    public URL getBasedirectory() throws URISyntaxException, MalformedURLException {
+        URI uri = url.toURI();
+        URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+        CORPUS_BASEDIRECTORY = parentURI.toURL();
         return CORPUS_BASEDIRECTORY;
     }
 
