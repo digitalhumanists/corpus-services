@@ -72,12 +72,14 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         Report stats = new Report();
         ComaData ccd = (ComaData) cd;
         CorpusIO cio = new CorpusIO();
-        ArrayList<URL> resulturls = new ArrayList<>();
+        ArrayList<URL> resulturls;
         ArrayList<Tier> tiers = new ArrayList<>();
+        ArrayList<BasicTranscriptionData> bts = new ArrayList<>();
         resulturls = ccd.getAllBasicTranscriptionURLs();
         for (URL resulturl : resulturls) {
             CorpusData cdexb = cio.readFileURL(resulturl);
             BasicTranscriptionData btexb = (BasicTranscriptionData) cdexb;
+            bts.add(btexb);
             Tier t;
             for (int i = 0; i < btexb.getEXMARaLDAbt().getBody().getNumberOfTiers(); i++) {
                 t = btexb.getEXMARaLDAbt().getBody().getTierAt(i);
@@ -101,12 +103,12 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                     + "   <tbody>\n";
             List<String> stringtiers = new ArrayList<String>();
             for (Tier tier : tiers) {
-                stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
+                //stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
+                stringtiers.add(tier.getCategory() + "-" + tier.getType());
             }
             Set<String> hash_Set = new HashSet<String>(stringtiers);
             // add the tables to the html
-            //first table: one column with categories, one with count
-//            
+            //first table: one column with categories, one with count    
             for (String s : hash_Set) {
                 tables = tables + "<tr><td class=\"compact\">" + s + "</td><td class=\"compact\">" + Collections.frequency(stringtiers, s) + "</td></tr>";
             }
