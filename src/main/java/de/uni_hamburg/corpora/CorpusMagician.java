@@ -10,7 +10,7 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaXsdChecker;
-import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -418,8 +418,8 @@ public class CorpusMagician {
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
-                case "comanamechecker":
-                    ComaNameChecker cnc = new ComaNameChecker();
+                case "comatranscriptionsnamechecker":
+                    ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
                     corpusfunctions.add(cnc);
                     break;
                 case "tiercheckerwithannotation":

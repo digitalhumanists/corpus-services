@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class ComaNameCheckerTest {
+public class ComaTranscriptionsNameCheckerTest {
 
-    public ComaNameCheckerTest() {
+    public ComaTranscriptionsNameCheckerTest() {
     }
 
     @BeforeClass
@@ -44,7 +44,7 @@ public class ComaNameCheckerTest {
     }
 
     /**
-     * Test of check method, of class ComaNameChecker.
+     * Test of check method, of class ComaTranscriptionsNameChecker.
      */
     @Test
     public void testCheck() throws Exception {
@@ -52,7 +52,7 @@ public class ComaNameCheckerTest {
         String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        ComaNameChecker instance = new ComaNameChecker();
+        ComaTranscriptionsNameChecker instance = new ComaTranscriptionsNameChecker();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check coma files
@@ -63,12 +63,12 @@ public class ComaNameCheckerTest {
 
 
     /**
-     * Test of getIsUsableFor method, of class ComaNameChecker.
+     * Test of getIsUsableFor method, of class ComaTranscriptionsNameChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        ComaNameChecker instance = new ComaNameChecker();
+        ComaTranscriptionsNameChecker instance = new ComaTranscriptionsNameChecker();
         //Collection<Class> expResult = null;
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
