@@ -30,8 +30,6 @@ import java.util.Hashtable;
 import java.util.Set;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -85,6 +83,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
 
     final String COMA_FILECOVERAGE = "coma-filecoverage";
     final List<String> whitelist;
+    final List<String> fileendingwhitelist;
 
     public FileCoverageChecker() {
         // these are acceptable
@@ -93,6 +92,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         whitelist.add(".gitignore");
         whitelist.add("README");
         whitelist.add("Thumbs.db");
+        fileendingwhitelist = new ArrayList<String>();
     }
 
     /**
@@ -105,11 +105,11 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         try {
             stats = oldExceptionalCheck(s);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": " + "Unknown parsing error");
+            stats.addException(pce, COMA_FILECOVERAGE, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": " + "Unknown parsing error");
+            stats.addException(saxe, COMA_FILECOVERAGE, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": " + "Unknown file reading error");
+            stats.addException(ioe, COMA_FILECOVERAGE, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -131,14 +131,14 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName())) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
                     } else if (f.getName().endsWith(".coma")) {
                         comacounter++;
                         if (comacounter > 1) {
-                            stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + f.getName());
+                            stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + f.getName());
                         }
                         System.out.println(comacounter);
                         continue;
@@ -162,14 +162,14 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName())) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
                     } else if (f.getName().endsWith(".coma")) {
                         comacounter++;
                         if (comacounter > 1) {
-                            stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + f.getName());
+                            stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + f.getName());
                         }
                         System.out.println(comacounter);
                         continue;
@@ -193,14 +193,14 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName())) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
                     } else if (f.getName().endsWith(".coma")) {
                         comacounter++;
                         if (comacounter > 1) {
-                            stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + f.getName());
+                            stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + f.getName());
                         }
                         System.out.println(comacounter);
                         continue;
@@ -266,11 +266,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         comaPaths.addAll(RelPaths);
         for (String s : allFilesPaths) {
             if (comaPaths.contains(s)) {
-                stats.addCorrect(COMA_FILECOVERAGE, comaLoc + ": "
-                        + "File both in coma and filesystem: " + s);
+                stats.addCorrect(COMA_FILECOVERAGE, cd, "File is both in coma and filesystem" + s);
             } else {
-                stats.addCritical(COMA_FILECOVERAGE, comaLoc + ": "
-                        + "File on filesystem is not explained in coma: " + s);
+                stats.addCritical(COMA_FILECOVERAGE, cd, "File on filesystem is not explained in coma" + s);
             }
         }
         return stats;
@@ -327,13 +325,13 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, COMA_FILECOVERAGE, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, COMA_FILECOVERAGE, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, COMA_FILECOVERAGE, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, COMA_FILECOVERAGE, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -345,8 +343,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         Report stats = new Report();
+        // FIXME:
         String[] path = new String[1];
-        path[0] = cd.getURL().toString().substring(6);
+        path[0] = cd.getURL().toString().substring(5);
         settings = new ValidatorSettings("FileCoverageChecker",
                 "Checks Exmaralda .coma file against directory, to find "
                 + "undocumented files",
@@ -376,14 +375,14 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File a : files) {
-                            if (whitelist.contains(a.getName())) {
+                            if (whitelist.contains(a.getName()) || fileendingwhitelist.contains(getFileExtension(a))) {
                                 continue;
                             } else if (a.isDirectory()) {
                                 dirs.add(a);
                             } else if (a.getName().endsWith(".coma")) {
                                 comacounter++;
                                 if (comacounter > 1) {
-                                    stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + a.getName());
+                                    stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + a.getName());
                                 }
                                 System.out.println(comacounter);
                                 continue;
@@ -407,14 +406,14 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File b : files) {
-                            if (whitelist.contains(b.getName())) {
+                            if (whitelist.contains(b.getName()) || fileendingwhitelist.contains(getFileExtension(b))) {
                                 continue;
                             } else if (b.isDirectory()) {
                                 dirs.add(b);
                             } else if (b.getName().endsWith(".coma")) {
                                 comacounter++;
                                 if (comacounter > 1) {
-                                    stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + b.getName());
+                                    stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + b.getName());
                                 }
                                 System.out.println(comacounter);
                                 continue;
@@ -438,14 +437,14 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File c : files) {
-                            if (whitelist.contains(c.getName())) {
+                            if (whitelist.contains(c.getName()) || fileendingwhitelist.contains(getFileExtension(c))) {
                                 continue;
                             } else if (c.isDirectory()) {
                                 dirs.add(c);
                             } else if (c.getName().endsWith(".coma")) {
                                 comacounter++;
                                 if (comacounter > 1) {
-                                    stats.addCritical(COMA_FILECOVERAGE, "There is more than one coma file in your corpus " + c.getName());
+                                    stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + c.getName());
                                 }
                                 System.out.println(comacounter);
                                 continue;
@@ -511,11 +510,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                 comaPaths.addAll(RelPaths);
                 for (String st : allFilesPaths) {
                     if (comaPaths.contains(st)) {
-                        stats.addCorrect(COMA_FILECOVERAGE, comaLoc + ": "
-                                + "File both in coma and filesystem: " + st);
+                        stats.addCorrect(COMA_FILECOVERAGE, cd, "File both in coma and filesystem: " + st);
                     } else {
-                        stats.addCritical(COMA_FILECOVERAGE, comaLoc + ": "
-                                + "File on filesystem is not explained in coma: " + st);
+                        stats.addCritical(COMA_FILECOVERAGE, cd, "File on filesystem is not explained in coma: " + st);
                     }
                 }
             } catch (FileNotFoundException fnfe) {
@@ -532,7 +529,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_FILECOVERAGE,
+        report.addCritical(COMA_FILECOVERAGE, cd,
                 "File names which do not comply with conventions cannot be fixed automatically");
         return report;
     }
@@ -548,7 +545,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
@@ -556,6 +553,26 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     @Override
     public Report check(String data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void addWhiteListString(String s) {
+        whitelist.add(s);
+    }
+
+    public void addFileEndingWhiteListString(String s) {
+        fileendingwhitelist.add(s);
+    }
+
+    private String getFileExtension(File f) {
+        String extension = "";
+        String fileName = f.getName();
+        int i = fileName.lastIndexOf('.');
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
     }
 
 }

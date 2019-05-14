@@ -7,21 +7,27 @@ package de.uni_hamburg.corpora.utilities;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -37,9 +43,9 @@ public class PrettyPrinter {
     * @param suppressedElements  blank-separated list of QNames for elements to be disregarded for indentation
     * @return	                 indented XML string
     */
-    public static String indent(String xml, String suppressedElements) {
+    public static String indent(String xml, String suppressedElements) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
         
-        try {
+
 
             // Turn xml string into a document
             Document document = DocumentBuilderFactory.newInstance()
@@ -82,12 +88,36 @@ public class PrettyPrinter {
             // insert explicit CDATA section for specific elements
             Pattern r2 = Pattern.compile("<nts([^>]*)>([\\s]+)</nts>", Pattern.DOTALL);
             prettyXmlString = r2.matcher(prettyXmlString).replaceAll("<nts$1><![CDATA[$2]]></nts>");
+                   
+	    // insert explicit CDATA section for specific elements
+            Pattern r2a = Pattern.compile("<event([^>]*)>([\\s]+)</event>", Pattern.DOTALL);
+            prettyXmlString = r2a.matcher(prettyXmlString).replaceAll("<event$1><![CDATA[$2]]></event>");
                         
-            return prettyXmlString;
+            // insert explicit CDATA section for specific elements
+            Pattern r2b = Pattern.compile("<ts([^>]*)>([\\s]+)</ts>", Pattern.DOTALL);
+            prettyXmlString = r2b.matcher(prettyXmlString).replaceAll("<ts$1><![CDATA[$2]]></ts>");
+            
+            // insert explicit CDATA section for specific elements
+            Pattern r2c = Pattern.compile("<ta([^>]*)>([\\s]+)</ta>", Pattern.DOTALL);
+            prettyXmlString = r2c.matcher(prettyXmlString).replaceAll("<ta$1><![CDATA[$2]]></ta>");
+            
+            // insert explicit CDATA section for specific elements
+            Pattern r2d = Pattern.compile("<ats([^>]*)>([\\s]+)</ats>", Pattern.DOTALL);
+            prettyXmlString = r2d.matcher(prettyXmlString).replaceAll("<ats$1><![CDATA[$2]]></ats>");
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            // re-sort attributes for EXBs from alphabetic to EXB style
+            Pattern r3 = Pattern.compile("<event\\s*(end=\"[^\">]*\")\\s+(start=\"[^\">]*\")\\s*>", Pattern.DOTALL);
+            prettyXmlString = r3.matcher(prettyXmlString).replaceAll("<event $2 $1>");
+            
+            Pattern r4 = Pattern.compile("<tier\\s+(category=\"[^\">]*\")\\s+(display\\-name=\"[^\">]*\")\\s+(id=\"[^\">]*\")\\s+(speaker=\"[^\">]*\")\\s+(type=\"[^\">]*\")\\s*(/?)>", Pattern.DOTALL);
+            prettyXmlString = r4.matcher(prettyXmlString).replaceAll("<tier $3 $4 $1 $5 $2 $6>");
+                   
+            // return certain empty elements from EXB with opening and closing tags
+            Pattern r5 = Pattern.compile("<(tier|event|ud\\-meta\\-information|languages\\-used|ud\\-speaker\\-information)([^/>]*?)\\s*/>", Pattern.DOTALL);
+            prettyXmlString = r5.matcher(prettyXmlString).replaceAll("<$1$2></$1>");
+            
+            return prettyXmlString;
+      
     }
     
 }

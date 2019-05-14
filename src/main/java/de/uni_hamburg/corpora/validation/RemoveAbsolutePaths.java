@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
+import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -19,8 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -29,6 +23,13 @@ import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import de.uni_hamburg.corpora.XMLData;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  *
@@ -40,14 +41,17 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     Path pathRelative = null;
     String nameOfCorpusFolder;
     String nameOfExbFolder;
+    String rap = "RemoveAbsolutePaths";
 
+    
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.SegmentedTranscriptionData");
             Class cl2 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            if (cl.isInstance(cd)) {
-                List al = findAllAbsolutePathsExb(cd);
+            if (cl.isInstance(cd) || cl3.isInstance(cd)) {
+                List al = findAllAbsolutePathsExbAttribute(cd);
                 //if there is no absolute path, nothing needs to be done
                 //check if the paths that are there are absolute
                 if (!al.isEmpty()) {
@@ -64,11 +68,38 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                             pabs = Paths.get(refurl);
                         }
                         if (pabs.isAbsolute()) {
-                            report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
-                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
+                            report.addCritical(rap, cd, "absolute path info needs to be replaced");
+                            if (cl.isInstance(cd)) {
+                                exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
+                            }
                         } else {
                             al.remove(o);
-                            report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
+                            report.addCorrect(rap, cd, "path is already relative, nothing to do");
+                        }
+                    }
+                }
+                List ale = findAllAbsolutePathsExbElement(cd);
+                if (!ale.isEmpty()) {
+                    for (int i = 0; i < ale.size(); i++) {
+                        Object o = ale.get(i);
+                        Element ae = (Element) o;
+                        //System.out.println(a);
+                        String refurl = ae.getText();
+                        Path pabs;
+                        if (refurl.startsWith("file")) {
+                            URL refurlurl = new URL(refurl);
+                            pabs = Paths.get(refurlurl.toURI());
+                        } else {
+                            pabs = Paths.get(refurl);
+                        }
+                        if (pabs.isAbsolute()) {
+                            report.addCritical(rap, cd, "absolute path info needs to be replaced");
+                            if (cl.isInstance(cd)) {
+                                exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
+                            }
+                        } else {
+                            al.remove(o);
+                            report.addCorrect(rap, cd, "path is already relative, nothing to do");
                         }
                     }
                 }
@@ -89,37 +120,46 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         //Path pabs = Paths.get(e.getText());
                         if (pabs.isAbsolute()) {
-                            report.addCritical("RemoveAbsolutePaths", "absolute path info needs to be replaced in " + cd.getURL().getFile());
+                            report.addCritical(rap, cd, "absolute path info needs to be replaced");
                             exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
                         } else {
                             al.remove(o);
-                            report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
+                            report.addCorrect(rap, cd, "path is already relative, nothing to do");
                         }
 
                     }
                 }
             } else {
-                report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb file");
+                report.addCritical(rap, cd, "File is neither coma nor exb nor exs file");
             }
         } catch (ClassNotFoundException ex) {
-            report.addException(ex, "unknown class not found error");
+            report.addException(ex, rap, cd, "unknown class not found error");
         } catch (JDOMException ex) {
-            report.addException(ex, "unknown reading error");
+            report.addException(ex, rap, cd, "unknown reading error");
         } catch (URISyntaxException ex) {
-            report.addException(ex, "unknown URI syntax error");
+            report.addException(ex, rap, cd, "unknown URI syntax error");
         } catch (MalformedURLException ex) {
-            report.addException(ex, "unknown malformed URL error");
+            report.addException(ex, rap, cd, "unknown malformed URL error");
+        } catch (TransformerException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
+        } catch (IOException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
         }
         return report;
     }
 
     @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {       
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.SegmentedTranscriptionData");
             Class cl2 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            if (cl.isInstance(cd)) {
-                List al = findAllAbsolutePathsExb(cd);
+            if (cl.isInstance(cd) || cl3.isInstance(cd)) {
+                List al = findAllAbsolutePathsExbAttribute(cd);
                 System.out.println(cd.getURL());
                 Path directory = Paths.get(cd.getURL().toURI());
                 System.out.println(directory);
@@ -148,21 +188,70 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 //then save file
                                 //add a report message
                                 CorpusIO cio = new CorpusIO();
+                                cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                                XMLData xml = (XMLData) cd;
+                                xml.setJdom(doc);
+                                cd = (CorpusData) xml;
                                 cio.write(doc, cd.getURL());
-                                report.addCorrect("RemoveAbsolutePaths", "removed absolute path in " + cd.getURL().getFile());
+                                report.addCorrect(rap, cd, "removed absolute path");
                             } else {
-                                report.addCritical("RemoveAbsolutePaths",
-                                        "relative path cannot be figured out for file "
-                                        + cd.getURL().getFile() + " with path " + pabs.toString());
-                                exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path needs to be replaced manually");
+                                report.addCritical(rap, cd,
+                                        "relative path " + pabs.toString() + " cannot be figured out");
+                                if (cl.isInstance(cd)) {
+                                    exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path needs to be replaced manually");
+                                }
                             }
                         } else {
-                            report.addCorrect("RemoveAbsolutePaths", "path is already relative in" + cd.getURL().getFile());
+                            report.addCorrect(rap, cd, "path is already relative");
                         }
                     }
                 } else {
-                    report.addCorrect("RemoveAbsolutePaths", "there is no absolute path left, nothing to do in " + cd.getURL().getFile());
+                    report.addCorrect(rap, cd, "there is no absolute path left, nothing to do");
                 }
+                List ale = findAllAbsolutePathsExbElement(cd);
+                if (!ale.isEmpty()) {
+                    for (int i = 0; i < ale.size(); i++) {
+                        Object o = ale.get(i);
+                        Element ae = (Element) o;
+                        String refurl = ae.getText();
+                        Path pabs;
+                        if (refurl.startsWith("file")) {
+                            URL refurlurl = new URL(refurl);
+                            pabs = Paths.get(refurlurl.toURI());
+                        } else {
+                            pabs = Paths.get(refurl);
+                        }
+                        if (pabs.isAbsolute()) {
+                            //make the path relative to the exb folder
+                            //need to cut it somehow
+                            System.out.println(pabs);
+                            System.out.println(nameOfExbFolder);
+                            pathRelative = trimFilePathBeforeDirectory(pabs, nameOfExbFolder);
+                            System.out.println(pathRelative);
+                            if (!(pathRelative == null)) {
+                                ae.setText(pathRelative.toString());
+                                //then save file
+                                //add a report message
+                                CorpusIO cio = new CorpusIO();
+                                cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                                XMLData xml = (XMLData) cd;
+                                xml.setJdom(doc);
+                                cd = (CorpusData) xml;
+                                cio.write(doc, cd.getURL());
+                                report.addCorrect(rap, cd, "removed absolute path");
+                            } else {
+                                report.addCritical(rap, cd,
+                                        "relative path " + pabs.toString() + " cannot be figured out");
+                                if (cl.isInstance(cd)) {
+                                    exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path needs to be replaced manually");
+                                }
+                            }
+                        } else {
+                            report.addCorrect(rap, cd, "path is already relative");
+                        }
+                    }
+                }
+
             } else if (cl2.isInstance(cd)) {
                 List al = findAllAbsolutePathsComa(cd);
                 Path directory = Paths.get(cd.getURL().toURI());
@@ -190,17 +279,20 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 //then save file
                                 //add a report message
                                 CorpusIO cio = new CorpusIO();
+                                cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                                XMLData xml = (XMLData) cd;
+                                xml.setJdom(doc);
+                                cd = (CorpusData) xml;
                                 cio.write(doc, cd.getURL());
-                                report.addCorrect("RemoveAbsolutePaths", "removed absolute path in " + cd.getURL().getFile());
+                                report.addCorrect(rap, cd, "removed absolute path");
                             } else {
-                                report.addCritical("RemoveAbsolutePaths",
-                                        "relative path cannot be figured out for file "
-                                        + cd.getURL().getFile() + " with path " + pabs.toString());
+                                report.addCritical(rap, cd,
+                                        "relative path " + pabs.toString() + " cannot be figured out");
                             }
 
                         } else {
                             al.remove(o);
-                            report.addCorrect("RemoveAbsolutePaths", "path is already relative, nothing to do");
+                            report.addCorrect(rap, cd, "path is already relative, nothing to do");
                         }
                     }
                 }
@@ -274,14 +366,22 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                  *
                  */
             } else {
-                report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb file");
+                report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb nor exs file");
             }
         } catch (ClassNotFoundException ex) {
-            report.addException(ex, "unknown class not found error");
+            report.addException(ex, rap, cd, "unknown class not found error");
         } catch (JDOMException ex) {
-            report.addException(ex, "unknown reading error");
+            report.addException(ex, rap, cd, "unknown reading error");
         } catch (URISyntaxException ex) {
-            report.addException(ex, "unknown URI syntax error");
+            report.addException(ex, rap, cd, "unknown URI syntax error");
+        } catch (TransformerException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
+        } catch (ParserConfigurationException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
+        } catch (UnsupportedEncodingException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
+        } catch (XPathExpressionException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
         }
         return report;
     }
@@ -291,6 +391,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
+            Class cl2 = Class.forName("de.uni_hamburg.corpora.SegmentedTranscriptionData");
+            IsUsableFor.add(cl2);
             Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
@@ -299,19 +401,33 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    public List findAllAbsolutePathsExb(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException {
+    public List findAllAbsolutePathsExbAttribute(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException, TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
-        // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>        
-        xp1 = XPath.newInstance("/basic-transcription/head/meta-information/referenced-file/@url");
+        // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>  
+        //working for exs too
+        xp1 = XPath.newInstance("//head/meta-information/referenced-file/@url");
         List allAbsolutePaths = xp1.selectNodes(doc);
         if (allAbsolutePaths.isEmpty()) {
-            report.addWarning("RemoveAbsolutePaths", "no paths found in file " + cd.getURL().getFile());
+            report.addWarning(rap, cd, "no paths found");
         }
         return allAbsolutePaths;
     }
 
-    public List findAllAbsolutePathsComa(CorpusData cd) throws JDOMException, URISyntaxException {
+    public List findAllAbsolutePathsExbElement(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException, TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
+        XPath xp1;
+        // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>  
+        //working for exs too
+        xp1 = XPath.newInstance("//ud-meta-information/ud-information[@attribute-name='# EXB-SOURCE']");
+        List allAbsolutePaths = xp1.selectNodes(doc);
+        if (allAbsolutePaths.isEmpty()) {
+            report.addWarning(rap, cd, "no paths found");
+        }
+        return allAbsolutePaths;
+    }
+
+    public List findAllAbsolutePathsComa(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException, TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
         // in Coma: NSLinks and relPaths <NSLink>narrative/KBD_71_Fish_nar/KBD_71_Fish_nar_s.exs</NSLink>
@@ -319,7 +435,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         xp1 = XPath.newInstance("/Corpus/CorpusData/Communication/File/relPath | /Corpus/CorpusData/Communication/File/absPath | /Corpus/CorpusData/Communication/Transcription/NSLink | /Corpus/CorpusData/Communication/Transcription/Description/Key[@Name='# EXB-SOURCE'] | /Corpus/CorpusData/Communication/Recording/Media/NSLink");
         List allAbsolutePaths = xp1.selectNodes(doc);
         if (allAbsolutePaths.isEmpty()) {
-            report.addWarning("RemoveAbsolutePaths", "no paths found in file " + cd.getURL().getFile());
+            report.addWarning(rap, cd, "no paths found");
         }
         return allAbsolutePaths;
     }

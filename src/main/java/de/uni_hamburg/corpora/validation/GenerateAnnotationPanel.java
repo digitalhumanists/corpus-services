@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Attr;
@@ -41,7 +43,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     static Map<String, Collection<String>> annotationsInExbs = new HashMap<String, Collection<String>>(); // list for holding annotations in exbs
     boolean generateDoc = true; // flag for whether the file created or not
     int iterateExbs = 0;
-    final String GAP = "gap";
+    final String GAP = "GenerateAnnotationPanel";
 
     /**
      * Creates the annotation panel with the annotationsinExbs.
@@ -55,7 +57,8 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         rootElement = doc.createElement("annotation-specification");
         doc.appendChild(rootElement);
         for (String key : annotationsInExbs.keySet()) {
-            if (!key.equals("en") && !key.equals("de") && !key.equals("ita") && !key.equals("fe") && !key.isEmpty()) {
+            if (!key.equals("en") && !key.equals("de") && !key.equals("ita") && !key.equals("fe")
+                    && !key.isEmpty() && annotationsInExbs.get(key).size() <= 60) {
                 Element annotationSet = doc.createElement("annotation-set");
                 rootElement.appendChild(annotationSet);
                 Attr attr = doc.createAttribute("exmaralda-tier-category");
@@ -69,6 +72,9 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                 category.appendChild(higherTag);
                 Element description = doc.createElement("description");
                 category.appendChild(description);
+                List<String> sortedTags = (List<String>) annotationsInExbs.get(key);
+                java.util.Collections.sort(sortedTags, String.CASE_INSENSITIVE_ORDER);
+                annotationsInExbs.replace(key, sortedTags);
                 for (String tag : annotationsInExbs.get(key)) {
                     if (!tag.isEmpty()) {
                         Element lowerCategory = doc.createElement("category");
@@ -78,7 +84,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                         lowerCategory.appendChild(lowerTag);
                         Element lowerDescription = doc.createElement("description");
                         lowerCategory.appendChild(lowerDescription);
-                        stats.addCorrect(GAP,
+                        stats.addCorrect(GAP, cd, 
                                 "Annotation added to the file annotation panel: "
                                 + tag);
                         category.appendChild(lowerCategory);
@@ -90,7 +96,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
-        File f = new File(new File(cd.getURL().getFile()).getParentFile() + File.separator + "AnnotationSpecFromExbs.xml");
+        File f = new File(new File(cd.getURL().getFile()).getParentFile() + "\\AnnotationSpecFromExbs.xml");
         URI u = f.toURI();
         StreamResult result = new StreamResult(new File(u));
         transformer.transform(source, result);
@@ -112,15 +118,17 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                 stats = generateAnnotation(cd);        // call the necessary method to create the annotation panel
             }
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, genLoc + ": Unknown parsing error");
+            stats.addException(pce, GAP, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, genLoc + ": Unknown parsing error");
+            stats.addException(saxe, GAP, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, genLoc + ": Unknown file reading error");
+            stats.addException(ioe, GAP, cd, "Unknown file reading error");
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(GenerateAnnotationPanel.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, GAP, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-            Logger.getLogger(GenerateAnnotationPanel.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, GAP, cd, "Unknown parsing error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, GAP, cd, "Unknown XPath error");
         }
         return stats;
     }
@@ -129,7 +137,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
      * Main feature of the class: Adds annotation tags from exb files to a list.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
+            throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
@@ -137,7 +145,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript
         for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);
-            String category = tier.getAttribute("category"); // get category
+            String category = tier.getAttribute("category"); // get category 
             String type = tier.getAttribute("type"); // get type
             // check if it is an annotation tier category that is already in the map
             if (annotationsInExbs.containsKey(category) && type.equals("a")) {
@@ -150,12 +158,12 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     if (tag.endsWith(" ")) {
                         System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
-                        stats.addWarning("generate-annotation-panel", "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        stats.addWarning(GAP, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         exmaError.addError("generate-annotation-panel", cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false,
                                 "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
-                        tag = tag.substring(0, tag.length() - 1);
+                        //tag = tag.substring(0, tag.length() - 1);
                     }
                     if (!tags.contains(tag)) {
                         tags.add(tag);
@@ -163,7 +171,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                 }
                 //annotationsInExbs.remove(category);
                 annotationsInExbs.put(category, tags);     // add annotations to the map
-            } // check if it is an annotation tier category that is not in the map
+            } // check if it is an annotation tier category that is not in the map 
             else if (!annotationsInExbs.containsKey(category) && type.equals("a")) {
                 Collection<String> tags = new ArrayList<String>();
                 NodeList events = tier.getElementsByTagName("event");
@@ -174,7 +182,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     if (tag.endsWith(" ")) {
                         System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
-                        stats.addWarning("generate-annotation-panel", "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        stats.addWarning(GAP, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         exmaError.addError("generate-annotation-panel", cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false,
                                 "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
@@ -212,7 +220,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(GenerateAnnotationPanel.class.getName()).log(Level.SEVERE, null, ex);
+              report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }

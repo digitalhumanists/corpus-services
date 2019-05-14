@@ -34,8 +34,6 @@ import org.jdom.transform.XSLTransformException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.exmaralda.common.corpusbuild.TextFilter;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
@@ -520,9 +518,9 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
             //doesn't really make sense to have check only here
             report = fix(cd);
         } catch (JDOMException ex) {
-            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown exception error");
         } catch (IOException ex) {
-            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown exception error");
         }
         return report;
     }
@@ -549,7 +547,7 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EXB2INELISOTEI.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     } 
