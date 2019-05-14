@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -23,6 +25,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
     String comaFile = "";
     boolean apostrophe = false;
+    String cac = "ComaApostropheChecker";
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -34,13 +37,17 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, cac, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, cac, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, cac, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, cac, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, cac, cd, "Unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, cac, cd, "Unknown Xpath error");
         }
         return stats;
     }
@@ -51,16 +58,15 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
      * it returns.
      */
     private Report exceptionalCheck(CorpusData cd) // check whether there's any illegal apostrophes '
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Report stats = new Report();         // create a new report
         comaFile = cd.toSaveableString();     // read the coma file as a string
         if (comaFile.contains("'")) {          // if coma file contains an apostrophe ' then issue warning
             apostrophe = true;
             System.err.println("Coma file is containing apostrophe(s) ’");
-            stats.addWarning("coma-apostrophe-checker", "Coma file " + cd.getURL().getFile() + " is containing apostrophe(s) ’");
-        }
-        else {
-            stats.addCorrect("coma-apostrophe-checker", "Coma file " + cd.getURL().getFile() + " does not contain apostrophes");
+            stats.addWarning(cac, cd, "Coma file is containing apostrophe(s) ’");
+        } else {
+            stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");
         }
         return stats; // return the report with warnings
     }
@@ -70,17 +76,31 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
      * One of the main functionalities of the feature; fix apostrophes ' with
      * apostrophes ´ add them to the report which it returns in the end.
      */
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-         Report stats = new Report();         // create a new report
-        comaFile = cd.toSaveableString();     // read the coma file as a string
-        if (comaFile.contains("'")) {         // if coma file contains an apostrophe ’ then issue warning
-            apostrophe = true;                // flag points out if there are illegal apostrophes
-            comaFile = comaFile.replaceAll("'", "’");    //replace all 's with ´s
-            CorpusIO cio = new CorpusIO();
-            cio.write(comaFile, cd.getURL());    // write back to coma file with allowed apostrophes ´ 
-            stats.addCorrect("ComaApostropheChecker", "corrected the apostrophes in " + cd.getURL().getFile()); // fix report 
-        } else {
-            stats.addCorrect("coma-apostrophe-checker", "Coma file " + cd.getURL().getFile() + " does not contain apostrophes");
+    public Report fix(CorpusData cd) {
+        Report stats = new Report();         // create a new report
+        try {
+
+            comaFile = cd.toSaveableString();     // read the coma file as a string
+            if (comaFile.contains("'")) {         // if coma file contains an apostrophe ’ then issue warning
+                apostrophe = true;                // flag points out if there are illegal apostrophes
+                comaFile = comaFile.replaceAll("'", "’");    //replace all 's with ´s
+                CorpusIO cio = new CorpusIO();
+                cio.write(comaFile, cd.getURL());    // write back to coma file with allowed apostrophes ´
+                stats.addCorrect(cac, cd, "Corrected the apostrophes"); // fix report
+            } else {
+                stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");
+            }
+
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, cac, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, cac, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, cac, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, cac, cd, "Unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, cac, cd, "Unknown Xpath error");
         }
         return stats;
     }
@@ -96,32 +116,9 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
 
-    /**
-     * Execute function for calling check and fix functions if necessary.
-     */
-    public Report execute(CorpusData cd, boolean fix) {
-        Report report = new Report();
-        try {
-
-            if (fix) {
-                report.merge(fix(cd));
-            } else {
-                report.merge(check(cd));
-            }
-        } catch (SAXException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JDOMException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JexmaraldaException ex) {
-            Logger.getLogger(ComaApostropheChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return report;
-    }
 }

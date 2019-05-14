@@ -9,7 +9,12 @@ import java.net.URL;
 import java.util.Collection;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -18,13 +23,14 @@ import java.util.ArrayList;
 public class Corpus {
 
     //only the metadata file, coma or cmdi in most cases, or a list of files
-    Collection<Metadata> metadata  = new ArrayList();;
+    Collection<Metadata> metadata  = new ArrayList();
     //the transcriptions
     Collection<ContentData> contentdata = new ArrayList();
     Collection<Recording> recording  = new ArrayList();
     Collection<AdditionalData> additionaldata  = new ArrayList();
     Collection<AnnotationSpecification> annotationspecification  = new ArrayList();
     Collection<ConfigParameters> configparameters  = new ArrayList();
+    private Collection<CmdiData> cmdidata = new ArrayList();
     //all the data together
     Collection<CorpusData> cdc;
 
@@ -32,7 +38,7 @@ public class Corpus {
 
     }
 
-    public Corpus(URL url) {
+    public Corpus(URL url) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         CorpusIO cio = new CorpusIO();
         cdc = cio.read(url);
         for (CorpusData cd : cdc) {
@@ -48,6 +54,8 @@ public class Corpus {
                 annotationspecification.add((AnnotationSpecification) cd);
             } else if (cd instanceof ConfigParameters) {
                 configparameters.add((ConfigParameters) cd);
+            } else if (cd instanceof CmdiData) {
+                cmdidata.add((CmdiData) cd);
             }
         }
         //and also the other collections maybe
@@ -80,6 +88,10 @@ public class Corpus {
     public Collection<ConfigParameters> getConfigparameters() {
         return configparameters;
     }
+    
+    public Collection<CmdiData> getCmdidata() {
+        return cmdidata;
+    }
 
     public void setMetadata(Collection<Metadata> metadata) {
         this.metadata = metadata;
@@ -107,6 +119,10 @@ public class Corpus {
 
     public void setCdc(Collection<CorpusData> cdc) {
         this.cdc = cdc;
+    }
+
+    public void setCmdidata(Collection<CmdiData> cmdidata) {
+        this.cmdidata = cmdidata;
     }
 
 }
