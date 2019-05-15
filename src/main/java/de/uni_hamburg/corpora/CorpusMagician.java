@@ -39,6 +39,7 @@ import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
+import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -313,6 +314,8 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("AddCSVMetadataToComa");
         allExistingCFs.add("RemoveEmptyEvents");
+        allExistingCFs.add("ComaTranscriptionsNameChecker");
+        
         return allExistingCFs;
     }
 
