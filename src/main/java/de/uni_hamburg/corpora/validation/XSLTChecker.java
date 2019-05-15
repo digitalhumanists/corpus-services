@@ -18,6 +18,10 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  *
@@ -108,6 +112,14 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             report.addException(ex, xc, cd, "unknown tranformation configuration error");
         } catch (TransformerException ex) {
             report.addException(ex, xc, cd, "unknown tranformation error");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, xc, cd, "unknown parsing error");
+        } catch (SAXException ex) {
+            report.addException(ex, xc, cd, "unknown XML error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, xc, cd, "unknown XPath error");
+        } catch (IOException ex) {
+            report.addException(ex, xc, cd, "unknown IO error");
         }
 
         return r;

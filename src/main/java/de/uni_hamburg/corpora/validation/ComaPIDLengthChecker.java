@@ -32,6 +32,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
@@ -80,6 +82,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
                 corpusVersion = keyElement.getTextContent();
             }
         }
+        
         Report stats = new Report();
         if (corpusPrefix.equals("")) {
             stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
@@ -101,30 +104,33 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
             stats.addCorrect(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                     "HZSK corpus version OK: " + corpusVersion);
         }
+        
+        //iterate <Communication>
         NodeList communications = doc.getElementsByTagName("Communication");
         for (int i = 0; i < communications.getLength(); i++) {
             Element communication = (Element)communications.item(i);
             String communicationName = communication.getAttribute("Name");
-            String fedoraPID = new String("communication: " + corpusPrefix +
+            String fedoraPID = new String("communication:" + corpusPrefix +
                     "-" + corpusVersion +
                     "_" + communicationName);
+            
+            //just strip some characters at the end to make a suggestion
             String shortenedCommuniationName;
             if(communicationName.length()>39){
                 shortenedCommuniationName = communicationName.substring(0, 40);
             } else {
                 shortenedCommuniationName = communicationName;
             }
+            
+            //test length of Fedora PID and report
             if (fedoraPID.length() >= 64) {
                 stats.addCritical(COMA_PID_LENGTH, comaLoc + ": " +
-                            "Communication is too long for Fedora PID" +
-                            "generation: " + fedoraPID,
-                            " It must be shortened, e.g. use: " +
-                            shortenedCommuniationName + ", or change " +
-                            "the corpus prefix");
+                    "Fedora PID would be too long (max. 64) for communication name (" + fedoraPID.length() + " chars): " + fedoraPID );
+                    // + " You could shorten it to: " + shortenedCommuniationName + ", or change the corpus prefix");
             } else {
                 stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
-                            "Following PID will be generated for this " +
-                            "communication in Fedora: " + fedoraPID);
+                    "Following PID will be generated for this " +
+                    "communication in Fedora: " + fedoraPID);
             }
         }
         return stats;
@@ -178,6 +184,10 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
             stats.addException(saxe, COMA_PID_LENGTH, cd, "Unknown parsing error");
         } catch(IOException ioe) {
             stats.addException(ioe, COMA_PID_LENGTH, cd, "Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, COMA_PID_LENGTH, cd, "Unknown XPath error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, COMA_PID_LENGTH, cd, "Unknown Transformer error");
         }
         return stats;
     }
@@ -187,7 +197,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
     * ID's that violate Fedora's PID limits.
     */  
      private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException{
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException{
         Report stats = new Report();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();

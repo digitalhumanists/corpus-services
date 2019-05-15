@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -44,6 +46,10 @@ public class TierChecker extends Checker implements CorpusFunction {
             stats.addException(saxe, tierLoc + ": Unknown parsing error");
         } catch (IOException ioe) {
             stats.addException(ioe, tierLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, tierLoc + ": Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, tierLoc + ": Unknown file reading error");
         }
         return stats;
     }
@@ -55,7 +61,7 @@ public class TierChecker extends Checker implements CorpusFunction {
      * the report. At last, it returns the report with all the warnings.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException {
+            throws SAXException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document

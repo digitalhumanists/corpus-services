@@ -15,11 +15,15 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -60,7 +64,7 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
     }
 
     @Override
-    public String toSaveableString() {
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
         return toPrettyPrintedXML();
     }
 
@@ -69,7 +73,7 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
         return originalstring;
     }
 
-    private String toPrettyPrintedXML() {
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
         String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;

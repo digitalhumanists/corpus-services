@@ -27,6 +27,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -120,6 +123,12 @@ public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFu
             stats.addException(saxe, "Unknown parsing error");
         } catch(IOException ioe) {
             stats.addException(ioe, "Reading/writing error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, "Reading/writing error");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(ex, "Reading/writing error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, "Reading/writing error");
         }
         return stats;
     }
@@ -128,7 +137,7 @@ public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFu
     * Main functionality of the feature; validates a coma file with XML schema from internet.
     */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, JDOMException, IOException, JexmaraldaException{
+            throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, XPathExpressionException{
         System.out.println("Checking COMA file against schema...");
         URL COMA_XSD = new URL("http://www.exmaralda.org/xml/comacorpus.xsd");
         Source xmlStream = new StreamSource(TypeConverter.String2InputStream(cd.toSaveableString()));
