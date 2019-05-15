@@ -7,14 +7,10 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -74,24 +70,35 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         CorpusIO cio = new CorpusIO();
         ArrayList<URL> resulturls = new ArrayList<>();
         ArrayList<Tier> tiers = new ArrayList<>();
+        ArrayList<BasicTranscriptionData> btds = new ArrayList<>();
+        String htmltemplate = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/tier_overview_datatable_template.html"));
+        String overviewTable = "";
+        String communicationsTable = "";
         resulturls = ccd.getAllBasicTranscriptionURLs();
         for (URL resulturl : resulturls) {
             CorpusData cdexb = cio.readFileURL(resulturl);
             BasicTranscriptionData btexb = (BasicTranscriptionData) cdexb;
+            btds.add(btexb);
             Tier t;
             for (int i = 0; i < btexb.getEXMARaLDAbt().getBody().getNumberOfTiers(); i++) {
                 t = btexb.getEXMARaLDAbt().getBody().getTierAt(i);
                 tiers.add(t);
             }
         }
+        List<String> stringtiers = new ArrayList<String>();
+            for (Tier tier : tiers) {
+                //stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
+                stringtiers.add(tier.getCategory() + " (type: " + tier.getType() + ")");
+            }
+        Set<String> hash_Set = new HashSet<String>(stringtiers);
         //System.out.println(tiers);
         //now we have all the existing tiers from the exbs, we need to make a table out of it
         //use the html template and add the content into id
         if (!tiers.isEmpty()) {
             // get the HTML stylesheet
-            String htmltemplate = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/tier_overview_datatable_template.html"));
-            String h1 = "<h1> Tier Overview over Whole Corpus (" + resulturls.size() +" exbs) </h1>";
-            String tables = h1 + "<table id=\"\" class=\"compact\">\n"
+
+            String h1 = "<h1> Tier Overview over Whole Corpus (" + resulturls.size() + " exbs) </h1>";
+            String header = "<table id=\"\" class=\"compact\">\n"
                     + "   <thead>\n"
                     + "      <tr>\n"
                     + "         <th class=\"compact\">Category-Type-DisplayName</th>\n"
@@ -99,29 +106,55 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                     + "      </tr>\n"
                     + "   </thead>\n"
                     + "   <tbody>\n";
-            List<String> stringtiers = new ArrayList<String>();
-            for (Tier tier : tiers) {
-                stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
-            }
-            Set<String> hash_Set = new HashSet<String>(stringtiers);
-            // add the tables to the html
+            // add the overviewTable to the html
             //first table: one column with categories, one with count
-//            
+            String content = "";
             for (String s : hash_Set) {
-                tables = tables + "<tr><td class=\"compact\">" + s + "</td><td class=\"compact\">" + Collections.frequency(stringtiers, s) + "</td></tr>";
+                content = content + "<tr><td class=\"compact\">" + s + "</td><td class=\"compact\">" + Collections.frequency(stringtiers, s) + "</td></tr>";
             }
-            tables = tables + " </tr>\n"
+            String footer = " </tr>\n"
                     + "   </tbody>\n"
                     + "</table>";
-            String result = htmltemplate + tables;
 
-            URL overviewurl = new URL(cd.getParentURL(), "tier_overview.html");
-            cio.write(result, overviewurl);
+            overviewTable = h1 + header + content + footer;
 
-            stats.addCorrect(cscc, cd, "created tier overview at " + overviewurl);
         } else {
             stats.addWarning(cscc, cd, "No tiers found in the linked exbs. ");
         }
+        //now each communication 
+        if (!btds.isEmpty()) {
+            String h1 = "<h1> Tiers in each exb </h1>";
+            communicationsTable = h1;
+            String header = "<table id=\"\" class=\"compact\">\n"
+                    + "   <thead>\n"
+                    + "      <tr>\n";
+            for (String s : hash_Set) {
+                header = header + "<tr><th class=\"compact\">" + s + "</th>";
+            }
+            header = header + "      </tr>\n"
+                    + "   </thead>\n"
+                    + "   <tbody>\n";
+            String content = "";
+            for (BasicTranscriptionData btd : btds) {
+                btd.getFilename();
+                content = content + "";
+            }
+
+            String footer = " </tr>\n"
+                    + "   </tbody>\n"
+                    + "</table>";
+            communicationsTable = h1 + header + content + footer;
+        } else {
+            stats.addWarning(cscc, cd, "No linked exbs found in the coma file. ");
+        }
+
+        String result = htmltemplate + overviewTable + communicationsTable;
+
+        URL overviewurl = new URL(cd.getParentURL(), "tier_overview.html");
+        cio.write(result, overviewurl);
+
+        stats.addCorrect(cscc, cd, "created tier overview at " + overviewurl);
+
         return stats; // return the report with warnings
     }
 
