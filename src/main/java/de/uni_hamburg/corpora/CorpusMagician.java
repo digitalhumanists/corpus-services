@@ -10,13 +10,14 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaXsdChecker;
-import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
+import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.FileCoverageChecker;
@@ -39,8 +40,13 @@ import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
+import de.uni_hamburg.corpora.validation.GeneralTransformer;
+import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
+import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,6 +68,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.xml.sax.SAXException;
@@ -226,6 +233,8 @@ public class CorpusMagician {
             report.addException(ex, "An Exmaralda file reading error occured");
         } catch (URISyntaxException ex) {
             report.addException(ex, "A URI was incorrect");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, "An Xpath expression was incorrect");
         }
 
     }
@@ -254,12 +263,12 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         corpus = new Corpus(url);
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
-    public ArrayList<URL> createListofData(URL url) {
+    public Collection<URL> createListofData(URL url) throws URISyntaxException, IOException {
         //add just that url if its a file
         //adds the urls recursively if its a directory
         return cio.URLtoList(url);
@@ -307,8 +316,13 @@ public class CorpusMagician {
         allExistingCFs.add("MakeTimelineConsistent");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
+        allExistingCFs.add("CalculateAnnotatedTime");
         allExistingCFs.add("AddCSVMetadataToComa");
         allExistingCFs.add("ComaKmlForLocations");
+        allExistingCFs.add("RemoveEmptyEvents");
+        allExistingCFs.add("ComaTranscriptionsNameChecker");
+        allExistingCFs.add("ComaTierOverviewCreator");
+        allExistingCFs.add("GeneralTransformer");
         return allExistingCFs;
     }
 
@@ -414,8 +428,8 @@ public class CorpusMagician {
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
-                case "comanamechecker":
-                    ComaNameChecker cnc = new ComaNameChecker();
+                case "comatranscriptionsnamechecker":
+                    ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
                     corpusfunctions.add(cnc);
                     break;
                 case "tiercheckerwithannotation":
@@ -514,7 +528,7 @@ public class CorpusMagician {
                         }
                         if (cfProperties.containsKey("coma")) {
                             cdrr.setComa(cfProperties.getProperty("coma"));
-                            System.out.println("Replace in Coma set to " + cfProperties.getProperty("xpathcontext"));
+                            System.out.println("Replace in Coma set to " + cfProperties.getProperty("coma"));
                         }
                     }
                     corpusfunctions.add(cdrr);
@@ -601,6 +615,10 @@ public class CorpusMagician {
                     }
                     corpusfunctions.add(eseg);
                     break;
+                case "calculateannotatedtime":
+                    CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
+                    corpusfunctions.add(cat);
+                    break;
                 case "addcsvmetadatatocoma":
                     AddCSVMetadataToComa acmtc = new AddCSVMetadataToComa();
                     if (cfProperties != null) {
@@ -615,6 +633,38 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(acmtc);
+                    break;
+                case "removeemptyevents":
+                    RemoveEmptyEvents ree = new RemoveEmptyEvents();
+                    corpusfunctions.add(ree);
+                    break;
+
+                 case "comatieroverviewcreator":
+                    ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
+                    corpusfunctions.add(ctoc);
+                case "generaltransformer":
+                    GeneralTransformer gt = new GeneralTransformer();
+                     if (cfProperties.containsKey("coma")) {
+                            gt.setComa(cfProperties.getProperty("coma"));
+                            System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
+                        }
+                     if (cfProperties.containsKey("exb")) {
+                            gt.setExb(cfProperties.getProperty("exb"));
+                            System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
+                        }
+                     if (cfProperties.containsKey("exs")) {
+                            gt.setExs(cfProperties.getProperty("exs"));
+                            System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
+                        }
+                     if (cfProperties.containsKey("xsl")) {
+                            gt.setPathToXSL(cfProperties.getProperty("xsl"));
+                            System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
+                        }
+                     if (cfProperties.containsKey("overwritefiles")) {
+                            gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
+                            System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
+                        }
+                    corpusfunctions.add(gt);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");

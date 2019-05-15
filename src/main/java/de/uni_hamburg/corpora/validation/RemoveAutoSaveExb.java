@@ -20,8 +20,9 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  *
@@ -72,6 +73,14 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                     cio.write(cd, cd.getURL());
                     report.addCorrect(rase, cd, "removed AutoSave info");
                 } catch (IOException ex) {
+                    report.addException(ex, rase, cd, "Input/Output Exception");
+                } catch (TransformerException ex) {
+                    report.addException(ex, rase, cd, "Input/Output Exception");
+                } catch (ParserConfigurationException ex) {
+                    report.addException(ex, rase, cd, "Input/Output Exception");
+                } catch (SAXException ex) {
+                    report.addException(ex, rase, cd, "Input/Output Exception");
+                } catch (XPathExpressionException ex) {
                     report.addException(ex, rase, cd, "Input/Output Exception");
                 }
             } else {

@@ -148,14 +148,14 @@
                 <xsl:value-of select="concat('CRITICAL;found ''Attaches.*?to.*?any.*?category'' in event (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
-            <!-- Check for ellipsis with wrong bracket number (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
-            <xsl:if test="(../@category = ('ts', 'tx', 'fe', 'fg', 'fr')) and matches(., '\(\((…|\.{2,})\)\)')">
-                <xsl:value-of select="concat('CRITICAL;found ''\(\((…|\.{2,})\)\)'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+            <!-- Check for wrong bracket number in translation tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
+            <xsl:if test="(../@category = ('fe', 'fg', 'fr')) and matches(., '\(\([^\)]*\)\)')">
+                <xsl:value-of select="concat('CRITICAL;found double brackets in translation tier in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis in other tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr'))) and matches(., '…')">
-                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''…'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:value-of select="concat('CRITICAL;found ellipsis (''…'') in non-transcription/non-translation event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis candidates present as dots (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
@@ -177,7 +177,7 @@
             <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat('^',$UTTERANCEENDSYMBOL))">
                 <xsl:choose>
                     <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
-                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol in preceding event ', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="concat('WARNING;utterance end symbol appearing alone in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
@@ -209,7 +209,7 @@
                     </xsl:when> 
                     <!-- Test if it is a colon but should be a vowel length marker -->
                     <xsl:when test=" matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;]+.*')">
-                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should be a vowel length marker ː ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should maybe be a vowel length marker &#x2D0; or needs a following whitespace', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when> 
                     <xsl:otherwise>
                         <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
