@@ -5,7 +5,12 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.io.IOException;
 import java.net.URL;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -29,7 +34,7 @@ public interface CorpusData {
     
     public void setFilenameWithoutFileEnding(String s);
 
-    public String toSaveableString();
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException;
 
     public String toUnformattedString();
     

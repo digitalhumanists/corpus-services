@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -58,6 +60,10 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
             stats.addException(saxe, annotLoc + ": Unknown parsing error");
         } catch (IOException ioe) {
             stats.addException(ioe, annotLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, annotLoc + ": Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, annotLoc + ": Unknown file reading error");
         }
         return stats;
     }
@@ -70,7 +76,7 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
      * inter annotator agreement according to Krippendorff's alpha.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();

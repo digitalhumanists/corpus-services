@@ -28,6 +28,9 @@ import org.xml.sax.SAXException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 import org.apache.commons.io.FilenameUtils;
@@ -100,11 +103,11 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     }
 
     @Override
-    public String toSaveableString() {
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return toPrettyPrintedXML();
     }
 
-    private String toPrettyPrintedXML() {
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
         String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;

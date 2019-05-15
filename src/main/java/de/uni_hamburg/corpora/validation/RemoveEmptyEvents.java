@@ -28,22 +28,22 @@ import javax.xml.xpath.XPathExpressionException;
  *
  * @author fsnv625
  */
-public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
+public class RemoveEmptyEvents extends Checker implements CorpusFunction {
 
     Document doc = null;
-    String rase = "RemoveAutoSaveExb";
+    String rase = "RemoveEmptyEvents";
 
     @Override
     public Report check(CorpusData cd) {
         try {
             XMLData xml = (XMLData) cd;
-            List al = findAllAutoSaveInstances(xml);
+            List al = findAllEmptyEvents(xml);
             //if there is no autosave, nothing needs to be done
             if (al.isEmpty()) {
-                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
+                report.addCorrect(rase, cd, "there are no empty events left");
             } else {
-                report.addCritical(rase, cd, "autosave info needs to be removed");
-                exmaError.addError("RemoveAutoSaveExb", cd.getURL().getFile(), "", "", false, "autosave info needs to be removed");
+                report.addCritical(rase, cd, "empty events need to be removed");
+                exmaError.addError(rase, cd.getURL().getFile(), "", "", false, "empty events need to be removed");
             }
         } catch (JDOMException ex) {
             report.addException(ex, rase, cd, "Jdom Exception");
@@ -55,7 +55,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
     public Report fix(CorpusData cd) {
         try {
             XMLData xml = (XMLData) cd;
-            List al = findAllAutoSaveInstances(xml);
+            List al = findAllEmptyEvents(xml);
             if (!al.isEmpty()) {
                 try {
                     for (Object o : al) {
@@ -71,7 +71,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
-                    report.addCorrect(rase, cd, "removed AutoSave info");
+                    report.addCorrect(rase, cd, "removed empty event");
                 } catch (IOException ex) {
                     report.addException(ex, rase, cd, "Input/Output Exception");
                 } catch (TransformerException ex) {
@@ -84,7 +84,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                     report.addException(ex, rase, cd, "Input/Output Exception");
                 }
             } else {
-                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
+                report.addCorrect(rase, cd, "there are no empty events left");
             }
         } catch (JDOMException ex) {
             report.addException(ex, rase, cd, "Jdom Exception");
@@ -106,13 +106,14 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    public List findAllAutoSaveInstances(XMLData xml) throws JDOMException {
+    public List findAllEmptyEvents(XMLData xml) throws JDOMException {
         doc = xml.getJdom();
+        //maybe pretty print too
         XPath xp1;
-        //working for exs too
-        xp1 = XPath.newInstance("//head/meta-information/ud-meta-information/ud-information[@attribute-name='AutoSave']");
-        List allAutoSaveInfo = xp1.selectNodes(doc);
-        return allAutoSaveInfo;
+        //needs to be working for exs too
+        xp1 = XPath.newInstance("//event[not(text())]");
+        List allEmptyEvents = xp1.selectNodes(doc);
+        return allEmptyEvents;
     }
 
 }

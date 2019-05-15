@@ -32,8 +32,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -116,6 +119,12 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             r.addException(ex, COMA_OVERVIEW, cd, "Unknown input/output error");
         } catch (URISyntaxException ex) {
             r.addException(ex, COMA_OVERVIEW, cd, "Unknown URI syntax error");
+        } catch (ParserConfigurationException ex) {
+            r.addException(ex, COMA_OVERVIEW, cd, "Unknown Parser error");
+        } catch (SAXException ex) {
+            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XML error");
+        } catch (XPathExpressionException ex) {
+            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XPath error");
         }
         
         return r;
