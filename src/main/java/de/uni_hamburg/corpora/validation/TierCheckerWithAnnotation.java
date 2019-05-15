@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -40,7 +42,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
      * specification file.
      */
     public void addAnnotations(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
@@ -120,6 +122,10 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
         } catch (IOException ioe) {
             stats.addException(ioe, comaLoc + ": Unknown file reading error");
         } catch (URISyntaxException ex) {
+            stats.addException(ex, comaLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, comaLoc + ": Unknown file reading error");
+        } catch (XPathExpressionException ex) {
             stats.addException(ex, comaLoc + ": Unknown file reading error");
         }
         return stats;

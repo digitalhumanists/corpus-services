@@ -23,6 +23,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * The class that checks out that all annotations for Nganasan Corpus are from
@@ -41,7 +43,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
      * specification file.
      */
     public void addAnnotations(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
@@ -106,6 +108,10 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
         } catch (IOException ioe) {
             stats.addException(ioe, comaLoc + ": Unknown file reading error");
         } catch (URISyntaxException ex) {
+            stats.addException(ex, comaLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, comaLoc + ": Unknown file reading error");
+        } catch (XPathExpressionException ex) {
             stats.addException(ex, comaLoc + ": Unknown file reading error");
         }
         return stats;
