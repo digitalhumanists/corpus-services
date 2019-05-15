@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -54,6 +56,8 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             stats.addException(ex, cscc, cd, "Transformer Exception");
         } catch (XPathExpressionException ex) {
             stats.addException(ex, cscc, cd, "XPath Exception");
+        } catch (JexmaraldaException ex) {
+            stats.addException(ex, cscc, cd, "Exmaralda Exception");
         }
         return stats;
     }
@@ -64,7 +68,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
      * Issues warnings and returns report which is composed of errors.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException {
         Report stats = new Report();
         ComaData ccd = (ComaData) cd;
         CorpusIO cio = new CorpusIO();
@@ -86,10 +90,10 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             }
         }
         List<String> stringtiers = new ArrayList<String>();
-            for (Tier tier : tiers) {
-                //stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
-                stringtiers.add(tier.getCategory() + " (type: " + tier.getType() + ")");
-            }
+        for (Tier tier : tiers) {
+            //stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
+            stringtiers.add(tier.getCategory() + " (type: " + tier.getType() + ")");
+        }
         Set<String> hash_Set = new HashSet<String>(stringtiers);
         //System.out.println(tiers);
         //now we have all the existing tiers from the exbs, we need to make a table out of it
@@ -112,8 +116,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             for (String s : hash_Set) {
                 content = content + "<tr><td class=\"compact\">" + s + "</td><td class=\"compact\">" + Collections.frequency(stringtiers, s) + "</td></tr>";
             }
-            String footer = " </tr>\n"
-                    + "   </tbody>\n"
+            String footer = "   </tbody>\n"
                     + "</table>";
 
             overviewTable = h1 + header + content + footer;
@@ -121,23 +124,30 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         } else {
             stats.addWarning(cscc, cd, "No tiers found in the linked exbs. ");
         }
-        //now each communication 
+        //now each exb linked in the coma file
         if (!btds.isEmpty()) {
             String h1 = "<h1> Tiers in each exb </h1>";
             communicationsTable = h1;
+            //first is the column for filename, then all the tier category/type combinations
             String header = "<table id=\"\" class=\"compact\">\n"
                     + "   <thead>\n"
-                    + "      <tr>\n";
+                    + "<th class=\"compact\"> Exb Filename </th>";
             for (String s : hash_Set) {
-                header = header + "<tr><th class=\"compact\">" + s + "</th>";
+                header = header + "<th class=\"compact\">" + s + "</th><";
             }
-            header = header + "      </tr>\n"
+            header = header + "</tr>"
                     + "   </thead>\n"
                     + "   <tbody>\n";
             String content = "";
             for (BasicTranscriptionData btd : btds) {
-                btd.getFilename();
-                content = content + "";
+                //first is the column for filename, then all the tier category/type combinations
+                content = content + "<tr><td class=\"compact\">" + btd.getFilename() + "</td>";
+                for (String s : hash_Set) {
+                    //TO DO
+                    String st = btd.getEXMARaLDAbt().getBody().getTiersOfType(s).toString();
+                    content = content + "<th class=\"compact\">" + st + "</th><";
+                }
+                content = content + "</tr>";
             }
 
             String footer = " </tr>\n"
