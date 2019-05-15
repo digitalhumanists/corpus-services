@@ -58,8 +58,29 @@ public class ComaKmlForLocationsTest {
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check coma files
-        for (CorpusData cd  : corp.getMetadata()) {
+        for (CorpusData cd : corp.getMetadata()) {
             assertNotNull(instance.check(cd));
+        }
+
+    }
+
+    /**
+     * Test of fix method, of class ComaKmlForLocations.
+     */
+    @Test
+    public void testFix() throws Exception {
+        System.out.println("fix");
+        //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\DolganCorpus";
+        URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
+        Corpus corp = new Corpus(corpusURL);
+        ComaKmlForLocations instance = new ComaKmlForLocations();
+        instance.setKMLFilePath("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\INEL_LangsRecolored.kml");
+        instance.report = new Report();
+        Collection<CorpusData> cdc;
+        //what happens when we fix coma files
+        for (CorpusData cd : corp.getMetadata()) {
+            assertNotNull(instance.fix(cd));
         }
 
     }
