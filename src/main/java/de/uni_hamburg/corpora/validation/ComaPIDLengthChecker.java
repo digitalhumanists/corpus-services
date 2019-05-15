@@ -84,16 +84,6 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, St
         }
         
         Report stats = new Report();
-        if (corpusPrefix.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
-                        "Missing <Key name='HZSK:corpusprefix'>.",
-                        "PID length cannot be estimated accurately. " +
-                        "Add that key in coma.");
-            corpusPrefix = "muster";
-        } else {
-            stats.addCorrect(COMA_PID_LENGTH + "-config", comaLoc + ": " +
-                    "HZSK corpus prefix OK: " + corpusPrefix);
-        }
         if (corpusVersion.equals("")) {
             stats.addWarning(COMA_PID_LENGTH + "-config", comaLoc + ": " +
                         "Missing <Key name='HZSK:corpusversion'>.",
