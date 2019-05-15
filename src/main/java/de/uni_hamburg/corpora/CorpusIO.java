@@ -144,6 +144,15 @@ public class CorpusIO {
         }
         return xslstring;
     }
+    
+    public String readExternalResourceAsString(String path2resource) throws JDOMException, IOException, URISyntaxException {
+        String xslstring = new String(Files.readAllBytes(Paths.get(new URL(path2resource).toURI())));
+        System.out.println(path2resource);
+        if (xslstring == null) {
+            throw new IOException("Stylesheet not found!");
+        }
+        return xslstring;
+    }
 
     public Collection<URL> URLtoList(URL url) throws URISyntaxException, IOException {
         if (isLocalFile(url)) {
