@@ -37,6 +37,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.exmaralda.partitureditor.jexmaralda.Tier;
 
 /**
  * Provides access to basic transcriptions as a data type that can be read and

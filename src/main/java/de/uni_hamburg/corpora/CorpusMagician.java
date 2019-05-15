@@ -38,6 +38,7 @@ import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
@@ -315,12 +316,9 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("AddCSVMetadataToComa");
         allExistingCFs.add("RemoveEmptyEvents");
-<<<<<<< HEAD
         allExistingCFs.add("ComaTranscriptionsNameChecker");
-        
-=======
+        allExistingCFs.add("ComaTierOverviewCreator");
         allExistingCFs.add("GeneralTransformer");
->>>>>>> 3bb65f576aa28c8f28b0ca4c5dedc71697c6bc6e
         return allExistingCFs;
     }
 
@@ -621,6 +619,10 @@ public class CorpusMagician {
                     RemoveEmptyEvents ree = new RemoveEmptyEvents();
                     corpusfunctions.add(ree);
                     break;
+
+                 case "comatieroverviewcreator":
+                    ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
+                    corpusfunctions.add(ctoc);
                 case "generaltransformer":
                     GeneralTransformer gt = new GeneralTransformer();
                      if (cfProperties.containsKey("coma")) {
