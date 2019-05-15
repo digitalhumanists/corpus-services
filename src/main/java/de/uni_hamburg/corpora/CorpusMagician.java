@@ -10,7 +10,7 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaXsdChecker;
-import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -39,6 +39,7 @@ import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
+import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import java.io.File;
 import java.io.IOException;
@@ -315,6 +316,7 @@ public class CorpusMagician {
         allExistingCFs.add("AddCSVMetadataToComa");
         allExistingCFs.add("RemoveEmptyEvents");
         allExistingCFs.add("ComaTierOverviewCreator");
+        allExistingCFs.add("GeneralTransformer");
         return allExistingCFs;
     }
 
@@ -420,8 +422,8 @@ public class CorpusMagician {
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
-                case "comanamechecker":
-                    ComaNameChecker cnc = new ComaNameChecker();
+                case "comatranscriptionsnamechecker":
+                    ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
                     corpusfunctions.add(cnc);
                     break;
                 case "tiercheckerwithannotation":
@@ -509,7 +511,7 @@ public class CorpusMagician {
                         }
                         if (cfProperties.containsKey("coma")) {
                             cdrr.setComa(cfProperties.getProperty("coma"));
-                            System.out.println("Replace in Coma set to " + cfProperties.getProperty("xpathcontext"));
+                            System.out.println("Replace in Coma set to " + cfProperties.getProperty("coma"));
                         }
                     }
                     corpusfunctions.add(cdrr);
@@ -615,9 +617,33 @@ public class CorpusMagician {
                     RemoveEmptyEvents ree = new RemoveEmptyEvents();
                     corpusfunctions.add(ree);
                     break;
+
                  case "comatieroverviewcreator":
                     ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
                     corpusfunctions.add(ctoc);
+                case "generaltransformer":
+                    GeneralTransformer gt = new GeneralTransformer();
+                     if (cfProperties.containsKey("coma")) {
+                            gt.setComa(cfProperties.getProperty("coma"));
+                            System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
+                        }
+                     if (cfProperties.containsKey("exb")) {
+                            gt.setExb(cfProperties.getProperty("exb"));
+                            System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
+                        }
+                     if (cfProperties.containsKey("exs")) {
+                            gt.setExs(cfProperties.getProperty("exs"));
+                            System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
+                        }
+                     if (cfProperties.containsKey("xsl")) {
+                            gt.setPathToXSL(cfProperties.getProperty("xsl"));
+                            System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
+                        }
+                     if (cfProperties.containsKey("overwritefiles")) {
+                            gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
+                            System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
+                        }
+                    corpusfunctions.add(gt);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
