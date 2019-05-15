@@ -343,8 +343,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         Report stats = new Report();
+        // FIXME:
         String[] path = new String[1];
-        path[0] = cd.getURL().toString().substring(6);
+        path[0] = cd.getURL().toString().substring(5);
         settings = new ValidatorSettings("FileCoverageChecker",
                 "Checks Exmaralda .coma file against directory, to find "
                 + "undocumented files",

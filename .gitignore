@@ -1,6 +1,9 @@
 *
 !*/
 !.gitignore
-*.java
-*.xsl
-*.xml
+!*.java
+!*.xsl
+!*.xml
+nbactions.xml
+target/
+!/src/test/java/de/uni_hamburg/corpora/resources/**

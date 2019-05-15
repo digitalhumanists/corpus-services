@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Element;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
@@ -56,6 +58,10 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
             stats.addException(ex, elb, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
             stats.addException(ex, elb, cd, "Unknown parsing error");
+        } catch (TransformerException ex) {
+             stats.addException(ex, elb, cd, "Unknown parsing error");
+        } catch (XPathExpressionException ex) {
+             stats.addException(ex, elb, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -66,7 +72,7 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
      * which it returns.
      */
     private Report exceptionalCheck(CorpusData cd) // check whether there's any illegal apostrophes '
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
         Report stats = new Report();         // create a new report
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
         Pattern replacePattern = Pattern.compile("[\r\n]");
@@ -100,34 +106,49 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
      * One of the main functionalities of the feature; fix linebreaks in events
      * add them to the report which it returns in the end.
      */
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
+    public Report fix(CorpusData cd) {
         Report stats = new Report();         // create a new report
-        doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
-        Pattern replacePattern = Pattern.compile("[\r\n]");
-        context = XPath.newInstance(xpathContext);
-        List allContextInstances = context.selectNodes(doc);
-        String s = "";
-        if (!allContextInstances.isEmpty()) {
-            for (int i = 0; i < allContextInstances.size(); i++) {
-                Object o = allContextInstances.get(i);
-                if (o instanceof Element) {
-                    Element e = (Element) o;
-                    s = e.getText();
-                    if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
-                        linebreak = true;
-                        String snew = s.replaceAll("[\r\n]", "");    //replace all replace with replacement
-                        //TODO Attributes?
-                        e.setText(snew);
-                        stats.addCorrect(elb, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+        try {
+            doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
+            Pattern replacePattern = Pattern.compile("[\r\n]");
+            context = XPath.newInstance(xpathContext);
+            List allContextInstances = context.selectNodes(doc);
+            String s = "";
+            if (!allContextInstances.isEmpty()) {
+                for (int i = 0; i < allContextInstances.size(); i++) {
+                    Object o = allContextInstances.get(i);
+                    if (o instanceof Element) {
+                        Element e = (Element) o;
+                        s = e.getText();
+                        if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
+                            linebreak = true;
+                            String snew = s.replaceAll("[\r\n]", "");    //replace all replace with replacement
+                            //TODO Attributes?
+                            e.setText(snew);
+                            stats.addCorrect(elb, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                        }
                     }
+                    
                 }
-
+                if (!linebreak) {
+                    stats.addCorrect(elb, cd, "CorpusData file does not contain line ending in an event");
+                }
+            } else {
+                stats.addCorrect(elb, cd, "CorpusData file does not contain any event");
             }
-            if (!linebreak) {
-                stats.addCorrect(elb, cd, "CorpusData file does not contain line ending in an event");
-            }
-        } else {
-            stats.addCorrect(elb, cd, "CorpusData file does not contain any event");
+            
+        } catch (TransformerException ex) {
+            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JDOMException ex) {
+            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stats; // return the report with warnings
     }

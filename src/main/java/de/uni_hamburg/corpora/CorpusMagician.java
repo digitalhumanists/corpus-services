@@ -10,7 +10,7 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaXsdChecker;
-import de.uni_hamburg.corpora.validation.ComaNameChecker;
+import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
@@ -38,8 +38,11 @@ import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
+import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -61,6 +64,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.xml.sax.SAXException;
@@ -133,7 +137,6 @@ public class CorpusMagician {
             //now add the functionsstrings to array
             String[] corpusfunctionarray = cmd.getOptionValues("c");
             for (String cf : corpusfunctionarray) {
-                //corpuma.chosencorpusfunctions.add("test");
                 CorpusMagician.chosencorpusfunctions.add(cf);
                 System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             }
@@ -142,13 +145,8 @@ public class CorpusMagician {
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
-            //get the basedirectory if there is a coma file
-            if (!(corpus.getMetadata().isEmpty())) {
-                Metadata md = corpus.getMetadata().iterator().next();
-                basedirectory = md.getParentURL();
-            } else {
-                basedirectory = url;
-            }
+            //get the basedirectory
+            basedirectory = url;
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
@@ -205,8 +203,14 @@ public class CorpusMagician {
             }
             //create the error list file
             System.out.println("Basedirectory is " + basedirectory);
+            System.out.println("BasedirectoryPath is " + basedirectory.getPath());
             URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
+            String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
+            if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
+                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
+                exmaErrorList = TypeConverter.String2JdomDocument(exmaErrorListString);
+            }
             if (exmaErrorList != null) {
                 cio.write(exmaErrorList, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
@@ -225,6 +229,8 @@ public class CorpusMagician {
             report.addException(ex, "An Exmaralda file reading error occured");
         } catch (URISyntaxException ex) {
             report.addException(ex, "A URI was incorrect");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, "An Xpath expression was incorrect");
         }
 
     }
@@ -253,12 +259,12 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException {
+    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         corpus = new Corpus(url);
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
-    public ArrayList<URL> createListofData(URL url) {
+    public Collection<URL> createListofData(URL url) throws URISyntaxException, IOException {
         //add just that url if its a file
         //adds the urls recursively if its a directory
         return cio.URLtoList(url);
@@ -307,6 +313,8 @@ public class CorpusMagician {
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("CalculateAnnotatedTime");
+        allExistingCFs.add("AddCSVMetadataToComa");
+        allExistingCFs.add("RemoveEmptyEvents");
         return allExistingCFs;
     }
 
@@ -412,8 +420,8 @@ public class CorpusMagician {
                     ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
-                case "comanamechecker":
-                    ComaNameChecker cnc = new ComaNameChecker();
+                case "comatranscriptionsnamechecker":
+                    ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
                     corpusfunctions.add(cnc);
                     break;
                 case "tiercheckerwithannotation":
@@ -591,6 +599,25 @@ public class CorpusMagician {
                 case "calculateannotatedtime":
                     CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
                     corpusfunctions.add(cat);
+                    break;
+                case "addcsvmetadatatocoma":
+                    AddCSVMetadataToComa acmtc = new AddCSVMetadataToComa();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("CSV")) {
+                            acmtc.setCSVFilePath(cfProperties.getProperty("CSV"));
+                            System.out.println("CSV file path set to " + cfProperties.getProperty("CSV"));
+                        }
+                        if (cfProperties.containsKey("SPEAKER")) {
+                            acmtc.setSpeakerOrCommunication(cfProperties.getProperty("SPEAKER"));
+                            System.out.println("CSV file set for " + cfProperties.getProperty("SPEAKER"));
+                        }
+                    }
+                    corpusfunctions.add(acmtc);
+                    break;
+                case "removeemptyevents":
+                    RemoveEmptyEvents ree = new RemoveEmptyEvents();
+                    corpusfunctions.add(ree);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");

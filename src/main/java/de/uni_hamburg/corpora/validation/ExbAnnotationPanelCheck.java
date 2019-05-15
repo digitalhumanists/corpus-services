@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.Event;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -48,6 +50,10 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
             stats.addException(saxe, tierLoc + ": Unknown parsing error");
         } catch (IOException ioe) {
             stats.addException(ioe, tierLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, tierLoc + ": Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, tierLoc + ": Unknown file reading error");
         }
         return stats;
     }
@@ -57,7 +63,7 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
      * specification file first, then checks if tiers in exb files are correct.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();

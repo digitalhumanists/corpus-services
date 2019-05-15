@@ -32,6 +32,9 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
@@ -122,13 +125,13 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //utilities\PrettyPrinter.java here to pretty print the files, so they
     //will always get pretty printed in the same way
     //TODO
-    private String toPrettyPrintedXML() {
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
         String prettyCorpusData = indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 
-    public String toSaveableString() {
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException  {
         return toPrettyPrintedXML();
     }
 
@@ -169,6 +172,15 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             System.exit(1);
         } catch (JexmaraldaException je) {
             je.printStackTrace();
+            System.exit(1);
+        } catch (TransformerException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        } catch (ParserConfigurationException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        } catch (XPathExpressionException ex) {
+            ex.printStackTrace();
             System.exit(1);
         }
     }
