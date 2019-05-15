@@ -12,9 +12,15 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -58,6 +64,14 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
             report.addException(ex, ne, cd, "unknown xml exception");
         } catch (IOException ex) {
             report.addException(ex, ne, cd, "unknown IO exception");
+        } catch (TransformerException ex) {
+             report.addException(ex, ne, cd, "unknown IO exception");
+        } catch (ParserConfigurationException ex) {
+             report.addException(ex, ne, cd, "unknown IO exception");
+        } catch (SAXException ex) {
+             report.addException(ex, ne, cd, "unknown IO exception");
+        } catch (XPathExpressionException ex) {
+             report.addException(ex, ne, cd, "unknown IO exception");
         }
         return report;
     }

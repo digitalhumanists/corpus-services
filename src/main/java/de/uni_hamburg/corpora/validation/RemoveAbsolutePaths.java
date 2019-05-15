@@ -24,6 +24,12 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.XMLData;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  *
@@ -134,6 +140,14 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
             report.addException(ex, rap, cd, "unknown URI syntax error");
         } catch (MalformedURLException ex) {
             report.addException(ex, rap, cd, "unknown malformed URL error");
+        } catch (TransformerException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
+        } catch (IOException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, rap, cd, "unknown reading error");
         }
         return report;
     }
@@ -360,6 +374,14 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
             report.addException(ex, rap, cd, "unknown reading error");
         } catch (URISyntaxException ex) {
             report.addException(ex, rap, cd, "unknown URI syntax error");
+        } catch (TransformerException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
+        } catch (ParserConfigurationException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
+        } catch (UnsupportedEncodingException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
+        } catch (XPathExpressionException ex) {
+             report.addException(ex, rap, cd, "unknown reading error");
         }
         return report;
     }
@@ -379,7 +401,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    public List findAllAbsolutePathsExbAttribute(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException {
+    public List findAllAbsolutePathsExbAttribute(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException, TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
         // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>  
@@ -392,7 +414,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         return allAbsolutePaths;
     }
 
-    public List findAllAbsolutePathsExbElement(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException {
+    public List findAllAbsolutePathsExbElement(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException, TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
         // in exbs: <referenced-file url="ChND_99_Barusi_flkd.wav"/>  
@@ -405,7 +427,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
         return allAbsolutePaths;
     }
 
-    public List findAllAbsolutePathsComa(CorpusData cd) throws JDOMException, URISyntaxException {
+    public List findAllAbsolutePathsComa(CorpusData cd) throws JDOMException, URISyntaxException, MalformedURLException, TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath xp1;
         // in Coma: NSLinks and relPaths <NSLink>narrative/KBD_71_Fish_nar/KBD_71_Fish_nar_s.exs</NSLink>

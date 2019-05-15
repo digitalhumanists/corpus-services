@@ -6,26 +6,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import static java.lang.System.out;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
@@ -43,9 +40,11 @@ public class CorpusIO {
     //need to be reworked
     //that's the local filepath or repository url
     URL url;
-    Collection<CorpusData> cdc;
+    Collection<CorpusData> cdc = new ArrayList();
+    Collection<URL> recursed = new ArrayList();
+    Collection<URL> alldata = new ArrayList();
 
-    public String CorpusData2String(CorpusData cd) {
+    public String CorpusData2String(CorpusData cd) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return cd.toSaveableString();
     }
 
@@ -65,7 +64,7 @@ public class CorpusIO {
      public abstract String getVideoLinkForTranscript();
 
      */
-    public void write(CorpusData cd, URL url) throws IOException {
+    public void write(CorpusData cd, URL url) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         write(cd.toSaveableString(), cd.getURL());
     }
 
@@ -80,7 +79,7 @@ public class CorpusIO {
         System.out.println("Document written...");
     }
 
-    public void write(Document doc, URL url) throws IOException {
+    public void write(Document doc, URL url) throws IOException, TransformerException, ParserConfigurationException, ParserConfigurationException, UnsupportedEncodingException, UnsupportedEncodingException, SAXException, XPathExpressionException {
         XMLOutputter xmOut = new XMLOutputter();
         String unformattedCorpusData = xmOut.outputString(doc);
         String prettyCorpusData = indent(unformattedCorpusData, "event");
@@ -99,28 +98,42 @@ public class CorpusIO {
 
     }
 
-    //TODO
-    public CorpusData readFile(URL url) {
+    //read a single file as a corpus data object from an url
+    public CorpusData readFileURL(URL url) {
         if (url.getPath().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(url);
             //bt.loadFile(f);
             return bt;
         } else if (url.getPath().endsWith("coma")) {
             ComaData cm = new ComaData(url);
-            //TODO
             return cm;
-        } else if (url.getPath().endsWith("exs") || url.getPath().endsWith("xml")) {
+        } else if (url.getPath().endsWith("xml") && ((url.getPath().contains("Annotation") || url.getPath().contains("annotation")))) {
+            AnnotationSpecification as = new AnnotationSpecification(url);
+            return as;
+        } else if ((url.getPath().endsWith("xml") && url.getPath().contains("cmdi")) || url.getPath().endsWith("cmdi")) {
+            CmdiData cmdi = new CmdiData(url);
+            return cmdi;
+        } else if (url.getPath().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
             return usd;
-            //we can't read files other than coma and exb yet...
-            /*  } else if (f.getName().endsWith("cmdi")) {
-             CmdiData cmdi = new CmdiData(f.toURI().toURL());
-            return cmdi; */
+        } else if (url.getPath().endsWith("exs")) {
+            UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
+            return usd;
         } else {
             System.out.println(url + " is not xml CorpusData");
             CorpusData cd = null;
             return cd;
         }
+    }
+
+    //read all the files as corpus data objects from a directory url
+    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException {
+        alldata = URLtoList(url);
+        for (URL readurl : alldata) {
+            CorpusData cdread = readFileURL(readurl);
+            cdc.add(cdread);
+        }
+        return cdc;
     }
 
     public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
@@ -131,78 +144,27 @@ public class CorpusIO {
         }
         return xslstring;
     }
-
-    //TODO
-    public CorpusData toCorpusData(File f) throws MalformedURLException, SAXException, JexmaraldaException {
-        //at some point we will need to use correct mimetypes here....
-        if (f.getName().endsWith("exb")) {
-            BasicTranscriptionData bt = new BasicTranscriptionData(f.toURI().toURL());
-            //bt.loadFile(f);
-            return bt;
-        } else if (f.getName().endsWith("coma")) {
-            ComaData cm = new ComaData(f.toURI().toURL());
-            //TODO
-            return cm;
-        } else if (f.getName().endsWith("xml") && ((f.getName().contains("Annotation") || f.getName().contains("annotation")))) {
-            AnnotationSpecification as = new AnnotationSpecification(f.toURI().toURL());
-            return as;
-        } else if ((f.getName().endsWith("xml") && f.getName().contains("cmdi")) || f.getName().endsWith("cmdi")) {
-            CmdiData cmdi = new CmdiData(f.toURI().toURL());
-            return cmdi;
-        } else if (f.getName().endsWith("xml")) {
-            UnspecifiedXMLData usd = new UnspecifiedXMLData(f.toURI().toURL());
-            return usd;
-        } else if (f.getName().endsWith("exs")) {
-            SegmentedTranscriptionData setd = new SegmentedTranscriptionData(f.toURI().toURL());
-            return setd;
-        } else {
-            System.out.println(f.getName() + " is not xml CorpusData");
-            CorpusData cd = null;
-            return cd;
+    
+    public String readExternalResourceAsString(String path2resource) throws JDOMException, IOException, URISyntaxException {
+        String xslstring = new String(Files.readAllBytes(Paths.get(new URL(path2resource).toURI())));
+        System.out.println(path2resource);
+        if (xslstring == null) {
+            throw new IOException("Stylesheet not found!");
         }
+        return xslstring;
     }
 
-    //TODO
-    public Collection<File> getFileURLSRecursively(URL directoryURL) {
-        Set<String> recursionBlackList = new HashSet<String>();
-        recursionBlackList.add(".git");
-        recursionBlackList.add(".gitignore");
-        //TODO And here we create Files again...
-        Set<File> recursed = new HashSet<File>();
-        Stack<File> dirs = new Stack();
-        File d = new File(directoryURL.getFile());
-        dirs.add(d);
-        while (!dirs.empty()) {
-            File[] files = dirs.pop().listFiles();
-            for (File f : files) {
-                if (recursionBlackList.contains(f.getName())) {
-                    continue;
-                } else if (f.isDirectory()) {
-                    dirs.add(f);
-                } else {
-                    recursed.add(f);
-                }
-            }
-        }
-        return recursed;
-    }
-
-    public ArrayList<URL> URLtoList(URL url) {
-        ArrayList<URL> alldata = new ArrayList();
+    public Collection<URL> URLtoList(URL url) throws URISyntaxException, IOException {
         if (isLocalFile(url)) {
             //if the url points to a directory
-            if (new File(url.getFile()).isDirectory()) {
+            if (isDirectory(url)) {
                 //we need to iterate    
-
                 //and add everything to the list
-                Collection<File> recursed = getFileURLSRecursively(url);
-                for (File f : recursed) {
-                    if (!f.isDirectory()) {
-                        try {
-                            alldata.add(f.toURI().toURL());
-                        } catch (MalformedURLException ex) {
-                            Logger.getLogger(CorpusIO.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                Path path = Paths.get(url.toURI());
+                listFiles(path);
+                for (URL urlread : recursed) {
+                    if (!isDirectory(urlread)) {
+                        alldata.add(urlread);
                     }
                 }
                 return alldata;
@@ -219,47 +181,6 @@ public class CorpusIO {
         }
     }
 
-    public Collection<CorpusData> read(URL url) throws MalformedURLException, SAXException, SAXException, JexmaraldaException, URISyntaxException {
-        Collection<CorpusData> cdc = new ArrayList();
-        ArrayList<CorpusData> acdc;
-        acdc = (ArrayList) cdc;
-        if (isLocalFile(url)) {
-            //if the url points to a directory
-            //I think we create more heap space usage because even for non-corpus-data objects we create File Objects!!
-            //probably check if the URL ends with one of our used file endings here first
-            if (isDirectory(url)) {
-                //we need to iterate
-                //and add everything to the cdc list
-                Collection<File> recursed = getFileURLSRecursively(url);
-                for (File f : recursed) {
-                    CorpusData cd = toCorpusData(f);
-                    if (cd != null) {
-                        acdc.add(toCorpusData(f));
-                    }
-                }
-                cdc = (Collection) acdc;
-                return cdc;
-            } //if the url points to a file
-            else {
-                //we need to read this file as some implementation of corpusdata
-                //I think we create more heap space usage because even for non-corpus-data objects we create File Objects!!
-                //probably check if the URL ends with one of our used file endings here first
-                File f = new File(url.getFile());
-                CorpusData cd = toCorpusData(f);
-                if (cd != null) {
-                    acdc.add(toCorpusData(f));
-                }
-                cdc = (Collection) acdc;
-                return cdc;
-
-            }
-        } else {
-            //it's a datastream in the repo
-            //TODO later          
-            return null;
-        }
-    }
-
     /**
      * Whether the URL is a file in the local file system.
      */
@@ -267,12 +188,13 @@ public class CorpusIO {
         String scheme = url.getProtocol();
         return "file".equalsIgnoreCase(scheme) && !hasHost(url);
     }
-    
+
     /**
      * Whether the URL is a directory in the local file system.
      */
-    public static boolean isDirectory(java.net.URL url) throws URISyntaxException{
-        return new File(url.toURI()).isDirectory();
+    public static boolean isDirectory(java.net.URL url) throws URISyntaxException {
+        //return new File(url.toURI()).isDirectory();
+        return Files.isDirectory(Paths.get(url.toURI()));
     }
 
     public static boolean hasHost(java.net.URL url) {
@@ -280,11 +202,25 @@ public class CorpusIO {
         return host != null && !"".equals(host);
     }
 
-    public void writePrettyPrinted(CorpusData cd, URL url) throws IOException {
+    public void writePrettyPrinted(CorpusData cd, URL url) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         write(cd.toSaveableString(), cd.getURL());
     }
 
     public void zipThings() {
 
+    }
+
+    void listFiles(Path path) throws IOException {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+            for (Path entry : stream) {
+                if (Files.isDirectory(entry)) {
+                    listFiles(entry);
+                }
+                String sentry = entry.getFileName().toString().toLowerCase();
+                if (sentry.endsWith(".exb") || sentry.endsWith(".exs") || sentry.endsWith(".coma") || sentry.endsWith(".xml") || sentry.endsWith(".cmdi") || sentry.endsWith(".eaf") || sentry.endsWith(".flextext") || sentry.endsWith(".esa") || sentry.endsWith(".tei") || sentry.endsWith(".xsl")) {
+                    recursed.add(entry.toUri().toURL());
+                }
+            }
+        }
     }
 }
