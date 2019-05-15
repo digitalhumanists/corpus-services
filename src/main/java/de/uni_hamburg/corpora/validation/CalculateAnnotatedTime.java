@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -46,6 +48,10 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
             stats.addException(saxe, annotLoc + ": Unknown parsing error");
         } catch (IOException ioe) {
             stats.addException(ioe, annotLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stats;
     }
@@ -56,7 +62,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
      * each annotation in the exb.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
