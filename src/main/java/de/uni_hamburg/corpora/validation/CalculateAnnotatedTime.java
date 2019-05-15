@@ -104,12 +104,14 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                         notAnnotation = true;
                         break;
                     }
-                    eventDuration = timelineItems.get(eventEnd) - timelineItems.get(eventStart); // calculate the event duration
-                    tierDuration += timelineItems.get(eventEnd) - timelineItems.get(eventStart); // add it up to the total tier duration
+                    if (timelineItems.get(eventEnd) - timelineItems.get(eventStart) >= 0) { // make sure eventEnd is after the eventStart
+                        eventDuration = timelineItems.get(eventEnd) - timelineItems.get(eventStart); // calculate the event duration
+                        tierDuration += timelineItems.get(eventEnd) - timelineItems.get(eventStart); // add it up to the total tier duration
+                    }
                     // sort the format out for putting it on the report
                     float secondsLeft = eventDuration % 60;
                     int minutes = (int) Math.floor(eventDuration / 60);
-                    String MM = (String) (minutes < 10 ? "0" + minutes : minutes);
+                    String MM = (String) (minutes < 10 ? "0" + Integer.toString(minutes) : Integer.toString(minutes));
                     String SS = (String) (secondsLeft < 10 ? "0" + Float.toString(secondsLeft) : Float.toString(secondsLeft));
                     if (SS.length() > 5) {
                         SS = SS.substring(0, 5);
@@ -118,12 +120,12 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                         String durOfEvent = eventH.get(eventLabel);
                         int minute = Integer.parseInt(durOfEvent.substring(0, durOfEvent.indexOf(":")));
                         float second = Float.parseFloat(durOfEvent.substring(durOfEvent.indexOf(":") + 1));
-                        float totalSecond = secondsLeft + second;
-                        if (totalSecond / 60 > 1.0) {
+                        float totalSecond = (secondsLeft + second) % 60;
+                        if ((secondsLeft + second) / 60 >= 1.0) {
                             minute++;
                         }
                         int totalMin = minute + minutes;
-                        String totalMM = (String) (totalMin < 10 ? "0" + totalMin : totalMin);
+                        String totalMM = (String) (totalMin < 10 ? "0" + Integer.toString(totalMin) : Integer.toString(totalMin));
                         String totalSS = (String) (totalSecond < 10 ? "0" + Float.toString(totalSecond) : Float.toString(totalSecond));
                         if (totalSS.length() > 5) {
                             totalSS = totalSS.substring(0, 5);
@@ -143,7 +145,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                 // formatting the duration of the annotation for the report
                 float secondsLeft = tierDuration % 60;
                 int minutes = (int) Math.floor(tierDuration / 60);
-                String MM = (String) (minutes < 10 ? "0" + minutes : minutes);
+                String MM = (String) (minutes < 10 ? "0" + Integer.toString(minutes) : Integer.toString(minutes));
                 String SS = (String) (secondsLeft < 10 ? "0" + Float.toString(secondsLeft) : Float.toString(secondsLeft));
                 if (SS.length() > 5) {
                     SS = SS.substring(0, 5);
@@ -163,6 +165,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
             for (Object obj : perMap) {
                 String label = (String) obj;
                 stats.addNote("calculate-annotated-time", label + "    " + map.get(label));
+                System.out.println(label + "    " + map.get(label));
             }
         }
         tierMap.put(transcriptName, tierH);  // finally add the annotations of the transcript
