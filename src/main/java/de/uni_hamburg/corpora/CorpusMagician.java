@@ -307,7 +307,6 @@ public class CorpusMagician {
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
         allExistingCFs.add("MakeTimelineConsistent");
-        allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("CalculateAnnotatedTime");
         allExistingCFs.add("AddCSVMetadataToComa");
