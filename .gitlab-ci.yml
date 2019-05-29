@@ -8,4 +8,4 @@ compile_withmaven:
     expire_in: 5 week
     paths:
     
-      - target/hzsk-corpus-services-0.1-jar-with-dependencies.jar
+      - target/hzsk-corpus-services-0.2-jar-with-dependencies.jar
