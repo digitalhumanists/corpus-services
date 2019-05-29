@@ -314,6 +314,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaTranscriptionsNameChecker");
         allExistingCFs.add("ComaTierOverviewCreator");
         allExistingCFs.add("GeneralTransformer");
+        allExistingCFs.add("ComaFedoraIdentifierLengthChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -416,7 +417,7 @@ public class CorpusMagician {
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
-                case "comapidlengthchecker":
+                case "comafedoraidentifierlengthchecker":
                     ComaFedoraIdentifierLengthChecker cplc = new ComaFedoraIdentifierLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
