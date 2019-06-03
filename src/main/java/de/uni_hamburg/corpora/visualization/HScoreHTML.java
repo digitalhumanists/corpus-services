@@ -83,6 +83,10 @@ public class HScoreHTML extends Visualizer {
             xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
+            String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
+            if (referencedRecording != null){
+            xt.setParameter(referencedRecording, RECORDING_PATH);
+            }
             result = xt.transform(basicTranscriptionString, xsl);
 
         } catch (TransformerException ex) {
