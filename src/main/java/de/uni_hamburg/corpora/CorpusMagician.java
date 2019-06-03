@@ -42,6 +42,7 @@ import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
+import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -302,6 +303,7 @@ public class CorpusMagician {
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
+        allExistingCFs.add("HScoreHTML");
         allExistingCFs.add("CorpusHTML");
         allExistingCFs.add("IAAFunctionality");
         allExistingCFs.add("ListHTML");
@@ -543,6 +545,10 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(shtml);
+                    break;
+                 case "hscorehtml":
+                    HScoreHTML hshtml = new HScoreHTML();
+                    corpusfunctions.add(hshtml);
                     break;
                 case "corpushtml":
                     CorpusHTML chtml = new CorpusHTML();
