@@ -49,11 +49,10 @@ public class HScoreHTML extends Visualizer {
     CorpusData cd;
     String corpusname = "";
 
-    
     public HScoreHTML() {
 
     }
-    
+
     public HScoreHTML(String btAsString) {
         createFromBasicTranscription(btAsString);
     }
@@ -84,8 +83,10 @@ public class HScoreHTML extends Visualizer {
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
             String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
-            if (referencedRecording != null){
-            xt.setParameter(referencedRecording, RECORDING_PATH);
+            if (referencedRecording != null) {
+                System.out.println("not null " + referencedRecording);
+                xt.setParameter("RECORDING_PATH", referencedRecording);
+                xt.setParameter("RECORDING_TYPE", "wav");
             }
             result = xt.transform(basicTranscriptionString, xsl);
 
@@ -94,7 +95,7 @@ public class HScoreHTML extends Visualizer {
         }
 
         setHTML(result);
-        
+
         return result;
     }
 
