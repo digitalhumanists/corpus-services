@@ -149,26 +149,18 @@ public class ApplicationFrame extends javax.swing.JFrame {
     void handleFileDrop(final File[] files) {
         for (File f : files) {
             try {
+                URL url = f.toURI().toURL();
                 if (f.isDirectory()) {
                     message("[Directory " + f.getName() + "]");
                     System.out.println("[Directory " + f.getName() + "]");
                     //need to use CorpusIO read(URL) method here
                     //that gives back a Colelction of CorpusData Objects
-                    URL url = f.toURI().toURL();
-                    Collection<File> recursed = cio.getFileURLSRecursively(url);
-                    for (File ff : recursed) {
-                        if (!ff.isDirectory()) {
-                        CorpusData cd = cio.toCorpusData(ff);
-                        if (cd != null) {
-                            allFiles.add(cd);
-                            message(cd.getFilename() + " added to list.");
-                        } else {
-                            message(ff.getName() + " not added to list (data suffix not recognized).");
-                        }
-                        }
-                    }
+                    ArrayList<CorpusData> allcd = (ArrayList<CorpusData>) cio.read(url);
+                    for (CorpusData cd: allcd){
+                        message(cd.getFilename() + " added to list.");    
+                    }                 
                 } else {
-                    CorpusData cd = cio.toCorpusData(f);
+                    CorpusData cd = cio.readFileURL(url);
                     if (cd != null) {
                         allFiles.add(cd);
                         message(cd.getFilename() + " added to list.");
@@ -178,10 +170,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 }
             } catch (MalformedURLException ex) {
                 message(f.getName() + " not added to list (file could not be read).");
-            } catch (SAXException ex) {
+            } catch (URISyntaxException ex) {
                 message(f.getName() + " not added to list (file could not be read).");
-            } catch (JexmaraldaException ex) {
-                message(f.getName() + " not added to list (file could not be read).");
+            } catch (IOException ex) {
+                Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         done = 0;
