@@ -22,8 +22,12 @@ import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
+import java.io.File;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -34,8 +38,12 @@ import org.jdom.Text;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import net.sf.saxon.expr.instruct.TerminationException;
 import org.exmaralda.common.corpusbuild.TextFilter;
 
@@ -48,22 +56,14 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     //TODO - how to get the language for INEL?
     String language = "en";
-
-    //testing and debuging stuff
-    String intermediatee = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exb";
-    String intermediate0 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate.exs";
-    String intermediate1 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate1.xml";
-    String intermediate2 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate2.xml";
-    String intermediate3 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate3.xml";
-    String intermediate4 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate4.xml";
-    String intermediate5 = "file:///C:/Users/fsnv625/Desktop/TEI/intermediate5.xml";
+    
     final String ISO_CONV = "inel iso tei";
 
     //locations of the used xsls
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
     static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtteranceINEL.xsl";
     static String SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSortINEL.xsl";
-    static String INEL_FSM = "/xsl/INEL_Segmentation_FSM.xml";
+    static String FSM = "/xsl/INEL_Segmentation_FSM.xml";
 
     static String BODY_NODE = "//text";
 
@@ -108,13 +108,24 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             System.out.println("started writing document...");
             //HIAT Segmentation
             //TODO need to be a parameter in the future
-            //we need to give it the path to the custom INEL fsm for hte segmentation
-            HIATSegmentation segmentation = new HIATSegmentation();
-            segmentation.utteranceFSM = INEL_FSM;
+            //we need to give it the path to the custom INEL fsm for the segmentation
+            HIATSegmentation segmentation;
+            if (FSM!=null){
+                //reading the FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
+                InputStream is = getClass().getResourceAsStream(FSM);
+                String fsmstring = TypeConverter.InputStream2String(is);
+                URL url =  Paths.get(System.getProperty("java.io.tmpdir")+ "fsmstring.xml").toUri().toURL();
+                cio.write(fsmstring, url);       
+                segmentation = new HIATSegmentation(url.getFile()); 
+            }
+            else {
+               //default HIAT segmentation 
+               segmentation = new HIATSegmentation(); 
+            }
+          
             //create a segmented exs
             SegmentedTranscription st = segmentation.BasicToSegmented(bt);
-            System.out.println("Segmented transcription created");
-            cio.write(st.toXML(), new URL(intermediate0));
+            System.out.println("Segmented transcription created");            
             //Document from segmented transcription string
             Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
             //TODO paramter in the future for deep & flat segmentation name
@@ -122,7 +133,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Document teiDoc = SegmentedTranscriptionToTEITranscription(stdoc,
                     nameOfDeepSegmentation,
                     nameOfFlategmentation,
-                    includeFullText);
+                    includeFullText, cd);
             if (teiDoc != null) {
                 System.out.println("Merged");
                 //so is the language of the doc
@@ -134,6 +145,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
                 System.out.println("document written.");
                 report.addCorrect(ISO_CONV, cd, "ISO TEI conversion of file was successful");
+            } else {
+                report.addCritical(ISO_CONV, cd, "ISO TEI conversion of file was not possible because of unknown error");
             }
 
         } catch (SAXException ex) {
@@ -146,10 +159,12 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
         } catch (IOException ex) {
             report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
-        } catch (TerminationException ex) {
-            report.addException(ex, ISO_CONV, cd, "Terminated because of XSL message - check structure of input file");
         } catch (TransformerException ex) {
             report.addException(ex, ISO_CONV, cd, "XSL transformer error");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, ISO_CONV, cd, "Parser error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, ISO_CONV, cd, "XPath error");
         }
         return report;
     }
@@ -157,7 +172,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
             String nameOfDeepSegmentation,
             String nameOfFlatSegmentation,
-            boolean includeFullText) throws JDOMException, IOException, TransformerConfigurationException, TransformerException, TerminationException {
+            boolean includeFullText, CorpusData cd) throws JDOMException, IOException, TransformerException {
 
         Document finalDocument = null;
         String skeleton_stylesheet = cio.readInternalResourceAsString(TEI_SKELETON_STYLESHEET_ISO);
@@ -176,8 +191,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         if (result != null) {
             //now we get a document of the first transformation, the iso tei skeleton
             teiDocument = TypeConverter.String2JdomDocument(result);
-            //For testing only
-            cio.write(teiDocument, new URL(intermediate1));
             System.out.println("STEP 1 completed.");
             /*
             * this method will take the segmented transcription and, for each speaker
@@ -202,8 +215,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
             Element textNode = (Element) (xp.selectSingleNode(teiDocument));
             textNode.addContent(uElements);
             if (teiDocument != null) {
-                //For testing only
-                cio.write(teiDocument, new URL(intermediate2));
                 System.out.println("STEP 2 completed.");
 
                 Document transformedDocument = null;
@@ -213,10 +224,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 if (transformedDocument != null) {
                     //fix for issue #89
                     textNode = (Element) (xp.selectSingleNode(transformedDocument));
-                    //For testing only
-                    cio.write(transformedDocument, new URL(intermediate3));
                     System.out.println("STEP 3 completed.");
-
                     // now take care of the events from tiers of type 'd'
                     XPath xp2 = XPath.newInstance("//segmentation[@name='Event']/ats");
                     List events = xp2.selectNodes(segmentedTranscription);
@@ -251,8 +259,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                     //and the generating of the ids
                     generateWordIDs(transformedDocument);
                     if (transformedDocument != null) {
-                        //for testing only
-                        cio.write(transformedDocument, new URL(intermediate4));
                         //Here the annotations are taken care of
                         //this is important for the INEL morpheme segmentations
                         //for the INEL transformation, the word IDs are generated earlier
@@ -261,8 +267,6 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                         if (result3 != null) {
                             finalDocument = IOUtilities.readDocumentFromString(result3);
                             if (finalDocument != null) {
-                                //for testing only
-                                cio.write(finalDocument, new URL(intermediate5));
                             }
                         }
                     }
@@ -341,26 +345,26 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                         + "/ts[@s='" + start + "' and @e='" + end + "']/ts";
                 XPath xp3 = XPath.newInstance(xpath3);
                 List transannos = xp3.selectNodes(segmentedTranscription);
-                for (Object transanno1 : transannos){
-                Element transanno = (Element) transanno1;
-                String transaStart = transanno.getAttributeValue("s");
-                String transaEnd = transanno.getAttributeValue("e");
-                int transas = ((Integer) (timelineItems.get(transaStart)));
-                int transae = ((Integer) (timelineItems.get(transaEnd)));
-                boolean transannotationBelongsToThisElement = (transas >= s && transas <= e) || (transae >= s && transae <= e);
-                if (transannotationBelongsToThisElement) {
-                    Element annotationsElement = mergedElement.getChild("annotations");
-                    if (annotationsElement == null) {
-                        annotationsElement = new Element("annotations");
-                        mergedElement.addContent(annotationsElement);
+                for (Object transanno1 : transannos) {
+                    Element transanno = (Element) transanno1;
+                    String transaStart = transanno.getAttributeValue("s");
+                    String transaEnd = transanno.getAttributeValue("e");
+                    int transas = ((Integer) (timelineItems.get(transaStart)));
+                    int transae = ((Integer) (timelineItems.get(transaEnd)));
+                    boolean transannotationBelongsToThisElement = (transas >= s && transas <= e) || (transae >= s && transae <= e);
+                    if (transannotationBelongsToThisElement) {
+                        Element annotationsElement = mergedElement.getChild("annotations");
+                        if (annotationsElement == null) {
+                            annotationsElement = new Element("annotations");
+                            mergedElement.addContent(annotationsElement);
+                        }
+                        Element annotation = new Element("annotation");
+                        annotation.setAttribute("start", transaStart);
+                        annotation.setAttribute("end", transaEnd);
+                        annotation.setAttribute("level", transanno.getParentElement().getParentElement().getAttributeValue("name"));
+                        annotation.setAttribute("value", transanno.getText());
+                        annotationsElement.addContent(annotation);
                     }
-                    Element annotation = new Element("annotation");
-                    annotation.setAttribute("start", transaStart);
-                    annotation.setAttribute("end", transaEnd);
-                    annotation.setAttribute("level", transanno.getParentElement().getParentElement().getAttributeValue("name"));
-                    annotation.setAttribute("value", transanno.getText());
-                    annotationsElement.addContent(annotation);
-                }
                 }
                 // now take care of the corresponding annotations
                 String xpath5 = "//segmented-tier[@id='" + tierref + "']/annotation/ta";

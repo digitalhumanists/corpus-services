@@ -19,10 +19,9 @@ https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-t
 
 # Functions
 
-The usable functions can be found here:
+The usable functions can be found in the help output:
 
-src/main/java/de/uni_hamburg/corpora/CorpusMagician.java
-in the method getAllExistingCFs(), which returns a String Collection of all the available functions. 
+`java -jar hzsk-corpus-services-0.2-jar-with-dependencies.jar -h`
 
 # Compilation
 

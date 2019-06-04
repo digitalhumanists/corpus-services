@@ -9,7 +9,9 @@ import java.net.URL;
 import java.util.Collection;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
@@ -36,7 +38,7 @@ public class Corpus {
 
     }
 
-    public Corpus(URL url) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException {
+    public Corpus(URL url) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         CorpusIO cio = new CorpusIO();
         cdc = cio.read(url);
         for (CorpusData cd : cdc) {

@@ -12,9 +12,15 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -26,10 +32,10 @@ public class ExbNormalize extends Checker implements CorpusFunction {
     BasicTranscriptionData btd = null;
     Boolean fixWhiteSpaces = false;
     String ne = "NormalizeExb";
-    
+
     @Override
     public Report check(CorpusData cd) {
-        report.addCritical("NormalizeExb", cd.getURL().getFile(), "Checking option is not available");
+        report.addCritical(ne, cd.getURL().getFile(), "Checking option is not available");
         return report;
     }
 
@@ -39,7 +45,7 @@ public class ExbNormalize extends Checker implements CorpusFunction {
             btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
             bt.normalize();
-            if(fixWhiteSpaces){
+            if (fixWhiteSpaces) {
                 bt.normalizeWhiteSpace();
             }
             btd.setReadbtasjdom(bt.toJDOMDocument());
@@ -48,16 +54,23 @@ public class ExbNormalize extends Checker implements CorpusFunction {
             cd = (CorpusData) btd;
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
-            if(cd != null){
-            report.addCorrect(ne, cd, "normalized the file");   
-            }
-            else{
-            report.addCritical(ne, cd, "normalizing was not possible");
+            if (cd != null) {
+                report.addCorrect(ne, cd, "normalized the file");
+            } else {
+                report.addCritical(ne, cd, "normalizing was not possible");
             }
         } catch (JDOMException ex) {
             report.addException(ex, ne, cd, "unknown xml exception");
         } catch (IOException ex) {
             report.addException(ex, ne, cd, "unknown IO exception");
+        } catch (TransformerException ex) {
+           report.addException(ex, ne, cd, "unknown xml exception");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, ne, cd, "unknown xml exception");
+        } catch (SAXException ex) {
+            report.addException(ex, ne, cd, "unknown xml exception");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, ne, cd, "unknown xml exception");
         }
         return report;
     }
@@ -73,9 +86,12 @@ public class ExbNormalize extends Checker implements CorpusFunction {
         }
         return IsUsableFor;
     }
-    
-    public void setfixWhiteSpaces(Boolean boo){
-        fixWhiteSpaces = boo;
+
+    public void setfixWhiteSpaces(String s) {
+        fixWhiteSpaces = false;
+        if (s.equals("true") || s.equals("wahr") || s.equals("ja") || s.equals("yes")) {
+            fixWhiteSpaces = true;
+        }
     }
 
 }

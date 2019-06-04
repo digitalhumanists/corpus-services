@@ -373,7 +373,7 @@ public class ComaErrorReportGenerator implements ErrorHandler {
     }
 
     /**
-     * Handle XML schema valdition warning
+     * Handle XML schema validation warning
      * This handler ignores the severity of validation errors.
      */
     public void warning(SAXParseException saxpe) throws SAXException {
