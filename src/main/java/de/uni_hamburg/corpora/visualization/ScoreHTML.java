@@ -23,9 +23,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.partitureditor.interlinearText.HTMLParameters;
 import org.exmaralda.partitureditor.interlinearText.InterlinearText;
@@ -38,6 +42,7 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.JDOMException;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -52,6 +57,7 @@ public class ScoreHTML extends Visualizer {
     Report stats;
     URL targeturl;
     CorpusData cd;
+    String corpusname = "";
 
     public ScoreHTML() {
 
@@ -159,6 +165,10 @@ public class ScoreHTML extends Visualizer {
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
             xt.setParameter("STYLES", styles);
+            xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
+            if(!corpusname.equals("")){
+            xt.setParameter("CORPUS_NAME", corpusname);
+            }
 
             // perform XSLT transformation
             result = xt.transform(xml, xsl);
@@ -237,6 +247,14 @@ public class ScoreHTML extends Visualizer {
             stats.addException(SERVICE_NAME, ex, "Malformed URL used");
         } catch (IOException ex) {
             stats.addException(SERVICE_NAME, ex, "Input Output Exception");
+        } catch (TransformerException ex) {
+            stats.addException(SERVICE_NAME, ex, "Transformer Exception");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(SERVICE_NAME, ex, "Parser Exception");
+        } catch (SAXException ex) {
+            stats.addException(SERVICE_NAME, ex, "XML Exception");
+        } catch (XPathExpressionException ex) {
+            stats.addException(SERVICE_NAME, ex, "XPath Exception");
         }
         return stats;
     }
@@ -281,5 +299,9 @@ public class ScoreHTML extends Visualizer {
 
     public URL getTargetURL() {
         return targeturl;
+    }
+    
+    public void setCorpusName(String s) {
+        corpusname = s;
     }
 }

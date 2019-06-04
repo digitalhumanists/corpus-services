@@ -9,12 +9,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -174,5 +181,30 @@ public class TypeConverter {
         }
         return w3cDoc;
     }
+    
+    /**
+     * Converts a org.w3c.dom.Document object into a String object.
+     *
+     * @param doc org.w3c.dom.Document object that shall be converted to String object
+     * @return String object that was created from org.w3c.dom.Document object
+     */
+    public static String W3cDocument2String(org.w3c.dom.Document doc) {
+        DOMSource domSource = new DOMSource(doc);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer;
+        try {
+            transformer = tf.newTransformer();
+            transformer.transform(domSource, result);
+        } catch (TransformerException ex) {
+            Logger.getLogger(TypeConverter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return writer.toString();
+    }
+    
+    
+    
+    
 
 }

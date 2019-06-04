@@ -37,7 +37,7 @@
     </xsl:variable>
 
     <!-- Is the VisualizationFormat still needed? -->
-    <xsl:variable name="CSS_PATH" select="concat($TOP_LEVEL_PATH, 'VisualizationFormat.css')" as="xs:string"/>
+    <xsl:variable name="CSS_PATH" select="'css/VisualizationFormat.css'" as="xs:string"/>
     <xsl:variable name="CSS_PATH_SCORE" select="'css/ScoreHFormat.css'"/>
 
     <xsl:template match="/">
@@ -200,7 +200,7 @@
         </xsl:for-each>
         <td class="event" id="{parent::tier/@id}EV{count(preceding-sibling::event) + 1}" exb:start="{key('time-by-id', @start)}" exb:end="{key('time-by-id', @end)}">
             <xsl:if test="parent::tier/@category='ref'">
-                <xsl:variable name="IDs" select="for $xpPart in tokenize(substring-after(., '#'),'xpointer\(id\(''')[position()!=1] return substring-before($xpPart, '''))')" as="xs:string+"/>
+                <xsl:variable name="IDs" select="for $xpPart in tokenize(substring-after(., '#'),'xpointer\(id\(''')[position()!=1] return substring-before($xpPart, '''))')" as="xs:string*"/>
                 <xsl:attribute name="onmouseover" select="for $id in $IDs return concat('svgDoc.getElementById(''', $id, ''').style.stroke = highlightedStroke; svgDoc.getElementById(''', $id, ''').style.fill = highlightedBackground; ')"/>
                 <xsl:attribute name="onmouseout" select="for $id in $IDs return concat('svgDoc.getElementById(''', $id, ''').style.stroke = unhighlightedFill; svgDoc.getElementById(''', $id, ''').style.fill = unhighlightedFill; ')"/>
             </xsl:if>
