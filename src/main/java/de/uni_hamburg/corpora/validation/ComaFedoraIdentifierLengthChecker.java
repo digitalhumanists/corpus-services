@@ -39,7 +39,7 @@ import javax.xml.xpath.XPathExpressionException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaPIDLengthChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaFedoraIdentifierLengthChecker extends Checker implements CommandLineable, CorpusFunction {
 
     ValidatorSettings settings;
     final String COMA_PID_LENGTH = "coma-pid-length";
@@ -53,7 +53,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, Co
     
 
     public static void main(String[] args) {
-        ComaPIDLengthChecker checker = new ComaPIDLengthChecker();
+        ComaFedoraIdentifierLengthChecker checker = new ComaFedoraIdentifierLengthChecker();
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
@@ -177,7 +177,7 @@ public class ComaPIDLengthChecker extends Checker implements CommandLineable, Co
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaPIDLengthChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ComaFedoraIdentifierLengthChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }
