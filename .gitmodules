@@ -4,3 +4,6 @@
 [submodule "corpus-curation"]
 	path = corpus-curation
 	url = git@gitlab.rrz.uni-hamburg.de:hzsk/corpus-curation.git
+[submodule "HZSK-CLARIN-Services"]
+	path = HZSK-CLARIN-Services
+	url = https://github.com/hzsk/HZSK-CLARIN-Services
