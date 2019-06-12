@@ -32,17 +32,7 @@
 
     <xsl:template match="/">
 
-        <!-- *** General checks *** -->
-
-        <!-- check for elements with text content consisting of only question marks (and whitespace) -->
-        <xsl:for-each select="//*[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains text value ''',  replace(replace(text(), ';', ':'), $NEWLINE, ''), ''';;', $NEWLINE)"/>
-        </xsl:for-each>
-
-        <!-- check for multiple whitespaces in text content of non-mixed content elements -->
-        <xsl:for-each select="//*[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
-            <xsl:value-of select="concat('WARNING;Element ''', local-name(), ''' contains more than one consecutive whitespaces: ''',  replace(replace(replace(text(), ';', ':'), $NEWLINE, ''), $NEWLINE, ''), ''';;', $NEWLINE)"/>
-        </xsl:for-each>
+  
 
 
         <!-- *** Coma checks *** -->
@@ -80,6 +70,18 @@
                 <xsl:value-of select="concat('WARNING;The file reference ''', replace(replace(text(), ';', ':'), $NEWLINE, ''), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
 
+
+        <!-- check for elements with text content consisting of only question marks (and whitespace) -->
+        <xsl:for-each select="//Key[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">           
+            <xsl:value-of select="concat('WARNING;Element ''', @Name '''in''' ../../Communication[@Name], ''' contains text value ''',  replace(replace(text(), ';', ':'), $NEWLINE, ''), ''';;', $NEWLINE)"/>
+        </xsl:for-each>
+
+        <!-- check for multiple whitespaces in text content of non-mixed content elements -->
+        <xsl:for-each select="//Key[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
+            <xsl:value-of select="concat('WARNING;Element ''', @Name '''in''' ../../Communication[@Name], ''' contains multiple whitespaces ''', $NEWLINE, ''), ''';;', $NEWLINE)"/>
+        </xsl:for-each>
+        
+        
         </xsl:for-each>
 
 
@@ -217,7 +219,15 @@
                 </xsl:choose>                                                     
             </xsl:if>
             
-            
+         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
+         <xsl:if test="matches(text(), '^(\s*\?\s*)+$')">
+                <xsl:value-of select="concat('WARNING;found ''', replace(replace(text(), ';', ':'), ''' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+         </xsl:if>      
+
+        <!-- check for multiple whitespaces in text content of non-mixed content elements -->
+        <xsl:if test="matches(text(), '\s{2,}')">
+                <xsl:value-of select="concat('WARNING;found ''', replace(replace(text(), ';', ':'), ''' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+         </xsl:if>
             
 
         </xsl:for-each>
