@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * specification file and that there are no annotations in the coma file not in
  * the annotation specification file.
  */
-public class TierCheckerWithAnnotation extends Checker implements CorpusFunction {
+public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implements CorpusFunction {
 
     String comaLoc = "";
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
@@ -182,7 +182,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierCheckerWithAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ComaTiersDescriptionAnnotationPanelChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }
