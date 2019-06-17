@@ -29,7 +29,7 @@ import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
 import de.uni_hamburg.corpora.validation.ExbTierDisplayNameChecker;
-import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
+import de.uni_hamburg.corpora.validation.ComaTiersDescriptionAnnotationPanelChecker;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
@@ -296,7 +296,7 @@ public class CorpusMagician {
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
-        allExistingCFs.add("TierCheckerWithAnnotation");
+        allExistingCFs.add("ComaTiersDescriptionAnnotationPanelChecker");
         allExistingCFs.add("ExbTierDisplayNameChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
         allExistingCFs.add("XsltCheckerInel");
@@ -427,8 +427,8 @@ public class CorpusMagician {
                     ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
                     corpusfunctions.add(cnc);
                     break;
-                case "tiercheckerwithannotation":
-                    TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
+                case "comatiersdescriptionannotationpanelchecker":
+                    ComaTiersDescriptionAnnotationPanelChecker tcwa = new ComaTiersDescriptionAnnotationPanelChecker();
                     corpusfunctions.add(tcwa);
                 case "exbtierdisplaynamechecker":
                     ExbTierDisplayNameChecker tc = new ExbTierDisplayNameChecker();
