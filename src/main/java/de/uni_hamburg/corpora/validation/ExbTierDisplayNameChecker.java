@@ -27,9 +27,10 @@ import org.xml.sax.SAXException;
  * A class that can check out tiers and find out if there is a mismatch between
  * category, speaker abbreviation and display name for each tier.
  */
-public class TierChecker extends Checker implements CorpusFunction {
+public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
+    final String tdnc = "tier-displayname-checker";
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -82,9 +83,10 @@ public class TierChecker extends Checker implements CorpusFunction {
         for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);
             String category = tier.getAttribute("category"); // get category  
-            String displayName = tier.getAttribute("display-name"); // get display name
             String speakerName = tier.getAttribute("speaker"); // get speaker name
+            String displayName = tier.getAttribute("display-name"); // get display name
             String displayNameCategory = displayName;
+            String displayNameSpeaker = "";
             int openingPar = -1;
             int closingPar = -1;
             if (!displayName.isEmpty()) { // if display name exists compare it with other attributes   
@@ -92,46 +94,43 @@ public class TierChecker extends Checker implements CorpusFunction {
                     openingPar = displayName.indexOf("[");
                     closingPar = displayName.indexOf("]");
                     displayNameCategory = displayName.substring(openingPar + 1, closingPar);
+                    displayNameSpeaker = displayName.substring(0, openingPar - 1);
+                } else if (displayName.contains("-")){
+                    openingPar = displayName.lastIndexOf("-");
+                    closingPar = displayName.length();
+                    displayNameSpeaker = displayName.substring(openingPar + 1, closingPar);
+                    displayNameCategory = displayName.substring(0, openingPar);
                 }
-                if (!speakerName.isEmpty()) { // if speaker name exists check if it complies with tier display name
-                    if (!category.equals(displayNameCategory)) {
-                        System.err.println("Category abbreviation and display name for tier do not match"
-                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                + " in transcription of " + transcriptName);
-                        stats.addWarning("tier-checker", "Tier mismatch "
-                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                + " in transcription of " + transcriptName);
-                        exmaError.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Category abbreviation and display name for tier do not match"
-                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                + " in transcription of " + transcriptName);
-                    }
-                    if (displayName.contains("[") && displayName.contains("]")) {
-                        String displayNameSpeaker = displayName.substring(0, openingPar - 1);
-                        if (!displayNameSpeaker.equals(speakerMap.get(speakerName))) {
-                            System.err.println("Speaker abbreviation and display name for tier do not match"
+                //System.out.println("Tier DisplayName " + displayName + " category " + category  + " displaycategory " + displayNameCategory  + " and speaker name " +  speakerName + " displayspeaker " + displayNameSpeaker);
+                if (!speakerName.isEmpty() && !category.isEmpty()) { // if speaker name exists check if it complies with tier display name
+                    if (category.equals(displayNameCategory) && speakerName.equals(displayNameSpeaker)) {
+                        //everything is correct
+                        System.out.println("Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
+                        stats.addCorrect(tdnc, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
+                    } else if (category.equals(displayNameCategory) && displayNameSpeaker.isEmpty()){
+                        System.out.println("Tier DisplayName " + displayName + " matches category " + category);
+                    } else {
+                     System.err.println("Speaker abbreviation and display name for tier do not match"
                                     + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            stats.addWarning("tier-checker", "Tier mismatch "
-                                    + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
+                            stats.addCritical(tdnc, cd, "Tier mismatch "
+                                    + "for speaker " + speakerName + ", tier category " + category
+                                    +", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            exmaError.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier do not match"
-                                    + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                    + " in transcription of " + transcriptName);
-                        }
-                    }
-                } else {  // if speaker name doesn't exist check only if the category complies with the display of the tier
-                    if (!category.equals(displayNameCategory)) {
-                        System.err.println("Category and display name for tier do not match"
-                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                + " in transcription of " + transcriptName);
-                        stats.addWarning("tier-checker", "Tier mismatch "
-                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                + " in transcription of " + transcriptName);
-                        exmaError.addError("tier-checker", cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Category and display name for tier do not match"
-                                + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
-                                + " in transcription of " + transcriptName);
+                            exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier doES not match"
+                                    + "for speaker " + speakerName + ", tier category " + category
+                                    + ", tier id " + tier.getAttribute("id")
+                                    + " in transcription of " + transcriptName);   
                     }
                 }
+            }
+            else{
+                stats.addWarning(tdnc, cd, "Display name is empty "
+                                    + "for speaker " + speakerName + ", tier category " + category
+                                    + ", tier id " + tier.getAttribute("id"));
+                exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Display name for tier is empty"
+                                    + "for speaker " + speakerName + ", tier category " + category
+                                    + ", tier id " + tier.getAttribute("id"));   
             }
         }
         return stats; // return all the warnings
@@ -158,7 +157,7 @@ public class TierChecker extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierChecker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ExbTierDisplayNameChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }

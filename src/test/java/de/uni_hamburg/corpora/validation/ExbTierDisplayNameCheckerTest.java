@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class TierCheckerTest {
+public class ExbTierDisplayNameCheckerTest {
     
-    public TierCheckerTest() {
+    public ExbTierDisplayNameCheckerTest() {
     }
     
     @BeforeClass
@@ -44,7 +44,7 @@ public class TierCheckerTest {
     }
 
     /**
-     * Test of check method, of class TierChecker.
+     * Test of check method, of class ExbTierDisplayNameChecker.
      */
     @Test
 public void testCheck() throws Exception {
@@ -53,7 +53,7 @@ public void testCheck() throws Exception {
         String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        TierChecker instance = new TierChecker();
+        ExbTierDisplayNameChecker instance = new ExbTierDisplayNameChecker();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check exb files
@@ -63,12 +63,12 @@ public void testCheck() throws Exception {
     }
 
     /**
-     * Test of getIsUsableFor method, of class TierChecker.
+     * Test of getIsUsableFor method, of class ExbTierDisplayNameChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        TierChecker instance = new TierChecker();
+        ExbTierDisplayNameChecker instance = new ExbTierDisplayNameChecker();
         //Collection<Class> expResult = null;
         //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();

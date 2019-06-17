@@ -28,7 +28,7 @@ import de.uni_hamburg.corpora.validation.NgTierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.PrettyPrintData;
 import de.uni_hamburg.corpora.validation.RemoveAbsolutePaths;
 import de.uni_hamburg.corpora.validation.RemoveAutoSaveExb;
-import de.uni_hamburg.corpora.validation.TierChecker;
+import de.uni_hamburg.corpora.validation.ExbTierDisplayNameChecker;
 import de.uni_hamburg.corpora.validation.TierCheckerWithAnnotation;
 import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
@@ -297,7 +297,7 @@ public class CorpusMagician {
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
-        allExistingCFs.add("TierChecker");
+        allExistingCFs.add("ExbTierDisplayNameChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
         allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
@@ -430,8 +430,8 @@ public class CorpusMagician {
                 case "tiercheckerwithannotation":
                     TierCheckerWithAnnotation tcwa = new TierCheckerWithAnnotation();
                     corpusfunctions.add(tcwa);
-                case "tierchecker":
-                    TierChecker tc = new TierChecker();
+                case "exbtierdisplaynamechecker":
+                    ExbTierDisplayNameChecker tc = new ExbTierDisplayNameChecker();
                     corpusfunctions.add(tc);
                 case "ngtiercheckerwithannotation":
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
