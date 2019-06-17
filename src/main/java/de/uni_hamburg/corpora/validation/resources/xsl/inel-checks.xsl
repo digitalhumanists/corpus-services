@@ -72,13 +72,13 @@
 
 
         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
-        <xsl:for-each select="//Key[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">           
-            <xsl:value-of select="concat('WARNING;Element ''', @Name '''in''' ../../Communication[@Name], ''' contains text value ''',  replace(replace(text(), ';', ':'), $NEWLINE, ''), ''';;', $NEWLINE)"/>
+        <xsl:for-each select="*:Description/*:Key[empty(*) and matches(text(), '^(\s*\?\s*)+$')]">           
+            <xsl:value-of select="concat('WARNING;Element ''', @Name, ''' in Communication ''', $COM_NAME, ''' contains text value ''',  replace(replace(text(), ';', ':'), $NEWLINE, ''), ''';;', $NEWLINE)"/>
         </xsl:for-each>
 
         <!-- check for multiple whitespaces in text content of non-mixed content elements -->
-        <xsl:for-each select="//Key[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
-            <xsl:value-of select="concat('WARNING;Element ''', @Name '''in''' ../../Communication[@Name], ''' contains multiple whitespaces ''', $NEWLINE, ''), ''';;', $NEWLINE)"/>
+        <xsl:for-each select="*:Description/*:Key[empty(element()) and exists(text()) and matches(text(), '\s{2,}')]">
+            <xsl:value-of select="concat('WARNING;Element ''', @Name, ''' in Communication ''', $COM_NAME, ''' contains multiple whitespaces;;', $NEWLINE)"/>
         </xsl:for-each>
         
         
@@ -193,10 +193,11 @@
                 <xsl:variable name="SPK" select="../@speaker"/>
                 <xsl:choose>
                     <xsl:when test="matches(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), $UTTERANCEENDSYMBOLWHITESPACE)">
-                        <!--<xsl:value-of select="concat('CRITICAL;sentence in tx tier IS ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>  -->                    
+                        <!--<xsl:value-of select="concat('CRITICAL;sentence in tx tier IS ending with utterance end symbol ', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>  -->                    
                     </xsl:when>      
                     <xsl:otherwise>
-                        <xsl:value-of select="concat('CRITICAL;sentence in tx tier not ending with utterance end symbol ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <!-- Need to deal with two tx tiers too!! (Two speaker files)-->
+                        <xsl:value-of select="concat('CRITICAL;sentence in tx tier not ending with utterance end symbol ', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:otherwise>
                 </xsl:choose>                                                     
             </xsl:if>
@@ -211,22 +212,22 @@
                     </xsl:when> 
                     <!-- Test if it is a colon but should be a vowel length marker -->
                     <xsl:when test=" matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;]+.*')">
-                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should maybe be a vowel length marker &#x2D0; or needs a following whitespace', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('CRITICAL;colon in tx tier should maybe be a vowel length marker &#x2D0; or needs a following whitespace', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when> 
                     <xsl:otherwise>
-                        <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx']/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                        <xsl:value-of select="concat('CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:otherwise>
                 </xsl:choose>                                                     
             </xsl:if>
             
          <!-- check for elements with text content consisting of only question marks (and whitespace) -->
          <xsl:if test="matches(text(), '^(\s*\?\s*)+$')">
-                <xsl:value-of select="concat('WARNING;found ''', replace(replace(text(), ';', ':'), ''' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;found text content consisting of only question marks', replace(replace(text(), ';', ':'), $NEWLINE, ''), ' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
          </xsl:if>      
 
         <!-- check for multiple whitespaces in text content of non-mixed content elements -->
         <xsl:if test="matches(text(), '\s{2,}')">
-                <xsl:value-of select="concat('WARNING;found ''', replace(replace(text(), ';', ':'), ''' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;found multiple whitespaces in ', replace(replace(text(), ';', ':'), $NEWLINE, ''), ' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
          </xsl:if>
             
 
