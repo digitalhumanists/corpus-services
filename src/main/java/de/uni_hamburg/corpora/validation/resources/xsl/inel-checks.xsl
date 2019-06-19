@@ -229,6 +229,12 @@
         <xsl:if test="matches(text(), '\s{2,}')">
                 <xsl:value-of select="concat('WARNING;found multiple whitespaces in ', replace(replace(text(), ';', ':'), $NEWLINE, ''), ' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
          </xsl:if>
+         
+         
+            <!-- Check if there is no null morpheme in mb tier without proper brackets .[]) -->         
+            <xsl:if test="(../@category = ('gr', 'ge', 'gg') and matches(., '(.*[^\.]\[.*)'))">
+                        <xsl:value-of select="concat('CRITICAL;null morpheme in mb tier without correct brackets or fullstop in ', replace(replace(text(), ';', ':'), $NEWLINE, ''), ' (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+            </xsl:if>
             
 
         </xsl:for-each>
