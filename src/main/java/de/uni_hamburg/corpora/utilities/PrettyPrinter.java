@@ -66,22 +66,22 @@ public class PrettyPrinter {
             }
 
             // Setup pretty print options
-            TransformerFactory transformerFactory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null);
-
-            StreamSource xslSource = new StreamSource(PrettyPrinter.class.getResourceAsStream("/pretty-print-sort-elements.xsl"));
+            // get the XSLT stylesheet and the XML base
+            String xslString = TypeConverter.InputStream2String(PrettyPrinter.class.getResourceAsStream("/pretty-print-sort-elements.xsl"));
+            String xmlString = TypeConverter.W3cDocument2String(document);
             
-            Transformer transformer = transformerFactory.newTransformer(xslSource);
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, xml.indexOf("<?xml") >= 0 ? "no" : "yes");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("suppress-indentation", suppressedElements);
+            // create XSLTransformer and set the parameters 
+            XSLTransformer xt = new XSLTransformer("net.sf.saxon.TransformerFactoryImpl");
 
+            xt.setOutputProperty(OutputKeys.ENCODING, "UTF-8");            
+            xt.setOutputProperty(OutputKeys.VERSION, "1.0");
+            xt.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, xml.indexOf("<?xml") >= 0 ? "no" : "yes");
+            xt.setOutputProperty(OutputKeys.INDENT, "yes");
+            xt.setOutputProperty("suppress-indentation", suppressedElements);
             
-            // Return pretty print xml stringu
-            StringWriter stringWriter = new StringWriter();
-            transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
-            String prettyXmlString = stringWriter.toString();
+            
+            // perform XSLT transformation
+            String prettyXmlString = xt.transform(xmlString, xslString);
             
             /* insert some specific EXMARaLDA dialect styles */
             

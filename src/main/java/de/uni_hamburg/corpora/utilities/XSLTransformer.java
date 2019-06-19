@@ -6,12 +6,8 @@
 package de.uni_hamburg.corpora.utilities;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -19,13 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.Configuration;
-import net.sf.saxon.Controller;
-import net.sf.saxon.event.ReceiverOptions;
-import net.sf.saxon.expr.instruct.TerminationException;
-import net.sf.saxon.jaxp.TransformerImpl;
 import net.sf.saxon.serialize.MessageEmitter;
-import net.sf.saxon.serialize.MessageWarner;
-import net.sf.saxon.serialize.XMLEmitter;
 import net.sf.saxon.trans.XPathException;
 
 /**
@@ -41,6 +31,7 @@ public class XSLTransformer {
     private Transformer transformer;
     private String transformerFactoryImpl = "net.sf.saxon.TransformerFactoryImpl";
     private Map<String, Object> parameters = new HashMap<>();
+    private Map<String, String> outputProperties = new HashMap<>();
 
     /**
      * Class constructor.
@@ -87,6 +78,10 @@ public class XSLTransformer {
         String result = null;
         try {
             transformer = tranformerFactory.newTransformer(xslSource);
+            // set the output properties for XSLT transformation
+            for (Map.Entry<String, String> param : outputProperties.entrySet()) {
+                transformer.setOutputProperty(param.getKey(), param.getValue());
+            }
             // set the parameters for XSLT transformation
             for (Map.Entry<String, Object> param : parameters.entrySet()) {
                 transformer.setParameter(param.getKey(), param.getValue());
@@ -157,6 +152,48 @@ public class XSLTransformer {
         return parameters;
     }
 
+    /**
+     * Set a single property for the XSLT transformation.
+     *
+     * @param propertyName Name of the output property
+     * @param propertyValue Value of the output property
+     * @return
+     */
+    public void setOutputProperty(String propertyName, String propertyValue) {
+        outputProperties.put(propertyName, propertyValue);
+    }
+
+    /**
+     * Set a bunch of properties for the XSLT transformation.
+     *
+     * @param outputProps Map object representing property names and values
+     * @return
+     */
+    public void setOutputProperties(Map<String, String> outputProps) {
+        outputProperties = outputProps;
+    }
+
+    /**
+     * Get a single property that was set for the XSLT transformation.
+     *
+     * @param propertyName Name of the property that shall be returned
+     * @return Value of the supplied property
+     */
+    public Object getOutputProperty(String propertyName) {
+        return outputProperties.get(propertyName);
+    }
+
+    /**
+     * Get all properties as Map object that were set for the XSLT
+     * transformation.
+     *
+     * @param
+     * @return Map representing all properties
+     */
+    public Map getOutputProperties() {
+        return outputProperties;
+    }
+    
     /**
      * Set TransformerFactoryImpl (represented as class name in String) for the
      * XSLT transformation.
