@@ -68,7 +68,7 @@ public class PrettyPrinter {
             // Setup pretty print options
             TransformerFactory transformerFactory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null);
 
-            StreamSource xslSource = new StreamSource(PrettyPrinter.class.getResourceAsStream("pretty-print-sort-elements.xsl"));
+            StreamSource xslSource = new StreamSource(PrettyPrinter.class.getResourceAsStream("/pretty-print-sort-elements.xsl"));
             
             Transformer transformer = transformerFactory.newTransformer(xslSource);
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
