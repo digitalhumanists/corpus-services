@@ -4,6 +4,7 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -64,86 +65,89 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         Report stats = new Report();
         String reportStatisticsPath = cd.getParentURL().getPath() + "curation/report-statistics.html";
         String htmlReportPath = cd.getParentURL().getPath() + HTML_REPORT;
-        FileInputStream fis = new FileInputStream(htmlReportPath);
-        String html = IOUtils.toString(fis);
-        String reportStatistics = IOUtils.toString(new FileInputStream(reportStatisticsPath));
-        Pattern ok = Pattern.compile("[0-9]+ OK"); // get okay messages
-        Pattern bad = Pattern.compile("[0-9]+ bad"); // get critical errors
-        Pattern warnings = Pattern.compile("[0-9]+ warnings"); // get warnings
-        Pattern unknown = Pattern.compile("[0-9]+ unknown"); // get unknown messages
-        Matcher mOk = ok.matcher(html);
-        Matcher mBad = bad.matcher(html);
-        Matcher mWarnings = warnings.matcher(html);
-        Matcher mUnknown = unknown.matcher(html);
-        int nOK = 0;
-        while (mOk.find()) {
-            String sOk = mOk.group();
-            nOK += Integer.parseInt(sOk.substring(0, sOk.indexOf("OK") - 1));
-        }
-        int nBad = 0;
-        while (mBad.find()) {
-            String sBad = mBad.group();
-            nBad += Integer.parseInt(sBad.substring(0, sBad.indexOf("bad") - 1));
-        }
-        int nWarnings = 0;
-        while (mWarnings.find()) {
-            String sWarnings = mWarnings.group();
-            nWarnings += Integer.parseInt(sWarnings.substring(0, sWarnings.indexOf("warnings") - 1));
-        }
-        int nUnknown = 0;
-        while (mUnknown.find()) {
-            String sUnknown = mUnknown.group();
-            nUnknown += Integer.parseInt(sUnknown.substring(0, sUnknown.indexOf("unknown") - 1));
-        }
+        File htmlReportFile = new File(htmlReportPath);
+        if (htmlReportFile.isFile()) {
+            FileInputStream fis = new FileInputStream(htmlReportPath);
+            String html = IOUtils.toString(fis);
+            File reportStatFile = new File(reportStatisticsPath);
+            if (reportStatFile.isFile()) {
+                String reportStatistics = IOUtils.toString(new FileInputStream(reportStatisticsPath));
+                Pattern ok = Pattern.compile("[0-9]+ OK"); // get okay messages
+                Pattern bad = Pattern.compile("[0-9]+ bad"); // get critical errors
+                Pattern warnings = Pattern.compile("[0-9]+ warnings"); // get warnings
+                Pattern unknown = Pattern.compile("[0-9]+ unknown"); // get unknown messages
+                Matcher mOk = ok.matcher(html);
+                Matcher mBad = bad.matcher(html);
+                Matcher mWarnings = warnings.matcher(html);
+                Matcher mUnknown = unknown.matcher(html);
+                int nOK = 0;
+                while (mOk.find()) {
+                    String sOk = mOk.group();
+                    nOK += Integer.parseInt(sOk.substring(0, sOk.indexOf("OK") - 1));
+                }
+                int nBad = 0;
+                while (mBad.find()) {
+                    String sBad = mBad.group();
+                    nBad += Integer.parseInt(sBad.substring(0, sBad.indexOf("bad") - 1));
+                }
+                int nWarnings = 0;
+                while (mWarnings.find()) {
+                    String sWarnings = mWarnings.group();
+                    nWarnings += Integer.parseInt(sWarnings.substring(0, sWarnings.indexOf("warnings") - 1));
+                }
+                int nUnknown = 0;
+                while (mUnknown.find()) {
+                    String sUnknown = mUnknown.group();
+                    nUnknown += Integer.parseInt(sUnknown.substring(0, sUnknown.indexOf("unknown") - 1));
+                }
 
-        if (reportStatistics.indexOf("var labelCSV") != -1) {
-            Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-            String strDate = formatter.format(date);
-            int sIndex = reportStatistics.indexOf("var labelCSV");
-            int eIndex = reportStatistics.indexOf(";", sIndex);
-            String exData = reportStatistics.substring(sIndex, eIndex + 1);
-            String newData = exData.replace("\";", "," + strDate + "\";");
-            reportStatistics = reportStatistics.replace(exData, newData);
-        }
-        if (reportStatistics.indexOf("var criticalsCSV") != -1) {
-            int sIndex = reportStatistics.indexOf("var criticalsCSV");
-            int eIndex = reportStatistics.indexOf(";", sIndex);
-            String exData = reportStatistics.substring(sIndex, eIndex + 1);
-            String newData = exData.replace("\";", "," + Integer.toString(nBad) + "\";");
-            reportStatistics = reportStatistics.replace(exData, newData);
-        }
-        if (reportStatistics.indexOf("var warningsCSV") != -1) {
-            int sIndex = reportStatistics.indexOf("var warningsCSV");
-            int eIndex = reportStatistics.indexOf(";", sIndex);
-            String exData = reportStatistics.substring(sIndex, eIndex + 1);
-            String newData = exData.replace("\";", "," + Integer.toString(nWarnings) + "\";");
-            reportStatistics = reportStatistics.replace(exData, newData);
-        }
+                if (reportStatistics.indexOf("var labelCSV") != -1) {
+                    Date date = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+                    String strDate = formatter.format(date);
+                    int sIndex = reportStatistics.indexOf("var labelCSV");
+                    int eIndex = reportStatistics.indexOf(";", sIndex);
+                    String exData = reportStatistics.substring(sIndex, eIndex + 1);
+                    String newData = exData.replace("\";", "," + strDate + "\";");
+                    reportStatistics = reportStatistics.replace(exData, newData);
+                }
+                if (reportStatistics.indexOf("var criticalsCSV") != -1) {
+                    int sIndex = reportStatistics.indexOf("var criticalsCSV");
+                    int eIndex = reportStatistics.indexOf(";", sIndex);
+                    String exData = reportStatistics.substring(sIndex, eIndex + 1);
+                    String newData = exData.replace("\";", "," + Integer.toString(nBad) + "\";");
+                    reportStatistics = reportStatistics.replace(exData, newData);
+                }
+                if (reportStatistics.indexOf("var warningsCSV") != -1) {
+                    int sIndex = reportStatistics.indexOf("var warningsCSV");
+                    int eIndex = reportStatistics.indexOf(";", sIndex);
+                    String exData = reportStatistics.substring(sIndex, eIndex + 1);
+                    String newData = exData.replace("\";", "," + Integer.toString(nWarnings) + "\";");
+                    reportStatistics = reportStatistics.replace(exData, newData);
+                }
 
-        if (reportStatistics.indexOf("var notesCSV") != -1) {
-            int sIndex = reportStatistics.indexOf("var notesCSV");
-            int eIndex = reportStatistics.indexOf(";", sIndex);
-            String exData = reportStatistics.substring(sIndex, eIndex + 1);
-            String newData = exData.replace("\";", "," + Integer.toString(nOK) + "\";");
-            reportStatistics = reportStatistics.replace(exData, newData);
+                if (reportStatistics.indexOf("var notesCSV") != -1) {
+                    int sIndex = reportStatistics.indexOf("var notesCSV");
+                    int eIndex = reportStatistics.indexOf(";", sIndex);
+                    String exData = reportStatistics.substring(sIndex, eIndex + 1);
+                    String newData = exData.replace("\";", "," + Integer.toString(nOK) + "\";");
+                    reportStatistics = reportStatistics.replace(exData, newData);
+                }
+                PrintWriter htmlOut = new PrintWriter(new FileOutputStream(reportStatisticsPath));
+                htmlOut.print(reportStatistics);
+                htmlOut.close();
+            } else {
+                stats.addMissing(SERVICE_NAME, cd, "Corpus Report Statistics file cannot be found"
+                        + "in the path and under the name: " + htmlReportPath + ".Please add"
+                        + "the report output file into the folder of the corpus: "
+                        + cd.getParentURL().getPath());
+            }
+        } else {
+            stats.addMissing(SERVICE_NAME, cd, "HTML Corpus Check Report cannot be found"
+                    + "in the path and under the name: " + reportStatisticsPath + ".Please add"
+                    + "the report statistics file into the folder of the corpus: "
+                    + cd.getParentURL().getPath()+"curation/");
         }
-        /*// perform XSLT transformation
-         String result = null;
-         try {
-         XSLTransformer xt = new XSLTransformer();
-         //xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
-         xt.setParameter("notes", nOK);
-         xt.setParameter("criticals", nBad);
-         xt.setParameter("warnings", nWarnings);
-         //xt.setParameter("Unknown", nUnknown);
-         result = xt.transform(reportStatistics, xsl);
-         } catch (TransformerException ex) {
-         Logger.getLogger(SERVICE_NAME).log(Level.SEVERE, null, ex);
-         }*/
-        PrintWriter htmlOut = new PrintWriter(new FileOutputStream(reportStatisticsPath));
-        htmlOut.print(reportStatistics);
-        htmlOut.close();
         return stats;
     }
 
