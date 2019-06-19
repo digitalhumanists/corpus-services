@@ -28,6 +28,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  *
@@ -67,14 +68,17 @@ public class PrettyPrinter {
             // Setup pretty print options
             TransformerFactory transformerFactory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null);
 
-            Transformer transformer = transformerFactory.newTransformer();
+            StreamSource xslSource = new StreamSource(PrettyPrinter.class.getResourceAsStream("pretty-print-sort-elements.xsl"));
+            
+            Transformer transformer = transformerFactory.newTransformer(xslSource);
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.VERSION, "1.0");
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, xml.indexOf("<?xml") >= 0 ? "no" : "yes");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("suppress-indentation", suppressedElements);
 
-            // Return pretty print xml string
+            
+            // Return pretty print xml stringu
             StringWriter stringWriter = new StringWriter();
             transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
             String prettyXmlString = stringWriter.toString();
