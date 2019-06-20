@@ -145,7 +145,7 @@ public class Report {
     public void addCritical(String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
-                cd.getURL().toString(), description));
+                cd.getURL().toString(), description, statId));
     }
 
     /**
@@ -180,7 +180,7 @@ public class Report {
     public void addWarning(String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.WARNING,
-                cd.getURL().toString(), description));
+                cd.getURL().toString(), description, statId));
     }
 
     /**
@@ -198,7 +198,7 @@ public class Report {
     public void addMissing(String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.MISSING,
-                cd.getURL().toString(), description));
+                cd.getURL().toString(), description, statId));
     }
 
     /**
@@ -217,7 +217,7 @@ public class Report {
     public void addCorrect(String statId, String filename, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.CORRECT, filename,
-                description));
+                description, statId));
     }
 
     /**
@@ -226,7 +226,7 @@ public class Report {
     public void addCorrect(String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.CORRECT,
-                cd.getURL().toString(), description));
+                cd.getURL().toString(), description, statId));
     }
 
     /**
@@ -266,7 +266,7 @@ public class Report {
     public void addNote(String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.NOTE,
-                cd.getURL().toString(), description));
+                cd.getURL().toString(), description, statId));
     }
 
     /**
