@@ -15,6 +15,7 @@ import de.uni_hamburg.corpora.validation.ComaFedoraIdentifierLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
+import de.uni_hamburg.corpora.validation.ExbRefTierChecker;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
 import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
@@ -317,6 +318,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaTierOverviewCreator");
         allExistingCFs.add("GeneralTransformer");
         allExistingCFs.add("ComaFedoraIdentifierLengthChecker");
+        allExistingCFs.add("ExbRefTierChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -653,6 +655,10 @@ public class CorpusMagician {
                             System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
                         }
                     corpusfunctions.add(gt);
+                    break;
+                case "exbreftierchecker":
+                    ExbRefTierChecker ertc = new ExbRefTierChecker();
+                    corpusfunctions.add(ertc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
