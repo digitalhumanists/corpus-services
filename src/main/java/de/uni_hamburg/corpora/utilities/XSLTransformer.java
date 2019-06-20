@@ -77,7 +77,22 @@ public class XSLTransformer {
         final StringWriter messageOut = new StringWriter();
         String result = null;
         try {
-            transformer = tranformerFactory.newTransformer(xslSource);
+            if(xslSource != null){
+                transformer = tranformerFactory.newTransformer(xslSource);
+                
+                //trying to get xsl:message into error reports            
+                ((net.sf.saxon.jaxp.TransformerImpl) transformer).getUnderlyingController().setRecoveryPolicy(Configuration.DO_NOT_RECOVER);
+                ((net.sf.saxon.jaxp.TransformerImpl) transformer).getUnderlyingController().setMessageEmitter(new MessageEmitter() {
+                    @Override
+                    public void open() throws XPathException {
+                        setWriter(messageOut);
+                        super.open();
+                    }
+                });
+            } else{                
+                transformer = tranformerFactory.newTransformer();
+            }
+            
             // set the output properties for XSLT transformation
             for (Map.Entry<String, String> param : outputProperties.entrySet()) {
                 transformer.setOutputProperty(param.getKey(), param.getValue());
@@ -86,15 +101,7 @@ public class XSLTransformer {
             for (Map.Entry<String, Object> param : parameters.entrySet()) {
                 transformer.setParameter(param.getKey(), param.getValue());
             }
-            //trying to get xsl:message into error reports
-            ((net.sf.saxon.jaxp.TransformerImpl) transformer).getUnderlyingController().setRecoveryPolicy(Configuration.DO_NOT_RECOVER);
-            ((net.sf.saxon.jaxp.TransformerImpl) transformer).getUnderlyingController().setMessageEmitter(new MessageEmitter() {
-                @Override
-                public void open() throws XPathException {
-                    setWriter(messageOut);
-                    super.open();
-                }
-            });
+            
             //transform and fetch result
             StringWriter resultWriter = new StringWriter();
             transformer.transform(xmlSource, new StreamResult(resultWriter));
@@ -109,6 +116,34 @@ public class XSLTransformer {
 
         return result;
     }
+    
+    
+    /**
+     * Returns a String object that represents the result of an XSLT
+     * transformation.
+     *
+     * @param xmlSource XML as StreamSource object that is used as the basis for the
+     * XSLT transformation
+     * @return the result of the XSLT transformation as String object
+     */
+    public String transform(StreamSource xmlSource) throws TransformerException {
+        return transform(xmlSource, null);        
+    }
+    
+    
+    /**
+     * Returns a String object that represents the result of an XSLT
+     * transformation.
+     *
+     * @param xml XML as String object that is used as the basis for the XSLT
+     * transformation
+     * @return the result of the XSLT transformation as String object
+     */
+    public String transform(String xml) throws TransformerException {
+        StreamSource xmlSource = TypeConverter.String2StreamSource(xml);
+        return transform(xmlSource);
+    }
+    
 
     /**
      * Set a single parameter for the XSLT transformation.
