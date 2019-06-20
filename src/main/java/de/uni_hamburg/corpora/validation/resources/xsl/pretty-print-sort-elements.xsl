@@ -3,7 +3,7 @@
 <!--
     Document   : pretty-print-sort-elements.xsl
     Created on : 19. Juni 2019, 10:25
-    Author     : sesv009
+    Author     : Daniel Jettka
     Description:
         Sorting elements in EXMARaLDA file for better pretty print (and better git diff later)
 -->
@@ -29,7 +29,7 @@
 
     <!-- SPECIFIC sorting rules -->
     
-    <xsl:template match="CorpusData">
+    <xsl:template match="/Corpus/CorpusData">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:for-each select="Communication">
@@ -46,7 +46,7 @@
         </xsl:copy>
     </xsl:template>
         
-    <xsl:template match="Communication">
+    <xsl:template match="/Corpus/CorpusData/Communication">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <!-- specific order for metadata elements -->
@@ -61,6 +61,9 @@
                         <xsl:call-template name="description-with-sorted-keys"/>                        
                     </xsl:for-each>
                     <xsl:copy-of select="Availability"/>
+                    <xsl:call-template name="children-sorted-by-name">
+                        <xsl:with-param name="ignore-elements" select="'Name', 'Filename', 'NSLink', 'Description', 'Availability'"/>
+                    </xsl:call-template>
                 </xsl:copy>
             </xsl:for-each>
             <!-- Recording elements -->
@@ -69,10 +72,16 @@
                     <xsl:copy-of select="@*"/>
                     <xsl:copy-of select="Name, RecordingDuration"/>
                     <xsl:for-each select="Media">
-                        <xsl:sort select="Filename"/>                        
-                        <xsl:call-template name="children-sorted-by-name"/>
+                        <xsl:sort select="Filename"/>   
+                        <xsl:copy>
+                            <xsl:copy-of select="@*"/>                     
+                            <xsl:call-template name="children-sorted-by-name"/>
+                        </xsl:copy>
                     </xsl:for-each>
                     <xsl:copy-of select="Description"/>
+                    <xsl:call-template name="children-sorted-by-name">
+                        <xsl:with-param name="ignore-elements" select="'Name', 'RecordingDuration', 'Media', 'Description'"/>
+                    </xsl:call-template>
                 </xsl:copy>
             </xsl:for-each>
             <!-- File elements -->
@@ -89,7 +98,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="Speaker">
+    <xsl:template match="/Corpus/CorpusData/Speaker">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:copy-of select="Sigle, Pseudo, KnownHuman, Sex"/>
@@ -107,7 +116,7 @@
             <xsl:copy-of select="Description"/>
             <!-- other elements -->
             <xsl:call-template name="children-sorted-by-name">
-                <xsl:with-param name="ignore-elements" select="'Sigle, Pseudo, KnownHuman, Sex', 'Location', 'Language'"/>
+                <xsl:with-param name="ignore-elements" select="'Sigle', 'Pseudo', 'KnownHuman', 'Sex', 'Location', 'Language', 'Description'"/>
             </xsl:call-template>
         </xsl:copy>
     </xsl:template>

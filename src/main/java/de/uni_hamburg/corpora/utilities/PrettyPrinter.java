@@ -46,8 +46,21 @@ public class PrettyPrinter {
     */
     public static String indent(String xml, String suppressedElements) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
         
-
-
+        return indent(xml, suppressedElements, "");
+      
+    }
+    
+    
+    /**
+    * pretty-prints (indents) XML
+    * 
+    * @param xml                 The input XML string 
+    * @param suppressedElements  blank-separated list of QNames for elements to be disregarded for indentation
+    * @return	                 indented XML string
+    */
+    public static String indent(String xml, String suppressedElements, String xslString) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
+      
+        
             // Turn xml string into a document
             Document document = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder()
@@ -67,7 +80,8 @@ public class PrettyPrinter {
 
             // Setup pretty print options
             // get the XSLT stylesheet and the XML base
-            String xslString = TypeConverter.InputStream2String(de.uni_hamburg.corpora.utilities.PrettyPrinter.class.getClassLoader().getResourceAsStream("/xsl/pretty-print-sort-elements.xsl"));
+            //String xslString = TypeConverter.InputStream2String(de.uni_hamburg.corpora.utilities.PrettyPrinter.class.getClassLoader().getResourceAsStream("/xsl/pretty-print-sort-elements.xsl"));
+            
             String xmlString = TypeConverter.W3cDocument2String(document);
             
             // create XSLTransformer and set the parameters 
@@ -81,7 +95,14 @@ public class PrettyPrinter {
             
             
             // perform XSLT transformation
-            String prettyXmlString = xt.transform(xmlString, xslString);
+            String prettyXmlString;
+            if(xslString.equals("")){                
+                prettyXmlString = xt.transform(xmlString);
+
+            } else{
+                prettyXmlString = xt.transform(xmlString, xslString);
+            }            
+            
             
             /* insert some specific EXMARaLDA dialect styles */
             
@@ -121,7 +142,5 @@ public class PrettyPrinter {
             prettyXmlString = r5.matcher(prettyXmlString).replaceAll("<$1$2></$1>");
             
             return prettyXmlString;
-      
     }
-    
 }
