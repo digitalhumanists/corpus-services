@@ -67,7 +67,7 @@ public class PrettyPrinter {
 
             // Setup pretty print options
             // get the XSLT stylesheet and the XML base
-            String xslString = TypeConverter.InputStream2String(PrettyPrinter.class.getClassLoader().getResourceAsStream("/xsl/pretty-print-sort-elements.xsl"));
+            String xslString = TypeConverter.InputStream2String(de.uni_hamburg.corpora.utilities.PrettyPrinter.class.getClassLoader().getResourceAsStream("/xsl/pretty-print-sort-elements.xsl"));
             String xmlString = TypeConverter.W3cDocument2String(document);
             
             // create XSLTransformer and set the parameters 
