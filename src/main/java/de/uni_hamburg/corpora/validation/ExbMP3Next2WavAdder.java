@@ -14,8 +14,6 @@ import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;

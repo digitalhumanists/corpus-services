@@ -42,6 +42,7 @@ import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
+import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -102,12 +103,8 @@ public class CorpusMagician {
     public CorpusMagician() {
     }
 
-    //TODO main method
     //TODO we need a webservice for this functionality too
-    //in the furture (for repo and external users)
-    //this should work via commandline like that:
-    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder}
-    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run)
+    //in the future (for repo and external users)
     public static void main(String[] args) {
 
         //first args needs to be the URL
@@ -317,6 +314,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaTierOverviewCreator");
         allExistingCFs.add("GeneralTransformer");
         allExistingCFs.add("ComaFedoraIdentifierLengthChecker");
+        allExistingCFs.add("ExbMP3Next2WavAdder");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -626,8 +624,7 @@ public class CorpusMagician {
                     RemoveEmptyEvents ree = new RemoveEmptyEvents();
                     corpusfunctions.add(ree);
                     break;
-
-                 case "comatieroverviewcreator":
+                case "comatieroverviewcreator":
                     ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
                     corpusfunctions.add(ctoc);
                 case "generaltransformer":
@@ -653,6 +650,10 @@ public class CorpusMagician {
                             System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
                         }
                     corpusfunctions.add(gt);
+                    break;
+                case "exbmp3next2wavadder":
+                    ExbMP3Next2WavAdder emn2wa = new ExbMP3Next2WavAdder();
+                    corpusfunctions.add(emn2wa);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
