@@ -10,9 +10,8 @@ import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
 import de.uni_hamburg.corpora.validation.ComaOverviewGeneration;
 import de.uni_hamburg.corpora.validation.ComaXsdChecker;
-import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
-import de.uni_hamburg.corpora.validation.ComaPIDLengthChecker;
+import de.uni_hamburg.corpora.validation.ComaFedoraIdentifierLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
@@ -44,18 +43,16 @@ import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
-import java.io.File;
+import de.uni_hamburg.corpora.visualization.HScoreHTML;
+import de.uni_hamburg.corpora.validation.ReportStatistics;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.nio.file.Paths;
+import java.util.Collections;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -64,8 +61,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -301,7 +298,6 @@ public class CorpusMagician {
         allExistingCFs.add("NgexmaraldaCorpusChecker");
         allExistingCFs.add("FilenameChecker");
         allExistingCFs.add("CmdiChecker");
-        allExistingCFs.add("ComaNameChecker");
         allExistingCFs.add("TierCheckerWithAnnotation");
         allExistingCFs.add("TierChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
@@ -309,12 +305,12 @@ public class CorpusMagician {
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
+        allExistingCFs.add("HScoreHTML");
         allExistingCFs.add("CorpusHTML");
         allExistingCFs.add("IAAFunctionality");
         allExistingCFs.add("ListHTML");
         allExistingCFs.add("ExbEventLinebreaksChecker");
         allExistingCFs.add("MakeTimelineConsistent");
-        allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("CalculateAnnotatedTime");
         allExistingCFs.add("AddCSVMetadataToComa");
@@ -323,6 +319,9 @@ public class CorpusMagician {
         allExistingCFs.add("ComaTranscriptionsNameChecker");
         allExistingCFs.add("ComaTierOverviewCreator");
         allExistingCFs.add("GeneralTransformer");
+        allExistingCFs.add("ComaFedoraIdentifierLengthChecker");
+        allExistingCFs.add("ReportStatistics");
+        Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
 
@@ -424,8 +423,8 @@ public class CorpusMagician {
                     CmdiChecker cmdi = new CmdiChecker();
                     corpusfunctions.add(cmdi);
                     break;
-                case "comapidlengthchecker":
-                    ComaPIDLengthChecker cplc = new ComaPIDLengthChecker();
+                case "comafedoraidentifierlengthchecker":
+                    ComaFedoraIdentifierLengthChecker cplc = new ComaFedoraIdentifierLengthChecker();
                     corpusfunctions.add(cplc);
                     break;
                 case "comatranscriptionsnamechecker":
@@ -508,6 +507,10 @@ public class CorpusMagician {
                     }
                     corpusfunctions.add(ckml);
                     break;
+                case "reportstatistics":
+                    ReportStatistics rs = new ReportStatistics();
+                    corpusfunctions.add(rs);
+                    break;
                 case "corpusdataregexreplacer":
                     //ToDo                   
                     CorpusDataRegexReplacer cdrr = new CorpusDataRegexReplacer();
@@ -561,6 +564,10 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(shtml);
+                    break;
+                case "hscorehtml":
+                    HScoreHTML hshtml = new HScoreHTML();
+                    corpusfunctions.add(hshtml);
                     break;
                 case "corpushtml":
                     CorpusHTML chtml = new CorpusHTML();
@@ -639,31 +646,31 @@ public class CorpusMagician {
                     corpusfunctions.add(ree);
                     break;
 
-                 case "comatieroverviewcreator":
+                case "comatieroverviewcreator":
                     ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
                     corpusfunctions.add(ctoc);
                 case "generaltransformer":
                     GeneralTransformer gt = new GeneralTransformer();
-                     if (cfProperties.containsKey("coma")) {
-                            gt.setComa(cfProperties.getProperty("coma"));
-                            System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
-                        }
-                     if (cfProperties.containsKey("exb")) {
-                            gt.setExb(cfProperties.getProperty("exb"));
-                            System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
-                        }
-                     if (cfProperties.containsKey("exs")) {
-                            gt.setExs(cfProperties.getProperty("exs"));
-                            System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
-                        }
-                     if (cfProperties.containsKey("xsl")) {
-                            gt.setPathToXSL(cfProperties.getProperty("xsl"));
-                            System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
-                        }
-                     if (cfProperties.containsKey("overwritefiles")) {
-                            gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
-                            System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
-                        }
+                    if (cfProperties.containsKey("coma")) {
+                        gt.setComa(cfProperties.getProperty("coma"));
+                        System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
+                    }
+                    if (cfProperties.containsKey("exb")) {
+                        gt.setExb(cfProperties.getProperty("exb"));
+                        System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
+                    }
+                    if (cfProperties.containsKey("exs")) {
+                        gt.setExs(cfProperties.getProperty("exs"));
+                        System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
+                    }
+                    if (cfProperties.containsKey("xsl")) {
+                        gt.setPathToXSL(cfProperties.getProperty("xsl"));
+                        System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
+                    }
+                    if (cfProperties.containsKey("overwritefiles")) {
+                        gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
+                        System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
+                    }
                     corpusfunctions.add(gt);
                     break;
                 default:

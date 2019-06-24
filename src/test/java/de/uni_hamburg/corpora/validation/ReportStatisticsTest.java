@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class ComaPIDLengthCheckerTest {
+public class ReportStatisticsTest {
     
-    public ComaPIDLengthCheckerTest() {
+    public ReportStatisticsTest() {
     }
     
     @BeforeClass
@@ -44,32 +44,37 @@ public class ComaPIDLengthCheckerTest {
     }
 
     /**
-     * Test of check method, of class ComaFedoraIdentifierLengthChecker.
+     * Test of check method, of class ReportStatistics.
      */
     @Test
-        public void testCheck() throws Exception {
-            
-            System.out.println("check");
-            String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
-            URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
-            Corpus corp = new Corpus(corpusURL);
-            ComaFedoraIdentifierLengthChecker instance = new ComaFedoraIdentifierLengthChecker();
-            instance.report = new Report();
-            Collection<CorpusData> cdc;
-            //what happens when we check coma files
-            for (CorpusData cd : corp.getMetadata()){
-                assertNotNull(instance.check(cd));
-            }
+    public void testCheck() throws Exception {
+        System.out.println("check");
+        //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        //String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        String corpusFolder = "K:/Selkup/SelkupCorpus";
+        URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
+        Corpus corp = new Corpus(corpusURL);
+        ReportStatistics instance = new ReportStatistics();
+        instance.report = new Report();
+        Collection<CorpusData> cdc;
+        //what happens when we check coma files
+        for (CorpusData cd : corp.getMetadata()) {
+            assertNotNull(instance.check(cd));
+        }
+
     }
 
+
+
     /**
-     * Test of getIsUsableFor method, of class ComaFedoraIdentifierLengthChecker.
+     * Test of getIsUsableFor method, of class ReportStatistics.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        ComaFedoraIdentifierLengthChecker instance = new ComaFedoraIdentifierLengthChecker();
+        ReportStatistics instance = new ReportStatistics();
         //Collection<Class> expResult = null;
+        //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
         assertNotNull(result);

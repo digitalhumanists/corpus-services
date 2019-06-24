@@ -56,7 +56,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
     final String EXB_SEG = "exb-segmentation-checker";
-    String segmentationName = "HIAT";
+    String segmentationName = "GENERIC";
     String path2ExternalFSM = "";
 
     public static Report check(File f) {

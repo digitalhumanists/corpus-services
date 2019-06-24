@@ -5,6 +5,10 @@
 !*.xsl
 !*.xml
 !*.html
+!*.css
 nbactions.xml
 target/
 !/src/test/java/de/uni_hamburg/corpora/resources/**
+!corpus-curation
+!exmaralda
+!HZSK-CLARIN-Services
