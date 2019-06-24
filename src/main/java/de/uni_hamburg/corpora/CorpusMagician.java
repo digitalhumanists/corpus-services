@@ -37,6 +37,7 @@ import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
+import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
@@ -312,6 +313,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("CalculateAnnotatedTime");
         allExistingCFs.add("AddCSVMetadataToComa");
+        allExistingCFs.add("ComaKmlForLocations");
         allExistingCFs.add("RemoveEmptyEvents");
         allExistingCFs.add("ComaTranscriptionsNameChecker");
         allExistingCFs.add("ComaTierOverviewCreator");
@@ -491,6 +493,17 @@ public class CorpusMagician {
                     fcci.addWhiteListString("Segmentation_Errors.xml");
                     fcci.addWhiteListString("Structure_Errors.xml");
                     corpusfunctions.add(fcci);
+                    break;
+                case "comakmlforlocations":
+                    ComaKmlForLocations ckml = new ComaKmlForLocations();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("KML")) {
+                            ckml.setKMLFilePath(cfProperties.getProperty("KML"));
+                            System.out.println("KML file path set to " + cfProperties.getProperty("KML"));
+                        }
+                    }
+                    corpusfunctions.add(ckml);
                     break;
                 case "corpusdataregexreplacer":
                     //ToDo                   
