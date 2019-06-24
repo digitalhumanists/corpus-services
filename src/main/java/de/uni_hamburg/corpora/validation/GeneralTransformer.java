@@ -62,7 +62,8 @@ public class GeneralTransformer extends Checker {
                 result = indent(result, "event");
             }
             if (overwritefiles){
-            cio.write(result, cd.getURL());    
+            cd.updateUnformattedString(result);
+            cio.write(cd, cd.getURL());    
             } else {
             cio.write(result, urlToOutput);
             }
