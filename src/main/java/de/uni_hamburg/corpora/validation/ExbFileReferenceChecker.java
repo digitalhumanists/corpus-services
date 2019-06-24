@@ -44,7 +44,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     final String EXB_REFS = "exb-referenced-file";
 
     String exbName = "";
-    
+
     File exbFile;
 
     CorpusData cd;
@@ -87,10 +87,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             if (justFile.exists()) {
                 found = true;
             }
+            //the absolute path needs to be true - nut just the filename and the local path
             String relfilename = url;
-            if (url.lastIndexOf("/") != -1) {
+            /*if (url.lastIndexOf("/") != -1) {
                 relfilename = url.substring(url.lastIndexOf("/"));
-            }
+            }*/
             String referencePath = f.getParentFile().getCanonicalPath();
             String absPath = referencePath + File.separator + relfilename;
             File absFile = new File(absPath);
@@ -192,11 +193,11 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             if (justFile.exists()) {
                 found = true;
             }
+            //the absolute path needs to be true - nut just the filename and the local path
             String relfilename = url;
-            if (url.lastIndexOf("/") != -1) {
+            /*if (url.lastIndexOf("/") != -1) {
                 relfilename = url.substring(url.lastIndexOf("/"));
-            }
-
+            }*/
             String referencePath = exbFile.getParentFile().getCanonicalPath();
             String absPath = referencePath + File.separator + relfilename;
             File absFile = new File(absPath);
@@ -243,4 +244,3 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     }
 
 }
-
