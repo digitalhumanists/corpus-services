@@ -3,12 +3,10 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -72,10 +70,10 @@ public class ReportStatistics extends Checker implements CorpusFunction {
             File reportStatFile = new File(reportStatisticsPath);
             if (reportStatFile.isFile()) {
                 String reportStatistics = IOUtils.toString(new FileInputStream(reportStatisticsPath));
-                Pattern ok = Pattern.compile("[0-9]+ OK"); // get okay messages
-                Pattern bad = Pattern.compile("[0-9]+ bad"); // get critical errors
-                Pattern warnings = Pattern.compile("[0-9]+ warnings"); // get warnings
-                Pattern unknown = Pattern.compile("[0-9]+ unknown"); // get unknown messages
+                Pattern ok = Pattern.compile("[0-9\\.]+ OK"); // get okay messages
+                Pattern bad = Pattern.compile("[0-9\\.]+ bad"); // get critical errors
+                Pattern warnings = Pattern.compile("[0-9\\.]+ warnings"); // get warnings
+                Pattern unknown = Pattern.compile("[0-9\\.]+ unknown"); // get unknown messages
                 Matcher mOk = ok.matcher(html);
                 Matcher mBad = bad.matcher(html);
                 Matcher mWarnings = warnings.matcher(html);
@@ -83,22 +81,22 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 int nOK = 0;
                 while (mOk.find()) {
                     String sOk = mOk.group();
-                    nOK += Integer.parseInt(sOk.substring(0, sOk.indexOf("OK") - 1));
+                    nOK += Integer.parseInt(sOk.substring(0, sOk.indexOf("OK") - 1).replaceAll("\\.", ""));
                 }
                 int nBad = 0;
                 while (mBad.find()) {
                     String sBad = mBad.group();
-                    nBad += Integer.parseInt(sBad.substring(0, sBad.indexOf("bad") - 1));
+                    nBad += Integer.parseInt(sBad.substring(0, sBad.indexOf("bad") - 1).replaceAll("\\.", ""));
                 }
                 int nWarnings = 0;
                 while (mWarnings.find()) {
                     String sWarnings = mWarnings.group();
-                    nWarnings += Integer.parseInt(sWarnings.substring(0, sWarnings.indexOf("warnings") - 1));
+                    nWarnings += Integer.parseInt(sWarnings.substring(0, sWarnings.indexOf("warnings") - 1).replaceAll("\\.", ""));
                 }
                 int nUnknown = 0;
                 while (mUnknown.find()) {
                     String sUnknown = mUnknown.group();
-                    nUnknown += Integer.parseInt(sUnknown.substring(0, sUnknown.indexOf("unknown") - 1));
+                    nUnknown += Integer.parseInt(sUnknown.substring(0, sUnknown.indexOf("unknown") - 1).replaceAll("\\.", ""));
                 }
 
                 if (reportStatistics.indexOf("var labelCSV") != -1) {
@@ -136,17 +134,15 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 PrintWriter htmlOut = new PrintWriter(new FileOutputStream(reportStatisticsPath));
                 htmlOut.print(reportStatistics);
                 htmlOut.close();
+                
+                stats.addNote(SERVICE_NAME, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
             } else {
-                stats.addMissing(SERVICE_NAME, cd, "Corpus Report Statistics file cannot be found"
-                        + "in the path and under the name: " + htmlReportPath + ".Please add"
-                        + "the report output file into the folder of the corpus: "
-                        + cd.getParentURL().getPath());
+                stats.addMissing(SERVICE_NAME, cd, "Corpus Report file not found "
+                        + "at '" + htmlReportPath + "'. Report Statistics (graphic overview) not updated.");
             }
         } else {
-            stats.addMissing(SERVICE_NAME, cd, "HTML Corpus Check Report cannot be found"
-                    + "in the path and under the name: " + reportStatisticsPath + ".Please add"
-                    + "the report statistics file into the folder of the corpus: "
-                    + cd.getParentURL().getPath()+"curation/");
+            stats.addMissing(SERVICE_NAME, cd, "Report Statistics file not found at "
+                    + "'" + reportStatisticsPath + "'. Report Statistics (graphic overview) not updated.");
         }
         return stats;
     }
@@ -163,8 +159,8 @@ public class ReportStatistics extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {        
+        return check(cd);
     }
 
 }
