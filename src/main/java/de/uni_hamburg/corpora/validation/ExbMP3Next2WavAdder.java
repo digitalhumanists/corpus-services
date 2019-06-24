@@ -43,8 +43,10 @@ public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
             CorpusIO cio = new CorpusIO();
+            //update the xml of the cd object
+            cd.updateUnformattedString(result);
             //save it - overwrite exb
-            cio.write(result, cd.getURL());
+            cio.write(cd, cd.getURL());
             //everything worked
             r.addCorrect(function, cd, "Added mp3 next to wav.");
             
