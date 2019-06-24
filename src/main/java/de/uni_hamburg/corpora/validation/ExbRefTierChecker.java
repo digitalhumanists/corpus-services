@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 public class ExbRefTierChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
-    final String ertc = "exb-ref-tier-checker";
+    final String ertc = "exbreftierchecker";
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -110,25 +110,10 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                     int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
                     int numbering = Integer.parseInt(wholeRef.substring(start, end));
                     if (order != numbering) {
-                        stats.addCritical(ertc, "False numbering of the event starting "
-                                + eventStart + " ending " + eventEnd + " in the reference"
-                                + " tier with id " + tierId + "in the exb file with "
-                                + "transcript name " + transcriptName + ". The event"
-                                + " has to be numbered as " + order + " instead of "
-                                + numbering + ".");
-                        System.out.println("False numbering of the event starting "
-                                + eventStart + " ending " + eventEnd + " in the reference"
-                                + " tier with id " + tierId + "in the exb file with "
-                                + "transcript name " + transcriptName + ". The event"
-                                + " has to be numbered as " + order + " instead of "
-                                + numbering + ".");
-                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                                "False numbering of the event starting "
-                                + eventStart + " ending " + eventEnd + " in the reference"
-                                + " tier with id " + tierId + "in the exb file with "
-                                + "transcript name " + transcriptName + ". The event"
-                                + " has to be numbered as " + order + " instead of "
-                                + numbering + ".");
+                        String message = "False numbering '"+numbering+"' (should be '"+order+"') in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                        stats.addCritical(ertc, message);
+                        System.out.println(message);
+                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
                     }
                     order++;
                 } else {
@@ -163,57 +148,25 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                             speakerCode = wholeRef.substring(refStart, refEnd);
                         }
                         if (order != numbering) {
-                            stats.addCritical(ertc, "False numbering of the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            System.out.println("False numbering of the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                                    "False numbering of the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
+                            String message = "False numbering in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                            stats.addCritical(ertc, message);
+                            System.out.println(message);
+                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
                         }
                         order++;
                         if (speakerCode != null) {
                             if (!speakerCode.equals(tierSpeaker)) {
-                                stats.addCritical(ertc, "False speaker code for the event starting "
-                                        + eventStart + " ending " + eventEnd + " in the reference"
-                                        + " tier with id " + tierId + "in the exb file with "
-                                        + "transcript name " + transcriptName + ". The speaker code"
-                                        + " of the event has to be " + tierSpeaker + " instead of "
-                                        + speakerCode + ".");
-                                System.out.println("False speaker code for the event starting "
-                                        + eventStart + " ending " + eventEnd + " in the reference"
-                                        + " tier with id " + tierId + "in the exb file with "
-                                        + "transcript name " + transcriptName + ". The speaker code"
-                                        + " of the event has to be " + tierSpeaker + " instead of "
-                                        + speakerCode + ".");
-                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                                        "False speaker code for the event starting "
-                                        + eventStart + " ending " + eventEnd + " in the reference"
-                                        + " tier with id " + tierId + "in the exb file with "
-                                        + "transcript name " + transcriptName + ". The speaker code"
-                                        + " of the event has to be " + tierSpeaker + " instead of "
-                                        + speakerCode + ".");
+                                String message = "False speaker code '"+speakerCode+"' (should be '"+tierSpeaker+"') in event "
+                                        + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                                stats.addCritical(ertc, message);
+                                System.out.println(message);
+                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
                             }
                         } else {
-                            stats.addCritical(ertc, "There is no speaker code for the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            System.out.println("There is no speaker code for the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                                    "There is no speaker code for the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
+                            String message = "Missing speaker code in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                            stats.addCritical(ertc, message);
+                            System.out.println(message);
+                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
                         }
                     } else {
                         stats.addCritical(ertc, "Unknown format of numbering of the "
@@ -291,19 +244,10 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                     String no = wholeRef.substring(start, end);
                     int numbering = Integer.parseInt(no);
                     if (order != numbering) {
-                        stats.addCritical(ertc, "False numbering of the event starting "
-                                + eventStart + " ending " + eventEnd + " in the reference"
-                                + " tier with id " + tierId + "in the exb file with "
-                                + "transcript name " + transcriptName);
-                        System.out.println("False numbering of the event starting "
-                                + eventStart + " ending " + eventEnd + " in the reference"
-                                + " tier with id " + tierId + "in the exb file with "
-                                + "transcript name " + transcriptName);
-                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true,
-                                "False numbering of the event starting "
-                                + eventStart + " ending " + eventEnd + " in the reference"
-                                + " tier with id " + tierId + "in the exb file with "
-                                + "transcript name " + transcriptName);
+                        String message = "False numbering in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                        stats.addCritical(ertc, message);
+                        System.out.println(message);
+                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);
                         String correctNo = String.format("%0" + no.length() + "d", order);
                         String correctRef = wholeRef.substring(0, start) + correctNo + wholeRef.substring(end);
                         event.setTextContent(correctRef);
@@ -344,74 +288,37 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                             speakerCode = wholeRef.substring(refStart, refEnd);
                         }
                         if (order != numbering) {
-                            stats.addCritical(ertc, "False numbering of the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            System.out.println("False numbering of the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true,
-                                    "False numbering of the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
+                            String message = "False numbering in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                            stats.addCritical(ertc, message);
+                            System.out.println(message);
+                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);
                             String correctNo = String.format("%0" + no.length() + "d", order);
                             String correctRef = wholeRef.substring(0, start) + correctNo + wholeRef.substring(end);
                             event.setTextContent(correctRef);
-                            stats.addNote(ertc, "The event has been renumbered as "
-                                    + correctNo);
-                            System.out.println("The event has been renumbered as "
-                                    + correctNo);
+                            stats.addNote(ertc, "The event has been renumbered as " + correctNo);
+                            System.out.println("The event has been renumbered as " + correctNo);
                         }
                         order++;
                         if (speakerCode != null) {
                             if (!speakerCode.equals(tierSpeaker)) {
-                                stats.addCritical(ertc, "False speaker code for the event starting "
-                                        + eventStart + " ending " + eventEnd + " in the reference"
-                                        + " tier with id " + tierId + "in the exb file with "
-                                        + "transcript name " + transcriptName + ". The speaker code"
-                                        + " of the event has to be " + tierSpeaker + " instead of "
-                                        + speakerCode + ".");
-                                System.out.println("False speaker code for the event starting "
-                                        + eventStart + " ending " + eventEnd + " in the reference"
-                                        + " tier with id " + tierId + "in the exb file with "
-                                        + "transcript name " + transcriptName + ". The speaker code"
-                                        + " of the event has to be " + tierSpeaker + " instead of "
-                                        + speakerCode + ".");
-                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true,
-                                        "False speaker code for the event starting "
-                                        + eventStart + " ending " + eventEnd + " in the reference"
-                                        + " tier with id " + tierId + "in the exb file with "
-                                        + "transcript name " + transcriptName);
+                                String message = "False speaker code '"+speakerCode+"' (should be '"+tierSpeaker+"') in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                                stats.addCritical(ertc, message);
+                                System.out.println(message);
+                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);
                                 String correctRef = event.getTextContent().substring(0, refStart) + tierSpeaker + event.getTextContent().substring(refEnd);
                                 event.setTextContent(correctRef);
-                                stats.addNote(ertc, "The speaker code has been changed as "
-                                        + tierSpeaker);
-                                System.out.println("The speaker code has been changed as "
-                                        + tierSpeaker);
+                                stats.addNote(ertc, "The speaker code has been changed to '" + tierSpeaker + "'");
+                                System.out.println("The speaker code has been changed to '" + tierSpeaker + "'");
                             }
                         } else {
-                            stats.addCritical(ertc, "There is no speaker code for the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            System.out.println("There is no speaker code for the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
-                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true,
-                                    "There is no speaker code for the event starting "
-                                    + eventStart + " ending " + eventEnd + " in the reference"
-                                    + " tier with id " + tierId + "in the exb file with "
-                                    + "transcript name " + transcriptName);
+                            String message = "Missing speaker code in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
+                            stats.addCritical(ertc, message);
+                            System.out.println(message);
+                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);
                             String correctRef = event.getTextContent().substring(0, start - 1) + "." + tierSpeaker + event.getTextContent().substring(refEnd);
                             event.setTextContent(correctRef);
-                            stats.addNote(ertc, "The speaker code has been defined as "
-                                    + tierSpeaker);
-                            System.out.println("The speaker code has been defined as "
-                                    + tierSpeaker);
+                            stats.addNote(ertc, "Speaker code now set to " + tierSpeaker);
+                            System.out.println("Speaker code now set to " + tierSpeaker);
                         }
                     } else {
                         stats.addCritical(ertc, "Unknown format of numbering of the "
