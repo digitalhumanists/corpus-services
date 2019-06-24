@@ -73,7 +73,7 @@ import java.net.URISyntaxException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class FileCoverageChecker extends Checker implements CommandLineable, StringChecker, CorpusFunction {
+public class ComaFileCoverageChecker extends Checker implements CommandLineable, StringChecker, CorpusFunction {
 
     ValidatorSettings settings;
     String referencePath = "./";
@@ -85,7 +85,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     final List<String> whitelist;
     final List<String> fileendingwhitelist;
 
-    public FileCoverageChecker() {
+    public ComaFileCoverageChecker() {
         // these are acceptable
         whitelist = new ArrayList<String>();
         whitelist.add(".git");
@@ -308,7 +308,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     }
 
     public static void main(String[] args) {
-        FileCoverageChecker checker = new FileCoverageChecker();
+        ComaFileCoverageChecker checker = new ComaFileCoverageChecker();
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
