@@ -38,7 +38,7 @@ public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
         try{
 
             // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/TODO.xsl"));
+            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/AddMP3next2WavExb.xsl"));
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
         
