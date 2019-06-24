@@ -19,7 +19,7 @@ import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
-import de.uni_hamburg.corpora.validation.FileCoverageChecker;
+import de.uni_hamburg.corpora.validation.ComaFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
@@ -381,7 +381,7 @@ public class CorpusMagician {
                     corpusfunctions.add(eapc);
                     break;
                 case "filecoveragechecker":
-                    FileCoverageChecker fcc = new FileCoverageChecker();
+                    ComaFileCoverageChecker fcc = new ComaFileCoverageChecker();
                     corpusfunctions.add(fcc);
                     break;
                 case "prettyprintdata":
@@ -485,7 +485,7 @@ public class CorpusMagician {
                     corpusfunctions.add(iaa);
                     break;
                 case "filecoveragecheckerinel":
-                    FileCoverageChecker fcci = new FileCoverageChecker();
+                    ComaFileCoverageChecker fcci = new ComaFileCoverageChecker();
                     fcci.addFileEndingWhiteListString("flextext");
                     fcci.addWhiteListString("report-output.html");
                     fcci.addWhiteListString("Segmentation_Errors.xml");
