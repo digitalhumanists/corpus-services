@@ -5,12 +5,9 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +25,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
-import org.jdom.output.XMLOutputter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -141,13 +137,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             placeOfBirth = placeOfBirth.substring(0, placeOfBirth.indexOf("`"));
                         }
                         if (!lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
-                            System.out.println("The KML file does not contain the birthplace '" + placeOfBirth + "' "
-                                    + "of the speaker '" + sigleString + "' as a place mark!");
-                            stats.addWarning("coma-kml-for-loc", "The KML file does not contain the birthplace '"
-                                    + placeOfBirth + "' of the speaker '" + sigleString + "' as a place mark!");
-                            exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does "
-                                    + "not contain the birthplace '" + placeOfBirth + "' of the speaker '" + sigleString
-                                    + "' as a place mark!");
+                            String message = "KML ("+kmlFile+") does not contain the birthplace '" + placeOfBirth + "' "
+                                    + "from speaker '" + sigleString + "'";
+                            System.out.println(message);
+                            stats.addWarning("coma-kml-for-loc", message);
+                            exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                         }
                     }
                     if (!domicileStr.equals("...") && !domicileStr.equals("")) {
@@ -158,13 +152,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             domicileStr = domicileStr.substring(0, domicileStr.indexOf("`"));
                         }
                         if (!lngLat.containsKey(domicileStr + "-" + languageCode)) {
-                            System.out.println("The KML file does not contain the domicile '" + domicileStr + "' "
-                                    + "of the speaker '" + sigleString + "' as a place mark!");
-                            stats.addWarning("coma-kml-for-loc", "The KML file does not contain the domicile '"
-                                    + domicileStr + "' of the speaker '" + sigleString + "' as a place mark!");
-                            exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does "
-                                    + "not contain the domicile '" + domicileStr + "' of the speaker '" + sigleString
-                                    + "' as a place mark!");
+                            String message = "KML ("+kmlFile+") does not contain the domicile '" + domicileStr + "' "
+                                    + "from speaker '" + sigleString + "'";
+                            System.out.println(message);
+                            stats.addWarning("coma-kml-for-loc", message);
+                            exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                         }
                     }
                     birthPlace.put(sigleString, new String(placeOfBirth + ", " + region + ", " + country));
@@ -205,13 +197,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                     settlement = settlement.substring(0, settlement.indexOf("`"));
                 }
                 if (!lngLat.containsKey(settlement + "-" + languageCode)) {
-                    System.out.println("The KML file does not contain the settlement '" + settlement + "' "
-                            + " where the communication '" + communicationName + "' takes place as a place mark!");
-                    stats.addWarning("coma-kml-for-loc", "The KML file does not contain the settlement '" + settlement + "' "
-                            + " where the communication '" + communicationName + "' takes place as a place mark!");
-                    exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does not "
-                            + "contain the settlement '" + settlement + "' "
-                            + " where the communication '" + communicationName + "' takes place as a place mark!");
+                    String message = "KML ("+kmlFile+") does not contain the settlement '" + settlement + "' "
+                            + "from communication '" + communicationName + "'";
+                    System.out.println(message);
+                    stats.addWarning("coma-kml-for-loc", message);
+                    exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                 }
             }
             commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
@@ -226,10 +216,19 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
 
     // the method for getting coordinates of locations in the kml file
     public void getCoordinates() throws ParserConfigurationException, SAXException, IOException {
-        File fXmlFile = new File(kmlFile);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(fXmlFile);
+        
+        Document doc = null;
+        
+        try{
+            File fXmlFile = new File(kmlFile);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            doc = dBuilder.parse(fXmlFile);
+        } catch(IOException ex){
+            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
+        }       
+        
+        
         if (lngLat == null) {
             lngLat = new HashMap<>();
         }
@@ -263,7 +262,12 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             getCoordinates();
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(IOException ex){            
+            System.out.println("The KML file could not be found.");
+            stats.addCritical("coma-kml-for-loc", "The KML file could not be found.");  
+            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -338,13 +342,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                 loc.insertBefore(coordinatesKey, ref);
                             } else if (!lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
-                                System.out.println("The KML file does not contain the birthplace '" + placeOfBirth + "' "
-                                        + "of the speaker '" + sigleString + "' as a place mark!");
-                                stats.addWarning("coma-kml-for-loc", "The KML file does not contain the birthplace '"
-                                        + placeOfBirth + "' of the speaker '" + sigleString + "' as a place mark!");
-                                exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does "
-                                        + "not contain the birthplace '" + placeOfBirth + "' of the speaker '" + sigleString
-                                        + "' as a place mark!");
+                                String message = "KML ("+kmlFile+") does not contain the birthplace '" + placeOfBirth + "' "
+                                        + "from speaker '" + sigleString + "'";
+                                System.out.println(message);
+                                stats.addWarning("coma-kml-for-loc", message);
+                                exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                             }
                         }
                         if (!domicileStr.equals("...") && !domicileStr.equals("")) {
@@ -361,13 +363,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                 loc.insertBefore(coordinatesKey, domRef);
                             } else if (!lngLat.containsKey(domicileStr + "-" + languageCode)) {
-                                System.out.println("The KML file does not contain the domicile '" + domicileStr + "' "
-                                        + "of the speaker '" + sigleString + "' as a place mark!");
-                                stats.addWarning("coma-kml-for-loc", "The KML file does not contain the domicile '"
-                                        + domicileStr + "' of the speaker '" + sigleString + "' as a place mark!");
-                                exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does "
-                                        + "not contain the domicile '" + domicileStr + "' of the speaker '" + sigleString
-                                        + "' as a place mark!");
+                                String message = "KML ("+kmlFile+") does not contain the domicile '" + domicileStr + "' "
+                                        + "from speaker '" + sigleString + "'";
+                                System.out.println(message);
+                                stats.addWarning("coma-kml-for-loc", message);
+                                exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                             }
                         }
                         birthPlace.put(sigleString, new String(placeOfBirth + ", " + region + ", " + country));
@@ -418,13 +418,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                         Element loc = (Element) location.getElementsByTagName("Description").item(0);
                         loc.appendChild(coordinatesKey);
                     } else if (!lngLat.containsKey(settlement + "-" + languageCode)) {
-                        System.out.println("The KML file does not contain the settlement '" + settlement + "' "
-                                + " where the communication '" + communicationName + "' takes place as a place mark!");
-                        stats.addWarning("coma-kml-for-loc", "The KML file does not contain the settlement '" + settlement + "' "
-                                + " where the communication '" + communicationName + "' takes place as a place mark!");
-                        exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, "The KML file does not "
-                                + "contain the settlement '" + settlement + "' "
-                                + " where the communication '" + communicationName + "' takes place as a place mark!");
+                        String message = "KML ("+kmlFile+") does not contain the settlement '" + settlement + "' "
+                                + "from communication '" + communicationName + "'";
+                        System.out.println(message);
+                        stats.addWarning("coma-kml-for-loc", message);
+                        exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                     }
                 }
                 commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
