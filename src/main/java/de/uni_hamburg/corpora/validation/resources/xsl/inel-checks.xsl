@@ -101,10 +101,11 @@
             <!-- Check dashes in INEL morph glosses -->
             <!-- The tiers mp, ge, gg and gr need to have the same as the mb tier -->
             <xsl:variable name="annValue" select="text()"/>
+            <xsl:variable name="speaker" select="../@speaker"/>
             <xsl:variable name="morpheme-annotation-start" select="./@start"/>
             <xsl:variable name="morpheme-annotation-end" select="./@end"/>
             <xsl:variable name="annotation-name" select="../@category"/>
-            <xsl:variable name="mbValue" select="//*:tier[@category = 'mb']/*:event[@start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/text()"/>
+            <xsl:variable name="mbValue" select="//*:tier[@category = 'mb' and @speaker = $speaker]/*:event[@start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/text()"/>
             <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
                 <xsl:value-of
                     select="concat('CRITICAL;the number of dashes does not match the number of dashes in matching mb tier, fix ', $annValue, ' vs. ', $mbValue, ' at ', $morpheme-annotation-start, '-', $morpheme-annotation-end, ' in tier ', $annotation-name, ';', ../@id, ';', $morpheme-annotation-start, $NEWLINE)"
