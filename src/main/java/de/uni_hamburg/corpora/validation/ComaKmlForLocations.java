@@ -7,7 +7,6 @@ import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -17,12 +16,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -429,11 +424,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
             }
 
-            String xmlString = TypeConverter.W3cDocument2String(doc);
             
             CorpusIO cio = new CorpusIO();
-            cio.write(xmlString, cd.getURL());
-            cd.updateUnformattedString(xmlString);
+            cio.write(doc, cd.getURL());
+            cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
             
             return stats; // return the report with warnings
         } catch (ParserConfigurationException ex) {

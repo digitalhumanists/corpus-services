@@ -13,6 +13,7 @@
     <!-- GENERAL copy rules -->
 
     <xsl:template match="/">
+        <xsl:comment select="'pretty printed'"/>
         <xsl:apply-templates/>
     </xsl:template>
     
