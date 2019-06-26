@@ -14,8 +14,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -64,18 +62,19 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
                 report.addCritical(ppd, cd, "Could not create the unformatted String!");
             } else {
                 if (!CorpusDataIsAlreadyPretty(cd)) {
-
-                    String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslLocation));
-                    
-                    String prettyCorpusData = indent(cd.toUnformattedString(), "event", xsl);
-                    //System.out.println(cd.toSaveableString());
-                    //System.out.println(prettyCorpusData);
-                    //save it instead of the old file
-                    CorpusIO cio = new CorpusIO();
-                    cio.write(prettyCorpusData, cd.getURL());
-                    cd.updateUnformattedString(prettyCorpusData);
-                    report.addCorrect(ppd, cd, "CorpusData was pretty printed and saved.");
-
+                    if (getClass().getResourceAsStream(xslLocation) == null) {
+                        report.addCritical(ppd, cd, "Could not read xsl!");
+                    } else {
+                        String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslLocation));
+                        String prettyCorpusData = indent(cd.toUnformattedString(), "event", xsl);
+                        //System.out.println(cd.toSaveableString());
+                        //System.out.println(prettyCorpusData);
+                        //save it instead of the old file
+                        CorpusIO cio = new CorpusIO();
+                        cio.write(prettyCorpusData, cd.getURL());
+                        cd.updateUnformattedString(prettyCorpusData);
+                        report.addCorrect(ppd, cd, "CorpusData was pretty printed and saved.");
+                    }
                 } else {
                     report.addCorrect(ppd, cd, "Was already pretty printed.");
                 }
