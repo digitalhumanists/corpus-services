@@ -37,6 +37,8 @@ import javax.xml.transform.stream.StreamSource;
 public class PrettyPrinter {
     
     
+    public PrettyPrinter(){}
+    
     /**
     * pretty-prints (indents) XML
     * 
@@ -44,7 +46,7 @@ public class PrettyPrinter {
     * @param suppressedElements  blank-separated list of QNames for elements to be disregarded for indentation
     * @return	                 indented XML string
     */
-    public static String indent(String xml, String suppressedElements) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
+    public String indent(String xml, String suppressedElements) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
         
         return indent(xml, suppressedElements, "");
       
@@ -58,7 +60,7 @@ public class PrettyPrinter {
     * @param suppressedElements  blank-separated list of QNames for elements to be disregarded for indentation
     * @return	                 indented XML string
     */
-    public static String indent(String xml, String suppressedElements, String xslString) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
+    public String indent(String xml, String suppressedElements, String xslString) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
       
         
             // Turn xml string into a document
