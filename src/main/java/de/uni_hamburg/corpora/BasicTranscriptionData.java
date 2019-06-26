@@ -8,7 +8,7 @@
  */
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -127,8 +127,9 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //will always get pretty printed in the same way
     //TODO
     private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 
