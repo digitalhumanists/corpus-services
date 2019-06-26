@@ -2,6 +2,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
@@ -428,10 +429,12 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
             }
 
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            StreamResult result = new StreamResult(new FileOutputStream(cd.getURL().getPath()));
-            DOMSource source = new DOMSource(doc);
-            transformer.transform(source, result);
+            String xmlString = TypeConverter.W3cDocument2String(doc);
+            
+            CorpusIO cio = new CorpusIO();
+            cio.write(xmlString, cd.getURL());
+            cd.updateUnformattedString(xmlString);
+            
             return stats; // return the report with warnings
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
