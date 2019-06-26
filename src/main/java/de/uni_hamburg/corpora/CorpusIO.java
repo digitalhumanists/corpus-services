@@ -86,6 +86,13 @@ public class CorpusIO {
         String prettyCorpusData = pp.indent(unformattedCorpusData, "event");
         write(prettyCorpusData, url);
     }
+    
+    public void write(org.w3c.dom.Document doc, URL url) throws IOException, TransformerException, ParserConfigurationException, ParserConfigurationException, UnsupportedEncodingException, UnsupportedEncodingException, SAXException, XPathExpressionException {
+        String unformattedCorpusData = TypeConverter.W3cDocument2String(doc);
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(unformattedCorpusData, "event");
+        write(prettyCorpusData, url);
+    }
 
     public void outappend(String a) {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
