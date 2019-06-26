@@ -37,7 +37,12 @@ import javax.xml.transform.stream.StreamSource;
 public class PrettyPrinter {
     
     
-    public PrettyPrinter(){}
+    String xslLocation = "/xsl/pretty-print-sort-elements.xsl";
+    
+    
+    public PrettyPrinter(){        
+    }
+    
     
     /**
     * pretty-prints (indents) XML
@@ -47,8 +52,9 @@ public class PrettyPrinter {
     * @return	                 indented XML string
     */
     public String indent(String xml, String suppressedElements) throws TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException, XPathExpressionException {
-        
-        return indent(xml, suppressedElements, "");
+                    
+        String xslString = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslLocation));
+        return indent(xml, suppressedElements, xslString);
       
     }
     
@@ -145,4 +151,5 @@ public class PrettyPrinter {
             
             return prettyXmlString;
     }
+    
 }
