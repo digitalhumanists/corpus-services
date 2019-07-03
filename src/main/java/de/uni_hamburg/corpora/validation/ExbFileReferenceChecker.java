@@ -22,8 +22,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.cli.Option;
@@ -79,6 +77,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
         for (int i = 0; i < reffiles.getLength(); i++) {
             Element reffile = (Element) reffiles.item(i);
             String url = reffile.getAttribute("url");
+            if(!url.isEmpty()){
             if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
                 stats.addCritical(EXB_REFS, cd, "Referenced-file " + url + " points to absolute local path, fix it to relative first");
             }
@@ -87,7 +86,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             if (justFile.exists()) {
                 found = true;
             }
-            //the absolute path needs to be true - nut just the filename and the local path
+            //the absolute path needs to be true - not just the filename and the local path
             String relfilename = url;
             /*if (url.lastIndexOf("/") != -1) {
                 relfilename = url.substring(url.lastIndexOf("/"));
@@ -106,6 +105,9 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
             } else {
                 reffilesFound++;
                 stats.addCorrect(EXB_REFS, cd, "File in referenced-file was found: " + url);
+            }
+            } else{
+                stats.addCorrect(EXB_REFS, cd, "No file was referenced in this transcription");
             }
         }
         return stats;
