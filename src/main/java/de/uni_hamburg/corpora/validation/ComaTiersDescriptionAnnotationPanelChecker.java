@@ -36,7 +36,8 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
     ArrayList<String> annotations; // list for holding annotations of annotation spec file
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
-
+    String ctdapc = "ComaTiersDescriptionAnnotationPanelChecker";
+    
     /**
      * Add annotations to the corresponding array from coma and annotation
      * specification file.
@@ -147,12 +148,12 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
                 if (!annotations.contains(annotType)) { // check if annotations not present in annotation spec file
                     System.err.println("Coma file is containing annotation (" + annotType
                             + ") for " + name + " not specified by annotation spec file!");
-                    stats.addWarning("tier-checker-with-annotation", "annotation error: annotation ("
-                            + annotType + ") for " + name + " not specified!");
+                    stats.addWarning(ctdapc, cd, "annotation error: annotation in annotation panel ("
+                            + annotType + ") in communication " + name + " not specified!");
                     int index = cd.getURL().getFile().lastIndexOf("/");
                     String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";
-                    exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation ("
-                            + annotType + ") for " + name + " not specified in the annotation specification file!");
+                    exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation in annotation panel("
+                            + annotType + ") for communication " + name + " not specified in the annotation specification file!");
                 }
             }
         }
