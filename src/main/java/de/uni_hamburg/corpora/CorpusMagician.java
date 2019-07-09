@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora;
 
+import static de.uni_hamburg.corpora.CorpusIO.isDirectory;
 import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
@@ -49,6 +50,7 @@ import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -145,7 +147,13 @@ public class CorpusMagician {
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
             //get the basedirectory
-            basedirectory = url;
+             if (isDirectory(url)){
+                basedirectory = url; 
+             } else {
+                 URI uri = url.toURI();
+                 URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+                 basedirectory = parentURI.toURL();
+             }
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
