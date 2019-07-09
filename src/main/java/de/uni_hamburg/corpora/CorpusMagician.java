@@ -211,7 +211,7 @@ public class CorpusMagician {
             //create the error list file
             System.out.println("Basedirectory is " + basedirectory);
             System.out.println("BasedirectoryPath is " + basedirectory.getPath());
-            URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");
+            URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
             if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
@@ -423,6 +423,7 @@ public class CorpusMagician {
                 case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
                     corpusfunctions.add(ngex);
+                    break;
                 case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
                     corpusfunctions.add(fnc);
@@ -442,9 +443,11 @@ public class CorpusMagician {
                 case "comatiersdescriptionannotationpanelchecker":
                     ComaTiersDescriptionAnnotationPanelChecker tcwa = new ComaTiersDescriptionAnnotationPanelChecker();
                     corpusfunctions.add(tcwa);
+                    break;
                 case "exbtierdisplaynamechecker":
                     ExbTierDisplayNameChecker tc = new ExbTierDisplayNameChecker();
                     corpusfunctions.add(tc);
+                    break;
                 case "ngtiercheckerwithannotation":
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
                     corpusfunctions.add(ngtcwa);
@@ -656,6 +659,7 @@ public class CorpusMagician {
                 case "comatieroverviewcreator":
                     ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
                     corpusfunctions.add(ctoc);
+                    break;
                 case "generaltransformer":
                     GeneralTransformer gt = new GeneralTransformer();
                     if (cfProperties.containsKey("coma")) {
@@ -683,6 +687,7 @@ public class CorpusMagician {
                 case "exbmp3next2wavadder":
                     ExbMP3Next2WavAdder emn2wa = new ExbMP3Next2WavAdder();
                     corpusfunctions.add(emn2wa);
+                    break;
                 case "exbreftierchecker":
                     ExbRefTierChecker ertc = new ExbRefTierChecker();
                     corpusfunctions.add(ertc);

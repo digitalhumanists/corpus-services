@@ -11,7 +11,7 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.CorpusMagician;
 import de.uni_hamburg.corpora.Report;
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.IOException;
@@ -99,6 +99,7 @@ public class PrettyPrintDataTest {
 
             System.out.println("fix");
             String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
+            PrettyPrinter pp = new PrettyPrinter();
             URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
             Corpus corp = new Corpus(corpusURL);
             PrettyPrintData instance = new PrettyPrintData();
@@ -114,10 +115,10 @@ public class PrettyPrintDataTest {
                 //but now it should
                 assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
-                String prettyCorpusData = indent(cd.toUnformattedString(), "event");
-                String prettyCorpusDataSecond = indent(prettyCorpusData, "event");
+                String prettyCorpusData = pp.indent(cd.toUnformattedString(), "event");
+                String prettyCorpusDataSecond = pp.indent(prettyCorpusData, "event");
                 assertEquals(prettyCorpusData, prettyCorpusDataSecond);
-                String prettyCorpusDataThird = indent(prettyCorpusDataSecond, "event");
+                String prettyCorpusDataThird = pp.indent(prettyCorpusDataSecond, "event");
                 assertEquals(prettyCorpusData, prettyCorpusDataThird);
             }
             //what happens when we check exb files
@@ -129,10 +130,10 @@ public class PrettyPrintDataTest {
                 //but now it should
                 //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
-                String prettyCorpusData = indent(cd.toUnformattedString(), "event");
-                String prettyCorpusDataSecond = indent(prettyCorpusData, "event");
+                String prettyCorpusData = pp.indent(cd.toUnformattedString(), "event");
+                String prettyCorpusDataSecond = pp.indent(prettyCorpusData, "event");
                 assertEquals(prettyCorpusData, prettyCorpusDataSecond);
-                String prettyCorpusDataThird = indent(prettyCorpusDataSecond, "event");
+                String prettyCorpusDataThird = pp.indent(prettyCorpusDataSecond, "event");
                 assertEquals(prettyCorpusData, prettyCorpusDataThird);
             }
             //what happens when we check annotation files
@@ -144,10 +145,10 @@ public class PrettyPrintDataTest {
                 //but now it should
                 //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
-                String prettyCorpusData = indent(cd.toUnformattedString(), "event");
-                String prettyCorpusDataSecond = indent(prettyCorpusData, "event");
+                String prettyCorpusData = pp.indent(cd.toUnformattedString(), "event");
+                String prettyCorpusDataSecond = pp.indent(prettyCorpusData, "event");
                 assertEquals(prettyCorpusData, prettyCorpusDataSecond);
-                String prettyCorpusDataThird = indent(prettyCorpusDataSecond, "event");
+                String prettyCorpusDataThird = pp.indent(prettyCorpusDataSecond, "event");
                 assertEquals(prettyCorpusData, prettyCorpusDataThird);
             }
             
