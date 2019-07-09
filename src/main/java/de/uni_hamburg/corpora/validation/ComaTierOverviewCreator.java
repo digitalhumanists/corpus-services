@@ -170,7 +170,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         //String result = htmltemplate + overviewTable + communicationsTable;
         String result = htmltemplate + overviewTable;
 
-        URL overviewurl = new URL(cd.getParentURL(), "tier_overview.html");
+        URL overviewurl = new URL(cd.getParentURL(), "curation/tier_overview.html");
         cio.write(result, overviewurl);
 
         stats.addCorrect(cscc, cd, "created tier overview at " + overviewurl);
