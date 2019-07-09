@@ -46,7 +46,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
             //get locatino to save new result
-            URL overviewurl = new URL(cd.getParentURL(), "coma_overview.html");
+            URL overviewurl = new URL(cd.getParentURL(), "curation/coma_overview.html");
             CorpusIO cio = new CorpusIO();
             //save it
             cio.write(result, overviewurl);
