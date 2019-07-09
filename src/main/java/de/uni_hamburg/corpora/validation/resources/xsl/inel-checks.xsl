@@ -171,6 +171,12 @@
                 <xsl:value-of select="concat('CRITICAL;found ''§'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
             
+            <!-- (#6908) taken from now deleted branch "feature/inel-check-brk-dmg" - maybe used again in the future -->
+            <!-- when a word only contains "((BRK))" or "((DMG))", the mb, mp, gr, ge, mc tiers should be empty (https://lab.multilingua.uni-hamburg.de/redmine/issues/5753) -->
+            <!--<xsl:if test="../@category=('mb', 'mp', 'gr', 'ge', 'mc') and (concat(../@speaker, '#', @start, '#', @end) = ((preceding::event|following::event)[../@category='tx' and matches(text(), '\(+(BRK|DMG\)+)')]/concat(../@speaker, '#', @start, '#', @end)))">
+                <xsl:value-of select="concat('CRITICAL;word only contains ''((BRK))'' or ''((DMG))'', but the mb, mp, gr, ge, mc tiers are not empty (event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+            </xsl:if>-->
+                        
             <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
             <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat(' ',$UTTERANCEENDSYMBOL))">
                 <xsl:value-of select="concat('CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
