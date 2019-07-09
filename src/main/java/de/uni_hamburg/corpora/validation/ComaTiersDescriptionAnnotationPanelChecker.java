@@ -154,9 +154,14 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
                     String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";
                     exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation in annotation panel("
                             + annotType + ") for communication " + name + " not specified in the annotation specification file!");
+                } else {
+                    stats.addCorrect(ctdapc, cd, "annotation in annotation panel ("
+                            + annotType + ") in communication " + name + " was found.");
                 }
             }
         }
+        } else {
+             stats.addNote(ctdapc, cd, "No annotations found in coma.");
         }
 
         return stats; // return the report with warnings
