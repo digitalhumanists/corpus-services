@@ -64,116 +64,9 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
      */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
-        Report stats = new Report(); // create a new report for the transcript
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        String transcriptName;
-        if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
-            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
-        } else {
-            transcriptName = "No Name Transcript";
-        }
-        NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript      
-        ArrayList<Element> refTiers = new ArrayList();
-        ArrayList<String> speakerNames = new ArrayList();
-        for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
-            Element tier = (Element) tiers.item(i);
-            String category = tier.getAttribute("category"); // get category  
-            String speakerName = tier.getAttribute("speaker"); // get speaker name
-            if (category.equals("ref")) {
-                refTiers.add(tier);
-                speakerNames.add(speakerName);
-            }
-        }
-        if (refTiers.size() == 0) { //when there is no reference tier present 
-            stats.addWarning(ertc, cd, "There is no reference tier present in transcript "
-                    + transcriptName);
-            exmaError.addError(ertc, cd.getURL().getFile(), "", "", false, "There is no reference "
-                    + "tier present in transcript " + transcriptName);
-        } else if (refTiers.size() == 1) {  //when there is only one speaker ref present
-            NodeList events = refTiers.get(0).getElementsByTagName("event");
-            String tierId = refTiers.get(0).getAttribute("id");
-            int order = 1;
-            for (int i = 0; i < events.getLength(); i++) {  // reference events
-                Element event = (Element) events.item(i);
-                String eventStart = event.getAttribute("start");
-                String eventEnd = event.getAttribute("end");
-                String wholeRef = event.getTextContent();
-                if (wholeRef.contains("(") && wholeRef.contains(".")) {
-                    int end = wholeRef.indexOf("(") - 1;
-                    int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
-                    int numbering = Integer.parseInt(wholeRef.substring(start, end));
-                    if (order != numbering) {
-                        String message = "False numbering '"+numbering+"' (should be '"+order+"') in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                        stats.addCritical(ertc, cd, message);
-                        //System.out.println(message);
-                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
-                    }
-                    order++;
-                } else {
-                    stats.addCritical(ertc, cd, "Unknown format of numbering of the "
-                            + "reference tier events in transcript " + transcriptName);
-                    exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                            "Unknown format of numbering of the "
-                            + "reference tier events in transcript " + transcriptName);
-                    break;
-                }
-            }
-        } else {  // when there are multiple speakers present
-            for (int i = 0; i < refTiers.size(); i++) {
-                NodeList events = refTiers.get(i).getElementsByTagName("event");
-                String tierId = refTiers.get(i).getAttribute("id");
-                String tierSpeaker = refTiers.get(i).getAttribute("speaker");
-                int order = 1;
-                for (int j = 0; j < events.getLength(); j++) {  // reference events
-                    Element event = (Element) events.item(j);
-                    String eventStart = event.getAttribute("start");
-                    String eventEnd = event.getAttribute("end");
-                    String wholeRef = event.getTextContent();
-                    if (wholeRef.contains("(") && wholeRef.contains(".")) {
-                        int end = wholeRef.indexOf("(") - 1;
-                        int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
-                        int numbering = Integer.parseInt(wholeRef.substring(start, end));
-                        int refEnd = start - 1;
-                        int refStart = -1;
-                        String speakerCode = null;
-                        if (wholeRef.substring(0, refEnd).contains(".")) {
-                            refStart = wholeRef.substring(0, refEnd).lastIndexOf(".") + 1;
-                            speakerCode = wholeRef.substring(refStart, refEnd);
-                        }
-                        if (order != numbering) {
-                            String message = "False numbering in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                            stats.addCritical(ertc, cd, message);
-                            //System.out.println(message);
-                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
-                        }
-                        order++;
-                        if (speakerCode != null) {
-                            if (!speakerCode.equals(tierSpeaker)) {
-                                String message = "False speaker code '"+speakerCode+"' (should be '"+tierSpeaker+"') in event "
-                                        + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                                stats.addCritical(ertc, cd, message);
-                                //System.out.println(message);
-                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
-                            }
-                        } else {
-                            String message = "Missing speaker code in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                            stats.addCritical(ertc, cd, message);
-                            //System.out.println(message);
-                            exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
-                        }
-                    } else {
-                        stats.addCritical(ertc, cd, "Unknown format of numbering of the "
-                                + "reference tier events in transcript " + transcriptName);
-                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                                "Unknown format of numbering of the reference tier "
-                                + "events in transcript " + transcriptName);
-                        break;
-                    }
-                }
-            }
-        }
+        
+        // test ref IDs without fixing errors
+        Report stats = testRefIDs(cd, false);
         return stats; // return all the warnings
     }
 
@@ -182,150 +75,9 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        Report stats = new Report(); // create a new report for the transcript
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
-        try {
-            db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Document doc = null;
-        try {
-            doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        } catch (TransformerException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String transcriptName;
-        if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
-            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
-        } else {
-            transcriptName = "No Name Transcript";
-        }
-        NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript      
-        ArrayList<Element> refTiers = new ArrayList();
-        ArrayList<String> speakerNames = new ArrayList();
-        for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
-            Element tier = (Element) tiers.item(i);
-            String category = tier.getAttribute("category"); // get category  
-            String speakerName = tier.getAttribute("speaker"); // get speaker name
-            if (category.equals("ref")) {
-                refTiers.add(tier);
-                speakerNames.add(speakerName);
-            }
-        }
-        if (refTiers.size() == 0) { //when there is no reference tier present 
-            stats.addWarning(ertc, cd, "There is no reference tier present in transcript " + transcriptName);
-            exmaError.addError(ertc, cd.getURL().getFile(), "", "", false, "There is no reference tier present in transcript "
-                    + transcriptName);
-        } else if (refTiers.size() == 1) {  //when there is only one speaker ref present
-            NodeList events = refTiers.get(0).getElementsByTagName("event");
-            String tierId = refTiers.get(0).getAttribute("id");
-            int order = 1;
-            for (int i = 0; i < events.getLength(); i++) {  // reference events
-                Element event = (Element) events.item(i);
-                String eventStart = event.getAttribute("start");
-                String eventEnd = event.getAttribute("end");
-                String wholeRef = event.getTextContent();
-                if (wholeRef.contains("(") && wholeRef.contains(".")) {
-                    int end = wholeRef.indexOf("(") - 1;
-                    int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
-                    String no = wholeRef.substring(start, end);
-                    int numbering = Integer.parseInt(no);
-                    if (order != numbering) {
-                        String correctNo = String.format("%0" + no.length() + "d", order);
-                        String correctRef = wholeRef.substring(0, start) + correctNo + wholeRef.substring(end);
-                        event.setTextContent(correctRef);
-                        
-                        String message = "Re-numbered event (new number '"+correctNo+"') " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                        stats.addCorrect(ertc, cd, message);
-                        //System.out.println(message);
-                        //exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);                        
-                    }
-                    order++;
-                } else {
-                    stats.addCritical(ertc, cd, "Unknown format of numbering of the "
-                            + "reference tier events in transcript " + transcriptName);
-                    exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                            "Unknown format of numbering of the "
-                            + "reference tier events in transcript " + transcriptName);
-                    break;
-                }
-            }
-        } else {  // when there are multiple speakers present
-            for (int i = 0; i < refTiers.size(); i++) {
-                NodeList events = refTiers.get(i).getElementsByTagName("event");
-                String tierId = refTiers.get(i).getAttribute("id");
-                String tierSpeaker = refTiers.get(i).getAttribute("speaker");
-                int order = 1;
-                for (int j = 0; j < events.getLength(); j++) {  // reference events
-                    Element event = (Element) events.item(j);
-                    String eventStart = event.getAttribute("start");
-                    String eventEnd = event.getAttribute("end");
-                    String wholeRef = event.getTextContent();
-                    if (wholeRef.contains("(") && wholeRef.contains(".")) {
-                        int end = wholeRef.indexOf("(") - 1;
-                        int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
-                        int numbering = Integer.parseInt(wholeRef.substring(start, end));
-                        String no = wholeRef.substring(start, end);
-                        int refEnd = start - 1;
-                        int refStart = -1;
-                        String speakerCode = null;
-                        if (wholeRef.substring(0, refEnd).contains(".")) {
-                            refStart = wholeRef.substring(0, refEnd).lastIndexOf(".") + 1;
-                            speakerCode = wholeRef.substring(refStart, refEnd);
-                        }
-                        if (order != numbering) {
-                            String correctNo = String.format("%0" + no.length() + "d", order);
-                            String correctRef = wholeRef.substring(0, start) + correctNo + wholeRef.substring(end);
-                            event.setTextContent(correctRef);
-                            
-                            String message = "Re-numbered event (new value '"+correctNo+"') " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                            stats.addCorrect(ertc, cd, message);
-                            //System.out.println(message);
-                            //exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);
-                        }
-                        order++;
-                        if (speakerCode != null) {
-                            if (!speakerCode.equals(tierSpeaker)) {
-                                String correctRef = event.getTextContent().substring(0, refStart) + tierSpeaker + event.getTextContent().substring(refEnd);
-                                event.setTextContent(correctRef);
-                                
-                                String message = "Changed speaker code '"+speakerCode+"' to '"+tierSpeaker+"' in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                                stats.addCorrect(ertc, cd, message);
-                                //System.out.println(message);
-                                //exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);                                
-                            }
-                        } else {
-                            String correctRef = event.getTextContent().substring(0, start - 1) + "." + tierSpeaker + event.getTextContent().substring(refEnd);
-                            event.setTextContent(correctRef);
-                            
-                            String message = "Set missing speaker code to '"+tierSpeaker+"' in event " + eventStart + "/" + eventEnd + " (tier '" + tierId + "') in EXB " + transcriptName;
-                            stats.addCorrect(ertc, cd, message);
-                            //System.out.println(message);
-                            //exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, true, message);
-                        }
-                    } else {
-                        stats.addCritical(ertc, cd, "Unknown format of numbering of the "
-                                + "reference tier events in transcript " + transcriptName);
-                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false,
-                                "Unknown format of numbering of the "
-                                + "reference tier events in transcript " + transcriptName);
-                        break;
-                    }
-                }
-            }
-        }
         
-        String result = TypeConverter.W3cDocument2String(doc);
-        CorpusIO cio = new CorpusIO();
-        cio.write(result, cd.getURL());
-        cd.updateUnformattedString(result);        
-
+        // test ref IDs and fix them
+        Report stats = testRefIDs(cd, true);
         return stats; // return all the warnings
     }
 
@@ -343,5 +95,176 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
             Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
+    }
+    
+    
+    private Report testRefIDs(CorpusData cd, Boolean fix) throws IOException{
+        
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = null;
+        try {
+            db = dbf.newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Document doc = null;
+        try {
+            doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
+        } catch (TransformerException ex) {
+            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Report stats = new Report(); // create a new report for the transcript
+        
+        String transcriptName;
+        if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
+            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
+        } else {
+            transcriptName = "Nameless Transcript";
+        }
+        
+        NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript      
+        ArrayList<Element> refTiers = new ArrayList();
+        ArrayList<String> speakerNames = new ArrayList();
+        for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
+            Element tier = (Element) tiers.item(i);
+            String category = tier.getAttribute("category"); // get category  
+            String speakerName = tier.getAttribute("speaker"); // get speaker name
+            if (category.equals("ref")) {
+                refTiers.add(tier);
+                speakerNames.add(speakerName);
+            }
+        }
+        
+        // when there is no reference tier present
+        if (refTiers.size() == 0) {  
+            String message = "There is no reference tier present in transcript " + transcriptName;
+            stats.addWarning(ertc, cd, message);
+            exmaError.addError(ertc, cd.getURL().getFile(), "", "", false, message);
+        } 
+        
+        // when there are reference tier/s present
+        else {
+        
+            // iterate ref tiers
+            for (int i = 0; i < refTiers.size(); i++) {
+                NodeList events = refTiers.get(i).getElementsByTagName("event");
+                String tierId = refTiers.get(i).getAttribute("id");
+                String tierSpeaker = refTiers.get(i).getAttribute("speaker");
+                int order = 1;
+                
+                // iterate ref events
+                for (int j = 0; j < events.getLength(); j++) {  
+                    Element event = (Element) events.item(j);
+                    String eventStart = event.getAttribute("start");
+                    String eventEnd = event.getAttribute("end");
+                    String wholeRef = event.getTextContent();
+                    String eventReference = "event " + eventStart + "/" + eventEnd + ", tier '" + tierId + "', EXB '" + transcriptName+"'";
+
+                    if (wholeRef.contains("(") && wholeRef.contains(".")) {
+                        int end = wholeRef.indexOf("(") - 1;
+                        int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
+                        String no = wholeRef.substring(start, end);
+                        int numbering = Integer.parseInt(no);
+
+                        // test for correct numbering
+                        if (order != numbering) {
+                            
+                            // if to be fixed
+                            if(fix){
+                                String correctNo = String.format("%0" + no.length() + "d", order);
+                                String correctRef = wholeRef.substring(0, start) + correctNo + wholeRef.substring(end);
+                                event.setTextContent(correctRef);
+
+                                String message = "Fixed: False numbering in ref ID '"+wholeRef+"' to '"+correctNo+"' (" + eventReference+")";
+                                stats.addCorrect(ertc, cd, message);
+                            }
+                            
+                            // if only to be tested
+                            else{
+                                String message = "False numbering in ref ID '"+wholeRef+"' ("+eventReference+")";
+                                stats.addCritical(ertc, cd, message);
+                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                            }                            
+                            
+                        }
+                        order++;
+
+                        // if there is more than one ref tier then also test speaker codes
+                        if (refTiers.size() > 1) {
+                            int refEnd = start - 1;
+                            int refStart = -1;
+                            String speakerCode = null;
+                            if (wholeRef.substring(0, refEnd).contains(".")) {
+                                refStart = wholeRef.substring(0, refEnd).lastIndexOf(".") + 1;
+                                speakerCode = wholeRef.substring(refStart, refEnd);
+                            }
+
+                            if (speakerCode != null) {
+                                if (!speakerCode.equals(tierSpeaker)) {
+                                    
+                                    // if to be fixed
+                                    if(fix){
+                                        String correctRef = event.getTextContent().substring(0, refStart) + tierSpeaker + event.getTextContent().substring(refEnd);
+                                        event.setTextContent(correctRef);
+
+                                        String message = "Fixed: False speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
+                                        stats.addCorrect(ertc, cd, message);
+                                    } 
+                                    
+                                    // if only to be tested
+                                    else{
+                                        String message = "False speaker code in ref ID '"+wholeRef+"' (should be '"+tierSpeaker+"' in "+eventReference+")";
+                                        stats.addCritical(ertc, cd, message);
+                                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                    }
+                                    
+                                 }
+                             } else {
+                                
+                                // if to be fixed
+                                if(fix){
+                                    String correctRef = event.getTextContent().substring(0, start - 1) + "." + tierSpeaker + event.getTextContent().substring(refEnd);
+                                    event.setTextContent(correctRef);
+
+                                    String message = "Fixed: Missing speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
+                                    stats.addCorrect(ertc, cd, message);                                
+                                } 
+
+                                // if only to be tested
+                                else{
+                                    String message = "Missing speaker code in ref ID '"+wholeRef+"' (should contain '"+tierSpeaker+"' in "+eventReference+")";
+                                    stats.addCritical(ertc, cd, message);
+                                    exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                }
+                                
+                             }
+                         }
+
+                    }
+                    
+                    // ref ID does not contain "(" and "."
+                    else {
+                         String message = "Unknown format of ref ID '"+wholeRef+"' in " + transcriptName;
+                         stats.addCritical(ertc, cd, message);
+                         exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                    }
+                }
+            }
+        }             
+        
+        
+        String result = TypeConverter.W3cDocument2String(doc);
+        CorpusIO cio = new CorpusIO();
+        cio.write(result, cd.getURL());
+        cd.updateUnformattedString(result);   
+    
+        return stats;
     }
 }
