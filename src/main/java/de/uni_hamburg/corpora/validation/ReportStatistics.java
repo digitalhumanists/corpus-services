@@ -62,7 +62,7 @@ public class ReportStatistics extends Checker implements CorpusFunction {
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException {
         Report stats = new Report();
         String reportStatisticsPath = cd.getParentURL().getPath() + "curation/report-statistics.html";
-        String htmlReportPath = cd.getParentURL().getPath() + HTML_REPORT;
+        String htmlReportPath = cd.getParentURL().getPath() + "curation/" +HTML_REPORT;
         File htmlReportFile = new File(htmlReportPath);
         if (htmlReportFile.isFile()) {
             FileInputStream fis = new FileInputStream(htmlReportPath);
