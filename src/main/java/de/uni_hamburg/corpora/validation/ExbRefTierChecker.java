@@ -99,7 +99,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
     }
     
     
-    private Report testRefIDs(CorpusData cd, Boolean fix) throws IOException{
+    private Report testRefIDs(CorpusData cd, Boolean fix) throws IOException, SAXException{
         
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = null;
@@ -276,21 +276,5 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
 
 
         return stats; // return all the warnings
-    }
-
-    /**
-     * Default function which determines for what type of files (basic
-     * transcription, segmented transcription, coma etc.) this feature can be
-     * used.
-     */
-    @Override
-    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-        try {
-            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
-            IsUsableFor.add(cl);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return IsUsableFor;
     }
 }
