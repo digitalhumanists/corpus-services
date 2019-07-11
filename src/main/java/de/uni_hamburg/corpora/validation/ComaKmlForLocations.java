@@ -35,6 +35,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
 
     String comaLoc = "";
     String kmlFile;
+    String ckfl = "coma-kml-for-locations";
     HashMap<String, String> birthPlace; // hash map for holding the birthplaces of speakers
     HashMap<String, String> domicile; // hash map for storing the residences of speakers 
     HashMap<String, String> commLocation; // hash map for holding locations where the communications took place
@@ -57,13 +58,13 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, ckfl, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, ckfl, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, ckfl, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, ckfl, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -136,7 +137,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             String message = "KML ("+kmlFile+") does not contain the birthplace '" + placeOfBirth + "' "
                                     + "from speaker '" + sigleString + "'";
                             System.out.println(message);
-                            stats.addWarning("coma-kml-for-loc", message);
+                            stats.addWarning(ckfl, cd, message);
                             exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                         }
                     }
@@ -151,7 +152,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             String message = "KML ("+kmlFile+") does not contain the domicile '" + domicileStr + "' "
                                     + "from speaker '" + sigleString + "'";
                             System.out.println(message);
-                            stats.addWarning("coma-kml-for-loc", message);
+                            stats.addWarning(ckfl, cd, message);
                             exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                         }
                     }
@@ -196,7 +197,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                     String message = "KML ("+kmlFile+") does not contain the settlement '" + settlement + "' "
                             + "from communication '" + communicationName + "'";
                     System.out.println(message);
-                    stats.addWarning("coma-kml-for-loc", message);
+                    stats.addWarning(ckfl, cd, message);
                     exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                 }
             }
@@ -260,7 +261,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
         } catch(IOException ex){            
             System.out.println("The KML file could not be found.");
-            stats.addCritical("coma-kml-for-loc", "The KML file could not be found.");  
+            stats.addCritical(ckfl, cd, "The KML file could not be found.");  
             Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -341,7 +342,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 String message = "KML ("+kmlFile+") does not contain the birthplace '" + placeOfBirth + "' "
                                         + "from speaker '" + sigleString + "'";
                                 System.out.println(message);
-                                stats.addWarning("coma-kml-for-loc", message);
+                                stats.addWarning(ckfl, cd, message);
                                 exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                             }
                         }
@@ -362,7 +363,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 String message = "KML ("+kmlFile+") does not contain the domicile '" + domicileStr + "' "
                                         + "from speaker '" + sigleString + "'";
                                 System.out.println(message);
-                                stats.addWarning("coma-kml-for-loc", message);
+                                stats.addWarning(ckfl, cd, message);
                                 exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                             }
                         }
@@ -417,7 +418,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                         String message = "KML ("+kmlFile+") does not contain the settlement '" + settlement + "' "
                                 + "from communication '" + communicationName + "'";
                         System.out.println(message);
-                        stats.addWarning("coma-kml-for-loc", message);
+                        stats.addWarning(ckfl, cd, message);
                         exmaError.addError("coma-kml-for-loc", cd.getURL().getFile(), "", "", false, message);
                     }
                 }
