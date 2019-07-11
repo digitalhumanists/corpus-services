@@ -426,9 +426,9 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             }
 
             
-            CorpusIO cio = new CorpusIO();
-            cio.write(doc, cd.getURL());
+            CorpusIO cio = new CorpusIO();            
             cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
+            cio.write(cd, cd.getURL());
             
             return stats; // return the report with warnings
         } catch (ParserConfigurationException ex) {
