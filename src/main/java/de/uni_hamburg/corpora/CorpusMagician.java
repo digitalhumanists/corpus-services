@@ -40,6 +40,7 @@ import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
@@ -102,6 +103,7 @@ public class CorpusMagician {
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
     static Properties cfProperties;
+    static PrettyPrinter pp = new PrettyPrinter();
 
     public CorpusMagician() {
     }
@@ -208,10 +210,10 @@ public class CorpusMagician {
             String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
             if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
                 exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
-                exmaErrorList = TypeConverter.String2JdomDocument(exmaErrorListString);
+                exmaErrorListString = pp.indent(exmaErrorListString, "event");
             }
-            if (exmaErrorList != null) {
-                cio.write(exmaErrorList, errorlistlocation);
+            if (exmaErrorListString != null) {
+                cio.write(exmaErrorListString, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
             }
         } catch (MalformedURLException ex) {

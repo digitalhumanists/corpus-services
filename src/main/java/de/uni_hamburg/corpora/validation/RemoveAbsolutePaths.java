@@ -277,7 +277,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 XMLData xml = (XMLData) cd;
                                 xml.setJdom(doc);
                                 cd = (CorpusData) xml;
-                                cio.write(doc, cd.getURL());
+                                cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                                cio.write(cd, cd.getURL());
                                 report.addCorrect(rap, cd, "removed absolute path");
                             } else {
                                 report.addCritical(rap, cd,
