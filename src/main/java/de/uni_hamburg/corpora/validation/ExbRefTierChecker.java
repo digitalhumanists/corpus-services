@@ -181,6 +181,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
      * Method for correcting the mistakes in the reference tiers.
      */
     @Override
+   
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         Report stats = new Report(); // create a new report for the transcript
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -323,8 +324,17 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         
         String result = TypeConverter.W3cDocument2String(doc);
         CorpusIO cio = new CorpusIO();
-        cio.write(result, cd.getURL());
-        cd.updateUnformattedString(result);        
+        cd.updateUnformattedString(result);
+        try {
+            cio.write(cd, cd.getURL());
+        } catch (TransformerException ex) {
+            stats.addCritical(ertc, cd, "Transformer error");
+        } catch (ParserConfigurationException ex) {
+            stats.addCritical(ertc, cd, "Transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addCritical(ertc, cd, "Transformer error");
+        }
+
 
         return stats; // return all the warnings
     }

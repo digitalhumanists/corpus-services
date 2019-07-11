@@ -189,10 +189,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 //add a report message
                                 CorpusIO cio = new CorpusIO();
                                 cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
-                                XMLData xml = (XMLData) cd;
-                                xml.setJdom(doc);
-                                cd = (CorpusData) xml;
-                                cio.write(doc, cd.getURL());
+                                cio.write(cd, cd.getURL());
                                 report.addCorrect(rap, cd, "removed absolute path");
                             } else {
                                 report.addCritical(rap, cd,
@@ -234,10 +231,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 //add a report message
                                 CorpusIO cio = new CorpusIO();
                                 cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
-                                XMLData xml = (XMLData) cd;
-                                xml.setJdom(doc);
-                                cd = (CorpusData) xml;
-                                cio.write(doc, cd.getURL());
+                                cio.write(cd, cd.getURL());
                                 report.addCorrect(rap, cd, "removed absolute path");
                             } else {
                                 report.addCritical(rap, cd,
