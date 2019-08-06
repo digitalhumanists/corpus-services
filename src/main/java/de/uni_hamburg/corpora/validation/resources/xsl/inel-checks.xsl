@@ -148,22 +148,23 @@
 
             <!-- Check for instance of 'Attachestoanycategory' (https://lab.multilingua.uni-hamburg.de/redmine/issues/5751) -->
             <xsl:if test="matches(., 'Attaches.*?to.*?any.*?category')">
-                <xsl:value-of select="concat('CRITICAL;found ''Attaches.*?to.*?any.*?category'' in event (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;found ''Attaches.*?to.*?any.*?category'' in event (start: ', @start, ', end: ', @end, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for wrong bracket number in translation tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="(../@category = ('fe', 'fg', 'fr')) and matches(., '\(\([^\)]*\)\)')">
-                <xsl:value-of select="concat('CRITICAL;found double brackets in translation tier in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;found double brackets in translation tier in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis in other tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr'))) and matches(., '…')">
-                <xsl:value-of select="concat('CRITICAL;found ellipsis (''…'') in non-transcription/non-translation event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:value-of select="concat('WARNING;found ellipsis (''…'') in non-transcription/non-translation event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for ellipsis candidates present as dots (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
             <xsl:if test="matches(., '\.{2,}')">
-                <xsl:value-of select="concat('CRITICAL;found ellipsis candidate ''\.{2,}'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                <xsl:variable name="message-type" select="if(../@category = ('tx')) then 'CRITICAL' else 'WARNING'" as="xs:string"/>
+                <xsl:value-of select="concat($message-type, ';found ellipsis candidate ''\.{2,}'' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
             <!-- Check for instance of '§' (https://lab.multilingua.uni-hamburg.de/redmine/issues/5749) -->
@@ -227,15 +228,15 @@
                 </xsl:choose>                                                     
             </xsl:if>
             
-         <!-- check for elements with text content consisting of only question marks (and whitespace) -->
-         <xsl:if test="matches(text(), '^(\s*\?\s*)+$')">
+            <!-- check for elements with text content consisting of only question marks (and whitespace) -->
+            <xsl:if test="matches(text(), '^(\s*\?\s*)+$')">
                 <xsl:value-of select="concat('WARNING;found text content consisting of only question marks', replace(replace(text(), ';', ':'), $NEWLINE, ''), ' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
-         </xsl:if>      
+            </xsl:if>      
 
-        <!-- check for multiple whitespaces in text content of non-mixed content elements -->
-        <xsl:if test="matches(text(), '\s{2,}')">
+            <!-- check for multiple whitespaces in text content of non-mixed content elements -->
+            <xsl:if test="matches(text(), '\s{2,}')">
                 <xsl:value-of select="concat('WARNING;found multiple whitespaces in ', replace(replace(text(), ';', ':'), $NEWLINE, ''), ' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
-         </xsl:if>
+            </xsl:if>
          
          
             <!-- Check if there is no null morpheme in mb tier without proper brackets .[]) -->         
