@@ -210,9 +210,9 @@ public class CorpusMagician {
             String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
             if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
                 exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
-                exmaErrorListString = pp.indent(exmaErrorListString, "event");
             }
             if (exmaErrorListString != null) {
+                exmaErrorListString = pp.indent(exmaErrorListString, "event");
                 cio.write(exmaErrorListString, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
             }
