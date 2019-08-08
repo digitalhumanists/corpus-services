@@ -84,7 +84,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                     switch (lineParts[1].toUpperCase()) {
                         case "WARNING":
                             r.addWarning(lineParts[0], cd, lineParts[2]);
-                            exmaError.addError(lineParts[0], cd.getURL().getFile(), lineParts[3], lineParts[4], false, lineParts[2]);
+                            /* exmaError.addError(lineParts[0], cd.getURL().getFile(), lineParts[3], lineParts[4], false, lineParts[2]); */
                             break;
                         case "CRITICAL":
                             r.addCritical(lineParts[0], cd, lineParts[2]);
