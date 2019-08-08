@@ -74,32 +74,32 @@ public class XSLTChecker extends Checker implements CorpusFunction {
 
                 //split line by ;
                 String[] lineParts = line.split(";", -1);
-                if (lineParts.length != 4) {
+                if (lineParts.length != 5) {
                     String message = "";
                     for (String s : lineParts) {
                         message = message + s;
                     }
-                    r.addCritical(xc, cd, "There was an exception while creating the error probably because of a semicolon or newline in an event: " + message);
+                    r.addCritical(lineParts[0], cd, "There was an exception while creating the error probably because of a semicolon or newline in an event: " + message);
                 } else {
-                    switch (lineParts[0].toUpperCase()) {
+                    switch (lineParts[1].toUpperCase()) {
                         case "WARNING":
-                            r.addWarning(xc, cd, lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addWarning(lineParts[0], cd, lineParts[2]);
+                            /* exmaError.addError(lineParts[0], cd.getURL().getFile(), lineParts[3], lineParts[4], false, lineParts[2]); */
                             break;
                         case "CRITICAL":
-                            r.addCritical(xc, cd, lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addCritical(lineParts[0], cd, lineParts[2]);
+                            exmaError.addError(lineParts[0], cd.getURL().getFile(), lineParts[3], lineParts[4], false, lineParts[2]);
                             break;
                         case "NOTE":
-                            r.addNote(xc, cd, lineParts[1]);
+                            r.addNote(lineParts[0], cd, lineParts[2]);
                             break;
                         case "MISSING":
-                            r.addMissing(xc, cd, lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addMissing(lineParts[0], cd, lineParts[2]);
+                            exmaError.addError(lineParts[0], cd.getURL().getFile(), lineParts[3], lineParts[4], false, lineParts[2]);
                             break;
                         default:
-                            r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addCritical(lineParts[0], cd, "(Unrecognized report type): " + lineParts[2]);
+                            exmaError.addError(lineParts[0], cd.getURL().getFile(), lineParts[3], lineParts[4], false, lineParts[2]);
                     }
                 }
 
@@ -139,8 +139,6 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             IsUsableFor.add(cl1);
             //Class cl2 = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
             //IsUsableFor.add(cl2);
-            //Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            //IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "unknown class not found error");
         }
