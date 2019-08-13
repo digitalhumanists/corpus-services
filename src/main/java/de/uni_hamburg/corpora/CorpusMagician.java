@@ -209,7 +209,7 @@ public class CorpusMagician {
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
             if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
-                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
+                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "../");
             }
             if (exmaErrorListString != null) {
                 exmaErrorListString = pp.indent(exmaErrorListString, "event");
