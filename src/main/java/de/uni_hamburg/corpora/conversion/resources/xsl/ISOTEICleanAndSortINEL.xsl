@@ -546,7 +546,10 @@
         <xsl:variable name="morpheme-annotation-end" select="./@end"/>
         <xsl:variable name="annotation-name" select="./@level"/>
         <xsl:variable name="annValue" select="./@value"/>
-        <xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
+        <!-- we need to differentiate between speakers here too!  -->
+        <xsl:variable name="speaker" select="./../../@who"/>
+        <xsl:variable name="mbValue" select="//*:u[@who = $speaker]/*:annotations/*:annotation[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
+        <!-- <xsl:variable name="mbValue" select="//*:annotations/*:annotation[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>-->
         <!-- check if the splitting creates the same number of tokens in each tier/annotation -->
         <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
             <xsl:message terminate="yes">
