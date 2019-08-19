@@ -4,7 +4,6 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
@@ -16,10 +15,6 @@ import javax.xml.transform.TransformerException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
-import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -83,23 +78,19 @@ public class XSLTChecker extends Checker implements CorpusFunction {
                 } else {
                     switch (lineParts[0].toUpperCase()) {
                         case "WARNING":
-                            r.addWarning(xc, cd, lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addWarning(xc, cd, lineParts[1]);                         
                             break;
                         case "CRITICAL":
-                            r.addCritical(xc, cd, lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addCritical(xc, cd, lineParts[1]);                            
                             break;
                         case "NOTE":
                             r.addNote(xc, cd, lineParts[1]);
                             break;
                         case "MISSING":
-                            r.addMissing(xc, cd, lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addMissing(xc, cd, lineParts[1]);                            
                             break;
                         default:
-                            r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);
-                            exmaError.addError("XSLTChecker", cd.getURL().getFile(), lineParts[2], lineParts[3], false, lineParts[1]);
+                            r.addCritical(xc, cd, "(Unrecognized report type): " + lineParts[1]);                            
                     }
                 }
 

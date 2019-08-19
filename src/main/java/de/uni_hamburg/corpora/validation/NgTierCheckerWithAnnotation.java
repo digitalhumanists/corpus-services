@@ -2,7 +2,6 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
@@ -22,7 +21,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -151,8 +149,6 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
                         default:
                             filePath = cd.getURL().getFile().substring(0, index) + "/" + nameExtension.substring(1) + "/" + name + "/" + name + ".exb";
                     }
-                    exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation ("
-                            + annotType + ") for " + name + " not specified in the annotation specification file!");
                 }
             }
         }
