@@ -67,7 +67,7 @@
 
             <!-- check if paths are relative -->
             <xsl:for-each select="(descendant::*:NSLink | descendant::*:relPath | descendant::*:absPath)[matches(text(), '^(file:[/\\]+)?[A-Za-z]:')]">
-                <xsl:value-of select="concat('XSLTChecker.references;WARNING;The file reference ''', replace(replace(text(), ';', ':'), $NEWLINE, ''), ''' appears to be an absolute path;;', $NEWLINE)"/>
+                <xsl:value-of select="concat('XSLTChecker.references;CRITICAL;The file reference ''', replace(replace(text(), ';', ':'), $NEWLINE, ''), ''' appears to be an absolute path;;', $NEWLINE)"/>
             </xsl:for-each>
 
 
