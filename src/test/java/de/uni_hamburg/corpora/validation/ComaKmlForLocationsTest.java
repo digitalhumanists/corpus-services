@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class IAAFunctionalityTest {
+public class ComaKmlForLocationsTest {
 
-    public IAAFunctionalityTest() {
+    public ComaKmlForLocationsTest() {
     }
 
     @BeforeClass
@@ -44,39 +44,58 @@ public class IAAFunctionalityTest {
     }
 
     /**
-     * Test of check method, of class IAAFunctionality.
+     * Test of check method, of class ComaKmlForLocations.
      */
     @Test
     public void testCheck() throws Exception {
         System.out.println("check");
         //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
-        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example";
+        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\DolganCorpus";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        IAAFunctionality instance = new IAAFunctionality();
+        ComaKmlForLocations instance = new ComaKmlForLocations();
+        instance.setKMLFilePath("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\INEL_LangsRecolored.kml");
         instance.report = new Report();
         Collection<CorpusData> cdc;
-        //what happens when we check exb files
-        for (CorpusData cd : corp.getContentdata()) {
+        //what happens when we check coma files
+        for (CorpusData cd : corp.getMetadata()) {
             assertNotNull(instance.check(cd));
         }
 
     }
 
+    /**
+     * Test of fix method, of class ComaKmlForLocations.
+     */
+    @Test
+    public void testFix() throws Exception {
+        System.out.println("fix");
+        //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\DolganCorpus";
+        URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
+        Corpus corp = new Corpus(corpusURL);
+        ComaKmlForLocations instance = new ComaKmlForLocations();
+        instance.setKMLFilePath("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example\\INEL_LangsRecolored.kml");
+        instance.report = new Report();
+        Collection<CorpusData> cdc;
+        //what happens when we fix coma files
+        for (CorpusData cd : corp.getMetadata()) {
+            assertNotNull(instance.fix(cd));
+        }
 
+    }
 
     /**
-     * Test of getIsUsableFor method, of class IAAFunctionality.
+     * Test of getIsUsableFor method, of class ComaKmlForLocations.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        IAAFunctionality instance = new IAAFunctionality();
+        ComaKmlForLocations instance = new ComaKmlForLocations();
         //Collection<Class> expResult = null;
         //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
         assertNotNull(result);
     }
-
 }

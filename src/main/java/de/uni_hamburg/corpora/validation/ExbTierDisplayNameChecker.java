@@ -86,6 +86,7 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
             String speakerName = tier.getAttribute("speaker"); // get speaker name
             String displayName = tier.getAttribute("display-name"); // get display name
             String displayNameCategory = displayName;
+
             String displayNameSpeaker = "";
             int openingPar = -1;
             int closingPar = -1;
@@ -98,26 +99,27 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                 } else if (displayName.contains("-")){
                     openingPar = displayName.lastIndexOf("-");
                     closingPar = displayName.length();
+                    //Could also be that the category has a dash!
                     displayNameSpeaker = displayName.substring(openingPar + 1, closingPar);
+                    //Could also be that the category has a dash!
                     displayNameCategory = displayName.substring(0, openingPar);
                 }
                 //System.out.println("Tier DisplayName " + displayName + " category " + category  + " displaycategory " + displayNameCategory  + " and speaker name " +  speakerName + " displayspeaker " + displayNameSpeaker);
                 if (!speakerName.isEmpty() && !category.isEmpty()) { // if speaker name exists check if it complies with tier display name
-                    if (category.equals(displayNameCategory) && speakerName.equals(displayNameSpeaker)) {
+                    if (((category.equals(displayNameCategory)) && (speakerName.equals(displayNameSpeaker))) || (category.equals(displayName))) {
                         //everything is correct
                         System.out.println("Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                         stats.addCorrect(tdnc, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
-                    } else if (category.equals(displayNameCategory) && displayNameSpeaker.isEmpty()){
-                        System.out.println("Tier DisplayName " + displayName + " matches category " + category);
                     } else {
                      System.err.println("Speaker abbreviation and display name for tier do not match"
-                                    + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
+                                    + "for speaker " + speakerName + ", tier: displayname " + displayName + " and id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
                             stats.addCritical(tdnc, cd, "Tier mismatch "
                                     + "for speaker " + speakerName + ", tier category " + category
-                                    +", tier id " + tier.getAttribute("id")
+                                    +", tier: displayname " + displayName
+                                    + " id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier doES not match"
+                            exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier does not match"
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);   

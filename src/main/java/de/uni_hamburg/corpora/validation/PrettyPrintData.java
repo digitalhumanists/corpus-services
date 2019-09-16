@@ -9,12 +9,11 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -63,7 +62,8 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
             } else {
                 if (!CorpusDataIsAlreadyPretty(cd)) {
 
-                    String prettyCorpusData = indent(cd.toUnformattedString(), "event");
+                    PrettyPrinter pp = new PrettyPrinter();
+                    String prettyCorpusData = pp.indent(cd.toUnformattedString(), "event");
                     //System.out.println(cd.toSaveableString());
                     //System.out.println(prettyCorpusData);
                     //save it instead of the old file
@@ -114,7 +114,8 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         //file is the input
 
         if (cd.toUnformattedString() != null) {
-            String prettyCorpusData = indent(cd.toUnformattedString(), "event");
+            PrettyPrinter pp = new PrettyPrinter();
+            String prettyCorpusData = pp.indent(cd.toUnformattedString(), "event");
             return cd.toUnformattedString().equals(prettyCorpusData);
         } else {
             return false;

@@ -216,7 +216,8 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                         xml.setJdom(jdomDoc);
                         cd = (CorpusData) xml;
                         try {
-                            cio.write(jdomDoc, cd.getURL());
+                            cd.updateUnformattedString(TypeConverter.JdomDocument2String(jdomDoc));
+                            cio.write(cd, cd.getURL());
                         } catch (TransformerException ex) {
                             Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (ParserConfigurationException ex) {
