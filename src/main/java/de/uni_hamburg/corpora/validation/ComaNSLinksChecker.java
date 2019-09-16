@@ -94,7 +94,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
             Node communication = nslink.getParentNode();
             if (communication.getNodeName() != null && communication.getNodeName().equals("Transcription")) {
                 communicationname = communication.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
-            } else if (communication.getNodeName() != null && communication.getNodeName().equals("Recording")) {
+            } else if (communication.getNodeName() != null && communication.getNodeName().equals("Media")) {
                 communicationname = communication.getParentNode().getParentNode().getAttributes().getNamedItem("Name").getTextContent();
             } else {
                 //could not find matching communication name

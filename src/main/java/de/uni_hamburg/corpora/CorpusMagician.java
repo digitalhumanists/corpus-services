@@ -48,6 +48,7 @@ import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -206,13 +207,19 @@ public class CorpusMagician {
             System.out.println("Basedirectory is " + basedirectory);
             System.out.println("BasedirectoryPath is " + basedirectory.getPath());
             URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
+            File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
+            if (!curationFolder.exists()){
+            //the curation folder it not there and needs to be created
+            curationFolder.mkdirs();
+            }
+               // new File(url.getFile()
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
             if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
-                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
-                exmaErrorListString = pp.indent(exmaErrorListString, "event");
+                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "../");
             }
             if (exmaErrorListString != null) {
+                exmaErrorListString = pp.indent(exmaErrorListString, "event");
                 cio.write(exmaErrorListString, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
             }

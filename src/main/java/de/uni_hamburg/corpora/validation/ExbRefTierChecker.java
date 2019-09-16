@@ -168,9 +168,19 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                     String wholeRef = event.getTextContent();
                     String eventReference = "event " + eventStart + "/" + eventEnd + ", tier '" + tierId + "', EXB '" + transcriptName+"'";
 
-                    if (wholeRef.contains("(") && wholeRef.contains(".")) {
-                        int end = wholeRef.indexOf("(") - 1;
+                    //if (wholeRef.contains("(") && wholeRef.contains(".")) {
+                    if (wholeRef.contains(".")) {  
+                        
+                        // get position of character after number that shall be tested/updated
+                        int end = wholeRef.length();
+                        if (wholeRef.contains("(")) {  
+                            end = wholeRef.indexOf("(") - 1;
+                        }
+                                                
+                        // get position of first character that belongs to number in question 
                         int start = wholeRef.substring(0, end).lastIndexOf(".") + 1;
+                        
+                        // get the number in question
                         String no = wholeRef.substring(start, end);
                         int numbering = Integer.parseInt(no);
 
@@ -250,7 +260,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
 
                     }
                     
-                    // ref ID does not contain "(" and "."
+                    // ref ID does not contain any "."
                     else {
                          String message = "Unknown format of ref ID '"+wholeRef+"' in " + transcriptName;
                          stats.addCritical(ertc, cd, message);
