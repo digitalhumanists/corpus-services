@@ -133,7 +133,8 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                 }
                 if (containsRegEx) {
                     CorpusIO cio = new CorpusIO();
-                    cio.write(doc, cd.getURL());
+                    cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                    cio.write(cd, cd.getURL());
                 } else {
                     stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
                 }

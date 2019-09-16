@@ -4,7 +4,6 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
-import de.uni_hamburg.corpora.ExmaErrorList;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
@@ -25,8 +24,6 @@ import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.XMLData;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -120,8 +117,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                         }
                         //Path pabs = Paths.get(e.getText());
                         if (pabs.isAbsolute()) {
-                            report.addCritical(rap, cd, "absolute path info needs to be replaced");
-                            exmaError.addError("RemoveAbsolutePaths", cd.getURL().getFile(), "", "", false, "absolute path info needs to be replaced");
+                            report.addCritical(rap, cd, "absolute path info needs to be replaced");                           
                         } else {
                             al.remove(o);
                             report.addCorrect(rap, cd, "path is already relative, nothing to do");
@@ -189,10 +185,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 //add a report message
                                 CorpusIO cio = new CorpusIO();
                                 cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
-                                XMLData xml = (XMLData) cd;
-                                xml.setJdom(doc);
-                                cd = (CorpusData) xml;
-                                cio.write(doc, cd.getURL());
+                                cio.write(cd, cd.getURL());
                                 report.addCorrect(rap, cd, "removed absolute path");
                             } else {
                                 report.addCritical(rap, cd,
@@ -234,10 +227,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 //add a report message
                                 CorpusIO cio = new CorpusIO();
                                 cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
-                                XMLData xml = (XMLData) cd;
-                                xml.setJdom(doc);
-                                cd = (CorpusData) xml;
-                                cio.write(doc, cd.getURL());
+                                cio.write(cd, cd.getURL());
                                 report.addCorrect(rap, cd, "removed absolute path");
                             } else {
                                 report.addCritical(rap, cd,
@@ -283,7 +273,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 XMLData xml = (XMLData) cd;
                                 xml.setJdom(doc);
                                 cd = (CorpusData) xml;
-                                cio.write(doc, cd.getURL());
+                                cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                                cio.write(cd, cd.getURL());
                                 report.addCorrect(rap, cd, "removed absolute path");
                             } else {
                                 report.addCritical(rap, cd,

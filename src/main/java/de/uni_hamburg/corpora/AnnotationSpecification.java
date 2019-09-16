@@ -1,6 +1,6 @@
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -68,8 +68,9 @@ class AnnotationSpecification implements CorpusData, XMLData {
     }
 
     private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 
