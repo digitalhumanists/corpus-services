@@ -32,6 +32,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 
 /**
  * This is the check procedure for the Nganasan Corpus
@@ -417,6 +418,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                     } catch (JexmaraldaException je) {
                         stats.addException(je, "ERRORR: tier with ID " + tierID
                                 + " is lost...");
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "ERROR: tier with ID " + tierID
+                                + " is lost...");
                         continue;
                     }
                     String displayName = tier.getDisplayName();
@@ -430,13 +433,19 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(NSLC,
                                 "Unrecognised tier name: "
                                 + tierID);
-                    }
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
+                                + tierID);
+
+                    }   
                     if (tierTypes.containsKey(category)) {
                         if (!tierTypes.get(category).equals(tierType)) {
                             stats.addCritical(NSLC,
                                     "Wrong tier type for: "
                                     + tierID, "Switch to annotation or "
                                     + " description tier");
+                            exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
+                                    + tierID);
+
                         } else {
                             stats.addCorrect(NSLC,
                                     "Correct tier type for: " + tierID);
@@ -446,11 +455,18 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
+                                + tierID + " should be annotation or "
+                                + "description");
+
                     }
                     if (!category.equals(tierID)) {
                         stats.addCritical(NSLC,
                                 "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
+                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
+                                + "but " + tierID + " is not " + category);
+
                     }
                 } // for each tier
                 for (Map.Entry<String, String> entry : obligatoryTiers.entrySet()) {
@@ -463,6 +479,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                     if (!found) {
                         stats.addCritical(
                                 "Missing required tier: "
+                                + entry.getKey() + ": " + entry.getValue());
+                        exmaError.addError(NSLC, comadirname+relPath, "", "", false, "Missing required tier: "
                                 + entry.getKey() + ": " + entry.getValue());
                     }
                 }
