@@ -84,6 +84,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     final String COMA_FILECOVERAGE = "coma-filecoverage";
     final List<String> whitelist;
     final List<String> fileendingwhitelist;
+    final List<String> directorywhitelist;
 
     public FileCoverageChecker() {
         // these are acceptable
@@ -93,6 +94,10 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         whitelist.add("README");
         whitelist.add("Thumbs.db");
         fileendingwhitelist = new ArrayList<String>();
+        directorywhitelist = new ArrayList<String>();
+        directorywhitelist.add("curation");
+        directorywhitelist.add("resources");
+        directorywhitelist.add("metadata");
     }
 
     /**
@@ -131,7 +136,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -162,7 +167,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -193,7 +198,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -375,7 +380,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File a : files) {
-                            if (whitelist.contains(a.getName()) || fileendingwhitelist.contains(getFileExtension(a))) {
+                            if (whitelist.contains(a.getName()) || fileendingwhitelist.contains(getFileExtension(a)) || directorywhitelist.contains(a.getParentFile().getName()) || directorywhitelist.contains(a.getParentFile().getParentFile().getName())) {
                                 continue;
                             } else if (a.isDirectory()) {
                                 dirs.add(a);
@@ -406,7 +411,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File b : files) {
-                            if (whitelist.contains(b.getName()) || fileendingwhitelist.contains(getFileExtension(b))) {
+                            if (whitelist.contains(b.getName()) || fileendingwhitelist.contains(getFileExtension(b)) || directorywhitelist.contains(b.getParentFile().getName()) || directorywhitelist.contains(b.getParentFile().getParentFile().getName())) {
                                 continue;
                             } else if (b.isDirectory()) {
                                 dirs.add(b);
@@ -437,7 +442,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File c : files) {
-                            if (whitelist.contains(c.getName()) || fileendingwhitelist.contains(getFileExtension(c))) {
+                            if (whitelist.contains(c.getName()) || fileendingwhitelist.contains(getFileExtension(c)) || directorywhitelist.contains(c.getParentFile().getName()) || directorywhitelist.contains(c.getParentFile().getParentFile().getName())) {
                                 continue;
                             } else if (c.isDirectory()) {
                                 dirs.add(c);

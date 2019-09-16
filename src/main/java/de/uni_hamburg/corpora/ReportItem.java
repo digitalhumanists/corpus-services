@@ -503,6 +503,7 @@ public class ReportItem {
         
         //add custom CSS
         report += "<style>"+
+                "body{padding:15px;}"+
                 ".critical{ background:#ffdddd; } "+
                 ".other{ background:#ffd39e; } "+
                 ".warning{ background:#fafcc2; } "+
