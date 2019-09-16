@@ -25,9 +25,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
- * The class that checks out that all annotations for Nganasan Corpus are from
- * the annotation specification file and that there are no annotations in the
- * coma file not in the annotation specification file.
+ * The class that checks out if all annotations for Nganasan Corpus are from
+ * the annotation specification file and there are no annotations in the
+ * coma file not present in the annotation specification file.
  */
 public class NgTierCheckerWithAnnotation extends Checker implements CorpusFunction {
 
@@ -95,7 +95,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
             if (counter < 1) {    //first add annotations from coma or annotation spec file depending on which is read first
                 addAnnotations(cd);
                 counter++;
-            } else {             //then add the second annotations and check it                    
+            } else {             //then add the second annotations and check them against the first ones                    
                 addAnnotations(cd);
                 stats = exceptionalCheck(cd);
             }
@@ -132,7 +132,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
                     System.err.println("Coma file is containing annotation (" + annotType
                             + ") for " + name + " not specified by annotation spec file!");
                     stats.addWarning("tier-checker-with-annotation", "annotation error: annotation ("
-                            + annotType + ") for " + name + " not specified!");
+                            + annotType + ") for " + name + " not specified in the annotation spec file!");
                     int index = cd.getURL().getFile().lastIndexOf("/");
                     String nameExtension = name.substring(name.lastIndexOf('_'));
                     String filePath;
