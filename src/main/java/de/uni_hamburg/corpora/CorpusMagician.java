@@ -14,6 +14,7 @@ import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaFedoraIdentifierLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
+import de.uni_hamburg.corpora.validation.ExbFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.ExbRefTierChecker;
 //import de.uni_hamburg.corpora.validation.ExbPatternChecker;
@@ -208,11 +209,11 @@ public class CorpusMagician {
             System.out.println("BasedirectoryPath is " + basedirectory.getPath());
             URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
             File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
-            if (!curationFolder.exists()){
-            //the curation folder it not there and needs to be created
-            curationFolder.mkdirs();
+            if (!curationFolder.exists()) {
+                //the curation folder it not there and needs to be created
+                curationFolder.mkdirs();
             }
-               // new File(url.getFile()
+            // new File(url.getFile()
             Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
             String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
             if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
@@ -289,6 +290,7 @@ public class CorpusMagician {
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbFileCoverageChecker");
         allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
@@ -388,6 +390,10 @@ public class CorpusMagician {
                 case "exbfilereferencechecker":
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
                     corpusfunctions.add(efrc);
+                    break;
+                case "exbfilecoveragechecker":
+                    ExbFileCoverageChecker efcc = new ExbFileCoverageChecker();
+                    corpusfunctions.add(efcc);
                     break;
                 case "exbannotationpanelcheck":
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
