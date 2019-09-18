@@ -119,7 +119,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
             } else if (refsInExb.contains(relativePath)) {
                 stats.addCorrect(EXB_FILECOVERAGE, cd, "File " + relativePath + " found in the exb as a reference.");
             } else {
-                stats.addMissing(EXB_FILECOVERAGE, cd, "File " + relativePath + " CANNOT be found in the exb as a reference!");
+                stats.addCritical(EXB_FILECOVERAGE, cd, "File " + relativePath + " CANNOT be found in the exb as a reference!");
                 exmaError.addError(EXB_FILECOVERAGE, cd.getURL().getFile(), "", "", false, "File " + relativePath + " CANNOT be found in the exb as a reference!");
             }
         }
