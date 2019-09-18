@@ -42,6 +42,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
     final String EXB_REFS = "exb-referenced-file";
 
 
+    CorpusData cd;
 
     /**
      * Default check function which calls the exceptionalCheck function so that
