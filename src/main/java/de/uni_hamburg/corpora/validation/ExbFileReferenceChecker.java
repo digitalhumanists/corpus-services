@@ -105,7 +105,7 @@ public class ExbFileReferenceChecker extends Checker implements CommandLineable,
                 }
                 if (!found) {
                     reffilesMissing++;
-                    stats.addMissing(EXB_REFS, cd, "File in referenced-file NOT found: " + url);
+                    stats.addCritical(EXB_REFS, cd, "File in referenced-file NOT found: " + url);
                     exmaError.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
                 } else {
                     reffilesFound++;
