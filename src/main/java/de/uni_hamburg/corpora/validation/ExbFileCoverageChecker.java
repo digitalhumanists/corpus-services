@@ -168,6 +168,9 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         fileendingwhitelist.add("rtf");
         fileendingwhitelist.add("tex");
         fileendingwhitelist.add("txt");
+        fileendingwhitelist.add("xml");
+        fileendingwhitelist.add("html");
+        fileendingwhitelist.add("flextext");
     }
     
      /**
