@@ -27,6 +27,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     String xslresource = "/xsl/nslc-checks.xsl";
     String xc = "XSLTChecker";
     String filename = "";
+    String UTTERANCEENDSYMBOLS = "'[.!?&#x2026;:]'";
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -57,6 +58,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             XSLTransformer xt = new XSLTransformer();
 
             xt.setParameter("filename", filename);
+            xt.setParameter("UTTERANCEENDSYMBOL", UTTERANCEENDSYMBOLS);
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
 
