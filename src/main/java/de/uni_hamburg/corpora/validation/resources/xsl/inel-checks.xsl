@@ -8,8 +8,8 @@
         <xsl:text>
 </xsl:text>
     </xsl:variable>
-    <xsl:variable name="UTTERANCEENDSYMBOL" select="'[.!?&#x2026;:]'"/>
-    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="'.*[.!?&#x2026;:]&quot;*\s*&quot;*\s*'"/>
+    <xsl:param name="UTTERANCEENDSYMBOL" select="'[.!?&#x2026;:]'"/>
+    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="concat('.*', $UTTERANCEENDSYMBOL, '&quot;*\s*&quot;*\s*')"/>
     <xsl:key name="tierids" match="*[@id]" use="@id"/>
     <xsl:variable name="duplicateids">
         <xsl:for-each-group select="$ROOT//*:tier" group-by="@id">
