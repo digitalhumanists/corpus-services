@@ -435,7 +435,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 + tierID);
                         exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
                                 + tierID);
-                    }
+
+                    }   
                     if (tierTypes.containsKey(category)) {
                         if (!tierTypes.get(category).equals(tierType)) {
                             stats.addCritical(NSLC,
@@ -444,6 +445,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                     + " description tier");
                             exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
                                     + tierID);
+
                         } else {
                             stats.addCorrect(NSLC,
                                     "Correct tier type for: " + tierID);
@@ -456,6 +458,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
+
                     }
                     if (!category.equals(tierID)) {
                         stats.addCritical(NSLC,
@@ -463,6 +466,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 + "but " + tierID + " is not " + category);
                         exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
+
                     }
                 } // for each tier
                 for (Map.Entry<String, String> entry : obligatoryTiers.entrySet()) {

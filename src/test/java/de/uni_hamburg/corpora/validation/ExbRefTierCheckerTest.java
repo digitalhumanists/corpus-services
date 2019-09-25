@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class IAAFunctionalityTest {
+public class ExbRefTierCheckerTest {
 
-    public IAAFunctionalityTest() {
+    public ExbRefTierCheckerTest() {
     }
 
     @BeforeClass
@@ -44,36 +44,49 @@ public class IAAFunctionalityTest {
     }
 
     /**
-     * Test of check method, of class IAAFunctionality.
+     * Test of check method, of class ExbRefTierChecker.
      */
     @Test
     public void testCheck() throws Exception {
         System.out.println("check");
-        //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
-        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example";
+        String corpusFolder = "K:/Dolgan/DolganCorpus";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        IAAFunctionality instance = new IAAFunctionality();
+        ExbRefTierChecker instance = new ExbRefTierChecker();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check exb files
         for (CorpusData cd : corp.getContentdata()) {
             assertNotNull(instance.check(cd));
         }
-
     }
 
-
+    /**
+     * Test of fix method, of class ExbRefTierChecker.
+     */
+    @Test
+    public void testFix() throws Exception {
+        System.out.println("fix");
+        String corpusFolder = "K:/Dolgan/DolganCorpus";
+        URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
+        Corpus corp = new Corpus(corpusURL);
+        ExbRefTierChecker instance = new ExbRefTierChecker();
+        instance.report = new Report();
+        Collection<CorpusData> cdc;
+        //what happens when we check exb files
+        for (CorpusData cd : corp.getContentdata()) {
+            assertNotNull(instance.fix(cd));
+        }
+    }
 
     /**
-     * Test of getIsUsableFor method, of class IAAFunctionality.
+     * Test of getIsUsableFor method, of class ExbRefTierChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        IAAFunctionality instance = new IAAFunctionality();
+        ExbRefTierChecker instance = new ExbRefTierChecker();
         //Collection<Class> expResult = null;
-        //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
         assertNotNull(result);

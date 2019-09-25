@@ -85,7 +85,8 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
                 apostrophe = true;                // flag points out if there are illegal apostrophes
                 comaFile = comaFile.replaceAll("'", "’");    //replace all 's with ´s
                 CorpusIO cio = new CorpusIO();
-                cio.write(comaFile, cd.getURL());    // write back to coma file with allowed apostrophes ´
+                cd.updateUnformattedString(comaFile);
+                cio.write(cd, cd.getURL());    // write back to coma file with allowed apostrophes ´
                 stats.addCorrect(cac, cd, "Corrected the apostrophes"); // fix report
             } else {
                 stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");

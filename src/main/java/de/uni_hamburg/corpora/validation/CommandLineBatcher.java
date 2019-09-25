@@ -304,7 +304,7 @@ public class CommandLineBatcher {
                     System.out.println(fargs);
                 }
                 if (testclass.equalsIgnoreCase("FileCoverageChecker")) {
-                    stats.merge(new FileCoverageChecker().doMain(fargs.toArray(
+                    stats.merge(new ComaFileCoverageChecker().doMain(fargs.toArray(
                                     new String[0])));
                 }
                 else if (testclass.equalsIgnoreCase("ComaNSLinksChecker")) {

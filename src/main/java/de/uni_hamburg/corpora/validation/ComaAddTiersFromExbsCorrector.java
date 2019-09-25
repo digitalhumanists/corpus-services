@@ -13,7 +13,6 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileOutputStream;
