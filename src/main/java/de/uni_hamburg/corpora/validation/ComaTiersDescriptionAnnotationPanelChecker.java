@@ -2,7 +2,6 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
@@ -30,7 +29,7 @@ import org.xml.sax.SAXException;
  * specification file and that there are no annotations in the coma file not in
  * the annotation specification file.
  */
-public class TierCheckerWithAnnotation extends Checker implements CorpusFunction {
+public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implements CorpusFunction {
 
     String comaLoc = "";
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
@@ -111,7 +110,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             if (counter < 1) {    //first add annotations from coma or annotation spec file depending on which is read first
                 addAnnotations(cd);
                 counter++;
-            } else {             //then add the second annotations and check it                    
+            } else {             //then add the second annotations and check them against the first ones                    
                 addAnnotations(cd);
                 stats = exceptionalCheck(cd);
             }
@@ -147,12 +146,10 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
                 if (!annotations.contains(annotType)) { // check if annotations not present in annotation spec file
                     System.err.println("Coma file is containing annotation (" + annotType
                             + ") for " + name + " not specified by annotation spec file!");
-                    stats.addWarning("tier-checker-with-annotation", "annotation error: annotation ("
-                            + annotType + ") for " + name + " not specified!");
+                    stats.addWarning("coma-tiers-description-annotation-panel-checker", "annotation error: annotation ("
+                            + annotType + ") for " + name + " not specified in the annotation spec file!");
                     int index = cd.getURL().getFile().lastIndexOf("/");
-                    String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";
-                    exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation ("
-                            + annotType + ") for " + name + " not specified in the annotation specification file!");
+                    String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";                   
                 }
             }
         }
@@ -182,7 +179,7 @@ public class TierCheckerWithAnnotation extends Checker implements CorpusFunction
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(TierCheckerWithAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ComaTiersDescriptionAnnotationPanelChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
     }

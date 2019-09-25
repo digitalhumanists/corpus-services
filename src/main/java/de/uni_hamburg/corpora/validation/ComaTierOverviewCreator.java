@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -170,7 +168,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         //String result = htmltemplate + overviewTable + communicationsTable;
         String result = htmltemplate + overviewTable;
 
-        URL overviewurl = new URL(cd.getParentURL(), "tier_overview.html");
+        URL overviewurl = new URL(cd.getParentURL(), "curation/tier_overview.html");
         cio.write(result, overviewurl);
 
         stats.addCorrect(cscc, cd, "created tier overview at " + overviewurl);

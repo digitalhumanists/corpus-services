@@ -22,56 +22,53 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class IAAFunctionalityTest {
-
-    public IAAFunctionalityTest() {
+public class ExbTierDisplayNameCheckerTest {
+    
+    public ExbTierDisplayNameCheckerTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of check method, of class IAAFunctionality.
+     * Test of check method, of class ExbTierDisplayNameChecker.
      */
     @Test
-    public void testCheck() throws Exception {
+public void testCheck() throws Exception {
         System.out.println("check");
         //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
-        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example";
+        String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        IAAFunctionality instance = new IAAFunctionality();
+        ExbTierDisplayNameChecker instance = new ExbTierDisplayNameChecker();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check exb files
         for (CorpusData cd : corp.getContentdata()) {
             assertNotNull(instance.check(cd));
         }
-
     }
 
-
-
     /**
-     * Test of getIsUsableFor method, of class IAAFunctionality.
+     * Test of getIsUsableFor method, of class ExbTierDisplayNameChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        IAAFunctionality instance = new IAAFunctionality();
+        ExbTierDisplayNameChecker instance = new ExbTierDisplayNameChecker();
         //Collection<Class> expResult = null;
         //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
@@ -79,4 +76,5 @@ public class IAAFunctionalityTest {
         assertNotNull(result);
     }
 
+    
 }

@@ -67,6 +67,8 @@ public class ReportItem {
     private String lines;
     /** Errors with file parsing can also include the columns when known.*/
     private String columns;
+    //name of the function that caused the error
+    private String function;
 
     /**
      * Default constructor should only be used when nothing at all is known
@@ -76,17 +78,20 @@ public class ReportItem {
         what = "Totally unknown error";
         howto = "No known fixes";
         e = null;
+        function = "Unknown function";
     }
 
     public ReportItem(Severity s, String what) {
         this.severity = s;
         this.what = what;
+        this.function = "Unknown function";
     }
 
     public ReportItem(Severity s, Throwable e, String what) {
         this.severity = s;
         this.e = e;
         this.what = what;
+        this.function = "Unknown function";
     }
 
     public ReportItem(Severity s, Throwable e, String filename, String what) {
@@ -94,12 +99,14 @@ public class ReportItem {
         this.e = e;
         this.what = what;
         this.filename = filename;
+        this.function = "Unknown function";
     }
     
-    public ReportItem(Severity s, String filename, String what) {
+    public ReportItem(Severity s, String filename, String what, String function) {
         this.severity = s;
         this.what = what;
         this.filename = filename;
+        this.function = function;
     }
     
     /**
@@ -115,6 +122,7 @@ public class ReportItem {
         this.filename = saxpe.getSystemId();
         this.lines = "" + saxpe.getLineNumber();
         this.columns = "" + saxpe.getColumnNumber();
+        this.function = "Unknown function";
     }
 
 
@@ -123,11 +131,12 @@ public class ReportItem {
      * can be constructed from filename and descriptions.
      */
     public ReportItem(Severity s, String filename,
-            String what, String howto) {
+            String what, String function, String howto) {
         this.severity = s;
         this.filename = filename;
         this.what = what;
         this.howto = howto;
+        this.function = function;
     }
 
     /**
@@ -221,6 +230,17 @@ public class ReportItem {
     public String getHowto() {
         if (this.howto != null) {
             return this.howto;
+        } else {
+            return "";
+        }
+    }
+    
+    /**
+     * A suggested fix to the error.
+     */
+    public String getFunction() {
+        if (this.function != null) {
+            return this.function;
         } else {
             return "";
         }
@@ -483,6 +503,7 @@ public class ReportItem {
         
         //add custom CSS
         report += "<style>"+
+                "body{padding:15px;}"+
                 ".critical{ background:#ffdddd; } "+
                 ".other{ background:#ffd39e; } "+
                 ".warning{ background:#fafcc2; } "+
@@ -491,7 +512,8 @@ public class ReportItem {
         
         report += "<table>\n  <thead><tr>" +
             "<th>Type</th>"+
-            "<th>File:line.column</th>"+
+            "<th>Function</th>"+
+            "<th>Filename:line.column</th>"+
             "<th>Error</th>" +
             "<th>Fix</th>"+
             "<th>Original</th>" +
@@ -515,6 +537,7 @@ public class ReportItem {
                     report += "<tr class='other'><td style='border-left: black solid 3px'>Other</td><td>";
                     break;
             }
+            report += error.getFunction() + "</td><td>";
             report += error.getLocation() + "</td>";
             report += "<td style='white-space: pre'>" +
                 error.getWhat() +

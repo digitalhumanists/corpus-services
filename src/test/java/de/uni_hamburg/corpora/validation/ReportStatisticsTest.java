@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class TierCheckerTest {
+public class ReportStatisticsTest {
     
-    public TierCheckerTest() {
+    public ReportStatisticsTest() {
     }
     
     @BeforeClass
@@ -44,37 +44,40 @@ public class TierCheckerTest {
     }
 
     /**
-     * Test of check method, of class TierChecker.
+     * Test of check method, of class ReportStatistics.
      */
     @Test
-public void testCheck() throws Exception {
+    public void testCheck() throws Exception {
         System.out.println("check");
         //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
-        String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        //String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        String corpusFolder = "K:/Selkup/SelkupCorpus";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        TierChecker instance = new TierChecker();
+        ReportStatistics instance = new ReportStatistics();
         instance.report = new Report();
         Collection<CorpusData> cdc;
-        //what happens when we check exb files
-        for (CorpusData cd : corp.getContentdata()) {
+        //what happens when we check coma files
+        for (CorpusData cd : corp.getMetadata()) {
             assertNotNull(instance.check(cd));
         }
+
     }
 
+
+
     /**
-     * Test of getIsUsableFor method, of class TierChecker.
+     * Test of getIsUsableFor method, of class ReportStatistics.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        TierChecker instance = new TierChecker();
+        ReportStatistics instance = new ReportStatistics();
         //Collection<Class> expResult = null;
         //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here
         assertNotNull(result);
     }
-
     
 }

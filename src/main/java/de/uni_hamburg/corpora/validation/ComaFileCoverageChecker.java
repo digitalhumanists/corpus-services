@@ -13,58 +13,27 @@ import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Set;
 import java.util.List;
 import java.util.Stack;
-import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.XMLConstants;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.StringUtils;
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
-import org.exmaralda.partitureditor.jexmaralda.BasicBody;
-import org.exmaralda.partitureditor.jexmaralda.Tier;
 import org.jdom.JDOMException;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URISyntaxException;
@@ -73,7 +42,7 @@ import java.net.URISyntaxException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class FileCoverageChecker extends Checker implements CommandLineable, StringChecker, CorpusFunction {
+public class ComaFileCoverageChecker extends Checker implements CommandLineable, StringChecker, CorpusFunction {
 
     ValidatorSettings settings;
     String referencePath = "./";
@@ -84,8 +53,9 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     final String COMA_FILECOVERAGE = "coma-filecoverage";
     final List<String> whitelist;
     final List<String> fileendingwhitelist;
+    final List<String> directorywhitelist;
 
-    public FileCoverageChecker() {
+    public ComaFileCoverageChecker() {
         // these are acceptable
         whitelist = new ArrayList<String>();
         whitelist.add(".git");
@@ -93,6 +63,10 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
         whitelist.add("README");
         whitelist.add("Thumbs.db");
         fileendingwhitelist = new ArrayList<String>();
+        directorywhitelist = new ArrayList<String>();
+        directorywhitelist.add("curation");
+        directorywhitelist.add("resources");
+        directorywhitelist.add("metadata");
     }
 
     /**
@@ -131,7 +105,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -162,7 +136,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -193,7 +167,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
             while (!dirs.empty()) {
                 File files[] = dirs.pop().listFiles();
                 for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f))) {
+                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
                         continue;
                     } else if (f.isDirectory()) {
                         dirs.add(f);
@@ -256,7 +230,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                 Text reltext = (Text) reltexts.item(j);
                 String relpath = reltext.getWholeText();
                 // added this line so it compares Coma NSLinks in the correct format of the OS
-                // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn#t be the case anyway
+                // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn't be the case anyway
                 relpath = relpath.replace('/', File.separatorChar);
                 System.out.println(relpath);
                 RelPaths.add(relpath);
@@ -308,7 +282,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
     }
 
     public static void main(String[] args) {
-        FileCoverageChecker checker = new FileCoverageChecker();
+        ComaFileCoverageChecker checker = new ComaFileCoverageChecker();
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
@@ -375,7 +349,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File a : files) {
-                            if (whitelist.contains(a.getName()) || fileendingwhitelist.contains(getFileExtension(a))) {
+                            if (whitelist.contains(a.getName()) || fileendingwhitelist.contains(getFileExtension(a)) || directorywhitelist.contains(a.getParentFile().getName()) || directorywhitelist.contains(a.getParentFile().getParentFile().getName())) {
                                 continue;
                             } else if (a.isDirectory()) {
                                 dirs.add(a);
@@ -406,7 +380,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File b : files) {
-                            if (whitelist.contains(b.getName()) || fileendingwhitelist.contains(getFileExtension(b))) {
+                            if (whitelist.contains(b.getName()) || fileendingwhitelist.contains(getFileExtension(b)) || directorywhitelist.contains(b.getParentFile().getName()) || directorywhitelist.contains(b.getParentFile().getParentFile().getName())) {
                                 continue;
                             } else if (b.isDirectory()) {
                                 dirs.add(b);
@@ -437,7 +411,7 @@ public class FileCoverageChecker extends Checker implements CommandLineable, Str
                     while (!dirs.empty()) {
                         File files[] = dirs.pop().listFiles();
                         for (File c : files) {
-                            if (whitelist.contains(c.getName()) || fileendingwhitelist.contains(getFileExtension(c))) {
+                            if (whitelist.contains(c.getName()) || fileendingwhitelist.contains(getFileExtension(c)) || directorywhitelist.contains(c.getParentFile().getName()) || directorywhitelist.contains(c.getParentFile().getParentFile().getName())) {
                                 continue;
                             } else if (c.isDirectory()) {
                                 dirs.add(c);

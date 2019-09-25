@@ -1,6 +1,6 @@
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -82,7 +82,15 @@ public class CorpusIO {
     public void write(Document doc, URL url) throws IOException, TransformerException, ParserConfigurationException, ParserConfigurationException, UnsupportedEncodingException, UnsupportedEncodingException, SAXException, XPathExpressionException {
         XMLOutputter xmOut = new XMLOutputter();
         String unformattedCorpusData = xmOut.outputString(doc);
-        String prettyCorpusData = indent(unformattedCorpusData, "event");
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(unformattedCorpusData, "event");
+        write(prettyCorpusData, url);
+    }
+    
+    public void write(org.w3c.dom.Document doc, URL url) throws IOException, TransformerException, ParserConfigurationException, ParserConfigurationException, UnsupportedEncodingException, UnsupportedEncodingException, SAXException, XPathExpressionException {
+        String unformattedCorpusData = TypeConverter.W3cDocument2String(doc);
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(unformattedCorpusData, "event");
         write(prettyCorpusData, url);
     }
 
@@ -95,7 +103,7 @@ public class CorpusIO {
     }
 
     public void write(Collection<CorpusData> cdc, URL url) {
-
+        //TODO
     }
 
     //read a single file as a corpus data object from an url

@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author Ozzy
  */
-public class TierCheckerWithAnnotationTest {
+public class ComaTiersDescriptionAnnotationPanelCheckerTest {
 
-    public TierCheckerWithAnnotationTest() {
+    public ComaTiersDescriptionAnnotationPanelCheckerTest() {
     }
 
     @BeforeClass
@@ -44,7 +44,7 @@ public class TierCheckerWithAnnotationTest {
     }
 
     /**
-     * Test of check method, of class TierCheckerWithAnnotation.
+     * Test of check method, of class ComaTiersDescriptionAnnotationPanelChecker.
      */
     @Test
     public void testCheck() throws Exception {
@@ -53,7 +53,7 @@ public class TierCheckerWithAnnotationTest {
         String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        TierCheckerWithAnnotation instance = new TierCheckerWithAnnotation();
+        ComaTiersDescriptionAnnotationPanelChecker instance = new ComaTiersDescriptionAnnotationPanelChecker();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check coma files
@@ -67,12 +67,12 @@ public class TierCheckerWithAnnotationTest {
     }
 
     /**
-     * Test of getIsUsableFor method, of class TierCheckerWithAnnotation.
+     * Test of getIsUsableFor method, of class ComaTiersDescriptionAnnotationPanelChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        TierCheckerWithAnnotation instance = new TierCheckerWithAnnotation();
+        ComaTiersDescriptionAnnotationPanelChecker instance = new ComaTiersDescriptionAnnotationPanelChecker();
         //Collection<Class> expResult = null;
         //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();

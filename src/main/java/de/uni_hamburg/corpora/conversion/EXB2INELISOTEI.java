@@ -22,9 +22,7 @@ import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.File;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -114,7 +112,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 //reading the FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
                 InputStream is = getClass().getResourceAsStream(FSM);
                 String fsmstring = TypeConverter.InputStream2String(is);
-                URL url =  Paths.get(System.getProperty("java.io.tmpdir")+ "fsmstring.xml").toUri().toURL();
+                URL url =  Paths.get(System.getProperty("java.io.tmpdir")+ "/" + "fsmstring.xml").toUri().toURL();
                 cio.write(fsmstring, url);       
                 segmentation = new HIATSegmentation(url.getFile()); 
             }

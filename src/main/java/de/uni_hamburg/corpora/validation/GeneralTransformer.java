@@ -6,6 +6,7 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -20,7 +21,6 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -59,10 +59,13 @@ public class GeneralTransformer extends Checker {
             if (result != null) {
                 report.addCorrect(getra, cd.getURL().toString(),
                         "XSL Transformation was successful");
-                result = indent(result, "event");
+                
+                PrettyPrinter pp = new PrettyPrinter();
+                result = pp.indent(result, "event");
             }
             if (overwritefiles){
-            cio.write(result, cd.getURL());    
+            cd.updateUnformattedString(result);
+            cio.write(cd, cd.getURL());    
             } else {
             cio.write(result, urlToOutput);
             }
