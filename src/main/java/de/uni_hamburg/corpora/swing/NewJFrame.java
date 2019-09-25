@@ -264,6 +264,7 @@ public class NewJFrame extends javax.swing.JFrame {
         showHTMLButton = new javax.swing.JButton();
         dropletToggleButton = new javax.swing.JToggleButton();
         helpButton = new javax.swing.JButton();
+        mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -830,6 +831,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JScrollPane listScrollPane;
     private javax.swing.JPanel messageAndProgressPanel;
     private javax.swing.JScrollPane messageScrollPane;
