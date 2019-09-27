@@ -3,6 +3,7 @@
 !.gitignore
 !*.java
 src/main/java/de/uni_hamburg/corpora/StupidCorpusMagicianTester.java
+!*.form
 !*.xsl
 !*.xml
 !*.html
