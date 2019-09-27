@@ -11,20 +11,8 @@ package de.uni_hamburg.corpora.validation;
 
 
 import de.uni_hamburg.corpora.Report;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.XMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ErrorHandler;

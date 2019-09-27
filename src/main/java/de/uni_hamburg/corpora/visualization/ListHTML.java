@@ -32,8 +32,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
@@ -289,7 +287,6 @@ public class ListHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         try {
             if (args.length < 2) {

@@ -10,14 +10,12 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
 import java.util.Collection;
-import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,7 +24,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -37,7 +34,7 @@ import org.w3c.dom.NodeList;
 /**
  * A validator for EXB-file's references.
  */
-public class ExbFileReferenceChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
 
     final String EXB_REFS = "exb-referenced-file";
 

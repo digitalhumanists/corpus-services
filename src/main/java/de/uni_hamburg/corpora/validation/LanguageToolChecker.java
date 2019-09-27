@@ -11,7 +11,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import java.io.IOException;
 import java.io.File;
 import java.util.Hashtable;
@@ -43,7 +42,7 @@ import org.languagetool.language.GermanyGerman;
 /**
  * A grammar and spelling error checker for EXB tiers mainly.
  */
-public class LanguageToolChecker implements CommandLineable  {
+public class LanguageToolChecker {
 
     BasicTranscription bt;
     ValidatorSettings settings;
