@@ -10,8 +10,6 @@
 package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.ReportItem.Severity;
-import java.io.StringWriter;
-import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;

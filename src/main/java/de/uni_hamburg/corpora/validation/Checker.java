@@ -6,18 +6,14 @@
  */
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.validation.StringChecker;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.Option;

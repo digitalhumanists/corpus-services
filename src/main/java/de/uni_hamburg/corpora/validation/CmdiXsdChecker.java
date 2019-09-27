@@ -10,7 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
-import de.uni_hamburg.corpora.CommandLineable;
+
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
@@ -76,7 +76,7 @@ import org.xml.sax.SAXParseException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class CmdiXsdChecker implements CommandLineable {
+public class CmdiXsdChecker {
 
     ValidatorSettings settings;
 

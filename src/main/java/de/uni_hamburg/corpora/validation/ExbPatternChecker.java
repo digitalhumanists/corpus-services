@@ -11,11 +11,8 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import java.io.IOException;
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -39,7 +36,7 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 /**
  * A command-line tool for checking EXB files.
  */
-public class ExbPatternChecker implements CommandLineable  {
+public class ExbPatternChecker {
 
     BasicTranscription bt;
     ValidatorSettings settings;

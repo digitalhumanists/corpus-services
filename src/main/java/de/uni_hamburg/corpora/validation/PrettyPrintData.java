@@ -10,7 +10,6 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;

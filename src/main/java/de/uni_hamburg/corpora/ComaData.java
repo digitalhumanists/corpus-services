@@ -16,14 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//don't know if this is the correct Coma class in Exmaralda yet...
-import org.exmaralda.coma.root.Coma;
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 import java.net.URI;
 import java.util.ArrayList;

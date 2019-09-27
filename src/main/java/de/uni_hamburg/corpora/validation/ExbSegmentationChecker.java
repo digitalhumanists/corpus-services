@@ -10,7 +10,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -36,7 +35,7 @@ import org.jdom.JDOMException;
 /**
  * A command-line tool for checking EXB files.
  */
-public class ExbSegmentationChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbSegmentationChecker extends Checker implements CorpusFunction {
 
     static String filename;
     static BasicTranscription bt;

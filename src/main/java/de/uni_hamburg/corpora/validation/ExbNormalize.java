@@ -12,8 +12,6 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;

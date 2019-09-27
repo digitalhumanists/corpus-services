@@ -10,7 +10,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
@@ -41,7 +40,7 @@ import org.xml.sax.ErrorHandler;
  * repository depositing.
  */
 
-public class ExbSchemaChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
     final String EXB_DTD_CHECKER = "exb-dtd";
 

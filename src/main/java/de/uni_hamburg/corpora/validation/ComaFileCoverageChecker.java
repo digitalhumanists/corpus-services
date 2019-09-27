@@ -9,7 +9,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
@@ -42,7 +41,7 @@ import java.net.URISyntaxException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaFileCoverageChecker extends Checker implements CommandLineable, StringChecker, CorpusFunction {
+public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
 
     ValidatorSettings settings;
     String referencePath = "./";
@@ -524,7 +523,6 @@ public class ComaFileCoverageChecker extends Checker implements CommandLineable,
         return IsUsableFor;
     }
 
-    @Override
     public Report check(String data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
