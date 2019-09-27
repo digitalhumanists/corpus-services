@@ -47,6 +47,7 @@ import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
+import de.uni_hamburg.corpora.validation.ExbSegmenter;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import java.io.File;
@@ -332,6 +333,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbMP3Next2WavAdder");
         allExistingCFs.add("ExbRefTierChecker");
         allExistingCFs.add("ReportStatistics");
+        allExistingCFs.add("ExbSegmenter");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -639,6 +641,21 @@ public class CorpusMagician {
                         }
                     }
                     corpusfunctions.add(eseg);
+                    break;
+                case "exbsegmenter":
+                    ExbSegmenter esegr = new ExbSegmenter();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("SEGMENTATION")) {
+                            esegr.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        }
+                        if (cfProperties.containsKey("FSM")) {
+                            esegr.setExternalFSM(cfProperties.getProperty("FSM"));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        }
+                    }
+                    corpusfunctions.add(esegr);
                     break;
                 case "calculateannotatedtime":
                     CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
