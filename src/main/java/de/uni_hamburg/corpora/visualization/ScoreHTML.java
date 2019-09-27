@@ -10,12 +10,10 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,8 +21,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,12 +30,12 @@ import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.partitureditor.interlinearText.HTMLParameters;
 import org.exmaralda.partitureditor.interlinearText.InterlinearText;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.convert.ItConverter;
 import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
+import org.exmaralda.partitureditor.jexmaralda.convert.ItConverter;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
 import org.jdom.JDOMException;
+import org.jdom.filter.ElementFilter;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
@@ -270,7 +266,6 @@ public class ScoreHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         try {
             if (args.length == 0) {

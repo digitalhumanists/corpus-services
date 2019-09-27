@@ -2,6 +2,8 @@
 !*/
 !.gitignore
 !*.java
+src/main/java/de/uni_hamburg/corpora/StupidCorpusMagicianTester.java
+!*.form
 !*.xsl
 !*.xml
 !*.html
@@ -12,3 +14,4 @@ target/
 !corpus-curation
 !exmaralda
 !HZSK-CLARIN-Services
+doc/

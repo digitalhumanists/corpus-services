@@ -9,7 +9,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.ExmaErrorList;
@@ -48,7 +47,7 @@ import org.xml.sax.SAXException;
  * A class that checks all file names in a directory to be deposited in HZSK
  * repository.
  */
-public class FilenameChecker extends Checker implements CommandLineable, CorpusFunction {
+public class FilenameChecker extends Checker implements CorpusFunction {
 
     Pattern acceptable;
     Pattern unacceptable;

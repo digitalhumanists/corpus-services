@@ -11,7 +11,6 @@ package de.uni_hamburg.corpora.validation;
 
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
@@ -39,7 +38,7 @@ import javax.xml.xpath.XPathExpressionException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaFedoraIdentifierLengthChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaFedoraIdentifierLengthChecker extends Checker implements CorpusFunction {
 
     ValidatorSettings settings;
     final String COMA_PID_LENGTH = "coma-pid-length";
