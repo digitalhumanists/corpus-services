@@ -10,7 +10,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.IOException;
@@ -25,12 +24,13 @@ import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.exmaralda.partitureditor.partiture.transcriptionActions.GetSegmentationErrorsAction;
 import org.jdom.JDOMException;
 
 /**
  * A command-line tool for checking EXB files.
  */
-public class ExbStructureChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbStructureChecker extends Checker implements CorpusFunction {
 
     String exbName;
     String filename;

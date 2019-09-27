@@ -11,7 +11,6 @@ import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.regex.Pattern;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
