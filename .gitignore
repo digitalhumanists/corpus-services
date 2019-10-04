@@ -15,3 +15,4 @@ target/
 !exmaralda
 !HZSK-CLARIN-Services
 doc/
+!*.png
