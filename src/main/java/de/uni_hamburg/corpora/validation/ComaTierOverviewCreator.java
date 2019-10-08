@@ -132,41 +132,64 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         }
         //now each exb linked in the coma file
         //TODO
-//        if (!btds.isEmpty()) {
-//            String h1 = "<h1> Tiers in each exb </h1>";
-//            communicationsTable = h1;
-//            //first is the column for filename, then all the tier category/type combinations
-//            String header = "<table id=\"\" class=\"compact\">\n"
-//                    + "   <thead>\n"
-//                    + "<th class=\"compact\"> Exb Filename </th>";
-//            for (String s : hash_Set) {
-//                header = header + "<th class=\"compact\">" + s + "</th><";
-//            }
-//            header = header + "</tr>"
-//                    + "   </thead>\n"
-//                    + "   <tbody>\n";
-//            String content = "";
-//            for (BasicTranscriptionData btd : btds) {
-//                //first is the column for filename, then all the tier category/type combinations
-//                content = content + "<tr><td class=\"compact\">" + btd.getFilename() + "</td>";
-//                for (String s : hash_Set) {
-//                    //TO DO
-//                    String st = btd.getEXMARaLDAbt().getBody().getTiersOfType(s).toString();
-//                    content = content + "<th class=\"compact\">" + st + "</th><";
-//                }
-//                content = content + "</tr>";
-//            }
-//
-//            String footer = " </tr>\n"
-//                    + "   </tbody>\n"
-//                    + "</table>";
-//            communicationsTable = h1 + header + content + footer;
-//        } else {
-//            stats.addWarning(cscc, cd, "No linked exbs found in the coma file. ");
-//        }
+        if (!btds.isEmpty()) {
+            String h1 = "<h1> Tiers in each exb </h1>";
+            communicationsTable = h1;
+            //first is the column for filename, then all the tier category/type combinations
+            String header = "<table id=\"\" class=\"compact\">\n"
+                    + "   <thead>\n"
+                    + "<th class=\"compact\"> Exb Filename </th>";
+            for (String s : hash_Set) {
+                header = header + "<th class=\"compact\">" + s + "</th>";
+            }
+            header = header + "</tr>"
+                    + "   </thead>\n"
+                    + "   <tbody>\n";
+            String content = "";
+            for (BasicTranscriptionData btd : btds) {
+                //first is the column for filename, then all the tier category/type combinations
+                content = content + "<tr><td class=\"compact\">" + btd.getFilename() + "</td>";
+                for (String s : hash_Set) {
+                    //TO DO
+                    String[] catType = s.split("type: ");
+                    String category = catType[0].substring(0, catType[0].length()-2);
+                    String type = catType[1].substring(0, catType[1].length()-1);
+                    String[] ids = btd.getEXMARaLDAbt().getBody().getTiersOfType(type);
+                    int noOfEvents = 0;
+                    boolean existence = false;
+                    if(ids.length>0){
+                        for(String id : ids){
+                            if(category.equals(btd.getEXMARaLDAbt().getBody().getTierWithID(id).getCategory())){
+                                noOfEvents += btd.getEXMARaLDAbt().getBody().getTierWithID(id).getNumberOfEvents();
+                                existence = true;
+                            }
+                        }
+                        if(existence){
+                            if(noOfEvents>0){
+                                content = content + "<td class=\"compact\">" + noOfEvents + "</td>";
+                            }else{
+                                content = content + "<td class=\"compact\">0</td>";
+                            }
+                        } else{
+                            content = content + "<td class=\"compact\"></td>";
+                        }
+                    }else{
+                        content = content + "<td class=\"compact\"></td>";
+                    }
+                }
+                content = content + "</tr>";
+            }
 
-        //String result = htmltemplate + overviewTable + communicationsTable;
-        String result = htmltemplate + overviewTable;
+            String footer = " </tr>\n"
+                    + "   </tbody>\n"
+                    + "</table>";
+            communicationsTable = h1 + header + content + footer;
+        } else {
+            stats.addWarning(cscc, cd, "No linked exbs found in the coma file. ");
+        }
+
+        String result = htmltemplate + overviewTable + communicationsTable;
+        //String result = htmltemplate + overviewTable;
 
         URL overviewurl = new URL(cd.getParentURL(), "curation/tier_overview.html");
         cio.write(result, overviewurl);
