@@ -19,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -30,22 +31,26 @@ import org.xml.sax.SAXException;
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
     final String COMA_OVERVIEW = "coma-overview";
+    boolean inel = false;
 
     @Override
     public Report check(CorpusData cd){
         Report r = new Report();
-        
+        String xsl;
         try{
 
             // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
-
+            if(inel){
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary_INEL.xsl"));    
+            }else {
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
+            }
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
         
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
-            //get locatino to save new result
+            //get location to save new result
             URL overviewurl = new URL(cd.getParentURL(), "curation/coma_overview.html");
             CorpusIO cio = new CorpusIO();
             //save it
@@ -94,6 +99,16 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+     public void setInel(String s) {
+        if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("wahr") || s.equalsIgnoreCase("ja")) {
+            inel = true;
+        } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
+            inel = false;
+        } else {
+            report.addCritical(COMA_OVERVIEW, cd, "Parameter coma not recognized: " + escapeHtml4(s));
+        }
     }
 
 }
