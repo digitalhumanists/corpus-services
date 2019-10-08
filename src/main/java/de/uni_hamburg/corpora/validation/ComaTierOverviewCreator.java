@@ -109,10 +109,10 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                     + "      </tr>\n"
                     + "   </thead>\n"
                     + "   <tbody>\n";
-            for (Tier tier : tiers) {
+            /* for (Tier tier : tiers) {
                 //stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
                 stringtiers.add(tier.getCategory() + "-" + tier.getType());
-            }
+            } */
             // add the tables to the html
             //first table: one column with categories, one with count    
             // add the overviewTable to the html
