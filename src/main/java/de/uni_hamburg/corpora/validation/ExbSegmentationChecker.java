@@ -190,4 +190,9 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     public void setExternalFSM(String s) {
         path2ExternalFSM = s;
     }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -154,4 +154,9 @@ public class XSLTChecker extends Checker implements CorpusFunction {
      public void setUtteranceEndSymbols(String s) {
         UTTERANCEENDSYMBOLS = s;
     }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

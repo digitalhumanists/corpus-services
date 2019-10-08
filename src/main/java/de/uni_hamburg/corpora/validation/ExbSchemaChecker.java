@@ -29,11 +29,9 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
-import org.xml.sax.ErrorHandler;
 
 /**
  * A class that can load basic transcription data and check for potential problems with HZSK
@@ -118,6 +116,11 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
             Logger.getLogger(ComaXsdChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

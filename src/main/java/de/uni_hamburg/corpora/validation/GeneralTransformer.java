@@ -158,4 +158,9 @@ public class GeneralTransformer extends Checker {
         }
     }
 
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -255,4 +255,9 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
         }
         return IsUsableFor;
     }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

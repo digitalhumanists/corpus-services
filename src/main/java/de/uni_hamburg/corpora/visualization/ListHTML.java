@@ -330,4 +330,9 @@ public class ListHTML extends Visualizer {
     public void setCorpusName(String s) {
         corpusname = s;
     }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
