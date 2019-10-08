@@ -35,6 +35,7 @@ import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
+import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -333,6 +334,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbRefTierChecker");
         allExistingCFs.add("ReportStatistics");
         allExistingCFs.add("ExbSegmenter");
+        allExistingCFs.add("ExbScriptMixChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -714,6 +716,10 @@ public class CorpusMagician {
                 case "exbreftierchecker":
                     ExbRefTierChecker ertc = new ExbRefTierChecker();
                     corpusfunctions.add(ertc);
+                    break;
+                case "exbscriptmixchecker":
+                    ExbScriptMixChecker esmc = new ExbScriptMixChecker();
+                    corpusfunctions.add(esmc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
