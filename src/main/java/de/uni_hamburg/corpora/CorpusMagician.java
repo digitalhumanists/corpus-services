@@ -417,6 +417,16 @@ public class CorpusMagician {
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("MODE") && cfProperties.getProperty("MODE").equals("INEL")) {
+                            xc.setXSLresource("/xsl/inel-checks.xsl");
+                            System.out.println("MODE set to " + cfProperties.getProperty("MODE"));
+                        }
+                        if (cfProperties.containsKey("UTTERANCEENDSYMBOLS")) {
+                            xc.setUtteranceEndSymbols(cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
+                            System.out.println("UTTERANCEENDSYMBOLS set to " + cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
+                        }
+                    }
                     corpusfunctions.add(xc);
                     break;
                 case "comaaddtiersfromexbscorrector":
@@ -462,6 +472,12 @@ public class CorpusMagician {
                 case "xsltcheckerinel":
                     XSLTChecker xci = new XSLTChecker();
                     xci.setXSLresource("/xsl/inel-checks.xsl");
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("UTTERANCEENDSYMBOLS")) {
+                            xci.setUtteranceEndSymbols(cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
+                            System.out.println("UTTERANCEENDSYMBOLS set to " + cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
+                        }
+                    }
                     corpusfunctions.add(xci);
                     break;
                 case "exb2inelisotei":

@@ -27,7 +27,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     String xslresource = "/xsl/nslc-checks.xsl";
     String xc = "XSLTChecker";
     String filename = "";
-    String UTTERANCEENDSYMBOLS = "'[.!?&#x2026;:]'";
+    String UTTERANCEENDSYMBOLS = "[.!?…:]";
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -149,5 +149,9 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
+    }
+    
+     public void setUtteranceEndSymbols(String s) {
+        UTTERANCEENDSYMBOLS = s;
     }
 }
