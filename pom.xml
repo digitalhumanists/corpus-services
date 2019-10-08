@@ -172,17 +172,17 @@
            <version>2.0.2</version>
          </dependency>
         -->
-		<dependency>
+        <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>4.2</version>
             <type>jar</type>
         </dependency>
-      <dependency>
-        <groupId>org.languagetool</groupId>
-        <artifactId>language-de</artifactId>
-        <version>4.2</version>
-      </dependency>
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-de</artifactId>
+            <version>4.2</version>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

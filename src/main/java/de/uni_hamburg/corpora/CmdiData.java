@@ -22,7 +22,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 /**

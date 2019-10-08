@@ -10,7 +10,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
@@ -41,7 +40,7 @@ import org.xml.sax.SAXException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaXsdChecker extends Checker implements CorpusFunction {
 
     ValidatorSettings settings;
     final String COMA_XSD_CHECKER = "coma-xsd";

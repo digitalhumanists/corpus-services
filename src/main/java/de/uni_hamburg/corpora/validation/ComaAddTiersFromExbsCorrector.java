@@ -13,9 +13,7 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
@@ -34,7 +32,6 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.BasicBody;
 import org.exmaralda.partitureditor.jexmaralda.Tier;
 import org.jdom.JDOMException;
-import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 

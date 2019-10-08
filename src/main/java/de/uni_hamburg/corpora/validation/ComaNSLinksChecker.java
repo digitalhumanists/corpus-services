@@ -10,7 +10,6 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -44,7 +43,7 @@ import javax.xml.xpath.XPathExpressionException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaNSLinksChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
     String referencePath = "./";
     String comaLoc = "";

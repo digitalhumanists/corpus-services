@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author fsnv625
  */
-public interface CorpusFunction extends CommandLineable{
+public interface CorpusFunction {
 
 public Report execute(CorpusData cd);
 

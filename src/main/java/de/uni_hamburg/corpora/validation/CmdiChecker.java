@@ -9,7 +9,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
@@ -36,7 +35,7 @@ import org.jdom.JDOMException;
  * A class that can load cmdi data and check for potential problems with HZSK
  * repository depositing.
  */
-public class CmdiChecker extends Checker implements CorpusFunction, CommandLineable, StringChecker {
+public class CmdiChecker extends Checker implements CorpusFunction {
 
     ValidatorSettings settings;
     final String CMDI_MISC = "cmdi-misc";
