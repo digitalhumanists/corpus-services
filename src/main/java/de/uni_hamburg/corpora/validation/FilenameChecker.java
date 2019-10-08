@@ -11,36 +11,22 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.ExmaErrorList;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.CommandLine;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -273,6 +259,11 @@ public class FilenameChecker extends Checker implements CorpusFunction {
             Logger.getLogger(FilenameChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -34,8 +34,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -291,6 +289,11 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
             report.merge(check(cd));
         }
         return report;
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

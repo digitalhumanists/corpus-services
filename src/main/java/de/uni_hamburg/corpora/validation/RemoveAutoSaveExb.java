@@ -115,4 +115,9 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
         return allAutoSaveInfo;
     }
 
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
