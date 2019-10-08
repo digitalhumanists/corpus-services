@@ -3,7 +3,6 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.ExmaErrorList;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
@@ -155,9 +154,9 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
-            Class clSecond = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
+            //Class clSecond = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
             IsUsableFor.add(cl);
-            IsUsableFor.add(clSecond);
+            //IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ExbTierDisplayNameChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
