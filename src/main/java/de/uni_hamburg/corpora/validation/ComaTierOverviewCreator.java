@@ -166,15 +166,15 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                         }
                         if(existence){
                             if(noOfEvents>0){
-                                content = content + "<th class=\"compact\">" + noOfEvents + "</th>";
+                                content = content + "<td class=\"compact\">" + noOfEvents + "</td>";
                             }else{
-                                content = content + "<th class=\"compact\">EMPTY</th>";
+                                content = content + "<td class=\"compact\">0</td>";
                             }
                         } else{
-                            content = content + "<th class=\"compact\">NONEXISTENT</th>";
+                            content = content + "<td class=\"compact\"></td>";
                         }
                     }else{
-                        content = content + "<th class=\"compact\">NONEXISTENT</th>";
+                        content = content + "<td class=\"compact\"></td>";
                     }
                 }
                 content = content + "</tr>";
