@@ -382,6 +382,13 @@ public class CorpusMagician {
                     break;
                 case "comaoverviewgeneration":
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
+                     if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("inel")) {
+                            cog.setInel(cfProperties.getProperty("inel"));
+                            System.out.println("INEL set to " + cfProperties.getProperty("inel"));
+                        }
+                    }
                     corpusfunctions.add(cog);
                     break;
                 case "comasegmentcountchecker":
@@ -701,25 +708,27 @@ public class CorpusMagician {
                     break;
                 case "generaltransformer":
                     GeneralTransformer gt = new GeneralTransformer();
-                    if (cfProperties.containsKey("coma")) {
-                        gt.setComa(cfProperties.getProperty("coma"));
-                        System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
-                    }
-                    if (cfProperties.containsKey("exb")) {
-                        gt.setExb(cfProperties.getProperty("exb"));
-                        System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
-                    }
-                    if (cfProperties.containsKey("exs")) {
-                        gt.setExs(cfProperties.getProperty("exs"));
-                        System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
-                    }
-                    if (cfProperties.containsKey("xsl")) {
-                        gt.setPathToXSL(cfProperties.getProperty("xsl"));
-                        System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
-                    }
-                    if (cfProperties.containsKey("overwritefiles")) {
-                        gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
-                        System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("coma")) {
+                            gt.setComa(cfProperties.getProperty("coma"));
+                            System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
+                        }
+                        if (cfProperties.containsKey("exb")) {
+                            gt.setExb(cfProperties.getProperty("exb"));
+                            System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
+                        }
+                        if (cfProperties.containsKey("exs")) {
+                            gt.setExs(cfProperties.getProperty("exs"));
+                            System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
+                        }
+                        if (cfProperties.containsKey("xsl")) {
+                            gt.setPathToXSL(cfProperties.getProperty("xsl"));
+                            System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
+                        }
+                        if (cfProperties.containsKey("overwritefiles")) {
+                            gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
+                            System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
+                        }
                     }
                     corpusfunctions.add(gt);
                     break;
