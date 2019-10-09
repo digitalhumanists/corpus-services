@@ -556,4 +556,8 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public void setLanguage(String lang) {
+        language = lang;
+    }
 }
