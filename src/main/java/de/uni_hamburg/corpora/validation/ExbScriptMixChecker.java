@@ -11,36 +11,22 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.CorpusIO;
-import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import de.uni_hamburg.corpora.XMLData;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
-import org.xml.sax.ErrorHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -51,7 +37,6 @@ import java.util.Map;
  * A class that checks for mixed scripts (e.g. Cyrillic/Latin) in the transcription.
  */
 public class ExbScriptMixChecker extends Checker implements CorpusFunction {
-    String tierLoc = "";
     static final String CHECKER_NAME = "ScriptMixChecker";
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
       Arrays.asList("tx", "mb", "mp", "ge"));
@@ -79,15 +64,15 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
+            stats.addException(pce, CHECKER_NAME, cd, "Unknown parsing error");          
         } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
+            stats.addException(saxe, CHECKER_NAME, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
+            stats.addException(ioe, CHECKER_NAME, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, CHECKER_NAME, cd, "Unknown parsing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, CHECKER_NAME, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -112,7 +97,7 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         Report report = new Report();
-        report.addCritical(CHECKER_NAME, cd.getURL().getFile(), "Fixing option is not available");
+        report.addCritical(CHECKER_NAME, cd, "Fixing option is not available");
         return report;
     }
 
@@ -134,34 +119,20 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     
     
     private Report testScriptMix(CorpusData cd, Boolean fix) throws IOException, SAXException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
-        try {
-            db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //so this is easier this way :)
         Document doc = null;
-        try {
-            doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        } catch (TransformerException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        XMLData xml = (XMLData)cd; 
+        doc = TypeConverter.JdomDocument2W3cDocument(xml.getJdom());
         Report stats = new Report(); // create a new report for the transcript
         
-        String transcriptName;
-        if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
-            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
-        } else {
-            transcriptName = "Nameless Transcript";
-        }
+        //I would rather use the filename instead the transcription name, when you add the error using the cd 
+        //object the filename gets added automatically to the created error list
+//        String transcriptName;
+//        if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
+//            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
+//        } else {
+//            transcriptName = "Nameless Transcript";
+//        }
         
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript      
         ArrayList<Element> relevantTiers = new ArrayList();
@@ -194,7 +165,8 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
                 }
                 if (lsScriptsUsed.size() > 1) {
                     String eventRef = "event " + eventStart + "/" + eventEnd 
-                            + ", tier '" + tierId + "', EXB '" + transcriptName+"'";
+                            + ", tier '" + tierId + "'";
+                    //Filename is added automatically so message can be shorter
                     String message = "Mixed scripts in \"" + eventText 
                             + "\" (" + String.join(", ", lsScriptsUsed) + "), " 
                             + eventRef;
