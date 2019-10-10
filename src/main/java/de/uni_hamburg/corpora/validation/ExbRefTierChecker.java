@@ -287,4 +287,9 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
 
         return stats; // return all the warnings
     }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
