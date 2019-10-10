@@ -140,4 +140,9 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
