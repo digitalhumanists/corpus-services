@@ -507,6 +507,10 @@ public class ReportItem {
                 ".critical{ background:#ffdddd; } "+
                 ".other{ background:#ffd39e; } "+
                 ".warning{ background:#fafcc2; } "+
+                ".char_Cyrillic{ color:#b51d0d; } "+
+                ".char_Greek{ background:#022299; } "+
+                ".char_Armenian{ background:#ad7600; } "+
+                ".char_Georgian{ background:#9c026d; } "+
                 "</style>\n";
         report += "   </head>\n   <body>\n";
         
