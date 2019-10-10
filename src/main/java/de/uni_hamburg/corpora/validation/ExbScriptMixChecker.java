@@ -39,19 +39,27 @@ import java.util.Map;
 public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     static final String CHECKER_NAME = "ScriptMixChecker";
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
-      Arrays.asList("tx", "mb", "mp", "ge"));
+      Arrays.asList("tx", "mb", "mp", "ge")); 
+    // Hardcoded list of tier names is bad. We'll have to replace it
+    // with a settings file or something like that.
     static String sCharClassLat = "[a-zÀ-žḀ-ỹ]";
     static String sCharClassCyr = "[Ѐ-ԯ]";
     static String sCharClassGreek = "[΄-ϡϰ-Ͽἀ-῾]";
-    Pattern rxLat = Pattern.compile(sCharClassLat, Pattern.CASE_INSENSITIVE);
-    Pattern rxCyr = Pattern.compile(sCharClassCyr, Pattern.CASE_INSENSITIVE);
-    Pattern rxGreek = Pattern.compile(sCharClassGreek, Pattern.CASE_INSENSITIVE);
+    static String sCharClassArmenian = "[Ա-֏]";
+    static String sCharClassGeorgian = "[\u10a0-\u10ff]";
+    Pattern rxLat = Pattern.compile(sCharClassLat, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
+    Pattern rxCyr = Pattern.compile(sCharClassCyr, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
+    Pattern rxGreek = Pattern.compile(sCharClassGreek, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
+    Pattern rxArmenian = Pattern.compile(sCharClassArmenian, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
+    Pattern rxGeorgian = Pattern.compile(sCharClassGeorgian, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
     Map<String, Pattern> dictScripts = new HashMap<>();
     
     public ExbScriptMixChecker() {
         dictScripts.put("Cyrillic", rxCyr);
         dictScripts.put("Latin", rxLat);
         dictScripts.put("Greek", rxGreek);
+        dictScripts.put("Armenian", rxArmenian);
+        dictScripts.put("Georgian", rxGeorgian);
     }
     
     /**
@@ -85,8 +93,7 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException,
                    TransformerException, XPathExpressionException {
-        
-        // test ref IDs without fixing errors
+        // test for mixed scripts without fixing errors
         Report stats = testScriptMix(cd, false);
         return stats; // return all the warnings
     }
@@ -125,15 +132,6 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
         doc = TypeConverter.JdomDocument2W3cDocument(xml.getJdom());
         Report stats = new Report(); // create a new report for the transcript
         
-        //I would rather use the filename instead the transcription name, when you add the error using the cd 
-        //object the filename gets added automatically to the created error list
-//        String transcriptName;
-//        if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
-//            transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
-//        } else {
-//            transcriptName = "Nameless Transcript";
-//        }
-        
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript      
         ArrayList<Element> relevantTiers = new ArrayList();
         for (int i = 0; i < tiers.getLength(); i++) {
@@ -166,11 +164,30 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
                 if (lsScriptsUsed.size() > 1) {
                     String eventRef = "event " + eventStart + "/" + eventEnd 
                             + ", tier '" + tierId + "'";
+                    // Highlight different scripts in different colors
+                    String eventTextColored = "";
+                    for (int iChar = 0; iChar < eventText.length(); ++iChar) {
+                        boolean bScriptFound = false;
+                        String curChar = eventText.substring(iChar, iChar + 1);
+                        for (Map.Entry<String, Pattern> entry : dictScripts.entrySet()) {
+                            Pattern p = entry.getValue();
+                            Matcher m = p.matcher(curChar);
+                            if (m.find()) {
+                                eventTextColored += "<span class=\"char_" 
+                                        + entry.getKey() + "\">" + curChar + "</span>";
+                                bScriptFound = true;
+                                break;
+                            }
+                        }
+                        if (!bScriptFound) {
+                            eventTextColored += curChar;
+                        }
+                    }
                     //Filename is added automatically so message can be shorter
-                    String message = "Mixed scripts in \"" + eventText 
+                    String message = "Mixed scripts in \"" + eventTextColored 
                             + "\" (" + String.join(", ", lsScriptsUsed) + "), " 
                             + eventRef;
-                    stats.addCritical(CHECKER_NAME, cd, message);
+                    stats.addWarning(CHECKER_NAME, cd, message);
                 }
                 /*
                 else {
