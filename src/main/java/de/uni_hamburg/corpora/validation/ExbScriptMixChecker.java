@@ -201,6 +201,6 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "A functions that checks for mixed scripts (e.g. Cyrillic/Latin) in the transcription tiers of EXMARaLDA basic transcriptions and issues warnings if they are found";
     }
 }
