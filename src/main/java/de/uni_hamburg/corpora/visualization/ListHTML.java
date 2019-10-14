@@ -39,6 +39,10 @@ import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 /**
  *
  * @author Daniel Jettka
+ * 
+ * This class creates an html visualization 
+ * in the List format from an exb.
+ * 
  */
 public class ListHTML extends Visualizer {
 
@@ -333,6 +337,8 @@ public class ListHTML extends Visualizer {
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class creates an html visualization "
+                       + "in the List format from an exb. ";
+        return description;
     }
 }

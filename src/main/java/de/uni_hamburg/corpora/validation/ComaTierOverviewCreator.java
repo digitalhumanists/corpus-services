@@ -25,8 +25,9 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
- * A class that checks whether there are more than one segmentation algorithms
- * used in the corpus. If that is the case, it issues warnings.
+ * This class creates a sort- and filterable html overview in table form
+ * of all tiers existing in the exbs linked in the coma file to make error "
+ * checking and harmonizing easier. 
  */
 public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
 
@@ -205,9 +206,9 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class checks whether there are more than one"
-                + " segmentation algorithms used in the corpus. If that is the case"
-                + ", it issues warnings.";
+        String description = "This class creates a sort- and filterable html overview in table form "
+                + " of all tiers existing in the exbs linked in the coma file to make error "
+                + "checking and harmonizing easier. ";
         return description;
     }
 }

@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * The class that calculates annotated time for exb files.
+ * This class calculates annotated time for an exb file and computes the duration of each annotation in the exb.
  *
  */
 public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
@@ -223,9 +223,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class calculates annotated time for exb files; "
-                + "it accepts the basic transcription files of the corpus one by "
-                + "one and computes the duration of each annotation in the exb.";
+        String description = "This class calculates annotated time for an exb file and computes the duration of each annotation in the exb.";
         return description;
     }
 

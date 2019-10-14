@@ -189,7 +189,10 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class takes a coma file and creates a zip file containing all important "
+                + "corpus file in the resources folder. It only takes exb, exs, coma, pdf and optionally mp3, "
+                + "and the folder structure. ";
+        return description;
     }
 
 }

@@ -23,6 +23,9 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class normalises the basic transcription data using the EXMARaLDA function and fixes white spaces if set by a parameter.
+ * 
  */
 public class ExbNormalize extends Checker implements CorpusFunction {
 
@@ -97,8 +100,8 @@ public class ExbNormalize extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class normalises the basic transcription data by"
-                + " fixing white spaces if necessary.";
+        String description = "This class normalises the basic transcription data using "
+                + "the EXMARaLDA function and fixes white spaces if set by a parameter. ";
         return description;
     }
 

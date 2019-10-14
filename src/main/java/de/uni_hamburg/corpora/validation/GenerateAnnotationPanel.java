@@ -229,7 +229,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         String description = "This class generates an annotation specification panel"
-                + " from the basic transcription files (exb) in a given corpus.";
+                + " from the basic transcription files (exb).";
         return description;
     }
 

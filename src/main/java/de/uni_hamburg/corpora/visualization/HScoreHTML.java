@@ -180,7 +180,9 @@ public class HScoreHTML extends Visualizer {
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                String description = "This class creates an html visualization "
+                       + "in the HScore format from an exb. ";
+        return description;
     }
 
 }

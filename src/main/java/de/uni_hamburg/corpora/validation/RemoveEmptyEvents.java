@@ -122,7 +122,7 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         String description = "This class removes empty events present in exb and"
-                + " exs files.";
+                + " exs files. ";
         return description;
     }
 

@@ -21,6 +21,8 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class takes XML corpusdata and formats it in the same way to avoid merge conflicts. 
  */
 public class PrettyPrintData extends Checker implements CorpusFunction {
 
@@ -130,8 +132,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class takes the data and changes it to a saveable"
-                + " string.";
+        String description = "This class takes XML corpusdata and formats it in the same way to avoid merge conflicts. ";
         return description;
     }
 }

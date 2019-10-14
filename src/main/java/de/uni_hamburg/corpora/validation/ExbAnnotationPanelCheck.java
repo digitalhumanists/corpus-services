@@ -146,7 +146,7 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         String description = "This class checks whether the annotations in exb "
-                + "files comply with the annotation specification panel.";
+                + "files comply with the annotation specification panel. ";
         return description;
     }
 

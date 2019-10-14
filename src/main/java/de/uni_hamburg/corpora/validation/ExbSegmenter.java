@@ -41,7 +41,9 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 
 /**
- * A command-line tool for checking EXB files.
+ * This class checks Exmaralda exb files for segmentation problems and creates
+ * segmented exs from the exbs.
+ * 
  */
 public class ExbSegmenter extends Checker implements CorpusFunction {
 
@@ -265,9 +267,8 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class is a command-line tool for checking EXB files; "
-                + "it checks Exmaralda exb files for segmentation problems and creates "
-                + "segmented exss from the exbs.";
+        String description = "This class checks Exmaralda exb files for segmentation problems and creates "
+                + "segmented exs from the exbs.";
         return description;
     }
 }

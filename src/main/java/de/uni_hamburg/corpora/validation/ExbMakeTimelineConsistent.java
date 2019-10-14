@@ -23,6 +23,10 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class makes the timeline of exbs consistent by removing incorrect timepoints 
+ * and interpolates timeline items without time info if the parameter is set.
+ * 
  */
 public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction {
 
@@ -99,8 +103,9 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
      */
     @Override
     public String getDescription() {
-        String description = "This class makes the timeline consistent by interpolating"
-                + " it if necessary.";
+        String description = "This class makes the timeline of exbs consistent by removing "
+                + "incorrect timepoints and interpolates timeline items without time "
+                + "info if the parameter is set. ";
         return description;
     }
 }

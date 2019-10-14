@@ -38,8 +38,8 @@ import org.xml.sax.SAXException;
 
 
 /**
- * A class that can load coma data and check for potential problems with HZSK
- * repository depositing.
+ * This class loads coma data and for all communications adds all tiers found
+ * in the linked exb as a key value pairs to the description. 
  */
 public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunction{
 
@@ -848,8 +848,8 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
      */
     @Override
     public String getDescription() {
-        String description = "This class loads coma data, and checks for and fix potential"
-                + " problems with HZSK repository depositing.";
+        String description = "This class loads coma data and for all communications adds "
+                + "all tiers found in the linked exb as a key value pairs to the description. ";
         return description;
     }
 }
