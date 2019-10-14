@@ -560,4 +560,8 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
         String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
         return description;
     }
+    
+    public void setLanguage(String lang) {
+        language = lang;
+    }
 }
