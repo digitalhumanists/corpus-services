@@ -35,6 +35,7 @@ import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
+import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -333,6 +334,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbRefTierChecker");
         allExistingCFs.add("ReportStatistics");
         allExistingCFs.add("ExbSegmenter");
+        allExistingCFs.add("ExbScriptMixChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -382,7 +384,7 @@ public class CorpusMagician {
                     break;
                 case "comaoverviewgeneration":
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
-                     if (cfProperties != null) {
+                    if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey("inel")) {
                             cog.setInel(cfProperties.getProperty("inel"));
@@ -490,6 +492,13 @@ public class CorpusMagician {
                     break;
                 case "exb2inelisotei":
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("LANG")) {
+                            eiit.setLanguage(cfProperties.getProperty("LANG"));
+                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                        }
+                    }
                     corpusfunctions.add(eiit);
                     break;
                 case "exb2inelisoteisel":
@@ -509,6 +518,13 @@ public class CorpusMagician {
                     break;
                 case "exb2hiatisotei":
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("LANG")) {
+                            ehit.setLanguage(cfProperties.getProperty("LANG"));
+                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                        }
+                    }
                     corpusfunctions.add(ehit);
                     break;
                 case "normalizeexb":
@@ -739,6 +755,10 @@ public class CorpusMagician {
                 case "exbreftierchecker":
                     ExbRefTierChecker ertc = new ExbRefTierChecker();
                     corpusfunctions.add(ertc);
+                    break;
+                case "exbscriptmixchecker":
+                    ExbScriptMixChecker esmc = new ExbScriptMixChecker();
+                    corpusfunctions.add(esmc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
