@@ -125,9 +125,13 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
 
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class takes the data and changes it to a saveable"
+                + " string.";
+        return description;
     }
-
 }

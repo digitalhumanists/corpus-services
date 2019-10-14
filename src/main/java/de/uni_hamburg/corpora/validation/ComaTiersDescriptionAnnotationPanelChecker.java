@@ -184,8 +184,14 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks out that all annotations are from"
+                + " the annotation specification file and that there are no annotations"
+                + " in the coma file not existing in the annotation specification file.";
+        return description;
     }
 }
