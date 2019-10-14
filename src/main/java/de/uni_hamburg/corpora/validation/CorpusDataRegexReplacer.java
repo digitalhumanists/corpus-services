@@ -201,9 +201,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class issues warnings if the coma file contains "
-                + "containsRegEx ’and adds that warning to the report which it "
-                + "returns.";
+        String description = "This class issues warnings if a file contains a certain RegEx and can also replace";
         return description;
     }
 }

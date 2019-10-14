@@ -168,7 +168,7 @@ public class ReportStatistics extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class creates or updates the statistics report"
+        String description = "This class creates or updates the html statistics report"
                 + " from the report output file outputted by the corpus services.";
         return description;
     }

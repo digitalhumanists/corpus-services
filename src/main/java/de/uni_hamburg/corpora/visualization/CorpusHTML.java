@@ -110,7 +110,10 @@ public class CorpusHTML extends Visualizer {
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class creates an html overview of the corpus "
+                + "needed for the ingest into the repository. ";
+        return description;
+
     }
 
 }

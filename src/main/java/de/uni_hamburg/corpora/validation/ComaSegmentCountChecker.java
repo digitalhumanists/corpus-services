@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 
 /**
  * A class that checks whether there are more than one segmentation algorithms
- * used in the corpus. If that is the case, it issues warnings.
+ * used in the coma file. If that is the case, it issues warnings.
  */
 public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
 
@@ -145,7 +145,7 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         String description = "This class checks whether there are more than one "
-                + "segmentation algorithms used in the corpus. If that is the case"
+                + "segmentation algorithms used in the coma file. If that is the case"
                 + ", it issues warnings.";
         return description;
     }

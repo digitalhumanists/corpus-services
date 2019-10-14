@@ -447,8 +447,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class finds and removes paths that are absolute"
-                + " in files.";
+        String description = "This class finds paths that are absolute"
+                + " in files and replaces them with paths relative to the corpus folder. ";
         return description;
     }
 }

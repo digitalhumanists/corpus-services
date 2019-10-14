@@ -163,7 +163,7 @@ public class GeneralTransformer extends Checker {
      */
     @Override
     public String getDescription() {
-        String description = "This class runs an xsl transformation on files.";
+        String description = "This class runs an xsl transformation on files. ";
         return description;
     }
 

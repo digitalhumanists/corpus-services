@@ -552,9 +552,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class loads coma data and check for potential"
-                + " problems with HZSK repository depositing;checks whether files "
-                + "are both in coma file and file system. ";
+        String description = "This class is a validator for Coma file references;"
+                + " it checks Exmaralda coma file for file references if a referenced "
+                + "file does not exist, issues a warning;";
         return description;
     }
 
