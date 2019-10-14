@@ -190,9 +190,15 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     public void setExternalFSM(String s) {
         path2ExternalFSM = s;
     }
-
+    
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class takes a CorpusDataObject that is an Exb, "
+                + "checks if there are SegmentationErrors using EXMARaLDA Code and"
+                + " returns the errors in the Report and in the ExmaErrors.";
+        return description;
     }
 }

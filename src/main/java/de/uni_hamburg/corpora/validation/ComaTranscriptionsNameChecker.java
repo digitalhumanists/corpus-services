@@ -256,8 +256,14 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks whether or not there is a mismatch "
+                + "between basic and segmented names, basic and segmented file names, "
+                + "plus their NSLinks for each communication in the coma file.";
+        return description;
     }
 }

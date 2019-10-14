@@ -843,9 +843,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         return report;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class loads coma data, and checks for and fix potential"
+                + " problems with HZSK repository depositing.";
+        return description;
     }
-
 }

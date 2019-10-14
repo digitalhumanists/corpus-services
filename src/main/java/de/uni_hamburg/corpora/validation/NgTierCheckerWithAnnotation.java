@@ -183,8 +183,15 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks out if all annotations for Nganasan"
+                + " Corpus are from the annotation specification file and there are"
+                + " no annotations in the coma file not present in the annotation"
+                + " specification file.";
+        return description;
     }
 }

@@ -218,9 +218,15 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class calculates annotated time for exb files; "
+                + "it accepts the basic transcription files of the corpus one by "
+                + "one and computes the duration of each annotation in the exb.";
+        return description;
     }
 
 }
