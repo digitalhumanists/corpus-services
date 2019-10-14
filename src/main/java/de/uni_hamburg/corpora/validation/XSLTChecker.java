@@ -21,6 +21,9 @@ import javax.xml.xpath.XPathExpressionException;
 /**
  *
  * @author Daniel Jettka, daniel.jettka@uni-hamburg.de
+ * 
+ * This class runs many little checks specified in a XSLT stylesheet and adds them to the report.";
+ * 
  */
 public class XSLTChecker extends Checker implements CorpusFunction {
 
@@ -155,8 +158,13 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         UTTERANCEENDSYMBOLS = s;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class runs many little checks specified"
+                + " in a XSLT stylesheet and adds them to the report. ";
+        return description;
     }
 }

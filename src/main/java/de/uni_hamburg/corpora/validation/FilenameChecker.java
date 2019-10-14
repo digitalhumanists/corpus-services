@@ -261,9 +261,15 @@ public class FilenameChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks if all file names in the directory"
+                + " to be deposited in HZSK repository; checks if there is a file"
+                + " which is not named according to coma file.";
+        return description;
     }
 
 }

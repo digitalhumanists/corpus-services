@@ -23,13 +23,18 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class makes the timeline of exbs consistent by removing incorrect timepoints 
+ * and interpolates timeline items without time info if the parameter is set.
+ * 
  */
 public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction {
+
     Document doc = null;
     BasicTranscriptionData btd = null;
     Boolean interpolateTimeline = false;
     String ne = "MakeTimelineConsistent";
-    
+
     @Override
     public Report check(CorpusData cd) {
         report.addCritical(ne, cd.getURL().getFile(), "Checking option is not available");
@@ -42,34 +47,33 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
             btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
             bt.getBody().getCommonTimeline().makeConsistent();
-            if(interpolateTimeline){
+            if (interpolateTimeline) {
                 bt.getBody().getCommonTimeline().completeTimes();
             }
-            
+
             btd.setReadbtasjdom(bt.toJDOMDocument());
             btd.setOriginalString(bt.toXML(bt.getTierFormatTable()));
             //btd.updateReadbtasjdom();
             cd = (CorpusData) btd;
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
-            if(cd != null){
-            report.addCorrect(ne, cd, "made timeline consistent");   
-            }
-            else{
-            report.addCritical(ne, cd, "making timeline consistent not possible");
+            if (cd != null) {
+                report.addCorrect(ne, cd, "made timeline consistent");
+            } else {
+                report.addCritical(ne, cd, "making timeline consistent not possible");
             }
         } catch (JDOMException ex) {
             report.addException(ex, ne, cd, "unknown xml exception");
         } catch (IOException ex) {
             report.addException(ex, ne, cd, "unknown IO exception");
         } catch (TransformerException ex) {
-             report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, ne, cd, "unknown IO exception");
         } catch (ParserConfigurationException ex) {
-             report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, ne, cd, "unknown IO exception");
         } catch (SAXException ex) {
-             report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, ne, cd, "unknown IO exception");
         } catch (XPathExpressionException ex) {
-             report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, ne, cd, "unknown IO exception");
         }
         return report;
     }
@@ -85,16 +89,23 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
         }
         return IsUsableFor;
     }
-    
-    public void setInterpolateTimeline(String s){
+
+    public void setInterpolateTimeline(String s) {
         interpolateTimeline = false;
         if (s.equals("true") || s.equals("wahr") || s.equals("ja") || s.equals("yes")) {
             interpolateTimeline = true;
         }
     }
 
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class makes the timeline of exbs consistent by removing "
+                + "incorrect timepoints and interpolates timeline items without time "
+                + "info if the parameter is set. ";
+        return description;
     }
 }

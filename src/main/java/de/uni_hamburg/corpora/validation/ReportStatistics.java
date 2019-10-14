@@ -163,9 +163,13 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         return check(cd);
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class creates or updates the html statistics report"
+                + " from the report output file outputted by the corpus services.";
+        return description;
     }
-
 }

@@ -547,9 +547,15 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         return extension;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class is a validator for Coma file references;"
+                + " it checks Exmaralda coma file for file references if a referenced "
+                + "file does not exist, issues a warning;";
+        return description;
     }
 
 }

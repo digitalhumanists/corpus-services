@@ -38,8 +38,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
- * A class that can load coma data and check for potential problems with HZSK
- * repository depositing.
+ * This class checks for existence of files linked in the 
+ * coma file.
  */
 public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
@@ -291,9 +291,13 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         return report;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks for existence of files linked in the "
+                + "coma file.";
+        return description;
     }
-
 }

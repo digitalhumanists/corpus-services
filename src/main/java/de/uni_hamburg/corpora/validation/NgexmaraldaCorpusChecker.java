@@ -701,8 +701,14 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class is the check procedure for the Nganasan"
+                + " Corpus and checks if the file names in the corpus comply with"
+                + " the coma file.";
+        return description;
     }
 }

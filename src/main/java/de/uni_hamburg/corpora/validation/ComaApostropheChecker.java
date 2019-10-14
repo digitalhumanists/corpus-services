@@ -13,8 +13,8 @@ import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
 
 /**
- * A class that checks whether or not the coma file contains an apostrophe ’. If
- * it does then these all apostrophes ’ are changed to apostrophes '.
+ * A class that checks whether or not the coma file contains an apostrophe '. If
+ * it does then these all apostrophes ' are changed to apostrophes ’.
  */
 public class ComaApostropheChecker extends Checker implements CorpusFunction {
 
@@ -118,9 +118,14 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks whether or not the coma file "
+                + "contains an apostrophe '. If it does then these all apostrophes"
+                + " ' are changed to apostrophes ’.";
+        return description;
     }
-
 }

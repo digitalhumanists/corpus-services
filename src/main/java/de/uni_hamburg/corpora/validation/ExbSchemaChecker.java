@@ -34,8 +34,7 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
- * A class that can load basic transcription data and check for potential problems with HZSK
- * repository depositing.
+ * This class validates a exb file with its DTD file.
  */
 
 public class ExbSchemaChecker extends Checker implements CorpusFunction {
@@ -118,10 +117,13 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class validates a exb file with its DTD file. ";
+        return description;
     }
-
 }
 
