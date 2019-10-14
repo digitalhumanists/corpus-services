@@ -288,8 +288,15 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         return stats; // return all the warnings
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks reference tiers in exb files and"
+                + " finds out whether or not the order of the numbering and speaker"
+                + " reference are correct and if there are any mistakes in the ref"
+                + " tiers, it corrects them thanks to its fix function.";
+        return description;
     }
 }

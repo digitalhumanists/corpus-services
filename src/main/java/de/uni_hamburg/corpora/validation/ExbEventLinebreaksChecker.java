@@ -29,6 +29,11 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 /**
  *
  * @author fsnv625
+ * 
+ * This class issues warnings if the exb file contains 
+ * linebreaks or fixes linebreaks in the events and adds those 
+ * warnings to the report which it returns.
+ * 
  */
 public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction {
 
@@ -168,9 +173,14 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class issues warnings if the exb file contains "
+                + "linebreaks or fixes linebreaks in the events and adds those "
+                + "warnings to the report which it returns.";
+        return description;
     }
-
 }

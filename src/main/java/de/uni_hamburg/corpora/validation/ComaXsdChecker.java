@@ -37,8 +37,8 @@ import org.xml.sax.SAXException;
 
 
 /**
- * A class that can load coma data and check for potential problems with HZSK
- * repository depositing.
+ * This class validates the coma file with the respective XML schema.
+ * 
  */
 public class ComaXsdChecker extends Checker implements CorpusFunction {
 
@@ -175,9 +175,13 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class validates the coma file with the respective XML schema. ";
+        return description;
     }
 
 }

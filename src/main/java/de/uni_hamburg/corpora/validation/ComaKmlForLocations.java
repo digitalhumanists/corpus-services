@@ -450,8 +450,14 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class identifies and lists fields which contain"
+                + " location information; creates a list of different location names;"
+                + " gets geo-coordinates for the location names via Google API.";
+        return description;
     }
 }

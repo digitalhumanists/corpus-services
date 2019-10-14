@@ -41,7 +41,9 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 
 /**
- * A command-line tool for checking EXB files.
+ * This class checks Exmaralda exb files for segmentation problems and creates
+ * segmented exs from the exbs.
+ * 
  */
 public class ExbSegmenter extends Checker implements CorpusFunction {
 
@@ -260,8 +262,13 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         path2ExternalFSM = s;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks Exmaralda exb files for segmentation problems and creates "
+                + "segmented exs from the exbs.";
+        return description;
     }
 }

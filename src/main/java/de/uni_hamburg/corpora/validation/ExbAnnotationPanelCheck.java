@@ -140,9 +140,14 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks whether the annotations in exb "
+                + "files comply with the annotation specification panel. ";
+        return description;
     }
 
 }

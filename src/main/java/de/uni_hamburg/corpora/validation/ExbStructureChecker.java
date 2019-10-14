@@ -28,7 +28,8 @@ import org.exmaralda.partitureditor.partiture.transcriptionActions.GetSegmentati
 import org.jdom.JDOMException;
 
 /**
- * A command-line tool for checking EXB files.
+ * This class checks basic transcription files for structural anomalies. 
+ * 
  */
 public class ExbStructureChecker extends Checker implements CorpusFunction {
 
@@ -238,8 +239,12 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class checks basic transcription files for structural anomalies. ";
+        return description;
     }
 }

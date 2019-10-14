@@ -115,9 +115,13 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
         return allAutoSaveInfo;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class removes auto save information present in"
+                + " exb and exs files.";
+        return description;
     }
-
 }

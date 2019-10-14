@@ -49,10 +49,9 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     public AddCSVMetadataToComa(String corpusPath) {
         //super(corpusPath);
     }
-    
+
     public AddCSVMetadataToComa() {
     }
-
 
     /**
      * creates a new instance of AddCSVMetadataToComa
@@ -107,7 +106,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         stats.addNote(CSV_to_Coma, cd, Arrays.toString(allElements.get(0)));
         System.out.println(allElements.get(0)[0]);
         stats.addNote(CSV_to_Coma, cd, allElements.get(0)[0]);
-        
+
         coma = org.exmaralda.common.jdomutilities.IOUtilities.readDocumentFromLocalFile(comaFile);
         //add the key and value to speaker/description or communication/description
         for (int i = 1; i < allElements.size(); i++) {
@@ -276,7 +275,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     public void setCSVFilePath(String path) {
         this.csvFile = path;
     }
-    
+
     // set what sort of data the csv file contain which will eventually be added to the coma
     public void setSpeakerOrCommunication(String spOrCommInput) {
         if (spOrCommInput.equals("speaker")) {
@@ -310,7 +309,11 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "this class can be used from the command line to insert data in a csv file "
+                + "  into an existing coma file there needs to be a header with information of the "
+                + "  information in the columns the first line has to consist of the sigle of the "
+                + "  speaker or name of the communication the metadata should be assigned to";
+        return description;
     }
 
 }

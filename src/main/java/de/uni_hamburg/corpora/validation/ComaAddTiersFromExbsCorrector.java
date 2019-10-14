@@ -38,8 +38,8 @@ import org.xml.sax.SAXException;
 
 
 /**
- * A class that can load coma data and check for potential problems with HZSK
- * repository depositing.
+ * This class loads coma data and for all communications adds all tiers found
+ * in the linked exb as a key value pairs to the description. 
  */
 public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunction{
 
@@ -843,9 +843,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         return report;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class loads coma data and for all communications adds "
+                + "all tiers found in the linked exb as a key value pairs to the description. ";
+        return description;
     }
-
 }

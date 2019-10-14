@@ -40,6 +40,9 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class takes an exb as input and converts it into ISO standard TEI format. 
+ * 
  */
 public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
    
@@ -554,7 +557,8 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
+        return description;
     }
     
     public void setLanguage(String lang) {
