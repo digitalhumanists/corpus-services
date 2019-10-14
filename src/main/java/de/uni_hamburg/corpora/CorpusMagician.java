@@ -957,6 +957,10 @@ public class CorpusMagician {
         Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
         fix.setRequired(false);
         options.addOption(errorsonly);
+        
+        Option verbose = new Option("v", "verbose", false, "output verbose help");
+        fix.setRequired(false);
+        options.addOption(verbose);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -964,7 +968,11 @@ public class CorpusMagician {
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
         String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
-
+        String footerverbose = "\nthe available functions are:\n";
+        for(CorpusFunction cf: corpusFunctionStrings2Classes()){
+            cf.getDescription();
+        }
+        footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
@@ -976,6 +984,11 @@ public class CorpusMagician {
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
             formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+            System.exit(1);
+        }
+        if (cmd.hasOption("v")) {
+            // automatically generate the help statement
+            formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
         if (cmd.hasOption("p")) {
