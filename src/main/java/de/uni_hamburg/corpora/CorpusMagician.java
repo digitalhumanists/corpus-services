@@ -46,6 +46,7 @@ import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
+import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmenter;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
@@ -335,6 +336,7 @@ public class CorpusMagician {
         allExistingCFs.add("ReportStatistics");
         allExistingCFs.add("ExbSegmenter");
         allExistingCFs.add("ExbScriptMixChecker");
+        allExistingCFs.add("ComaUpdateSegmentCounts");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -759,6 +761,10 @@ public class CorpusMagician {
                 case "exbscriptmixchecker":
                     ExbScriptMixChecker esmc = new ExbScriptMixChecker();
                     corpusfunctions.add(esmc);
+                    break;
+                case "comaupdatesegmentcounts":
+                    ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
+                    corpusfunctions.add(cusc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");

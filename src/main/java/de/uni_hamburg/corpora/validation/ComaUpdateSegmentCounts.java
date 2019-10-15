@@ -4,15 +4,10 @@ import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
-import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,8 +16,6 @@ import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.coma.root.Coma;
 import org.xml.sax.SAXException;
 
-import org.jdom.Document;
-import org.jdom.JDOMException;
 
 /**
  *
