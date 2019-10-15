@@ -21,6 +21,7 @@ import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.output.XMLOutputter;
@@ -107,7 +108,7 @@ public class CorpusIO {
     }
 
     //read a single file as a corpus data object from an url
-    public CorpusData readFileURL(URL url) {
+    public CorpusData readFileURL(URL url) throws SAXException, JexmaraldaException {
         if (url.getPath().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(url);
             //bt.loadFile(f);
@@ -135,7 +136,7 @@ public class CorpusIO {
     }
 
     //read all the files as corpus data objects from a directory url
-    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException {
+    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException, SAXException, JexmaraldaException {
         alldata = URLtoList(url);
         for (URL readurl : alldata) {
             CorpusData cdread = readFileURL(readurl);
