@@ -7,8 +7,6 @@ package de.uni_hamburg.corpora;
 
 import org.exmaralda.coma.root.Coma;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -65,9 +63,8 @@ public class ComaData implements Metadata, CorpusData, XMLData {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
             readcomaasjdom = builder.build(url);
-            File f = new File(url.toURI());
             originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
-            loadFile(f);
+            loadComaString(originalstring);
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             CORPUS_BASEDIRECTORY = parentURI.toURL();
@@ -82,10 +79,8 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         }
     }
 
-    public void loadFile(File f) throws SAXException, JexmaraldaException, FileNotFoundException, MalformedURLException {
-        org.exmaralda.coma.helpers.StreamToString reader = new org.exmaralda.coma.helpers.StreamToString();
-        coma = new Coma(reader.convertStreamToString(new FileInputStream(f)), "0.0", "0", false);
-        url = f.toURI().toURL();
+    public void loadComaString(String s) throws SAXException, JexmaraldaException, FileNotFoundException, MalformedURLException {
+        coma = new Coma(s, "0.0", "0", false);
     }
 
     /*public void updateReadcomaasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
