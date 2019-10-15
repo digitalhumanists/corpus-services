@@ -5,8 +5,11 @@
  */
 package de.uni_hamburg.corpora;
 
+import org.exmaralda.coma.root.Coma;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -29,6 +32,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 import org.apache.commons.io.FilenameUtils;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
@@ -37,7 +41,7 @@ import org.apache.commons.io.FilenameUtils;
 public class ComaData implements Metadata, CorpusData, XMLData {
 
     //TODO
-    //private Coma coma;
+    private Coma coma;
     //TODO change exceptions to adding ReportItems
     URL url;
     Document readcomaasjdom = new Document();
@@ -56,14 +60,14 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     public ComaData() {
     }
 
-    public ComaData(URL url) {
+    public ComaData(URL url) throws SAXException, JexmaraldaException {
         try {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
             readcomaasjdom = builder.build(url);
             File f = new File(url.toURI());
             originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
-            //loadFile(f);
+            loadFile(f);
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             CORPUS_BASEDIRECTORY = parentURI.toURL();
@@ -78,19 +82,18 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         }
     }
 
-    //TODO
-//     public void loadFile(File f) throws SAXException, JexmaraldaException, MalformedURLException {
-//        coma = new BasicTranscription(f.getAbsolutePath());
-//        url = f.toURI().toURL();
-//    }
-    //TODO
-    /*  
-     public void updateReadcomaasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
-        String xmlString = bt.toXML();
-        SAXBuilder builder = new SAXBuilder();
-        readbtasjdom = builder.build(xmlString);
+    public void loadFile(File f) throws SAXException, JexmaraldaException, FileNotFoundException, MalformedURLException {
+        org.exmaralda.coma.helpers.StreamToString reader = new org.exmaralda.coma.helpers.StreamToString();
+        coma = new Coma(reader.convertStreamToString(new FileInputStream(f)), "0.0", "0", false);
+        url = f.toURI().toURL();
     }
-     */
+
+    /*public void updateReadcomaasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
+        String xmlString = 
+        SAXBuilder builder = new SAXBuilder();
+        readcomaasjdom = builder.build(xmlString);
+    }*/
+
     @Override
     public URL getURL() {
         return url;
@@ -130,7 +133,7 @@ public class ComaData implements Metadata, CorpusData, XMLData {
             for (int pos = 0; pos < transcriptionList.size(); pos++) {
                 Element nslink = (Element) (transcriptionList.get(pos));
                 //String fullTranscriptionName = CORPUS_BASEDIRECTORY.toURI().getPath() + nslink.getText();
-                resulturl = new URL (CORPUS_BASEDIRECTORY + nslink.getText()); 
+                resulturl = new URL(CORPUS_BASEDIRECTORY + nslink.getText());
                 //Paths.get(fullTranscriptionName).toUri().toURL();
                 resulturls.add(resulturl);
             }
@@ -140,7 +143,7 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         }
         return null;
     }
-    
+
     public ArrayList<String> getAllBasicTranscriptionFilenames() {
         try {
             ArrayList<String> result = new ArrayList<>();
@@ -220,5 +223,13 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     @Override
     public void setJdom(Document jdom) {
         readcomaasjdom = jdom;
+    }
+
+    public Coma getEXMARaLDAComa() {
+        return coma;
+    }
+
+    public void setOriginalString(String s) {
+        originalstring = s;
     }
 }
