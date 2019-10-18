@@ -34,6 +34,8 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -238,6 +240,10 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
                 fnfe.printStackTrace();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+            } catch (SAXException ex) {
+                Logger.getLogger(ComaNSLinksChecker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException ex) {
+                Logger.getLogger(ComaNSLinksChecker.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return stats;
