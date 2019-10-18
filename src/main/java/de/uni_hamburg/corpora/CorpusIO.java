@@ -126,7 +126,7 @@ public class CorpusIO {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
             return usd;
         } else if (url.getPath().endsWith("exs")) {
-            UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
+            SegmentedTranscriptionData usd = new SegmentedTranscriptionData(url);
             return usd;
         } else {
             System.out.println(url + " is not xml CorpusData");
