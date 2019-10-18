@@ -48,7 +48,7 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             parenturl = parentURI.toURL();
-             filename = FilenameUtils.getName(url.getPath());
+            filename = FilenameUtils.getName(url.getPath());
             filenamewithoutending = FilenameUtils.getBaseName(url.getPath());
         } catch (JDOMException ex) {
             Logger.getLogger(SegmentedTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
@@ -132,8 +132,7 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     }
     
     public List getSegmentCounts() throws JDOMException {
-        //todo
-        XPath context = XPath.newInstance("/segmented-transcription/head/meta-information/ud-meta-information/ud-information[startsWith('#')]");
+        XPath context = XPath.newInstance("/segmented-transcription/head/meta-information/ud-meta-information/ud-information[starts-with(@attribute-name,'#')]");
         List allContextInstances = context.selectNodes(jdom);
         segmentCounts = allContextInstances;
         return segmentCounts;

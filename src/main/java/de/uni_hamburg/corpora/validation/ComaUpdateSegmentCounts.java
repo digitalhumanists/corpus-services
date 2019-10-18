@@ -8,10 +8,12 @@ import de.uni_hamburg.corpora.SegmentedTranscriptionData;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -49,10 +51,11 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
      * linked exbs and saves the coma file afterwards without changing exbs;
      */
     @Override
-    public Report fix(CorpusData cd) throws SAXException, IOException {
+    public Report fix(CorpusData cd) throws SAXException, IOException, JexmaraldaException {
         Report stats = new Report();
         CorpusIO cio = new CorpusIO();
         SegmentedTranscriptionData exs;
+        List<Element> toRemove = new ArrayList<Element>();
         try {
             Document comaDoc = TypeConverter.String2JdomDocument(cd.toSaveableString());
             XPath context;
@@ -64,65 +67,45 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
                     Object o = allContextInstances.get(i);
                     if (o instanceof Element) {
                         Element e = (Element) o;
+                        List<Element> descKeys;
+                        //in the coma file remove old stats first
+                        descKeys = e.getChild("Description")
+                                .getChildren();
+                        for (Element ke : (List<Element>) descKeys) {
+                            if (Pattern.matches("#(..).*", ke.getAttributeValue("Name"))) {
+                                toRemove.add(ke);
+                            }
+                        }
+                        for (Element re : toRemove) {
+                            descKeys.remove(re);
+                        }
+                        //now get the new segment counts and add them insted
                         String s = e.getChildText("NSLink");
-                        url = new URL(s);
+                        //System.out.println("NSLink:" + s);
+                        url = new URL(cd.getParentURL() + s);
                         exs = (SegmentedTranscriptionData) cio.readFileURL(url);
                         List segmentCounts = exs.getSegmentCounts();
-                        for (Object segmentCount : segmentCounts) {
-                            e.addContent("Key");
-                        }
-                        /*
-                        descKeys = element.getChild("Description")
-                                .getChildren();
-                        if (removeStats) {
-                            List<Element> toRemove = new ArrayList<Element>();
-
-                            for (Element ke : (List<Element>) descKeys) {
-                                if (Pattern.matches("#(..).*:.*", ke.getAttributeValue("Name"))) {
-                                    //System.out.println("RefreshTranscriptionTask.doInBackground" + ke.getAttributeValue("Name"));
-                                    // System.out.println(ke.getAttributeValue("Name"));
-                                    toRemove.add(ke);
-                                }
-                            }
-                            for (Element re : toRemove) {
-                                descKeys.remove(re);
-                            }
-                        }
-
-                        Iterator sI = segments.entrySet().iterator();
-                        boolean set = false;
-                        while (sI.hasNext()) {
-                            Map.Entry entry = (Map.Entry) sI.next();
-                            Object key = entry.getKey();
-                            Object value = entry.getValue();
-                            descKeys = element.getChild("Description")
-                                    .getChildren();
-                            Iterator keyI = descKeys.iterator();
-                            while (keyI.hasNext()) {
-                                myKey = (Element) keyI.next();
-                                if (myKey.getAttributeValue("Name").equals(
-                                        "# " + key)) {
-                                    myKey.setText(value.toString());
-                                    set = true;
-                                }
-                            }
-                            if (!set) {
+                        for (Object segmentCount : segmentCounts) {                           
+                            if (segmentCount instanceof Element) {
+                                Element segmentCountEl = (Element) segmentCount;
+                                //Object key = segmentCountEl.getAttributeValue("attribute-name").substring(2);
+                                Object key = segmentCountEl.getAttributeValue("attribute-name");
+                                Object value = segmentCountEl.getValue();
+                                //System.out.println("Value:" + value);
                                 Element newKey = new Element("Key");
-                                newKey.setAttribute("Name", "# " + key);
+                                newKey.setAttribute("Name", (String) key);
                                 newKey.setText(value.toString());
-                                element.getChild("Description").addContent(
+                                e.getChild("Description").addContent(
                                         newKey);
                             }
-                            set = false;
                         }
-                        */
-                    } else {
-                        stats.addCorrect(COMA_UP_SEG, cd, "Coma fiel does not contain segmented transcriptions");
+
                     }
                 }
             }
-            cio.write(cd, cd.getURL());
-            if (cd != null) {
+            if (comaDoc != null) {
+                cd.updateUnformattedString(TypeConverter.JdomDocument2String(comaDoc));
+                cio.write(cd, cd.getURL());
                 report.addCorrect(COMA_UP_SEG, cd, "Updated the segment counts!");
             } else {
                 report.addCritical(COMA_UP_SEG, cd, "Updating the segment counts was not possible!");
@@ -138,9 +121,7 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
         } catch (XPathExpressionException ex) {
             report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
         } catch (JDOMException ex) {
-            Logger.getLogger(ComaUpdateSegmentCounts.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JexmaraldaException ex) {
-            Logger.getLogger(ComaUpdateSegmentCounts.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
         }
         return stats;
     }
