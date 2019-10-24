@@ -113,19 +113,19 @@ public class CorpusIO {
             BasicTranscriptionData bt = new BasicTranscriptionData(url);
             //bt.loadFile(f);
             return bt;
-        } else if (url.getPath().endsWith("coma")) {
+        } else if (url.getPath().toLowerCase().endsWith("coma")) {
             ComaData cm = new ComaData(url);
             return cm;
-        } else if (url.getPath().endsWith("xml") && ((url.getPath().contains("Annotation") || url.getPath().contains("annotation")))) {
+        } else if (url.getPath().toLowerCase().endsWith("xml") && ((url.getPath().toLowerCase().contains("Annotation")))) {
             AnnotationSpecification as = new AnnotationSpecification(url);
             return as;
-        } else if ((url.getPath().endsWith("xml") && url.getPath().contains("cmdi")) || url.getPath().endsWith("cmdi")) {
+        } else if ((url.getPath().toLowerCase().endsWith("xml") && url.getPath().toLowerCase().contains("cmdi")) || url.getPath().toLowerCase().endsWith("cmdi")) {
             CmdiData cmdi = new CmdiData(url);
             return cmdi;
-        } else if (url.getPath().endsWith("xml")) {
+        } else if (url.getPath().toLowerCase().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
             return usd;
-        } else if (url.getPath().endsWith("exs")) {
+        } else if (url.getPath().toLowerCase().endsWith("exs")) {
             SegmentedTranscriptionData usd = new SegmentedTranscriptionData(url);
             return usd;
         } else {
