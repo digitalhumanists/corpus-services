@@ -892,7 +892,7 @@ public class CorpusMagician {
     //to save individual corpusparameters in a file
     //and maybe also save the functions todos there
     public void readParameters() {
-
+        //read the XML file as variables
     }
 
     public void setCorpusData(CorpusData corpusData) {
