@@ -19,7 +19,9 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
     static File exbfile;
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
-    final String EXB_SEG = "exb-segmentation-checker";
+    final String EXB_SEG = "exb-segmenter";
     String segmentationName = "GENERIC";
     String path2ExternalFSM = "";
 
@@ -191,12 +193,14 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
              stats.addException(ex, "Unknown Parser error");
         } catch (XPathExpressionException ex) {
              stats.addException(ex, "Unknown XPath error");
+        } catch (URISyntaxException ex) {
+            stats.addException(ex, "Unknown URI error");
         }
         return stats;
     }
     
     
-    public Report exceptionalFix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException, FSMException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException {
+    public Report exceptionalFix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException, FSMException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
         Report stats = new Report();
         btd = new BasicTranscriptionData(cd.getURL());
         if (segmentationName.equals("HIAT")) {
@@ -219,13 +223,24 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         if (!path2ExternalFSM.equals("")) {
             segmentation.pathToExternalFSM = path2ExternalFSM;
         }
+        CorpusIO cio = new CorpusIO();
         List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
         if (v.isEmpty()){
         SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());
+
+        st.setEXBSource(cd.getFilename());
         URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
-        CorpusIO cio = new CorpusIO();
-        Document doc = TypeConverter.String2JdomDocument(st.toXML());
+        
+        Document doc = TypeConverter.String2JdomDocument(st.toXML());     
         cio.write(doc, url);
+        //TODO make this prettier and don't use File Object
+        //And not write first and then do this :(
+        System.out.println(url);
+        File f = Paths.get(url.toURI()).toFile();
+        //File f = new File("E:\\Anne\\SelkupCorpus\\nar\\KF_1964_Bread_nar\\KF_1964_Bread_nar_s.exs");
+        System.out.println(f);
+        //only needed to add the udMetadata....
+        new org.exmaralda.coma.models.TranscriptionMetadata(f,true);
         stats.addCorrect(EXB_SEG, cd, "Exs successfully created at " + url);
         } else {
             for (Object o : v) {
