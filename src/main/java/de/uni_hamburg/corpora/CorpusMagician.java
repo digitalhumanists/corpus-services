@@ -36,6 +36,7 @@ import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
+import de.uni_hamburg.corpora.validation.DuplicateChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -336,6 +337,7 @@ public class CorpusMagician {
         allExistingCFs.add("ReportStatistics");
         allExistingCFs.add("ExbSegmenter");
         allExistingCFs.add("ExbScriptMixChecker");
+        allExistingCFs.add("DuplicateChecker");
         allExistingCFs.add("ComaUpdateSegmentCounts");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
@@ -761,6 +763,10 @@ public class CorpusMagician {
                 case "exbscriptmixchecker":
                     ExbScriptMixChecker esmc = new ExbScriptMixChecker();
                     corpusfunctions.add(esmc);
+                    break;
+                case "duplicatechecker":
+                    DuplicateChecker duplc = new DuplicateChecker();
+                    corpusfunctions.add(duplc);
                     break;
                 case "comaupdatesegmentcounts":
                     ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
