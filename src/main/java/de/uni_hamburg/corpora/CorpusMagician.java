@@ -36,7 +36,7 @@ import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
-import de.uni_hamburg.corpora.validation.DuplicateChecker;
+import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -764,9 +764,16 @@ public class CorpusMagician {
                     ExbScriptMixChecker esmc = new ExbScriptMixChecker();
                     corpusfunctions.add(esmc);
                     break;
-                case "duplicatechecker":
-                    DuplicateChecker duplc = new DuplicateChecker();
+                case "duplicatetiercontentchecker":
+                    DuplicateTierContentChecker duplc = new DuplicateTierContentChecker();
                     corpusfunctions.add(duplc);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("tiers")) {
+                            duplc.setTierNames(cfProperties.getProperty("tiers"));
+                            System.out.println("Tier names set to " + cfProperties.getProperty("tiers"));
+                        }
+                    }
                     break;
                 case "comaupdatesegmentcounts":
                     ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();

@@ -1,7 +1,8 @@
 /**
- * @file DuplicateChecker.java
+ * @file DuplicateTierContentChecker.java
  *
  * Checks for duplicate or near-duplicate transcriptions in the corpus.
+ * Argument usage example: -c DuplicateTierContentChecker -p "tiers=tx,fr"
  *
  * @author Timofey Arkhangelskiy <timofey.arkhangelskiy@uni-hamburg.de>
  */
@@ -48,17 +49,20 @@ import java.math.BigInteger;
  *
  * @author Timofey Arkhangelskiy <timofey.arkhangelskiy@uni-hamburg.de>
  */
-public class DuplicateChecker extends Checker implements CorpusFunction {
+public class DuplicateTierContentChecker extends Checker implements CorpusFunction {
     static final String CHECKER_NAME = "DuplicateChecker";
     static final int MIN_TIER_LENGTH = 10;   // tiers shorter than this will not be compared
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
       Arrays.asList("ts", "tx", "fe", "fg", "fr")); 
-    // Hardcoded list of tier names is bad. We'll have to replace it
-    // with a settings file or something like that.
+    // This is the default list that can be overridden by calling setTierNames
     Pattern rxClean = Pattern.compile("[ \r\n\t.,:;?!()\\[\\]/\\-{}<>*%=\"]",
             Pattern.UNICODE_CHARACTER_CLASS);
     Pattern rxApostrophe = Pattern.compile("[`‘’′́̀ʼ]", Pattern.UNICODE_CHARACTER_CLASS);
     MessageDigest md = null;
+    
+    public void setTierNames(String sTiers) {
+        lsTiersToCheck = new ArrayList<>(Arrays.asList(sTiers.split(",")));
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
