@@ -329,12 +329,12 @@
         <div id="mediaplayer" class="sidebarcontrol">
             <xsl:if test="$HAS_VIDEO">
                 <video controls="controls" width="320" height="240" data-tlid="media">
-                    <source src="{$DATASTREAM_VIDEO}" type="video/webm"/>
+                    <source src="{$DATASTREAM_VIDEO}" type="video/{$RECORDING_TYPE}"/>
                 </video>
             </xsl:if>
             <xsl:if test="not($HAS_VIDEO) and ($HAS_AUDIO)">
                 <audio controls="controls" data-tlid="media">
-                    <source src="{$DATASTREAM_AUDIO}" type="audio/ogg"/>
+                    <source src="{$DATASTREAM_AUDIO}" type="audio/{$RECORDING_TYPE}"/>
                 </audio>
             </xsl:if>
         </div>
