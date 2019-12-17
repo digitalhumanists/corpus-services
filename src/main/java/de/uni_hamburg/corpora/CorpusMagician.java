@@ -337,7 +337,7 @@ public class CorpusMagician {
         allExistingCFs.add("ReportStatistics");
         allExistingCFs.add("ExbSegmenter");
         allExistingCFs.add("ExbScriptMixChecker");
-        allExistingCFs.add("DuplicateChecker");
+        allExistingCFs.add("DuplicateTierContentChecker");
         allExistingCFs.add("ComaUpdateSegmentCounts");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
