@@ -60,14 +60,41 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
     Pattern rxApostrophe = Pattern.compile("[`‘’′́̀ʼ]", Pattern.UNICODE_CHARACTER_CLASS);
     MessageDigest md = null;
     
+    
+    /**
+     * Default check function which calls the exceptionalCheck function so that
+     * the primal functionality of the feature can be implemented, and
+     * additionally checks for parser configuration, SAXE and IO exceptions.
+     */
+    public Report check(CorpusData cd) throws JexmaraldaException {
+        Report stats = new Report();
+        try {
+            stats = exceptionalCheck(cd);
+        } catch (NoSuchAlgorithmException ex) {
+            stats.addException(ex, CHECKER_NAME + ": MessageDigest could not be initialized for MD5.");
+        } catch (TransformerException ex) {
+            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+        } catch (SAXException ex) {
+            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+        } catch (IOException ex) {
+            stats.addException(ex, CHECKER_NAME + ": unknown IO exception.");
+        } catch (JDOMException ex) {
+            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+        }        
+        return stats;
+    }
+
+    
     public void setTierNames(String sTiers) {
         lsTiersToCheck = new ArrayList<>(Arrays.asList(sTiers.split(",")));
     }
 
     /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
+     * Fixing the errors in tiers is not supported yet.
      */
     @Override
     public Report fix(CorpusData cd) {
@@ -136,67 +163,50 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
      * exbs and reports those that have (nearly) identical transcription/
      * translation tiers to some other exbs.
      */
-    @Override
-    public Report check(CorpusData cd) {
+    public Report exceptionalCheck(CorpusData cd) throws NoSuchAlgorithmException, TransformerException, ParserConfigurationException, SAXException, IOException, JDOMException, XPathExpressionException, JexmaraldaException {
         System.out.println("Duplicate check started.");
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException ex) {
-            report.addCritical(CHECKER_NAME, "MessageDigest could not be initialized for MD5.");
-        }
+        
+        md = MessageDigest.getInstance("MD5");
+        
         Report stats = new Report();
         CorpusIO cio = new CorpusIO();
         Map<String, HashMap<String, String>> tierValues = new HashMap<>();
         for (String tierName : lsTiersToCheck) {
             tierValues.put(tierName, new HashMap<String, String>());
         }
-        try {
-            org.jdom.Document comaDoc = TypeConverter.String2JdomDocument(cd.toSaveableString());
-            XPath context;
-            context = XPath.newInstance("//Transcription[Description/Key[@Name='segmented']/text()='false']");
-            URL url;
-            List allContextInstances = context.selectNodes(comaDoc);
-            for (int i = 0; i < allContextInstances.size(); i++) {
-                Object o = allContextInstances.get(i);
-                if (o instanceof org.jdom.Element) {
-                    org.jdom.Element e = (org.jdom.Element) o;
-                    String sFilename = e.getChildText("NSLink");
-                    System.out.println("NSLink: " + sFilename);
-                    url = new URL(cd.getParentURL() + sFilename);
-                    CorpusData exb = cio.readFileURL(url);
-                    Map<String, String> curTierValues = process_exb(exb);
-                    for (Map.Entry<String, String> entry : curTierValues.entrySet()) {
-                        if (!tierValues.containsKey(entry.getKey()) 
-                                || entry.getValue().length() <= 0) {
-                            continue;
-                        }
-                        if (tierValues.get(entry.getKey()).containsKey(entry.getValue())) {
-                            stats.addCritical(CHECKER_NAME, exb, "The file is a duplicate of " 
-                                    + tierValues.get(entry.getKey()).get(entry.getValue()) 
-                                    + " (tier " + entry.getKey() + ").");
-                        }
-                        else {
-                            tierValues.get(entry.getKey()).put(entry.getValue(), exb.getFilename());
-                            // Remember that this text for this tier was seen in this file
-                        }
+        
+        org.jdom.Document comaDoc = TypeConverter.String2JdomDocument(cd.toSaveableString());
+        XPath context;
+        context = XPath.newInstance("//Transcription[Description/Key[@Name='segmented']/text()='false']");
+        URL url;
+        List allContextInstances = context.selectNodes(comaDoc);
+        for (int i = 0; i < allContextInstances.size(); i++) {
+            Object o = allContextInstances.get(i);
+            if (o instanceof org.jdom.Element) {
+                org.jdom.Element e = (org.jdom.Element) o;
+                String sFilename = e.getChildText("NSLink");
+                System.out.println("NSLink: " + sFilename);
+                url = new URL(cd.getParentURL() + sFilename);
+                CorpusData exb = cio.readFileURL(url);
+                Map<String, String> curTierValues = process_exb(exb);
+                for (Map.Entry<String, String> entry : curTierValues.entrySet()) {
+                    if (!tierValues.containsKey(entry.getKey()) 
+                            || entry.getValue().length() <= 0) {
+                        continue;
+                    }
+                    if (tierValues.get(entry.getKey()).containsKey(entry.getValue())) {
+                        stats.addCritical(CHECKER_NAME, exb, "The file is a duplicate of " 
+                                + tierValues.get(entry.getKey()).get(entry.getValue()) 
+                                + " (tier " + entry.getKey() + ").");
+                    }
+                    else {
+                        tierValues.get(entry.getKey()).put(entry.getValue(), exb.getFilename());
+                        // Remember that this text for this tier was seen in this file
                     }
                 }
             }
-        } catch (IOException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown IO exception");
-        } catch (TransformerException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown xml exception");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown xml exception");
-        } catch (SAXException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown xml exception");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown xml exception");
-        } catch (JDOMException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown xml exception");
-        } catch (JexmaraldaException ex) {
-            report.addException(ex, CHECKER_NAME, cd, "unknown xml exception");
         }
+            
         return stats;
     }
 
