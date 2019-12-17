@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.List;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  * This class creates a sort- and filterable html overview in table form
  * of all tiers existing in the exbs linked in the coma file to make error "
- * checking and harmonizing easier. 
+ * checking and harmonizing easier.
  */
 public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
 
@@ -94,7 +95,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             //stringtiers.add(tier.getCategory() + "-" + tier.getType() + "-" + tier.getDisplayName());
             stringtiers.add(tier.getCategory() + " (type: " + tier.getType() + ")");
         }
-        Set<String> hash_Set = new HashSet<String>(stringtiers);
+        Set<String> hash_Set = new TreeSet<String>(stringtiers);
         //System.out.println(tiers);
         //now we have all the existing tiers from the exbs, we need to make a table out of it
         //use the html template and add the content into id
@@ -115,7 +116,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                 stringtiers.add(tier.getCategory() + "-" + tier.getType());
             } */
             // add the tables to the html
-            //first table: one column with categories, one with count    
+            //first table: one column with categories, one with count
             // add the overviewTable to the html
             //first table: one column with categories, one with count
             String content = "";
@@ -224,7 +225,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
+    /**Default function which returns a two/three line description of what
      * this class is about.
      */
     @Override
