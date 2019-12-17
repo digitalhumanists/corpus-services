@@ -50,7 +50,7 @@ import java.math.BigInteger;
  * @author Timofey Arkhangelskiy <timofey.arkhangelskiy@uni-hamburg.de>
  */
 public class DuplicateTierContentChecker extends Checker implements CorpusFunction {
-    static final String CHECKER_NAME = "DuplicateChecker";
+    static final String CHECKER_NAME = "DuplicateTierContentChecker";
     static final int MIN_TIER_LENGTH = 10;   // tiers shorter than this will not be compared
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
       Arrays.asList("ts", "tx", "fe", "fg", "fr")); 
