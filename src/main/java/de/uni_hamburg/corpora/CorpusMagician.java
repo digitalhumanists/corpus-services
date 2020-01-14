@@ -50,6 +50,7 @@ import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmenter;
+import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import java.io.File;
@@ -339,6 +340,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbScriptMixChecker");
         allExistingCFs.add("DuplicateTierContentChecker");
         allExistingCFs.add("ComaUpdateSegmentCounts");
+        allExistingCFs.add("LanguageToolChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -778,6 +780,21 @@ public class CorpusMagician {
                 case "comaupdatesegmentcounts":
                     ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
                     corpusfunctions.add(cusc);
+                    break;
+                case "languagetoolchecker":
+                    LanguageToolChecker ltc = new LanguageToolChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("LANG")) {
+                            ltc.setLanguage(cfProperties.getProperty("LANG"));
+                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                        }
+                        if (cfProperties.containsKey("TIER")) {
+                            ltc.setTierToCheck(cfProperties.getProperty("TIER"));
+                            System.out.println("Tier to check set to " + cfProperties.getProperty("TIER"));
+                        }
+                    }
+                    corpusfunctions.add(ltc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
