@@ -157,7 +157,7 @@
             </xsl:if>
 
             <!-- Check for ellipsis in other tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
-            <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr'))) and matches(., '…')">
+            <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr', 'stl', 'st', 'ltr', 'ltg', 'lte'))) and matches(., '…')">
                 <xsl:value-of select="concat('XSLTChecker.content;WARNING;found ellipsis (''…'') in non-transcription/non-translation event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
