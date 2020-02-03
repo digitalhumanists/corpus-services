@@ -7,12 +7,12 @@
  * @author Tommi A Pirinen <tommi.antero.pirinen@uni-hamburg.de>
  * @author HZSK
  */
-
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
@@ -58,7 +58,6 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
 
     final String LANGUAGETOOL = "languagetool";
 
-
     public Report check(File f) {
         Report stats = new Report();
         try {
@@ -81,8 +80,8 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             langTool = new JLanguageTool(new GermanyGerman());
         } else {
             Report report = new Report();
-            report.addCritical(LANGUAGETOOL, "Missing languagetool for language " +
-                    language);
+            report.addCritical(LANGUAGETOOL, "Missing languagetool for language "
+                    + language);
             return report;
         }
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -91,24 +90,24 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
         NodeList tiers = doc.getElementsByTagName("tier");
         Report stats = new Report();
         for (int k = 0; k < tiers.getLength(); k++) {
-            Element tier = (Element)tiers.item(k);
+            Element tier = (Element) tiers.item(k);
             if (!tier.getAttribute("category").equals(tierToCheck)) {
                 continue;
             }
             NodeList events = tier.getElementsByTagName("event");
             for (int i = 0; i < events.getLength(); i++) {
-                Element event = (Element)events.item(i);
+                Element event = (Element) events.item(i);
                 NodeList eventTexts = event.getChildNodes();
                 for (int j = 0; j < eventTexts.getLength(); j++) {
                     Node maybeText = eventTexts.item(j);
                     if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                        if (maybeText.getNodeType() == Node.ELEMENT_NODE &&
-                                maybeText.getNodeName().equals("ud-information")) {
+                        if (maybeText.getNodeType() == Node.ELEMENT_NODE
+                                && maybeText.getNodeName().equals("ud-information")) {
                             // XXX: ud-information is weird I'll just skip it...
                             continue;
                         }
-                        System.err.println("This is not a text node: " +
-                                maybeText);
+                        System.err.println("This is not a text node: "
+                                + maybeText);
                         continue;
                     }
                     Text eventText = (Text) maybeText;
@@ -116,13 +115,13 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
                     List<RuleMatch> matches = langTool.check(text);
                     for (RuleMatch match : matches) {
                         stats.addWarning(LANGUAGETOOL,
-                                "Potential error at characters " +
-                                match.getFromPos() + "-" + match.getToPos() + ": " +
-                                match.getMessage() + ": \"" +
-                                text.substring(match.getFromPos(),
-                                               match.getToPos()) + "\" ",
-                                "Suggested correction(s): " +
-                                match.getSuggestedReplacements());
+                                "Potential error at characters "
+                                + match.getFromPos() + "-" + match.getToPos() + ": "
+                                + match.getMessage() + ": \""
+                                + text.substring(match.getFromPos(),
+                                        match.getToPos()) + "\" ",
+                                "Suggested correction(s): "
+                                + match.getSuggestedReplacements());
                     }
                 }
             }
@@ -132,8 +131,8 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
 
     public Report doMain(String[] args) {
         settings = new ValidatorSettings("LanguageToolChecker",
-                "Checks Exmaralda .exb file annotations for spelling and " +
-                "grammar errors", "Blah");
+                "Checks Exmaralda .exb file annotations for spelling and "
+                + "grammar errors", "Blah");
         // XXX: the option version is quite useless unless for quick checks
         List<Option> ltOptions = new ArrayList<Option>();
         ltOptions.add(new Option("l", "language", true, "use language"));
@@ -146,7 +145,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             language = cmd.getOptionValue("language");
             if (!language.equals("de")) {
                 System.err.println("Language " + language + " is not supported"
-                        );
+                );
                 System.exit(1);
             }
         } else {
@@ -177,13 +176,13 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
         Report stats = checker.doMain(args);
         System.out.println(stats.getSummaryLines());
         System.out.println(stats.getErrorReports());
-        for (String arg :  args) {
+        for (String arg : args) {
             if (arg.equals("-v") || arg.equals("--verbose")) {
                 System.out.println(stats.getFullReports());
             }
         }
     }
-    
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -225,57 +224,68 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             langTool = new JLanguageTool(new GermanyGerman());
         } else {
             Report report = new Report();
-            report.addCritical(LANGUAGETOOL, "Missing languagetool for language " +
-                    language);
+            report.addCritical(LANGUAGETOOL, "Missing languagetool for language "
+                    + language);
             return stats;
         }
         Document doc = TypeConverter.JdomDocument2W3cDocument(btd.getJdom());
         NodeList tiers = doc.getElementsByTagName("tier");
+        List<RuleMatch> matches = new ArrayList<RuleMatch>();
+        int count = 0;
         for (int k = 0; k < tiers.getLength(); k++) {
-            Element tier = (Element)tiers.item(k);
+            Element tier = (Element) tiers.item(k);
             if (!tier.getAttribute("category").equals(tierToCheck)) {
                 continue;
             }
             NodeList events = tier.getElementsByTagName("event");
             for (int i = 0; i < events.getLength(); i++) {
-                Element event = (Element)events.item(i);
+                Element event = (Element) events.item(i);
                 NodeList eventTexts = event.getChildNodes();
                 for (int j = 0; j < eventTexts.getLength(); j++) {
                     Node maybeText = eventTexts.item(j);
                     if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                        if (maybeText.getNodeType() == Node.ELEMENT_NODE &&
-                                maybeText.getNodeName().equals("ud-information")) {
+                        if (maybeText.getNodeType() == Node.ELEMENT_NODE
+                                && maybeText.getNodeName().equals("ud-information")) {
                             // XXX: ud-information is weird I'll just skip it...
                             continue;
                         }
-                        System.err.println("This is not a text node: " +
-                                maybeText);
+                        System.err.println("This is not a text node: "
+                                + maybeText);
                         continue;
                     }
                     Text eventText = (Text) maybeText;
                     String text = eventText.getWholeText();
-                    List<RuleMatch> matches = langTool.check(text);
+                    matches = langTool.check(text);
                     for (RuleMatch match : matches) {
-                        stats.addWarning(LANGUAGETOOL,
-                                "Potential error at characters " +
-                                match.getFromPos() + "-" + match.getToPos() + ": " +
-                                match.getMessage() + ": \"" +
-                                text.substring(match.getFromPos(),
-                                               match.getToPos()) + "\" ",
-                                "Suggested correction(s): " +
-                                match.getSuggestedReplacements());
-                        System.out.println("Potential error at characters " + 
-                                match.getFromPos() + "-" + match.getToPos() + ": " +
-                                match.getMessage() + ": \"" +
-                                text.substring(match.getFromPos(),
-                                               match.getToPos()) + "\" " +
-                                "Suggested correction(s): " +
-                                match.getSuggestedReplacements());
+                        String message = "Potential error at characters "
+                                + match.getFromPos() + "-" + match.getToPos() + ": "
+                                + match.getMessage() + ": \""
+                                + text.substring(match.getFromPos(),
+                                        match.getToPos()) + "\" "
+                                + "Suggested correction(s): "
+                                + match.getSuggestedReplacements();
+                        stats.addWarning(LANGUAGETOOL, cd, message
+                        );
+//                        System.out.println("Potential error at characters " + 
+//                                match.getFromPos() + "-" + match.getToPos() + ": " +
+//                                match.getMessage() + ": \"" +
+//                                text.substring(match.getFromPos(),
+//                                               match.getToPos()) + "\" " +
+//                                "Suggested correction(s): " +
+//                                match.getSuggestedReplacements());
+                        //add ExmaError tierID eventID
+                        exmaError.addError(LANGUAGETOOL, cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false, message);
+                    }
+                    if (!matches.isEmpty()) {
+                        count++;
                     }
                 }
+
             }
         }
-
+        if (count==0) {
+            stats.addCorrect(LANGUAGETOOL, cd, "No spelling errors found.");
+        }
         return stats;
     }
 
@@ -300,23 +310,23 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-             report.addException(ex, "unknown class not found error");
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
 
     @Override
     public String getDescription() {
-                String description = "This class takes a CorpusDataObject that is an Exb, "
+        String description = "This class takes a CorpusDataObject that is an Exb, "
                 + "checks if there are spell or grammar errors in German, English or Russian using LnaguageTool and"
                 + " returns the errors in the Report and in the ExmaErrors.";
         return description;
     }
-    
+
     public void setLanguage(String lang) {
         language = lang;
     }
-    
+
     public void setTierToCheck(String ttc) {
         tierToCheck = ttc;
     }
