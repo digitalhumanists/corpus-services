@@ -152,8 +152,6 @@ public class CorpusMagician {
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
-            //get the basedirectory
-            basedirectory = url;
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
@@ -274,6 +272,9 @@ public class CorpusMagician {
     //creates a corpus object from an URL (filepath or "real" url)
     public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         corpus = new Corpus(url);
+        //get the basedirectory
+        //URL can be a path to a file too, then basedirectroy is different
+        basedirectory = corpus.getBaseDirectory();
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
