@@ -650,6 +650,11 @@ public class CorpusMagician {
                             lhtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
                             System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
                         }
+                        if (cfProperties.containsKey("FSM")) {
+                            lhtml.setExternalFSM(cfProperties.getProperty("FSM"));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        
+                        }
                     }
                     corpusfunctions.add(lhtml);
                     break;
