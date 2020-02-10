@@ -54,6 +54,8 @@ import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -117,11 +119,10 @@ public class CorpusMagician {
     //TODO we need a webservice for this functionality too
     //in the future (for repo and external users)
     public static void main(String[] args) {
-
         //first args needs to be the URL
-        //check if it's a filepath, we could just convert it to an url
-        createCommandLineOptions(args);
+        //check if it's a filepath, we could just convert it to an url    
         try {
+            createCommandLineOptions(args);
             String urlstring = cmd.getOptionValue("input");
             URL url;
             fixing = cmd.hasOption("f");
@@ -951,7 +952,7 @@ public class CorpusMagician {
         return chosencorpusfunctions;
     }
 
-    private static void createCommandLineOptions(String[] args) {
+    private static void createCommandLineOptions(String[] args) throws FileNotFoundException, IOException {
         Options options = new Options();
 
         Option input = new Option("i", "input", true, "input file path");
@@ -1023,6 +1024,18 @@ public class CorpusMagician {
         if (cmd.hasOption("p")) {
             cfProperties = cmd.getOptionProperties("p");
         }
+        //add function to read properties from file! Needs to be a key value list though not xml
+        //Reads a property list (key and element pairs) from the input
+        //Need to use 
+//     * byte stream. The input stream is in a simple line-oriented
+//     * format as specified in
+//     * {@link #load(java.io.Reader) load(Reader)} and is assumed to use
+//     * the ISO 8859-1 character encoding; that is each byte is one Latin1
+//     * character. Characters not in Latin1, and certain special characters,
+//     * are represented in keys and elements using Unicode escapes as defined in
+//     * section 3.3 of
+        Properties fromFile = new Properties();
+        fromFile.loadFromXML(new FileInputStream("settings.xml"));
         /*
          String inputFilePath = cmd.getOptionValue("input");
          String outputFilePath = cmd.getOptionValue("output");
