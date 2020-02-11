@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml"
+    xmlns:string="https://corpora.uni-hamburg.de/hzsk/xmlns/string"
     xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all"    version="2.0">
 
     <xsl:output encoding="UTF-8" method="html" omit-xml-declaration="yes"/>
@@ -55,10 +56,6 @@
     <!-- sorted by favourited format -->
     <xsl:variable name="SUPPORTED_AUDIO_TYPES" select="('mp3', 'ogg', 'wav')" as="xs:string+"/>
     <!-- sorted by favourited format -->
-
-    <xsl:variable name="DATASTREAM_VIDEO" select="$RECORDING_PATH"/>
-
-    <xsl:variable name="DATASTREAM_AUDIO" select="$RECORDING_PATH"/>
 
     <!-- whether or not the transcription contains video -->
     <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_VIDEO_TYPES"/>
@@ -205,12 +202,18 @@
             <xsl:choose>
                 <xsl:when test="$HAS_VIDEO">
                     <video controls="controls" width="320" height="240" data-tlid="media">
-                        <source src="{$DATASTREAM_VIDEO}" type="video/{$RECORDING_TYPE}"/>
+                        <source src="{$RECORDING_PATH}" type="video/{$RECORDING_TYPE}"/>
+                        <xsl:if test="not(starts-with($RECORDING_PATH, 'http'))">
+                            <source src="https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:{replace(lower-case($CORPUS_NAME), '\s+corpus\s+', '-')}_{$TRANSCRIPTION_NAME}/datastream/{upper-case($RECORDING_TYPE)}/{$RECORDING_PATH}" type="video/{$RECORDING_TYPE}"/>
+                        </xsl:if>
                     </video>
                 </xsl:when>
                 <xsl:when test="$HAS_AUDIO">
                     <audio controls="controls" data-tlid="media">
-                        <source src="{$DATASTREAM_AUDIO}" type="audio/{$RECORDING_TYPE}"/>
+                        <source src="{$RECORDING_PATH}" type="audio/{$RECORDING_TYPE}"/>
+                        <xsl:if test="not(starts-with($RECORDING_PATH, 'http'))">
+                            <source src="https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:{replace(lower-case($CORPUS_NAME), '\s+corpus\s+', '-')}_{$TRANSCRIPTION_NAME}/datastream/{upper-case($RECORDING_TYPE)}/{$RECORDING_PATH}" type="audio/{$RECORDING_TYPE}"/>
+                        </xsl:if>
                     </audio>
                 </xsl:when>
             </xsl:choose>
@@ -330,7 +333,27 @@
         <xsl:value-of
             select="concat(concat('0', $hours)[$hours + 0 &lt; 10 and $hours &gt; 0], '00'[$hours + 0 = 0], ':', '0'[$minutes + 0 &lt; 10], $minutes, ':', '0'[$seconds + 0 &lt; 10], (round($seconds * 100) div 100))"
         />
+    </xsl:function>    
+    
+    <xsl:function name="string:ID-conform" as="xs:string">
+        <xsl:param name="string" as="xs:string"/>
+        <xsl:value-of select="string:multi-replace($string, ('^\s+', '[\s\\/\(\)\[\]´`''\.:,;\?#=\+_]+$', '[\s\\/\(\)\[\]´`'':,;\?#=\+_]+', 'Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü', 'ß', '[éèê]', '[íìî]', '[úùû]', '[áàâ]', '[óòô]'), ('', '', '_', 'Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss', 'e', 'i', 'u', 'a', 'o' ))"/>
+    </xsl:function>
+    
+    <xsl:function name="string:multi-replace" as="xs:string">
+        <xsl:param name="input" as="xs:string"/>
+        <xsl:param name="replace" as="xs:string*"/>
+        <xsl:param name="with" as="xs:string*"/>
+        <xsl:choose>
+            <xsl:when test="$replace[1]">
+                <xsl:copy-of select="string:multi-replace(replace($input, $replace[1], $with[1]), subsequence($replace, 2), subsequence($with, 2))"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$input"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
 
 
 </xsl:stylesheet>
+
