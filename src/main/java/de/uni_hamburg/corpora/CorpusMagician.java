@@ -110,8 +110,9 @@ public class CorpusMagician {
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
-    static Properties cfProperties;
+    static Properties cfProperties = new Properties();
     static PrettyPrinter pp = new PrettyPrinter();
+    static String settingsfilepath = "settings.xml";
 
     public CorpusMagician() {
     }
@@ -654,7 +655,7 @@ public class CorpusMagician {
                         if (cfProperties.containsKey("FSM")) {
                             lhtml.setExternalFSM(cfProperties.getProperty("FSM"));
                             System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
-                        
+
                         }
                     }
                     corpusfunctions.add(lhtml);
@@ -1001,6 +1002,11 @@ public class CorpusMagician {
         fix.setRequired(false);
         options.addOption(errorsonly);
 
+        Option settingsfile = new Option("s", "settingsfile", true, "settings file path");
+        settingsfile.setRequired(false);
+        settingsfile.setArgName("FILE PATH");
+        options.addOption(settingsfile);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
@@ -1022,7 +1028,26 @@ public class CorpusMagician {
             System.exit(1);
         }
         if (cmd.hasOption("p")) {
-            cfProperties = cmd.getOptionProperties("p");
+            if (cmd.hasOption("s")) {
+                System.out.println("Options s and p for paramaters are not allowed at the same time!!");
+                formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+                System.exit(1);
+            } else {
+                cfProperties = cmd.getOptionProperties("p");
+            }
+        } else {
+            if (cmd.hasOption("s")) {
+                //read filepath
+                settingsfilepath = cmd.getOptionValue("s");
+                System.out.println("test");
+                System.out.println(settingsfilepath);
+            } else {
+                //default
+                settingsfilepath = "settings.xml";
+            }
+            FileInputStream test = new FileInputStream(settingsfilepath);
+            cfProperties.loadFromXML(test);
+            System.out.println(cfProperties);
         }
         //add function to read properties from file! Needs to be a key value list though not xml
         //Reads a property list (key and element pairs) from the input
@@ -1034,8 +1059,7 @@ public class CorpusMagician {
 //     * character. Characters not in Latin1, and certain special characters,
 //     * are represented in keys and elements using Unicode escapes as defined in
 //     * section 3.3 of
-        Properties fromFile = new Properties();
-        fromFile.loadFromXML(new FileInputStream("settings.xml"));
+
         /*
          String inputFilePath = cmd.getOptionValue("input");
          String outputFilePath = cmd.getOptionValue("output");
@@ -1043,7 +1067,6 @@ public class CorpusMagician {
          System.out.println(inputFilePath);
          System.out.println(outputFilePath);
          */
-
     }
 
 }
