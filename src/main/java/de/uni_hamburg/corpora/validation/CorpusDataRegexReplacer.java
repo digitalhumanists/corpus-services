@@ -39,7 +39,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
     String replace = "'";
     String replacement = "´";
     boolean coma = false;
-    String xpathContext = "/test";
+    String xpathContext = "//*";
     Document doc = null;
     XPath context;
 
@@ -143,17 +143,17 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
             }
             
          } catch (SAXException ex) {
-            report.addException(ex, cdrr, cd, "Unknown exception error");
+            stats.addException(ex, cdrr, cd, "Unknown exception error");
         } catch (JDOMException ex) {
-            report.addException(ex, cdrr, cd, "Unknown file reading error");
+            stats.addException(ex, cdrr, cd, "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ex, cdrr, cd, "Unknown file reading error");
+            stats.addException(ex, cdrr, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            report.addException(ex, cdrr, cd, "XSL transformer error");
+            stats.addException(ex, cdrr, cd, "XSL transformer error");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, cdrr, cd, "Parser error");
+            stats.addException(ex, cdrr, cd, "Parser error");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, cdrr, cd, "XPath error");
+            stats.addException(ex, cdrr, cd, "XPath error");
         }
         return stats;
     }
