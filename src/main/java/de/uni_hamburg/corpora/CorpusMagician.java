@@ -1029,7 +1029,7 @@ public class CorpusMagician {
         }
         if (cmd.hasOption("p")) {
             if (cmd.hasOption("s")) {
-                System.out.println("Options s and p for paramaters are not allowed at the same time!!");
+                System.out.println("Options s and p for parameters are not allowed at the same time!!");
                 formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
                 System.exit(1);
             } else {
@@ -1039,8 +1039,6 @@ public class CorpusMagician {
             if (cmd.hasOption("s")) {
                 //read filepath
                 settingsfilepath = cmd.getOptionValue("s");
-                System.out.println("test");
-                System.out.println(settingsfilepath);
             } else {
                 //default
                 settingsfilepath = "settings.xml";
