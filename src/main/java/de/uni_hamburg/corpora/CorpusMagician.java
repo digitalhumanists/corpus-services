@@ -36,6 +36,7 @@ import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
+import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -49,6 +50,7 @@ import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmenter;
+import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import java.io.File;
@@ -150,8 +152,6 @@ public class CorpusMagician {
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
             corpuma.initCorpusWithURL(url);
-            //get the basedirectory
-            basedirectory = url;
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
@@ -272,6 +272,9 @@ public class CorpusMagician {
     //creates a corpus object from an URL (filepath or "real" url)
     public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         corpus = new Corpus(url);
+        //get the basedirectory
+        //URL can be a path to a file too, then basedirectroy is different
+        basedirectory = corpus.getBaseDirectory();
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
@@ -336,7 +339,9 @@ public class CorpusMagician {
         allExistingCFs.add("ReportStatistics");
         allExistingCFs.add("ExbSegmenter");
         allExistingCFs.add("ExbScriptMixChecker");
+        allExistingCFs.add("DuplicateTierContentChecker");
         allExistingCFs.add("ComaUpdateSegmentCounts");
+        allExistingCFs.add("LanguageToolChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -645,6 +650,11 @@ public class CorpusMagician {
                             lhtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
                             System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
                         }
+                        if (cfProperties.containsKey("FSM")) {
+                            lhtml.setExternalFSM(cfProperties.getProperty("FSM"));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        
+                        }
                     }
                     corpusfunctions.add(lhtml);
                     break;
@@ -762,9 +772,35 @@ public class CorpusMagician {
                     ExbScriptMixChecker esmc = new ExbScriptMixChecker();
                     corpusfunctions.add(esmc);
                     break;
+                case "duplicatetiercontentchecker":
+                    DuplicateTierContentChecker duplc = new DuplicateTierContentChecker();
+                    corpusfunctions.add(duplc);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("tiers")) {
+                            duplc.setTierNames(cfProperties.getProperty("tiers"));
+                            System.out.println("Tier names set to " + cfProperties.getProperty("tiers"));
+                        }
+                    }
+                    break;
                 case "comaupdatesegmentcounts":
                     ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
                     corpusfunctions.add(cusc);
+                    break;
+                case "languagetoolchecker":
+                    LanguageToolChecker ltc = new LanguageToolChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("LANG")) {
+                            ltc.setLanguage(cfProperties.getProperty("LANG"));
+                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                        }
+                        if (cfProperties.containsKey("TIER")) {
+                            ltc.setTierToCheck(cfProperties.getProperty("TIER"));
+                            System.out.println("Tier to check set to " + cfProperties.getProperty("TIER"));
+                        }
+                    }
+                    corpusfunctions.add(ltc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
