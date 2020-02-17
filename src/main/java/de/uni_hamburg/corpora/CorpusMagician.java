@@ -116,10 +116,10 @@ public class CorpusMagician {
     //Properties Key Names
     static String fsm = "fsm";
     static String segmentation = "segmentation";
-    static String lang = "segmentation";
-    static String corpusname = "segmentation";
-    static String kml = "segmentation";
-    static String mode = "segmentation";
+    static String lang = "lang";
+    static String corpusname = "corpusname";
+    static String kml = "kml";
+    static String mode = "mode";
 
     public CorpusMagician() {
     }
