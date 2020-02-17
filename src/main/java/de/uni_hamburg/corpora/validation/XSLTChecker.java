@@ -3,12 +3,15 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -17,6 +20,9 @@ import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
 
 /**
  *
@@ -154,8 +160,28 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
     
-     public void setUtteranceEndSymbols(String s) {
-        UTTERANCEENDSYMBOLS = s;
+     public void setUtteranceEndSymbols(String s) throws JDOMException, IOException, URISyntaxException {
+        //now get the UtteranceEndSymbols from the FSM XML file
+        //XPath: //fsm/char-set/char
+        UTTERANCEENDSYMBOLS = "";
+        String path2fsm = s;
+        String symbol;
+        CorpusIO cio = new CorpusIO();
+        String fsmstring = cio.readExternalResourceAsString(path2fsm);
+        Document fsmdoc = de.uni_hamburg.corpora.utilities.TypeConverter.String2JdomDocument(fsmstring);
+        XPath xpath = XPath.newInstance("//fsm/char-set/char");
+        List allContextInstances = xpath.selectNodes(fsmdoc);
+        if (!allContextInstances.isEmpty()) {
+            for (int i = 0; i < allContextInstances.size(); i++) {
+                Object o = allContextInstances.get(i);
+                if (o instanceof Element) {
+                    Element e = (Element) o;
+                    symbol = e.getText();
+                    UTTERANCEENDSYMBOLS = UTTERANCEENDSYMBOLS + symbol;
+                } 
+            }
+        }
+
     }
 
     /**Default function which returns a two/three line description of what 
