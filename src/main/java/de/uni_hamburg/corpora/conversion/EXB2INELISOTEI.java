@@ -87,8 +87,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     /*
     * this method takes a CorpusData object, the info if the fulltext is used, and an individual String where the morpheme segmentation
     * is located as xpath,
-    * converts it into ISO TEI and saves it TODO where
-    * and gives back a report if it worked
+    * converts it into ISO TEI and saves it next to cd with _tei.xml
+    * and gives back a report if it worked or with errors
      */
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) {
@@ -134,7 +134,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 setDocLanguage(teiDoc, language);
                 //now the completed document is saved next to cd
                 String filename = cd.getURL().getFile();
-                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + ".xml");
+                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
                 cio.write(teiDoc, url);
 
                 System.out.println("document written.");
