@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
@@ -230,20 +229,15 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         CorpusIO cio = new CorpusIO();
         List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
         if (v.isEmpty()) {
-            SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());
+            SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());         
             st.setEXBSource(cd.getFilename());
+            //add the udMetadata!!!!
+            //finally found the missing method :) :)
+            org.exmaralda.partitureditor.jexmaralda.segment.SegmentCountForMetaInformation
+					.count(st);
             Document doc = TypeConverter.String2JdomDocument(st.toXML());
-            setMetadataInformation(doc);
             URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
             cio.write(doc, url);
-            //TODO make this prettier and don't use File Object
-            //And not write first and then do this :(
-            System.out.println(url);
-            File f = Paths.get(url.toURI()).toFile();
-            //File f = new File("E:\\Anne\\SelkupCorpus\\nar\\KF_1964_Bread_nar\\KF_1964_Bread_nar_s.exs");
-            System.out.println(f);
-            //only needed to add the udMetadata....
-            new org.exmaralda.coma.models.TranscriptionMetadata(f, true);
             stats.addCorrect(EXB_SEG, cd, "Exs successfully created at " + url);
         } else {
             for (Object o : v) {
