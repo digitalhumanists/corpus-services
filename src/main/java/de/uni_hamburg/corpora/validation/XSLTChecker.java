@@ -10,6 +10,8 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
@@ -163,25 +165,28 @@ public class XSLTChecker extends Checker implements CorpusFunction {
      public void setUtteranceEndSymbols(String s) {
         try {
             //now get the UtteranceEndSymbols from the FSM XML file
-            //XPath: //fsm/char-set/char
+            //XPath: "//fsm/char-set[@id='UtteranceEndSymbols']/char"
             UTTERANCEENDSYMBOLS = "";
-            String path2fsm = s;
-            String symbol;
             CorpusIO cio = new CorpusIO();
-            String fsmstring = cio.readExternalResourceAsString(path2fsm);
+            URL url = Paths.get(s).toUri().toURL();
+            String fsmstring = cio.readExternalResourceAsString(url.toString());
             Document fsmdoc = de.uni_hamburg.corpora.utilities.TypeConverter.String2JdomDocument(fsmstring);
-            XPath xpath = XPath.newInstance("//fsm/char-set/char");
+            XPath xpath = XPath.newInstance("//fsm/char-set[@id='UtteranceEndSymbols']/char");
             List allContextInstances = xpath.selectNodes(fsmdoc);
             if (!allContextInstances.isEmpty()) {
                 for (int i = 0; i < allContextInstances.size(); i++) {
                     Object o = allContextInstances.get(i);
                     if (o instanceof Element) {
                         Element e = (Element) o;
-                        symbol = e.getText();
+                        String symbol = e.getText();
+                        System.out.println(symbol);
                         UTTERANCEENDSYMBOLS = UTTERANCEENDSYMBOLS + symbol; 
                     }
                 }
             }
+            //needs to be a RegEx (set)
+            UTTERANCEENDSYMBOLS = "[" + UTTERANCEENDSYMBOLS + "]";
+            System.out.println(UTTERANCEENDSYMBOLS);
         } catch (JDOMException ex) {
             report.addException(ex, xc, cd, "unknown jdom error");
         } catch (IOException ex) {
