@@ -160,26 +160,34 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
     
-     public void setUtteranceEndSymbols(String s) throws JDOMException, IOException, URISyntaxException {
-        //now get the UtteranceEndSymbols from the FSM XML file
-        //XPath: //fsm/char-set/char
-        UTTERANCEENDSYMBOLS = "";
-        String path2fsm = s;
-        String symbol;
-        CorpusIO cio = new CorpusIO();
-        String fsmstring = cio.readExternalResourceAsString(path2fsm);
-        Document fsmdoc = de.uni_hamburg.corpora.utilities.TypeConverter.String2JdomDocument(fsmstring);
-        XPath xpath = XPath.newInstance("//fsm/char-set/char");
-        List allContextInstances = xpath.selectNodes(fsmdoc);
-        if (!allContextInstances.isEmpty()) {
-            for (int i = 0; i < allContextInstances.size(); i++) {
-                Object o = allContextInstances.get(i);
-                if (o instanceof Element) {
-                    Element e = (Element) o;
-                    symbol = e.getText();
-                    UTTERANCEENDSYMBOLS = UTTERANCEENDSYMBOLS + symbol;
-                } 
+     public void setUtteranceEndSymbols(String s) {
+        try {
+            //now get the UtteranceEndSymbols from the FSM XML file
+            //XPath: //fsm/char-set/char
+            UTTERANCEENDSYMBOLS = "";
+            String path2fsm = s;
+            String symbol;
+            CorpusIO cio = new CorpusIO();
+            String fsmstring = cio.readExternalResourceAsString(path2fsm);
+            Document fsmdoc = de.uni_hamburg.corpora.utilities.TypeConverter.String2JdomDocument(fsmstring);
+            XPath xpath = XPath.newInstance("//fsm/char-set/char");
+            List allContextInstances = xpath.selectNodes(fsmdoc);
+            if (!allContextInstances.isEmpty()) {
+                for (int i = 0; i < allContextInstances.size(); i++) {
+                    Object o = allContextInstances.get(i);
+                    if (o instanceof Element) {
+                        Element e = (Element) o;
+                        symbol = e.getText();
+                        UTTERANCEENDSYMBOLS = UTTERANCEENDSYMBOLS + symbol; 
+                    }
+                }
             }
+        } catch (JDOMException ex) {
+            report.addException(ex, xc, cd, "unknown jdom error");
+        } catch (IOException ex) {
+            report.addException(ex, xc, cd, "unknown input output error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, xc, cd, "unknown URI Syntax error");
         }
 
     }
