@@ -19,7 +19,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -109,14 +108,8 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         return description;
     }
     
-     public void setInel(String s) {
-        if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("wahr") || s.equalsIgnoreCase("ja")) {
+     public void setInel() {
             inel = true;
-        } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
-            inel = false;
-        } else {
-            report.addCritical(COMA_OVERVIEW, cd, "Parameter coma not recognized: " + escapeHtml4(s));
-        }
     }
 
 }

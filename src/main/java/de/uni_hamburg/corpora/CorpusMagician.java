@@ -113,6 +113,13 @@ public class CorpusMagician {
     static Properties cfProperties = new Properties();
     static PrettyPrinter pp = new PrettyPrinter();
     static String settingsfilepath = "settings.xml";
+    //Properties Key Names
+    static String fsm = "fsm";
+    static String segmentation = "segmentation";
+    static String lang = "segmentation";
+    static String corpusname = "segmentation";
+    static String kml = "segmentation";
+    static String mode = "segmentation";
 
     public CorpusMagician() {
     }
@@ -395,9 +402,9 @@ public class CorpusMagician {
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("inel")) {
-                            cog.setInel(cfProperties.getProperty("inel"));
-                            System.out.println("INEL set to " + cfProperties.getProperty("inel"));
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                            cog.setInel();
+                            System.out.println("Mode set to inel");
                         }
                     }
                     corpusfunctions.add(cog);
@@ -437,13 +444,14 @@ public class CorpusMagician {
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
                     if (cfProperties != null) {
-                        if (cfProperties.containsKey("MODE") && cfProperties.getProperty("MODE").equals("INEL")) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
                             xc.setXSLresource("/xsl/inel-checks.xsl");
-                            System.out.println("MODE set to " + cfProperties.getProperty("MODE"));
+                            System.out.println("Mode set to inel");
                         }
-                        if (cfProperties.containsKey("UTTERANCEENDSYMBOLS")) {
-                            xc.setUtteranceEndSymbols(cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
-                            System.out.println("UTTERANCEENDSYMBOLS set to " + cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
+                        if (cfProperties.containsKey(fsm)) {
+                            xc.setUtteranceEndSymbols(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
                     corpusfunctions.add(xc);
@@ -488,13 +496,14 @@ public class CorpusMagician {
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
                     corpusfunctions.add(ngtcwa);
                     break;
+                //not needed anymore because of mode parameter
                 case "xsltcheckerinel":
                     XSLTChecker xci = new XSLTChecker();
                     xci.setXSLresource("/xsl/inel-checks.xsl");
                     if (cfProperties != null) {
-                        if (cfProperties.containsKey("UTTERANCEENDSYMBOLS")) {
-                            xci.setUtteranceEndSymbols(cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
-                            System.out.println("UTTERANCEENDSYMBOLS set to " + cfProperties.getProperty("UTTERANCEENDSYMBOLS"));
+                        if (cfProperties.containsKey(fsm)) {
+                            xci.setUtteranceEndSymbols(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
                     corpusfunctions.add(xci);
@@ -503,13 +512,14 @@ public class CorpusMagician {
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("LANG")) {
-                            eiit.setLanguage(cfProperties.getProperty("LANG"));
-                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                        if (cfProperties.containsKey(lang)) {
+                            eiit.setLanguage(cfProperties.getProperty(lang));
+                            System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
                     }
                     corpusfunctions.add(eiit);
                     break;
+                //Maybe get rid of those special cases too!
                 case "exb2inelisoteisel":
                     EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
                     eiitsel.setLanguage("sel");
@@ -529,9 +539,9 @@ public class CorpusMagician {
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("LANG")) {
-                            ehit.setLanguage(cfProperties.getProperty("LANG"));
-                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                        if (cfProperties.containsKey(lang)) {
+                            ehit.setLanguage(cfProperties.getProperty(lang));
+                            System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
                     }
                     corpusfunctions.add(ehit);
@@ -567,9 +577,9 @@ public class CorpusMagician {
                     ComaKmlForLocations ckml = new ComaKmlForLocations();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("KML")) {
-                            ckml.setKMLFilePath(cfProperties.getProperty("KML"));
-                            System.out.println("KML file path set to " + cfProperties.getProperty("KML"));
+                        if (cfProperties.containsKey(kml)) {
+                            ckml.setKMLFilePath(cfProperties.getProperty(kml));
+                            System.out.println("KML file path set to " + cfProperties.getProperty(kml));
                         }
                     }
                     corpusfunctions.add(ckml);
@@ -625,9 +635,9 @@ public class CorpusMagician {
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
                     if (cfProperties != null) {
-                        if (cfProperties.containsKey("CORPUSNAME")) {
-                            shtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
-                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        if (cfProperties.containsKey(corpusname)) {
+                            shtml.setCorpusName(cfProperties.getProperty(corpusname));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
                         }
                     }
                     corpusfunctions.add(shtml);
@@ -644,17 +654,17 @@ public class CorpusMagician {
                     ListHTML lhtml = new ListHTML();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SEGMENTATION")) {
-                            lhtml.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
-                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        if (cfProperties.containsKey(segmentation)) {
+                            lhtml.setSegmentation(cfProperties.getProperty(segmentation));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty(segmentation));
                         }
-                        if (cfProperties.containsKey("CORPUSNAME")) {
-                            lhtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
-                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        if (cfProperties.containsKey(corpusname)) {
+                            lhtml.setCorpusName(cfProperties.getProperty(corpusname));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
                         }
-                        if (cfProperties.containsKey("FSM")) {
-                            lhtml.setExternalFSM(cfProperties.getProperty("FSM"));
-                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        if (cfProperties.containsKey(fsm)) {
+                            lhtml.setExternalFSM(cfProperties.getProperty(fsm));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
 
                         }
                     }
@@ -683,13 +693,13 @@ public class CorpusMagician {
                     ExbSegmentationChecker eseg = new ExbSegmentationChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SEGMENTATION")) {
-                            eseg.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
-                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        if (cfProperties.containsKey(segmentation)) {
+                            eseg.setSegmentation(cfProperties.getProperty(segmentation));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty(segmentation));
                         }
-                        if (cfProperties.containsKey("FSM")) {
-                            eseg.setExternalFSM(cfProperties.getProperty("FSM"));
-                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        if (cfProperties.containsKey(fsm)) {
+                            eseg.setExternalFSM(cfProperties.getProperty(fsm));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
                     corpusfunctions.add(eseg);
@@ -698,13 +708,13 @@ public class CorpusMagician {
                     ExbSegmenter esegr = new ExbSegmenter();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SEGMENTATION")) {
-                            esegr.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
-                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        if (cfProperties.containsKey(segmentation)) {
+                            esegr.setSegmentation(cfProperties.getProperty(segmentation));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty(segmentation));
                         }
-                        if (cfProperties.containsKey("FSM")) {
-                            esegr.setExternalFSM(cfProperties.getProperty("FSM"));
-                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        if (cfProperties.containsKey(fsm)) {
+                            esegr.setExternalFSM(cfProperties.getProperty(fsm));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
                     corpusfunctions.add(esegr);
@@ -717,13 +727,13 @@ public class CorpusMagician {
                     AddCSVMetadataToComa acmtc = new AddCSVMetadataToComa();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("CSV")) {
-                            acmtc.setCSVFilePath(cfProperties.getProperty("CSV"));
-                            System.out.println("CSV file path set to " + cfProperties.getProperty("CSV"));
+                        if (cfProperties.containsKey("csv")) {
+                            acmtc.setCSVFilePath(cfProperties.getProperty("csv"));
+                            System.out.println("CSV file path set to " + cfProperties.getProperty("csv"));
                         }
-                        if (cfProperties.containsKey("SPEAKER")) {
-                            acmtc.setSpeakerOrCommunication(cfProperties.getProperty("SPEAKER"));
-                            System.out.println("CSV file set for " + cfProperties.getProperty("SPEAKER"));
+                        if (cfProperties.containsKey("speaker")) {
+                            acmtc.setSpeakerOrCommunication(cfProperties.getProperty("speaker"));
+                            System.out.println("CSV file set for " + cfProperties.getProperty("speaker"));
                         }
                     }
                     corpusfunctions.add(acmtc);
@@ -793,8 +803,8 @@ public class CorpusMagician {
                     LanguageToolChecker ltc = new LanguageToolChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("LANG")) {
-                            ltc.setLanguage(cfProperties.getProperty("LANG"));
+                        if (cfProperties.containsKey(lang)) {
+                            ltc.setLanguage(cfProperties.getProperty(lang));
                             System.out.println("Language set to " + cfProperties.getProperty("LANG"));
                         }
                         if (cfProperties.containsKey("TIER")) {
@@ -1047,6 +1057,11 @@ public class CorpusMagician {
             cfProperties.loadFromXML(test);
             System.out.println(cfProperties);
         }
+        
+        //we can save the properties if the input was not from an settings.xml
+        //cfProperties.storeToXML() 
+        
+        
         //add function to read properties from file! Needs to be a key value list though not xml
         //Reads a property list (key and element pairs) from the input
         //Need to use 
