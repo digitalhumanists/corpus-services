@@ -617,17 +617,17 @@ public class CorpusMagician {
                     ZipCorpus zc = new ZipCorpus();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SOURCE_FOLDER")) {
-                            zc.setSourceFolder(cfProperties.getProperty("SOURCE_FOLDER"));
-                            System.out.println("Location of source folder set to " + cfProperties.getProperty("SOURCE_FOLDER"));
+                        if (cfProperties.containsKey("source_folder")) {
+                            zc.setSourceFolder(cfProperties.getProperty("source_folder"));
+                            System.out.println("Location of source folder set to " + cfProperties.getProperty("source_folder"));
                         }
-                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {
-                            zc.setOutputFile(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
-                            System.out.println("Location of output file set to " + cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                        if (cfProperties.containsKey("output_zip_file")) {
+                            zc.setOutputFile(cfProperties.getProperty("output_zip_file"));
+                            System.out.println("Location of output file set to " + cfProperties.getProperty("output_zip_file"));
                         }
-                        if (cfProperties.containsKey("AUDIO")) {
-                            zc.setWithAudio(cfProperties.getProperty("AUDIO"));
-                            System.out.println("Should contain audio set to " + cfProperties.getProperty("AUDIO"));
+                        if (cfProperties.containsKey("audio")) {
+                            zc.setWithAudio(cfProperties.getProperty("audio"));
+                            System.out.println("Should contain audio set to " + cfProperties.getProperty("audio"));
                         }
                     }
                     corpusfunctions.add(zc);
@@ -805,11 +805,11 @@ public class CorpusMagician {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey(lang)) {
                             ltc.setLanguage(cfProperties.getProperty(lang));
-                            System.out.println("Language set to " + cfProperties.getProperty("LANG"));
+                            System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
-                        if (cfProperties.containsKey("TIER")) {
-                            ltc.setTierToCheck(cfProperties.getProperty("TIER"));
-                            System.out.println("Tier to check set to " + cfProperties.getProperty("TIER"));
+                        if (cfProperties.containsKey("tier")) {
+                            ltc.setTierToCheck(cfProperties.getProperty("tier"));
+                            System.out.println("Tier to check set to " + cfProperties.getProperty("tier"));
                         }
                     }
                     corpusfunctions.add(ltc);
