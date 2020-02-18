@@ -29,6 +29,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -182,7 +183,16 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
+            //keep the doctype info
+            // http://www.srccodes.com/p/article/13/how-to-retain-doctype-declaration-while-saving-dom-document-to-an-xml-file
+            DocumentType doctype = document.getDoctype();
+            System.out.println(doctype);
+            if (doctype != null && doctype.getSystemId() != null) {
+                transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+            }
+            if(doctype != null && doctype.getPublicId() != null){
+                transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+            }
             // Return pretty print xml string
             StringWriter stringWriter = new StringWriter();
             transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
