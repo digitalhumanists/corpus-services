@@ -1054,10 +1054,11 @@ public class CorpusMagician {
                 //default
                 settingsfilepath = "settings.xml";
             }
+            System.out.println("SettingsFilePath is " + settingsfilepath);
             if (new File(settingsfilepath).exists()) {
                 FileInputStream test = new FileInputStream(settingsfilepath);
                 cfProperties.loadFromXML(test);
-                System.out.println(cfProperties);
+                System.out.println("Properties are: " + cfProperties);
             } else {
                 System.out.println("No parameters loaded.");
             }
