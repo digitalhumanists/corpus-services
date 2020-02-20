@@ -129,6 +129,7 @@ public class CorpusMagician {
     public static void main(String[] args) {
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url    
+        System.out.println("CorpusMagician is now doing its magic.");
         try {
             createCommandLineOptions(args);
             String urlstring = cmd.getOptionValue("input");
