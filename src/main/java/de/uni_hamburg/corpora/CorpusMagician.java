@@ -1053,15 +1053,18 @@ public class CorpusMagician {
                 //default
                 settingsfilepath = "settings.xml";
             }
-            FileInputStream test = new FileInputStream(settingsfilepath);
-            cfProperties.loadFromXML(test);
-            System.out.println(cfProperties);
+            if (new File(settingsfilepath).exists()) {
+                FileInputStream test = new FileInputStream(settingsfilepath);
+                cfProperties.loadFromXML(test);
+                System.out.println(cfProperties);
+            } else {
+                System.out.println("No parameters loaded.");
+            }
+
         }
-        
+
         //we can save the properties if the input was not from an settings.xml
         //cfProperties.storeToXML() 
-        
-        
         //add function to read properties from file! Needs to be a key value list though not xml
         //Reads a property list (key and element pairs) from the input
         //Need to use 
