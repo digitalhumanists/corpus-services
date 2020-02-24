@@ -129,6 +129,7 @@ public class CorpusMagician {
     public static void main(String[] args) {
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url    
+        System.out.println("CorpusMagician is now doing its magic.");
         try {
             createCommandLineOptions(args);
             String urlstring = cmd.getOptionValue("input");
@@ -1054,12 +1055,12 @@ public class CorpusMagician {
                 settingsfilepath = "settings.xml";
             }
             //also need to allow for not findind the xml settings file here!
-            if(new File(settingsfilepath).exists()){
-            FileInputStream test = new FileInputStream(settingsfilepath);
-            cfProperties.loadFromXML(test);
-            System.out.println(cfProperties);
-             } else{
-            System.out.println("No settings file found.");    
+            if (new File(settingsfilepath).exists()) {
+                FileInputStream test = new FileInputStream(settingsfilepath);
+                cfProperties.loadFromXML(test);
+                System.out.println("Properties are: " + cfProperties);
+            } else {
+                System.out.println("No parameters loaded.");
             }
         }
 
