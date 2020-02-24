@@ -1054,7 +1054,7 @@ public class CorpusMagician {
                 //default
                 settingsfilepath = "settings.xml";
             }
-            System.out.println("SettingsFilePath is " + settingsfilepath);
+            //also need to allow for not findind the xml settings file here!
             if (new File(settingsfilepath).exists()) {
                 FileInputStream test = new FileInputStream(settingsfilepath);
                 cfProperties.loadFromXML(test);
@@ -1062,7 +1062,6 @@ public class CorpusMagician {
             } else {
                 System.out.println("No parameters loaded.");
             }
-
         }
 
         //we can save the properties if the input was not from an settings.xml
