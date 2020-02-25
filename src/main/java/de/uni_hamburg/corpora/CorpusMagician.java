@@ -1052,7 +1052,7 @@ public class CorpusMagician {
                 settingsfilepath = cmd.getOptionValue("s");
             } else {
                 //default
-                settingsfilepath = "settings.xml";
+                settingsfilepath = "settings.param";
             }
             //also need to allow for not findind the xml settings file here!
             if (new File(settingsfilepath).exists()) {
