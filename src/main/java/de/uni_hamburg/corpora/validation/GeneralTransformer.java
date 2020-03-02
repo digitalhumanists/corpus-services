@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Collection;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -53,7 +54,8 @@ public class GeneralTransformer extends Checker {
             CorpusIO cio = new CorpusIO();
             String corpusdata = cd.toUnformattedString();
             //String stylesheet = cio.readInternalResourceAsString(pathToXSL);
-            String stylesheet = cio.readExternalResourceAsString(pathToXSL);
+            URL url = Paths.get(pathToXSL).toUri().toURL();
+            String stylesheet = cio.readExternalResourceAsString(url.toString());
             XSLTransformer xslt = new XSLTransformer();
             String result
                     = xslt.transform(corpusdata, stylesheet);

@@ -160,7 +160,7 @@ public class CorpusIO {
         String xslstring = new String(Files.readAllBytes(Paths.get(new URL(path2resource).toURI())));
         System.out.println(path2resource);
         if (xslstring == null) {
-            throw new IOException("Stylesheet not found!");
+            throw new IOException("File not found!");
         }
         return xslstring;
     }
