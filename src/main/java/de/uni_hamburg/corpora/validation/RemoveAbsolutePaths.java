@@ -360,7 +360,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                  *
                  */
             } else {
-                report.addCritical("RemoveAbsolutePaths", "File is neither coma nor exb nor exs file");
+                report.addCritical(function, cd, "File is neither coma nor exb nor exs file");
             }
         } catch (ClassNotFoundException ex) {
             report.addException(ex, function, cd, "unknown class not found error");

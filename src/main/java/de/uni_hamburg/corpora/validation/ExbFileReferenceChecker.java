@@ -120,7 +120,7 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         this.cd = cd;
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "Automatic fix is not yet supported.");
         return report;
     }

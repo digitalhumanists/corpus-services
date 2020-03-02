@@ -140,11 +140,11 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
             
             //test length of Fedora PID and report
             if (fedoraPID.length() >= 64) {
-                stats.addCritical(function, comaLoc + 
+                stats.addCritical(function, cd,
                     "Fedora PID would be too long (max. 64) for communication name (" + fedoraPID.length() + " chars): " + fedoraPID );
                     // + " You could shorten it to: " + shortenedCommuniationName + ", or change the corpus prefix");
             } else {
-                stats.addCorrect(function, comaLoc + ": " +
+                stats.addCorrect(function, cd,
                     "Fedora PID can be generated for communication: " + fedoraPID);
             }
         }

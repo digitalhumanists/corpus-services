@@ -95,7 +95,7 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
      */
     @Override
     public Report fix(CorpusData cd) {
-        report.addCritical(function, cd.getURL().getFile(), "Fixing option is not available");
+        report.addCritical(function, cd, "Fixing option is not available");
         return report;
     }
     

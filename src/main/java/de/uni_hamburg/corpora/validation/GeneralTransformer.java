@@ -42,7 +42,7 @@ public class GeneralTransformer extends Checker {
 
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "XSL Transformation cannot be checked, only fixed (use -f)");
         return report;
     }

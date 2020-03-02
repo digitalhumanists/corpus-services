@@ -221,14 +221,14 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "Wrong NS links cannot be fixed automatically");
         return report;
     }
 
     @Override
     public Report fix(Collection<CorpusData> cdc) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "Wrong NS links cannot be fixed automatically");
         return report;
     }
