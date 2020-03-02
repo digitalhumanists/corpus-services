@@ -250,13 +250,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         try {
             stats = exceptionalFix();
         } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         }
         return stats;
     }
@@ -438,13 +438,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         try {
             stats = exceptionalCheck(cd);
         } catch (JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch (JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         }
         return stats;
     }

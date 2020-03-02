@@ -57,19 +57,19 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         }
         return stats;
     }
