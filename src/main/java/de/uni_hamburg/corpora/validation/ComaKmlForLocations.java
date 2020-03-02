@@ -35,7 +35,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     HashMap<String, String> domicile; // hash map for storing the residences of speakers 
     HashMap<String, String> commLocation; // hash map for holding locations where the communications took place
     HashMap<String, String> lngLat; // hash map for holding coordinates of locations
-
+    Report stats = new Report(); //create a new report
+     
     public ComaKmlForLocations() {
         super("coma-kml-for-locations");
     }
@@ -46,10 +47,13 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
      * additionally checks for parser configuration, SAXE and IO exceptions.
      */
     public Report check(CorpusData cd) {
-        Report stats = new Report();
         try {
+            if (kmlFile != null) {
             getCoordinates();
             stats = exceptionalCheck(cd);
+            } else {
+            stats.addCritical(function, "No KML file path supplied");    
+            }
         } catch (ParserConfigurationException pce) {
             stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
@@ -77,8 +81,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
         NodeList communications = doc.getElementsByTagName("Communication"); // get all the communications in the corpus
-        NodeList speakers = doc.getElementsByTagName("Speaker"); // get all the speakers in the corpus
-        Report stats = new Report(); //create a new report
+        NodeList speakers = doc.getElementsByTagName("Speaker"); // get all the speakers in the corpus    
         if (birthPlace == null) {
             birthPlace = new HashMap<>();
         }
@@ -211,36 +214,40 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     public void getCoordinates() throws ParserConfigurationException, SAXException, IOException, JDOMException, URISyntaxException {
         Document doc = null;
         CorpusIO cio = new CorpusIO();
-        String kmlString = cio.readExternalResourceAsString(kmlFile);
-        if (kmlString != null) {
-            doc = TypeConverter.String2W3cDocument(kmlString);
-            if (lngLat == null) {
-                lngLat = new HashMap<>();
-            }
-            if (doc != null) {
-                NodeList placeMarks = doc.getElementsByTagName("Placemark");
-                for (int i = 0; i < placeMarks.getLength(); i++) { //iterate through place marks
-                    Element placeMark = (Element) placeMarks.item(i);
-                    Element name = (Element) placeMark.getElementsByTagName("name").item(0);
-                    String nameOfPlace = name.getTextContent();
-                    String language = "";
-                    NodeList data = placeMark.getElementsByTagName("Data");
-                    for (int j = 0; j < data.getLength(); j++) {
-                        Element datum = (Element) data.item(j);
-                        if (datum.getAttribute("name").equals("lang")) {
-                            Element value = (Element) datum.getElementsByTagName("value").item(0);
-                            language = value.getTextContent();
+        if (kmlFile != null) {
+            String kmlString = cio.readExternalResourceAsString(kmlFile);
+            if (kmlString != null) {
+                doc = TypeConverter.String2W3cDocument(kmlString);
+                if (lngLat == null) {
+                    lngLat = new HashMap<>();
+                }
+                if (doc != null) {
+                    NodeList placeMarks = doc.getElementsByTagName("Placemark");
+                    for (int i = 0; i < placeMarks.getLength(); i++) { //iterate through place marks
+                        Element placeMark = (Element) placeMarks.item(i);
+                        Element name = (Element) placeMark.getElementsByTagName("name").item(0);
+                        String nameOfPlace = name.getTextContent();
+                        String language = "";
+                        NodeList data = placeMark.getElementsByTagName("Data");
+                        for (int j = 0; j < data.getLength(); j++) {
+                            Element datum = (Element) data.item(j);
+                            if (datum.getAttribute("name").equals("lang")) {
+                                Element value = (Element) datum.getElementsByTagName("value").item(0);
+                                language = value.getTextContent();
+                            }
                         }
+                        String coordinatesWithAltitude = placeMark.getElementsByTagName("coordinates").item(0).getTextContent();
+                        String coordinate = coordinatesWithAltitude.trim().substring(0, coordinatesWithAltitude.trim().lastIndexOf(","));
+                        lngLat.put(nameOfPlace + "-" + language, coordinate);
                     }
-                    String coordinatesWithAltitude = placeMark.getElementsByTagName("coordinates").item(0).getTextContent();
-                    String coordinate = coordinatesWithAltitude.trim().substring(0, coordinatesWithAltitude.trim().lastIndexOf(","));
-                    lngLat.put(nameOfPlace + "-" + language, coordinate);
+                } else {
+                    stats.addCritical(function, "KML file cannot be read");
                 }
             } else {
-                report.addCritical(function, cd, "KML file cannot be read");
+                stats.addCritical(function, "KML file cannot be read");
             }
         } else {
-            report.addCritical(function, cd, "KML file cannot be read");
+            stats.addCritical(function, "No KML file path supplied");
         }
     }
 
@@ -439,7 +446,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            report.addException(ex, " usable class not found");
+            stats.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

@@ -36,7 +36,7 @@ public abstract class Checker implements CorpusFunction {
     //They are only allowed to be used in the main method, not the other CorpusFunction methods
     ValidatorSettings settings;
     CorpusData cd;
-    Report report;
+    Report report = new Report();
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
             extends CorpusData>>();
     final String function;
