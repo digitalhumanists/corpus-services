@@ -44,7 +44,6 @@ import java.math.BigInteger;
  * @author Timofey Arkhangelskiy <timofey.arkhangelskiy@uni-hamburg.de>
  */
 public class DuplicateTierContentChecker extends Checker implements CorpusFunction {
-    static final String CHECKER_NAME = "DuplicateTierContentChecker";
     static final int MIN_TIER_LENGTH = 10;   // tiers shorter than this will not be compared
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
       Arrays.asList("ts", "tx", "fe", "fg", "fr")); 
@@ -53,6 +52,10 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
             Pattern.UNICODE_CHARACTER_CLASS);
     Pattern rxApostrophe = Pattern.compile("[`‘’′́̀ʼ]", Pattern.UNICODE_CHARACTER_CLASS);
     MessageDigest md = null;
+
+    public DuplicateTierContentChecker() {
+        super("DuplicateTierContentChecker");
+    }
     
     
     /**
@@ -65,19 +68,19 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
         try {
             stats = exceptionalCheck(cd);
         } catch (NoSuchAlgorithmException ex) {
-            stats.addException(ex, CHECKER_NAME + ": MessageDigest could not be initialized for MD5.");
+            stats.addException(ex, function, cd, "MessageDigest could not be initialized for MD5.");
         } catch (TransformerException ex) {
-            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+            stats.addException(ex, function, cd, "unknown xml exception.");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+            stats.addException(ex, function, cd, "unknown xml exception.");
         } catch (SAXException ex) {
-            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+            stats.addException(ex, function, cd, "unknown xml exception.");
         } catch (IOException ex) {
-            stats.addException(ex, CHECKER_NAME + ": unknown IO exception.");
+            stats.addException(ex, function, cd, "unknown IO exception.");
         } catch (JDOMException ex) {
-            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+            stats.addException(ex, function, cd, "unknown xml exception.");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, CHECKER_NAME + ": unknown xml exception.");
+            stats.addException(ex, function, cd, "unknown xml exception.");
         }        
         return stats;
     }
@@ -92,7 +95,7 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
      */
     @Override
     public Report fix(CorpusData cd) {
-        report.addCritical(CHECKER_NAME, cd.getURL().getFile(), "Fixing option is not available");
+        report.addCritical(function, cd.getURL().getFile(), "Fixing option is not available");
         return report;
     }
     
@@ -189,7 +192,7 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
                         continue;
                     }
                     if (tierValues.get(entry.getKey()).containsKey(entry.getValue())) {
-                        stats.addCritical(CHECKER_NAME, exb, "The file is a duplicate of " 
+                        stats.addCritical(function, exb, "The file is a duplicate of " 
                                 + tierValues.get(entry.getKey()).get(entry.getValue()) 
                                 + " (tier " + entry.getKey() + ").");
                     }

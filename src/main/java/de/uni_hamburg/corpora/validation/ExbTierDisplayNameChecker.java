@@ -27,7 +27,10 @@ import org.xml.sax.SAXException;
 public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
-    final String tdnc = "tier-displayname-checker";
+
+    public ExbTierDisplayNameChecker() {
+        super("tier-displayname-checker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -39,15 +42,15 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -106,17 +109,17 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                     if (((category.equals(displayNameCategory)) && (speakerName.equals(displayNameSpeaker))) || (category.equals(displayName))) {
                         //everything is correct
                         System.out.println("Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
-                        stats.addCorrect(tdnc, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
+                        stats.addCorrect(function, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                     } else {
                      System.err.println("Speaker abbreviation and display name for tier do not match"
                                     + "for speaker " + speakerName + ", tier: displayname " + displayName + " and id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            stats.addCritical(tdnc, cd, "Tier mismatch "
+                            stats.addCritical(function, cd, "Tier mismatch "
                                     + "for speaker " + speakerName + ", tier category " + category
                                     +", tier: displayname " + displayName
                                     + " id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier does not match"
+                            exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier does not match"
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);   
@@ -124,10 +127,10 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                 }
             }
             else{
-                stats.addWarning(tdnc, cd, "Display name is empty "
+                stats.addWarning(function, cd, "Display name is empty "
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id"));
-                exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Display name for tier is empty"
+                exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Display name for tier is empty"
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id"));   
             }

@@ -56,18 +56,20 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
     String language = "de";
     JLanguageTool langTool;
 
-    final String LANGUAGETOOL = "languagetool";
+    public LanguageToolChecker() {
+        super("languagetoolchecker");
+    }
 
     public Report check(File f) {
         Report stats = new Report();
         try {
             stats = exceptionalCheck(f);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, "Unknown parser error");
+            stats.addException(pce, function, cd, "Unknown parser error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parser error");
+            stats.addException(saxe, function, cd, "Unknown parser error");
         } catch (IOException ioe) {
-            stats.addException(ioe, "Unknown read error");
+            stats.addException(ioe, function, cd, "Unknown read error");
         }
         return stats;
     }
@@ -80,7 +82,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             langTool = new JLanguageTool(new GermanyGerman());
         } else {
             Report report = new Report();
-            report.addCritical(LANGUAGETOOL, "Missing languagetool for language "
+            report.addCritical(function, "Missing languagetool for language "
                     + language);
             return report;
         }
@@ -114,7 +116,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
                     String text = eventText.getWholeText();
                     List<RuleMatch> matches = langTool.check(text);
                     for (RuleMatch match : matches) {
-                        stats.addWarning(LANGUAGETOOL,
+                        stats.addWarning(function,
                                 "Potential error at characters "
                                 + match.getFromPos() + "-" + match.getToPos() + ": "
                                 + match.getMessage() + ": \""
@@ -198,9 +200,9 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         }
         return stats;
     }
@@ -224,7 +226,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             langTool = new JLanguageTool(new GermanyGerman());
         } else {
             Report report = new Report();
-            report.addCritical(LANGUAGETOOL, "Missing languagetool for language "
+            report.addCritical(function, "Missing languagetool for language "
                     + language);
             return stats;
         }
@@ -264,7 +266,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
                                         match.getToPos()) + "\" "
                                 + "Suggested correction(s): "
                                 + match.getSuggestedReplacements();
-                        stats.addWarning(LANGUAGETOOL, cd, message
+                        stats.addWarning(function, cd, message
                         );
 //                        System.out.println("Potential error at characters " + 
 //                                match.getFromPos() + "-" + match.getToPos() + ": " +
@@ -274,7 +276,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
 //                                "Suggested correction(s): " +
 //                                match.getSuggestedReplacements());
                         //add ExmaError tierID eventID
-                        exmaError.addError(LANGUAGETOOL, cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false, message);
+                        exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false, message);
                     }
                     if (!matches.isEmpty()) {
                         count++;
@@ -284,7 +286,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             }
         }
         if (count==0) {
-            stats.addCorrect(LANGUAGETOOL, cd, "No spelling errors found.");
+            stats.addCorrect(function, cd, "No spelling errors found.");
         }
         return stats;
     }
@@ -294,7 +296,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(LANGUAGETOOL,
+        report.addCritical(function,
                 "Automatic fix is not yet supported.");
         return report;
     }

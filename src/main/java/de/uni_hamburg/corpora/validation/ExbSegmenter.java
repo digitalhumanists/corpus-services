@@ -57,9 +57,12 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
     static File exbfile;
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
-    final String EXB_SEG = "exb-segmenter";
     String segmentationName = "GENERIC";
     String path2ExternalFSM = "";
+
+    public ExbSegmenter() {
+        super("exb-segmenter");
+    }
 
     public static Report check(File f) {
         Report stats = new Report();
@@ -165,8 +168,8 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         for (Object o : v) {
             FSMException fsme = (FSMException) o;
             String text = fsme.getMessage();
-            stats.addCritical(EXB_SEG, cd, text);
-            exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
+            stats.addCritical(function, cd, text);
+            exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
         }
         return stats;
     }
@@ -227,22 +230,22 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         CorpusIO cio = new CorpusIO();
         List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
         if (v.isEmpty()) {
-            SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());         
+            SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());
             st.setEXBSource(cd.getFilename());
             //add the udMetadata!!!!
             //finally found the missing method :) :)
             org.exmaralda.partitureditor.jexmaralda.segment.SegmentCountForMetaInformation
-					.count(st);
+                    .count(st);
             Document doc = TypeConverter.String2JdomDocument(st.toXML());
             URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
             cio.write(doc, url);
-            stats.addCorrect(EXB_SEG, cd, "Exs successfully created at " + url);
+            stats.addCorrect(function, cd, "Exs successfully created at " + url);
         } else {
             for (Object o : v) {
                 FSMException fsme = (FSMException) o;
                 String text = fsme.getMessage();
-                stats.addCritical(EXB_SEG, cd, text);
-                exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
+                stats.addCritical(function, cd, text);
+                exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
             }
         }
         return stats;

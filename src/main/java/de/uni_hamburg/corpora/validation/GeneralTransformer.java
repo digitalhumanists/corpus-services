@@ -31,15 +31,18 @@ public class GeneralTransformer extends Checker {
     String pathToXSL = "";
     String outputFilename = "";
     URL urlToOutput;
-    String getra = "GeneralTransformer";
     boolean overwritefiles = false;
     boolean coma = false;
     boolean exb = false;
     boolean exs = false;
 
+    public GeneralTransformer() {
+        super("GeneralTransformer");
+    }
+
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        report.addCritical(getra,
+        report.addCritical(function,
                 "XSL Transformation cannot be checked, only fixed (use -f)");
         return report;
     }
@@ -55,7 +58,7 @@ public class GeneralTransformer extends Checker {
             String result
                     = xslt.transform(corpusdata, stylesheet);
             if (result != null) {
-                report.addCorrect(getra, cd.getURL().toString(),
+                report.addCorrect(function, cd.getURL().toString(),
                         "XSL Transformation was successful");
                 
                 PrettyPrinter pp = new PrettyPrinter();
@@ -68,21 +71,21 @@ public class GeneralTransformer extends Checker {
             cio.write(result, urlToOutput);
             }
         } catch (TransformerConfigurationException ex) {
-            report.addException(ex, getra, cd, "Transformer Error");
+            report.addException(ex, function, cd, "Transformer Error");
         } catch (TransformerException ex) {
-            report.addException(ex, getra, cd, "Transformer Error");
+            report.addException(ex, function, cd, "Transformer Error");
         } catch (JDOMException ex) {
-            report.addException(ex, getra, cd, "Transformer Error");
+            report.addException(ex, function, cd, "Transformer Error");
         } catch (IOException ex) {
-            report.addException(ex, getra, cd, "IO Error");
+            report.addException(ex, function, cd, "IO Error");
         } catch (URISyntaxException ex) {
-            report.addException(ex, getra, cd, "URI Error");
+            report.addException(ex, function, cd, "URI Error");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, getra, cd, "Transformer Error");
+            report.addException(ex, function, cd, "Transformer Error");
         } catch (SAXException ex) {
-            report.addException(ex, getra, cd, "Transformer Error");
+            report.addException(ex, function, cd, "Transformer Error");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, getra, cd, "XPath Error");
+            report.addException(ex, function, cd, "XPath Error");
         }
         return report;
     }
@@ -122,7 +125,7 @@ public class GeneralTransformer extends Checker {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             overwritefiles = false;
         } else {
-            report.addCritical(getra, cd, "Parameter coma not recognized: " + escapeHtml4(s));
+            report.addCritical(function, cd, "Parameter coma not recognized: " + escapeHtml4(s));
         }
     }
     
@@ -132,7 +135,7 @@ public class GeneralTransformer extends Checker {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             coma = false;
         } else {
-            report.addCritical(getra, cd, "Parameter coma not recognized: " + escapeHtml4(s));
+            report.addCritical(function, cd, "Parameter coma not recognized: " + escapeHtml4(s));
         }
     }
     
@@ -142,7 +145,7 @@ public class GeneralTransformer extends Checker {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             exb = false;
         } else {
-            report.addCritical(getra, cd, "Parameter coma not recognized: " + escapeHtml4(s));
+            report.addCritical(function, cd, "Parameter coma not recognized: " + escapeHtml4(s));
         }
     }
     
@@ -152,7 +155,7 @@ public class GeneralTransformer extends Checker {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             exs = false;
         } else {
-            report.addCritical(getra, cd, "Parameter coma not recognized: " + escapeHtml4(s));
+            report.addCritical(function, cd, "Parameter coma not recognized: " + escapeHtml4(s));
         }
     }
 

@@ -37,7 +37,10 @@ import org.xml.sax.SAXException;
 
 public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
-    final String EXB_DTD_CHECKER = "exb-dtd";
+
+    public ExbSchemaChecker() {
+        super("exb-dtd");
+    }
 
     /**
      * Validate an exb file with a DTD file.
@@ -95,7 +98,7 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_DTD_CHECKER,
+        report.addCritical(function,
                 "No fix is applicable for this feature.");
         return report;
     }

@@ -44,32 +44,32 @@ import org.xml.sax.SAXException;
  */
 public class PrettyPrintData extends Checker implements CorpusFunction {
 
-    String ppd = "PrettyPrintData";
     String prettyCorpusData = "";
 
     public PrettyPrintData() {
+        super("PrettyPrintData");
     }
 
     public Report check(CorpusData cd) {
         try {
             // if no diff - all fine, nothing needs to be done
             if (CorpusDataIsAlreadyPretty(cd)) {
-                report.addCorrect(ppd, cd, "Already pretty printed.");
+                report.addCorrect(function, cd, "Already pretty printed.");
             } // if difference then - needs to be pretty printed
             else {
-                report.addCritical(ppd, cd, "Needs to be pretty printed.");
+                report.addCritical(function, cd, "Needs to be pretty printed.");
             }
 
         } catch (IOException ex) {
-            report.addException(ex, ppd, cd, "Causes an Input/Output error.");
+            report.addException(ex, function, cd, "Causes an Input/Output error.");
         } catch (TransformerException ex) {
-            report.addException(ex, ppd, cd, "Causes an Transformer error.");
+            report.addException(ex, function, cd, "Causes an Transformer error.");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, ppd, cd, "Causes an Parser error.");
+            report.addException(ex, function, cd, "Causes an Parser error.");
         } catch (SAXException ex) {
-            report.addException(ex, ppd, cd, "Causes an XML error.");
+            report.addException(ex, function, cd, "Causes an XML error.");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, ppd, cd, "Causes an Xpath error.");
+            report.addException(ex, function, cd, "Causes an Xpath error.");
         }
         return report;
     }
@@ -78,30 +78,30 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
         // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
         try {
             if (cd.toUnformattedString() == null) {
-                report.addCritical(ppd, cd, "Could not create the unformatted String!");
+                report.addCritical(function, cd, "Could not create the unformatted String!");
             } else {
                 if (!CorpusDataIsAlreadyPretty(cd)) {
                     //save it instead of the old file
                     CorpusIO cio = new CorpusIO();
                     cio.write(prettyCorpusData, cd.getURL());
                     cd.updateUnformattedString(prettyCorpusData);
-                    report.addCorrect(ppd, cd, "CorpusData was pretty printed and saved.");
+                    report.addCorrect(function, cd, "CorpusData was pretty printed and saved.");
 
                 } else {
                     //do nothing because it is pretty printed already
-                    report.addCorrect(ppd, cd, "Was already pretty printed.");
+                    report.addCorrect(function, cd, "Was already pretty printed.");
                 }
             }
         } catch (IOException ex) {
-            report.addException(ex, ppd, cd, "Causes an Input/Output error.");
+            report.addException(ex, function, cd, "Causes an Input/Output error.");
         } catch (TransformerException ex) {
-            report.addException(ex, ppd, cd, "Causes an Transformer error.");
+            report.addException(ex, function, cd, "Causes an Transformer error.");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, ppd, cd, "Causes an Parser error.");
+            report.addException(ex, function, cd, "Causes an Parser error.");
         } catch (SAXException ex) {
-            report.addException(ex, ppd, cd, "Causes an XML error.");
+            report.addException(ex, function, cd, "Causes an XML error.");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, ppd, cd, "Causes an Xpath error.");
+            report.addException(ex, function, cd, "Causes an Xpath error.");
         }
         return report;
     }
@@ -190,7 +190,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
             if (doctype != null && doctype.getSystemId() != null) {
                 transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
             }
-            if(doctype != null && doctype.getPublicId() != null){
+            if (doctype != null && doctype.getPublicId() != null) {
                 transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
             }
             // Return pretty print xml string

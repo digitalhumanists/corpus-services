@@ -30,7 +30,10 @@ import javax.xml.xpath.XPathExpressionException;
  * 
  */
 public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
-     final String function = "add-mp3-next-2-wav";
+
+    public ExbMP3Next2WavAdder() {
+        super("add-mp3-next-2-wav");
+    }
      
     @Override
     public Report check(CorpusData cd){

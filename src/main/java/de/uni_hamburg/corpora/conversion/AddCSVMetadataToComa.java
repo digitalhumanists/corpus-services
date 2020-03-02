@@ -39,7 +39,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     private Document coma;
     private String SpeakerOrCommunication;
     private Boolean IsSpeaker;
-    final String CSV_to_Coma = "add-csv-metadata-to-coma";
+    final String function = "add-csv-metadata-to-coma";
 
     /**
      * creates a new instance of AddCSVMetadataToComa
@@ -77,11 +77,11 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
-             stats.addException(ex, ": Unknown JDOM error");
+             stats.addException(ex, function, cd, "Unknown JDOM error");
         }
         return stats;
     }
@@ -98,12 +98,12 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         // put the elements in the report
         for (String[] row : allElements) {
             System.out.println(Arrays.toString(row));
-            stats.addNote(CSV_to_Coma, cd, Arrays.toString(row));
+            stats.addNote(function, cd, Arrays.toString(row));
         }
         System.out.println(Arrays.toString(allElements.get(0)));
-        stats.addNote(CSV_to_Coma, cd, Arrays.toString(allElements.get(0)));
+        stats.addNote(function, cd, Arrays.toString(allElements.get(0)));
         System.out.println(allElements.get(0)[0]);
-        stats.addNote(CSV_to_Coma, cd, allElements.get(0)[0]);
+        stats.addNote(function, cd, allElements.get(0)[0]);
 
         coma = org.exmaralda.common.jdomutilities.IOUtilities.readDocumentFromLocalFile(comaFile);
         //add the key and value to speaker/description or communication/description
@@ -113,7 +113,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                     //the place is the xpath where it should be inserted
                     String place = "//Speaker[Sigle/text()=\"" + allElements.get(i)[0] + "\"]/Description";
                     System.out.println(place);
-                    stats.addNote(CSV_to_Coma, cd, place);
+                    stats.addNote(function, cd, place);
                     XPath p = XPath.newInstance(place);
                     //System.out.println(p.selectSingleNode(coma));
                     Object o = p.selectSingleNode(coma);
@@ -124,7 +124,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                         desc.addContent(key);
                         key.setAttribute("Name", allElements.get(0)[a]);
                         System.out.println(desc.getAttributes());
-                        stats.addNote(CSV_to_Coma, cd, Arrays.toString(desc.getAttributes().toArray()));
+                        stats.addNote(function, cd, Arrays.toString(desc.getAttributes().toArray()));
                         key.setText(allElements.get(i)[a]);
                     }
                 }
@@ -132,10 +132,10 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                     //the place is the xpath where it should be inserted
                     String place = "//Communication[@Name=\"" + allElements.get(i)[0] + "\"]/Description";
                     System.out.println(place);
-                    stats.addNote(CSV_to_Coma, cd, place);
+                    stats.addNote(function, cd, place);
                     XPath p = XPath.newInstance(place);
                     System.out.println(p.selectSingleNode(coma));
-                    stats.addNote(CSV_to_Coma, cd, p.selectSingleNode(coma).toString());
+                    stats.addNote(function, cd, p.selectSingleNode(coma).toString());
                     Object o = p.selectSingleNode(coma);
                     if (o != null) {
                         Element desc = (Element) o;
@@ -144,7 +144,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                         desc.addContent(key);
                         key.setAttribute("Name", allElements.get(0)[a]);
                         System.out.println(desc.getAttributes());
-                        stats.addNote(CSV_to_Coma, cd, Arrays.toString(desc.getAttributes().toArray()));
+                        stats.addNote(function, cd, Arrays.toString(desc.getAttributes().toArray()));
                         key.setText(allElements.get(i)[a]);
                     }
                 }
@@ -154,7 +154,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(comaFile), "UTF8"));
         XMLOutputter serializer = new XMLOutputter();
         serializer.output(coma, fileWriter);
-        stats.addNote(CSV_to_Coma, cd, "The data in the csv file has been added into the coma.");
+        stats.addNote(function, cd, "The data in the csv file has been added into the coma.");
         return stats;
     }
 

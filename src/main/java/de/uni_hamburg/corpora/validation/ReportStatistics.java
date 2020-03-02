@@ -29,11 +29,14 @@ import org.xml.sax.SAXException;
 public class ReportStatistics extends Checker implements CorpusFunction {
 
     private static final String HTML_REPORT = "report-output.html";
-    private final String SERVICE_NAME = "ReportStatistics";
     String REPORT_STATISTICS;
     Report stats;
     CorpusData cd;
     String corpusname = "";
+
+    public ReportStatistics() {
+        super("ReportStatistics");
+    }
 
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
@@ -41,17 +44,17 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (IOException ex) {
-            stats.addException(SERVICE_NAME, ex, "Input Output Exception");
+            stats.addException(function, ex, "Input Output Exception");
         } catch (ParserConfigurationException ex) {
-            stats.addException(SERVICE_NAME, ex, "Parser Exception");
+            stats.addException(function, ex, "Parser Exception");
         } catch (SAXException ex) {
-            stats.addException(SERVICE_NAME, ex, "XML Exception");
+            stats.addException(function, ex, "XML Exception");
         } catch (XPathExpressionException ex) {
-            stats.addException(SERVICE_NAME, ex, "XPath Exception");
+            stats.addException(function, ex, "XPath Exception");
         } catch (URISyntaxException ex) {
-            stats.addException(SERVICE_NAME, ex, "URI");
+            stats.addException(function, ex, "URI");
         } catch (TransformerException ex) {
-            stats.addException(SERVICE_NAME, ex, "Transformer");
+            stats.addException(function, ex, "Transformer");
         }
         return stats;
     }
@@ -133,13 +136,13 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 htmlOut.print(reportStatistics);
                 htmlOut.close();
                 
-                stats.addNote(SERVICE_NAME, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
+                stats.addNote(function, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
             } else {
-                stats.addMissing(SERVICE_NAME, cd, "Corpus Report file not found "
+                stats.addMissing(function, cd, "Corpus Report file not found "
                         + "at '" + htmlReportPath + "'. Report Statistics (graphic overview) not updated.");
             }
         } else {
-            stats.addMissing(SERVICE_NAME, cd, "Report Statistics file not found at "
+            stats.addMissing(function, cd, "Report Statistics file not found at "
                     + "'" + reportStatisticsPath + "'. Report Statistics (graphic overview) not updated.");
         }
         return stats;

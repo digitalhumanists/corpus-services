@@ -34,6 +34,10 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
     ArrayList<String> annotations; // list for holding annotations of annotation spec file
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
 
+    public ComaTiersDescriptionAnnotationPanelChecker() {
+        super("ComaTiersDescriptionAnnotationPanelChecker");
+    }
+
     /**
      * Add annotations to the corresponding array from coma and annotation
      * specification file.

@@ -31,6 +31,10 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     //HashMap<String, HashMap<String, String>> eventMap; // hash map for holding events of annotation tiers
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
 
+    public CalculateAnnotatedTime() {
+        super("calculate-annotated-time");
+    }
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -41,15 +45,15 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, annotLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, annotLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, annotLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, annotLoc + ": Unknown transformer error");
+            stats.addException(ex, function, cd, "Unknown transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, annotLoc + ": Unknown XPath error");
+            stats.addException(ex, function, cd, "Unknown XPath error");
         }
         return stats;
     }

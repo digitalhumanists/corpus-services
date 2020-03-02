@@ -30,8 +30,11 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
 
     static String filename;
     static ValidatorSettings settings;
-    final String COMA_UP_SEG = "coma-update-segment-counts";
     String path2ExternalFSM = "";
+
+    public ComaUpdateSegmentCounts() {
+        super("coma-update-segment-counts");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -40,7 +43,7 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
      */
     @Override
     public Report check(CorpusData cd) {
-        report.addCritical(COMA_UP_SEG, cd.getURL().getFile(), "Checking option is not available");
+        report.addCritical(function, cd.getURL().getFile(), "Checking option is not available");
         return report;
     }
 
@@ -104,22 +107,22 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
             if (comaDoc != null) {
                 cd.updateUnformattedString(TypeConverter.JdomDocument2String(comaDoc));
                 cio.write(cd, cd.getURL());
-                report.addCorrect(COMA_UP_SEG, cd, "Updated the segment counts!");
+                report.addCorrect(function, cd, "Updated the segment counts!");
             } else {
-                report.addCritical(COMA_UP_SEG, cd, "Updating the segment counts was not possible!");
+                report.addCritical(function, cd, "Updating the segment counts was not possible!");
             }
         } catch (IOException ex) {
-            report.addException(ex, COMA_UP_SEG, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         } catch (TransformerException ex) {
-            report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (SAXException ex) {
-            report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (JDOMException ex) {
-            report.addException(ex, COMA_UP_SEG, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         }
         return stats;
     }

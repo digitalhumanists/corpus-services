@@ -40,8 +40,9 @@ import org.xml.sax.SAXException;
  */
 public class ComaXsdChecker extends Checker implements CorpusFunction {
 
-    ValidatorSettings settings;
-    final String COMA_XSD_CHECKER = "coma-xsd";
+    public ComaXsdChecker() {
+        super("coma-xsd");
+    }
 
     /**
      * Validate a coma file with XML schema from internet.
@@ -54,9 +55,9 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(f);
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error.");
+            stats.addException(saxe, function, cd, "Unknown parsing error.");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Unknown reading error.");
+            stats.addException(ioe, function, cd, "Unknown reading error.");
         }
         return stats;
     }
@@ -113,19 +114,19 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         }
         return stats;
     }
@@ -153,7 +154,7 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_XSD_CHECKER,
+        report.addCritical(function,
                 "No fix is applicable for this feature.");
         return report;
     }
