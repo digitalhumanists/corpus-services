@@ -7,6 +7,8 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
@@ -215,7 +217,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         Document doc = null;
         CorpusIO cio = new CorpusIO();
         if (kmlFile != null) {
-            String kmlString = cio.readExternalResourceAsString(kmlFile);
+            URL url = Paths.get(kmlFile).toUri().toURL();
+            String kmlString = cio.readExternalResourceAsString(url.toString());
             if (kmlString != null) {
                 doc = TypeConverter.String2W3cDocument(kmlString);
                 if (lngLat == null) {
