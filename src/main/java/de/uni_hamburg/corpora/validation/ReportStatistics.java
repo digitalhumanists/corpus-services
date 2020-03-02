@@ -44,17 +44,17 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (IOException ex) {
-            stats.addException(function, ex, "Input Output Exception");
+            stats.addException(ex, function, cd, "Input Output Exception");
         } catch (ParserConfigurationException ex) {
-            stats.addException(function, ex, "Parser Exception");
+            stats.addException(ex, function, cd, "Parser Exception");
         } catch (SAXException ex) {
-            stats.addException(function, ex, "XML Exception");
+            stats.addException(ex, function, cd, "XML Exception");
         } catch (XPathExpressionException ex) {
-            stats.addException(function, ex, "XPath Exception");
+            stats.addException(ex, function, cd, "XPath Exception");
         } catch (URISyntaxException ex) {
-            stats.addException(function, ex, "URI");
+            stats.addException(ex, function, cd, "URI");
         } catch (TransformerException ex) {
-            stats.addException(function, ex, "Transformer");
+            stats.addException(ex, function, cd, "Transformer");
         }
         return stats;
     }

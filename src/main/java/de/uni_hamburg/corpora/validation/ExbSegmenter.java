@@ -129,9 +129,9 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         }
         return stats;
     }
@@ -187,19 +187,19 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (JDOMException ex) {
-            stats.addException(ex, "Unknown JDOM error");
+            stats.addException(ex, function, cd, "Unknown JDOM error");
         } catch (FSMException ex) {
-            stats.addException(ex, "Unknown FSM error");
+            stats.addException(ex, function, cd, "Unknown FSM error");
         } catch (TransformerException ex) {
-            stats.addException(ex, "Unknown Transformer error");
+            stats.addException(ex, function, cd, "Unknown Transformer error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Unknown Parser error");
+            stats.addException(ex, function, cd, "Unknown Parser error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Unknown XPath error");
+            stats.addException(ex, function, cd, "Unknown XPath error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, "Unknown URI error");
+            stats.addException(ex, function, cd, "Unknown URI error");
         }
         return stats;
     }
