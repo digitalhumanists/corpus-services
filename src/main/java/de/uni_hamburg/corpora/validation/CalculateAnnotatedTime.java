@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,9 +47,9 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         } catch (IOException ioe) {
             stats.addException(ioe, annotLoc + ": Unknown file reading error");
         } catch (TransformerException ex) {
-            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, annotLoc + ": Unknown transformer error");
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, annotLoc + ": Unknown XPath error");
         }
         return stats;
     }
@@ -213,7 +211,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IAAFunctionality.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

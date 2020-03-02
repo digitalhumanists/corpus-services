@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -814,34 +812,11 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
 
-    
-    /** 
-     * Execute function for calling check and fix functions if necessary.
-     */ 
-    public Report execute(CorpusData cd, boolean fix) {  
-        Report report = new Report();
-        try {
-            if(fix){
-                report.merge(fix(cd));
-            }else{
-                report.merge(check(cd));
-            }
-        } catch (SAXException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JDOMException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JexmaraldaException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return report;
-    }
 
     /**Default function which returns a two/three line description of what 
      * this class is about.

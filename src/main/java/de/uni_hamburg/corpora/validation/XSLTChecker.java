@@ -9,6 +9,7 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -39,6 +40,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     String xc = "XSLTChecker";
     String filename = "";
     String UTTERANCEENDSYMBOLS = "[.!?…:]";
+    String FSMpath = "";
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -62,6 +64,10 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         filename = cd.getURL().getFile().subSequence(cd.getURL().getFile().lastIndexOf('/') + 1, cd.getURL().getFile().lastIndexOf('.')).toString();
         try {
 
+            //get UtteranceEndSymbols form FSM if supplied
+            if(FSMpath.equals("")){
+                setUtteranceEndSymbols(FSMpath);
+            }
             // get the XSLT stylesheet
             String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslresource));
 
@@ -137,6 +143,10 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             report.addException(ex, xc, cd, "unknown XPath error");
         } catch (IOException ex) {
             report.addException(ex, xc, cd, "unknown IO error");
+        } catch (JDOMException ex) {
+            report.addException(ex, xc, cd, "unknown JDOM error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, xc, cd, "unknown URISyntax error");
         }
 
         return r;
@@ -162,8 +172,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
     
-     public void setUtteranceEndSymbols(String s) {
-        try {
+     public void setUtteranceEndSymbols(String s) throws MalformedURLException, JDOMException, IOException, URISyntaxException {
             //now get the UtteranceEndSymbols from the FSM XML file
             //XPath: "//fsm/char-set[@id='UtteranceEndSymbols']/char"
             UTTERANCEENDSYMBOLS = "";
@@ -186,17 +195,12 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             }
             //needs to be a RegEx (set)
             UTTERANCEENDSYMBOLS = "[" + UTTERANCEENDSYMBOLS + "]";
-            System.out.println(UTTERANCEENDSYMBOLS);
-        } catch (JDOMException ex) {
-            report.addException(ex, xc, cd, "unknown jdom error");
-        } catch (IOException ex) {
-            report.addException(ex, xc, cd, "unknown input output error");
-        } catch (URISyntaxException ex) {
-            report.addException(ex, xc, cd, "unknown URI Syntax error");
-        }
-
+            System.out.println(UTTERANCEENDSYMBOLS);      
     }
 
+     public void setFSMpath(String s){
+         FSMpath = s;
+     }
     /**Default function which returns a two/three line description of what 
      * this class is about.
      */

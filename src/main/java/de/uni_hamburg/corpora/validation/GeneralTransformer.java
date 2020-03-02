@@ -13,8 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
@@ -70,21 +68,21 @@ public class GeneralTransformer extends Checker {
             cio.write(result, urlToOutput);
             }
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "Transformer Error");
         } catch (TransformerException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "Transformer Error");
         } catch (JDOMException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "Transformer Error");
         } catch (IOException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "IO Error");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "URI Error");
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "Transformer Error");
         } catch (SAXException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "Transformer Error");
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(GeneralTransformer.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, getra, cd, "XPath Error");
         }
         return report;
     }

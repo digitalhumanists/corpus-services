@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -9,10 +10,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -93,36 +90,18 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
     
     
     private Report testRefIDs(CorpusData cd, Boolean fix) throws IOException, SAXException{
-        
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
-        try {
-            db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Document doc = null;
-        try {
-            doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        } catch (TransformerException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         Report stats = new Report(); // create a new report for the transcript
-        
+        Document doc = null;
+        ComaData ccd = new ComaData();
+        cd = (ComaData) ccd;
+        doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document      
         String transcriptName;
         if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
             transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name

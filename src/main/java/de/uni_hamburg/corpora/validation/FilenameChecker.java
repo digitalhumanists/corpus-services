@@ -17,8 +17,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
@@ -256,7 +254,7 @@ public class FilenameChecker extends Checker implements CorpusFunction {
             IsUsableFor.add(clSecond);
             IsUsableFor.add(clThird);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FilenameChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

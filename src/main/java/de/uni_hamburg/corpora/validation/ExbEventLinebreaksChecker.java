@@ -18,8 +18,6 @@ import org.xml.sax.SAXException;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -141,18 +139,18 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                 stats.addCorrect(elb, cd, "CorpusData file does not contain any event");
             }
             
-        } catch (TransformerException ex) {
-            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (ParserConfigurationException pce) {
+            stats.addException(pce, elb, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, elb, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, elb, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
-            Logger.getLogger(ExbEventLinebreaksChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, elb, cd, "Unknown parsing error");
+        } catch (TransformerException ex) {
+             stats.addException(ex, elb, cd, "Unknown parsing error");
+        } catch (XPathExpressionException ex) {
+             stats.addException(ex, elb, cd, "Unknown parsing error");
         }
         return stats; // return the report with warnings
     }

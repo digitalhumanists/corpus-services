@@ -155,8 +155,8 @@ public class CorpusMagician {
             String[] corpusfunctionarray = cmd.getOptionValues("c");
             for (String cf : corpusfunctionarray) {
                 CorpusMagician.chosencorpusfunctions.add(cf);
-                System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             }
+            System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             corpusfunctions = corpusFunctionStrings2Classes();
 
             //here is the heap space problem: everything is read all at one
@@ -451,7 +451,7 @@ public class CorpusMagician {
                             System.out.println("Mode set to inel");
                         }
                         if (cfProperties.containsKey(fsm)) {
-                            xc.setUtteranceEndSymbols(cfProperties.getProperty(fsm));
+                            xc.setFSMpath(cfProperties.getProperty(fsm));
                             System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
@@ -503,7 +503,7 @@ public class CorpusMagician {
                     xci.setXSLresource("/xsl/inel-checks.xsl");
                     if (cfProperties != null) {
                         if (cfProperties.containsKey(fsm)) {
-                            xci.setUtteranceEndSymbols(cfProperties.getProperty(fsm));
+                            xci.setFSMpath(cfProperties.getProperty(fsm));
                             System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
@@ -666,7 +666,6 @@ public class CorpusMagician {
                         if (cfProperties.containsKey(fsm)) {
                             lhtml.setExternalFSM(cfProperties.getProperty(fsm));
                             System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
-
                         }
                     }
                     corpusfunctions.add(lhtml);

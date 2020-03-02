@@ -17,8 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,9 +65,9 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         } catch (URISyntaxException ex) {
             stats.addException(ex, EXB_FILECOVERAGE, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            Logger.getLogger(ExbFileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, EXB_FILECOVERAGE, cd, "Unknown tranformer error");
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbFileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, EXB_FILECOVERAGE, cd, "Unknown XPath error");
         }
         return stats;
     }

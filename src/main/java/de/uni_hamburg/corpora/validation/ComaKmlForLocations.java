@@ -49,13 +49,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         Report stats = new Report();
         try {
             getCoordinates();
-            try {
-                stats = exceptionalCheck(cd);
-            } catch (TransformerException ex) {
-                Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (XPathExpressionException ex) {
-                Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
             stats.addException(pce, ckfl, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
@@ -64,6 +58,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             stats.addException(ioe, ckfl, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
             stats.addException(ex, ckfl, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, ckfl, cd, "Unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, ckfl, cd, "Unknown XPath error");
         }
         return stats;
     }
@@ -133,10 +131,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             placeOfBirth = placeOfBirth.substring(0, placeOfBirth.indexOf("`"));
                         }
                         if (!lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
-                            String message = "KML ("+kmlFile+") does not contain the birthplace '" + placeOfBirth + "' "
+                            String message = "KML (" + kmlFile + ") does not contain the birthplace '" + placeOfBirth + "' "
                                     + "from speaker '" + sigleString + "'";
                             System.out.println(message);
-                            stats.addWarning(ckfl, cd, message);                            
+                            stats.addWarning(ckfl, cd, message);
                         }
                     }
                     if (!domicileStr.equals("...") && !domicileStr.equals("")) {
@@ -147,10 +145,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             domicileStr = domicileStr.substring(0, domicileStr.indexOf("`"));
                         }
                         if (!lngLat.containsKey(domicileStr + "-" + languageCode)) {
-                            String message = "KML ("+kmlFile+") does not contain the domicile '" + domicileStr + "' "
+                            String message = "KML (" + kmlFile + ") does not contain the domicile '" + domicileStr + "' "
                                     + "from speaker '" + sigleString + "'";
                             System.out.println(message);
-                            stats.addWarning(ckfl, cd, message);                          
+                            stats.addWarning(ckfl, cd, message);
                         }
                     }
                     birthPlace.put(sigleString, new String(placeOfBirth + ", " + region + ", " + country));
@@ -191,10 +189,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                     settlement = settlement.substring(0, settlement.indexOf("`"));
                 }
                 if (!lngLat.containsKey(settlement + "-" + languageCode)) {
-                    String message = "KML ("+kmlFile+") does not contain the settlement '" + settlement + "' "
+                    String message = "KML (" + kmlFile + ") does not contain the settlement '" + settlement + "' "
                             + "from communication '" + communicationName + "'";
                     System.out.println(message);
-                    stats.addWarning(ckfl, cd, message);                  
+                    stats.addWarning(ckfl, cd, message);
                 }
             }
             commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
@@ -209,19 +207,14 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
 
     // the method for getting coordinates of locations in the kml file
     public void getCoordinates() throws ParserConfigurationException, SAXException, IOException {
-        
+
         Document doc = null;
-        
-        try{
-            File fXmlFile = new File(kmlFile);
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            doc = dBuilder.parse(fXmlFile);
-        } catch(IOException ex){
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
-        }       
-        
-        
+
+        File fXmlFile = new File(kmlFile);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        doc = dBuilder.parse(fXmlFile);
+
         if (lngLat == null) {
             lngLat = new HashMap<>();
         }
@@ -251,17 +244,9 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         Report stats = new Report(); //create a new report
+
         try {
             getCoordinates();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(IOException ex){            
-            System.out.println("The KML file could not be found.");
-            stats.addCritical(ckfl, cd, "The KML file could not be found.");  
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
@@ -335,10 +320,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                 loc.insertBefore(coordinatesKey, ref);
                             } else if (!lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
-                                String message = "KML ("+kmlFile+") does not contain the birthplace '" + placeOfBirth + "' "
+                                String message = "KML (" + kmlFile + ") does not contain the birthplace '" + placeOfBirth + "' "
                                         + "from speaker '" + sigleString + "'";
                                 System.out.println(message);
-                                stats.addWarning(ckfl, cd, message);                               
+                                stats.addWarning(ckfl, cd, message);
                             }
                         }
                         if (!domicileStr.equals("...") && !domicileStr.equals("")) {
@@ -355,10 +340,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                 loc.insertBefore(coordinatesKey, domRef);
                             } else if (!lngLat.containsKey(domicileStr + "-" + languageCode)) {
-                                String message = "KML ("+kmlFile+") does not contain the domicile '" + domicileStr + "' "
+                                String message = "KML (" + kmlFile + ") does not contain the domicile '" + domicileStr + "' "
                                         + "from speaker '" + sigleString + "'";
                                 System.out.println(message);
-                                stats.addWarning(ckfl, cd, message);                              
+                                stats.addWarning(ckfl, cd, message);
                             }
                         }
                         birthPlace.put(sigleString, new String(placeOfBirth + ", " + region + ", " + country));
@@ -409,27 +394,28 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                         Element loc = (Element) location.getElementsByTagName("Description").item(0);
                         loc.appendChild(coordinatesKey);
                     } else if (!lngLat.containsKey(settlement + "-" + languageCode)) {
-                        String message = "KML ("+kmlFile+") does not contain the settlement '" + settlement + "' "
+                        String message = "KML (" + kmlFile + ") does not contain the settlement '" + settlement + "' "
                                 + "from communication '" + communicationName + "'";
                         System.out.println(message);
-                        stats.addWarning(ckfl, cd, message);                       
+                        stats.addWarning(ckfl, cd, message);
                     }
                 }
                 commLocation.put(communicationID, new String(settlement + ", " + region + ", " + country));
             }
 
-            
-            CorpusIO cio = new CorpusIO();            
+            CorpusIO cio = new CorpusIO();
             cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
             cio.write(cd, cd.getURL());
-            
+
             return stats; // return the report with warnings
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, ckfl, cd, "The KML file could not be parsed.");
         } catch (TransformerException ex) {
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, ckfl, cd, "Unknown Transformer error.");
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, ckfl, cd, "Unknown XPath error.");
+        } catch (IOException ex) {
+            stats.addException(ex, ckfl, cd, "The KML file could not be parsed.");
         }
         return stats;
     }
@@ -450,8 +436,9 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
