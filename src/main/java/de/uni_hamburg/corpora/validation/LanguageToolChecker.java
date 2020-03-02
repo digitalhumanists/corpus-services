@@ -226,7 +226,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             langTool = new JLanguageTool(new GermanyGerman());
         } else {
             Report report = new Report();
-            report.addCritical(function, "Missing languagetool for language "
+            report.addCritical(function, cd, "Missing languagetool for language "
                     + language);
             return stats;
         }
@@ -296,7 +296,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "Automatic fix is not yet supported.");
         return report;
     }

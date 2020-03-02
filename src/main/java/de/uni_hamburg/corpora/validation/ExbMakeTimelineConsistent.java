@@ -40,7 +40,7 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
 
     @Override
     public Report check(CorpusData cd) {
-        report.addCritical(function, cd.getURL().getFile(), "Checking option is not available");
+        report.addCritical(function, cd, "Checking option is not available");
         return report;
     }
 

@@ -235,7 +235,7 @@ public class FilenameChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "File names which do not comply with conventions cannot be fixed automatically");
         return report;
     }

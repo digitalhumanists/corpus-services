@@ -98,7 +98,7 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
+        report.addCritical(function, cd,
                 "No fix is applicable for this feature.");
         return report;
     }
