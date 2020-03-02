@@ -8,15 +8,12 @@
  */
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.SegmentedTranscriptionData;
 import de.uni_hamburg.corpora.XMLData;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import static de.uni_hamburg.corpora.validation.ExbScriptMixChecker.sCharClassLat;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -25,8 +22,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -38,7 +33,6 @@ import org.w3c.dom.NodeList;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -221,7 +215,7 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbSegmenter.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

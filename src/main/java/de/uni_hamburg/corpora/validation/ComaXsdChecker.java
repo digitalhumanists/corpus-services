@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -170,7 +168,7 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaXsdChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }

@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -261,7 +259,7 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbSegmenter.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }

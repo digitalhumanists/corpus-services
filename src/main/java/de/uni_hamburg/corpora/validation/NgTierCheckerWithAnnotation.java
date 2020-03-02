@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -178,7 +176,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(NgTierCheckerWithAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

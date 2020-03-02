@@ -13,15 +13,11 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.CorpusIO;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -34,8 +30,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -211,44 +205,7 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         }
         return stats;
     }
-
-    public Report doMain(String[] args) {
-        settings = new ValidatorSettings("ComaNSLinksChecker",
-                "Checks Exmaralda .coma file for NSLink references that do not "
-                + "exist", "If input is a directory, performs recursive check "
-                + "from that directory, otherwise checks input file");
-        settings.handleCommandLine(args, new ArrayList<Option>());
-        if (settings.isVerbose()) {
-            System.out.println("Checking COMA files for references...");
-        }
-        Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            try {
-                if (settings.isVerbose()) {
-                    System.out.println(" * " + f.getName());
-                }
-                referencePath = "./";
-                if (f.getParentFile() != null) {
-                    referencePath = f.getParentFile()
-                            .getCanonicalPath();
-                }
-                comaLoc = f.getName();
-                CorpusIO cio = new CorpusIO();
-                CorpusData cd = cio.readFileURL(f.toURI().toURL());
-                stats = check(cd);
-            } catch (FileNotFoundException fnfe) {
-                fnfe.printStackTrace();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            } catch (SAXException ex) {
-                Logger.getLogger(ComaNSLinksChecker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(ComaNSLinksChecker.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return stats;
-    }
-
+    
     public static void main(String[] args) {
         ComaNSLinksChecker checker = new ComaNSLinksChecker();
         Report stats = checker.doMain(args);

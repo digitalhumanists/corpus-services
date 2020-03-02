@@ -16,8 +16,6 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -83,7 +81,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         } catch (IOException ioe) {
             stats.addException(ioe, ": Unknown file reading error");
         } catch (JDOMException ex) {
-            Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
+             stats.addException(ex, ": Unknown JDOM error");
         }
         return stats;
     }
@@ -249,27 +247,6 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public static void main(String[] args) {
-        try {
-            args = new String[3];
-            args[0] = "C:\\Users\\Ozzy\\Desktop\\Demo-Corpus\\EXMARaLDA_DemoKorpus.coma";
-            args[1] = "C:\\Users\\Ozzy\\Desktop\\Demo-Corpus\\exampleCSV.csv";
-            args[2] = "speaker";
-            if (args.length != 3) {
-                System.out.println("Usage: Coma-file CSV-file Boolean IsSpeaker");
-            }
-
-            AddCSVMetadataToComa metadatainputter = new AddCSVMetadataToComa(args[0], args[1], args[2]);
-            try {
-                metadatainputter.inputData();
-            } catch (JDOMException ex) {
-                Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.exit(0);
-        } catch (IOException ex) {
-            Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     // sets the CSV file path which is provided as input
     public void setCSVFilePath(String path) {
@@ -302,7 +279,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }

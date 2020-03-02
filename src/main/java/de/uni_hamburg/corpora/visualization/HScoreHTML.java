@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
@@ -45,7 +46,11 @@ public class HScoreHTML extends Visualizer {
     }
 
     public HScoreHTML(String btAsString) {
-        createFromBasicTranscription(btAsString);
+        try {
+            createFromBasicTranscription(btAsString);
+        } catch (TransformerException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -55,14 +60,14 @@ public class HScoreHTML extends Visualizer {
      * @param btAsString the EXB file represented in a String object
      * @return
      */
-    public String createFromBasicTranscription(String btAsString) {
+    public String createFromBasicTranscription(String btAsString) throws TransformerConfigurationException, TransformerException {
 
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(btAsString);
 
         String result = null;
 
-        try {
+
             BasicTranscription bt = basicTranscription;
             bt.normalize();
             basicTranscriptionString = bt.toXML();
@@ -81,9 +86,7 @@ public class HScoreHTML extends Visualizer {
             }
             result = xt.transform(basicTranscriptionString, xsl);
 
-        } catch (TransformerException ex) {
-            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
         setHTML(result);
 

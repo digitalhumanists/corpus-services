@@ -17,8 +17,6 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.Option;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -146,9 +144,9 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
         } catch (SAXException saxe) {
             stats.addException("exb-parse", saxe, "Unknown parsing error");
         } catch (JDOMException ex) {
-            Logger.getLogger(ExbStructureChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException("exb-parse", ex, "Unknown JDOM error");
         } catch (IOException ex) {
-            Logger.getLogger(ExbStructureChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException("exb-parse", ex, "Unknown IO error");
         }
         return stats;
     }
@@ -234,7 +232,7 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbStructureChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

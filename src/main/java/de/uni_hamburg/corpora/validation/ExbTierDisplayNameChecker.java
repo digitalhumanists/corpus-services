@@ -8,8 +8,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -158,7 +156,7 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
             IsUsableFor.add(cl);
             //IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbTierDisplayNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }

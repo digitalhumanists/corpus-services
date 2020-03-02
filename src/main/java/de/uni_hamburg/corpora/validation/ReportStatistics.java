@@ -12,8 +12,6 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,9 +49,9 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         } catch (XPathExpressionException ex) {
             stats.addException(SERVICE_NAME, ex, "XPath Exception");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(ReportStatistics.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(SERVICE_NAME, ex, "URI");
         } catch (TransformerException ex) {
-            Logger.getLogger(ReportStatistics.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(SERVICE_NAME, ex, "Transformer");
         }
         return stats;
     }

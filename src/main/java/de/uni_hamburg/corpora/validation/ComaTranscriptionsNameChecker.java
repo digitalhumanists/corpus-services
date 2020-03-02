@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -10,10 +11,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -66,9 +63,10 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
      */
     private Report exceptionalCheck(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
+        Document doc = null;
+        ComaData ccd = new ComaData();
+        cd = (ComaData) ccd;
+        doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document      
         NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
         Report stats = new Report(); //create a new report
 
@@ -119,7 +117,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                         stats.addCritical(checkname, cd, "Transcript name mismatch exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
                                 + " for communication " + communicationName + ".");
                     } else {
-                         stats.addCorrect(checkname, cd, "Transcript name matches exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
+                        stats.addCorrect(checkname, cd, "Transcript name matches exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
                                 + " for communication " + communicationName + ".");
                     }
                 }
@@ -164,22 +162,13 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        
-        
+
         // fix transcription names (XPath: //Transcription/Name) which are unequals base of filename (XPath: //Transcription/Filename)
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db;
-        Document doc = null; 
-        try {
-            db = dbf.newDocumentBuilder();
-            doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        } catch (TransformerException ex) {
-            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Document doc = null;
+        ComaData ccd = new ComaData();
+        cd = (ComaData) ccd;
+
+        doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document       
         NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
         Report stats = new Report(); //create a new report
 
@@ -194,16 +183,16 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
             if (transcriptions.getLength() > 0) {  // check if there is at least one transcription for the communication
                 for (int j = 0; j < transcriptions.getLength(); j++) {   // iterate through transcriptions 
                     Element transcription = (Element) transcriptions.item(j);
-                    
+
                     transcriptName = transcription.getElementsByTagName("Name").item(0).getTextContent();
                     fileName = transcription.getElementsByTagName("Filename").item(0).getTextContent();
                     String baseFileName = fileName.replaceAll("(\\.exb|(_s)?\\.exs)$", "");
-                    
-                    if(!transcriptName.equals(baseFileName)){
-                        
+
+                    if (!transcriptName.equals(baseFileName)) {
+
                         // fix the transcription Name
                         transcription.getElementsByTagName("Name").item(0).setTextContent(baseFileName);
-                        
+
                         //then save file
                         CorpusIO cio = new CorpusIO();
                         cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
@@ -215,16 +204,16 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                             cd.updateUnformattedString(TypeConverter.JdomDocument2String(jdomDoc));
                             cio.write(cd, cd.getURL());
                         } catch (TransformerException ex) {
-                            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+                            stats.addException(ex, checkname, cd, "Unknown Transformer Exception");
                         } catch (ParserConfigurationException ex) {
-                            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+                            stats.addException(ex, checkname, cd, "Unknown Parser Exception");
                         } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+                            stats.addException(ex, checkname, cd, "Unknown Encoding Exception");
                         } catch (XPathExpressionException ex) {
-                            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+                            stats.addException(ex, checkname, cd, "Unknown Xpath Exception");
                         }
-                        stats.addCorrect(checkname, cd, "Transcription/Name ("+transcriptName+") changed to base file name ("+baseFileName+").");
-                                                                        
+                        stats.addCorrect(checkname, cd, "Transcription/Name (" + transcriptName + ") changed to base file name (" + baseFileName + ").");
+
                     }
                 }
 
@@ -233,13 +222,12 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                 System.err.println(message);
                 stats.addCorrect(checkname, cd, message);
             }
-            
+
         }
-        
+
         return stats;
     }
 
-    
     /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
@@ -251,13 +239,14 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaTranscriptionsNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
