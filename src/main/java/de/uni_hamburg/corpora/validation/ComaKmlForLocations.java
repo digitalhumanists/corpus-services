@@ -5,13 +5,10 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,6 +59,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             stats.addException(ex, ckfl, cd, "Unknown transformer error");
         } catch (XPathExpressionException ex) {
             stats.addException(ex, ckfl, cd, "Unknown XPath error");
+        } catch (JDOMException ex) {
+            stats.addException(ex, ckfl, cd, "Unknown Jdom error");
         }
         return stats;
     }
@@ -206,35 +205,39 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     }
 
     // the method for getting coordinates of locations in the kml file
-    public void getCoordinates() throws ParserConfigurationException, SAXException, IOException {
-
+    public void getCoordinates() throws ParserConfigurationException, SAXException, IOException, JDOMException, URISyntaxException {
         Document doc = null;
-
-        File fXmlFile = new File(kmlFile);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        doc = dBuilder.parse(fXmlFile);
-
-        if (lngLat == null) {
-            lngLat = new HashMap<>();
-        }
-        NodeList placeMarks = doc.getElementsByTagName("Placemark");
-        for (int i = 0; i < placeMarks.getLength(); i++) { //iterate through place marks
-            Element placeMark = (Element) placeMarks.item(i);
-            Element name = (Element) placeMark.getElementsByTagName("name").item(0);
-            String nameOfPlace = name.getTextContent();
-            String language = "";
-            NodeList data = placeMark.getElementsByTagName("Data");
-            for (int j = 0; j < data.getLength(); j++) {
-                Element datum = (Element) data.item(j);
-                if (datum.getAttribute("name").equals("lang")) {
-                    Element value = (Element) datum.getElementsByTagName("value").item(0);
-                    language = value.getTextContent();
-                }
+        CorpusIO cio = new CorpusIO();
+        String kmlString = cio.readExternalResourceAsString(kmlFile);
+        if (kmlString != null) {
+            doc = TypeConverter.String2W3cDocument(kmlString);
+            if (lngLat == null) {
+                lngLat = new HashMap<>();
             }
-            String coordinatesWithAltitude = placeMark.getElementsByTagName("coordinates").item(0).getTextContent();
-            String coordinate = coordinatesWithAltitude.trim().substring(0, coordinatesWithAltitude.trim().lastIndexOf(","));
-            lngLat.put(nameOfPlace + "-" + language, coordinate);
+            if (doc != null) {
+                NodeList placeMarks = doc.getElementsByTagName("Placemark");
+                for (int i = 0; i < placeMarks.getLength(); i++) { //iterate through place marks
+                    Element placeMark = (Element) placeMarks.item(i);
+                    Element name = (Element) placeMark.getElementsByTagName("name").item(0);
+                    String nameOfPlace = name.getTextContent();
+                    String language = "";
+                    NodeList data = placeMark.getElementsByTagName("Data");
+                    for (int j = 0; j < data.getLength(); j++) {
+                        Element datum = (Element) data.item(j);
+                        if (datum.getAttribute("name").equals("lang")) {
+                            Element value = (Element) datum.getElementsByTagName("value").item(0);
+                            language = value.getTextContent();
+                        }
+                    }
+                    String coordinatesWithAltitude = placeMark.getElementsByTagName("coordinates").item(0).getTextContent();
+                    String coordinate = coordinatesWithAltitude.trim().substring(0, coordinatesWithAltitude.trim().lastIndexOf(","));
+                    lngLat.put(nameOfPlace + "-" + language, coordinate);
+                }
+            } else {
+                report.addCritical(ckfl, cd, "KML file cannot be read");
+            }
+        } else {
+            report.addCritical(ckfl, cd, "KML file cannot be read");
         }
     }
 
@@ -416,6 +419,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             stats.addException(ex, ckfl, cd, "Unknown XPath error.");
         } catch (IOException ex) {
             stats.addException(ex, ckfl, cd, "The KML file could not be parsed.");
+        } catch (URISyntaxException ex) {
+            stats.addException(ex, ckfl, cd, "URI syntax Exception.");
         }
         return stats;
     }
@@ -431,7 +436,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaKmlForLocations.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
