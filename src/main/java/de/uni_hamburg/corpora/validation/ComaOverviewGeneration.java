@@ -32,8 +32,11 @@ import org.xml.sax.SAXException;
  */
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
-    final String COMA_OVERVIEW = "coma-overview";
     boolean inel = false;
+
+    public ComaOverviewGeneration() {
+        super("coma-overview");
+    }
 
     @Override
     public Report check(CorpusData cd){
@@ -58,23 +61,23 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             //save it
             cio.write(result, overviewurl);
             //everything worked
-            r.addCorrect(COMA_OVERVIEW, cd, "created html overview at " + overviewurl);
+            r.addCorrect(function, cd, "created html overview at " + overviewurl);
             
 
         } catch (TransformerConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Transformer configuration error");
+            r.addException(ex, function, cd, "Transformer configuration error");
         } catch (TransformerException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Transformer error");
+            r.addException(ex, function, cd, "Transformer error");
         } catch (MalformedURLException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Malformed URL error");
+            r.addException(ex, function, cd, "Malformed URL error");
         } catch (IOException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown input/output error");
+            r.addException(ex, function, cd, "Unknown input/output error");
         } catch (ParserConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown Parser error");
+            r.addException(ex, function, cd, "Unknown Parser error");
         } catch (SAXException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XML error");
+            r.addException(ex, function, cd, "Unknown XML error");
         } catch (XPathExpressionException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XPath error");
+            r.addException(ex, function, cd, "Unknown XPath error");
         }
         
         return r;

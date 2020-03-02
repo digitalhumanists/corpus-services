@@ -49,7 +49,7 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
 
-    final String ISO_CONV = "inel iso tei";
+    final String function = "inel iso tei";
 
     //locations of the used xsls
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
@@ -521,9 +521,9 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
             //doesn't really make sense to have check only here
             report = fix(cd);
         } catch (JDOMException ex) {
-            report.addException(ex, "unknown exception error");
+            report.addException(ex, function, cd, "unknown exception error");
         } catch (IOException ex) {
-            report.addException(ex, "unknown exception error");
+            report.addException(ex, function, cd, "unknown exception error");
         }
         return report;
     }
@@ -536,11 +536,11 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
         try {
             report = convertCD2MORPHEMEHIATISOTEI(cd);
         } catch (XSLTransformException ex) {
-            report.addException(ex, "unknown XSLT error");
+            report.addException(ex, function, cd, "unknown XSLT error");
         } catch (Exception ex) {
-            report.addException(ex, "unknown exception error");
+            report.addException(ex, function, cd, "unknown exception error");
         }
-        report.addCorrect(ISO_CONV, "ISO TEI conversion of file " + cd.getURL().getFile() + " was successful");
+        report.addCorrect(function, "ISO TEI conversion of file " + cd.getURL().getFile() + " was successful");
         return report;
     }
 

@@ -35,7 +35,6 @@ import java.util.Map;
  * A class that checks for mixed scripts (e.g. Cyrillic/Latin) in the transcription.
  */
 public class ExbScriptMixChecker extends Checker implements CorpusFunction {
-    static final String CHECKER_NAME = "ScriptMixChecker";
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
       Arrays.asList("tx", "mb", "mp", "ge")); 
     // Hardcoded list of tier names is bad. We'll have to replace it
@@ -53,6 +52,7 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     Map<String, Pattern> dictScripts = new HashMap<>();
     
     public ExbScriptMixChecker() {
+        super("ScriptMixChecker");
         dictScripts.put("Cyrillic", rxCyr);
         dictScripts.put("Latin", rxLat);
         dictScripts.put("Greek", rxGreek);
@@ -70,15 +70,15 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, CHECKER_NAME, cd, "Unknown parsing error");          
+            stats.addException(pce, function, cd, "Unknown parsing error");          
         } catch (SAXException saxe) {
-            stats.addException(saxe, CHECKER_NAME, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, CHECKER_NAME, cd, "Unknown parsing error");
+            stats.addException(ioe, function, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, CHECKER_NAME, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, CHECKER_NAME, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -102,7 +102,7 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         Report report = new Report();
-        report.addCritical(CHECKER_NAME, cd, "Fixing option is not available");
+        report.addCritical(function, cd, "Fixing option is not available");
         return report;
     }
 
@@ -185,11 +185,11 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
                     String message = "Mixed scripts in \"" + eventTextColored 
                             + "\" (" + String.join(", ", lsScriptsUsed) + "), " 
                             + eventRef;
-                    stats.addWarning(CHECKER_NAME, cd, message);
+                    stats.addWarning(function, cd, message);
                 }
                 /*
                 else {
-                    stats.addCorrect(CHECKER_NAME, cd, "ok");
+                    stats.addCorrect(function, cd, "ok");
                 }
                 */
             }

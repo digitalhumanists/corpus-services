@@ -43,10 +43,8 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
     String communicationname;
 
-    final String COMA_NSLINKS = "coma-nslinks";
-    final String COMA_RELPATHS = "coma-relpaths";
-
     public ComaNSLinksChecker() {
+        super("coma-nslinks");
     }
 
     /**
@@ -59,19 +57,19 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, COMA_NSLINKS, cd, "Unknown parsing error.");
+            stats.addException(pce, function, cd, "Unknown parsing error.");
         } catch (SAXException saxe) {
-            stats.addException(saxe, COMA_NSLINKS, cd, "Unknown parsing error.");
+            stats.addException(saxe, function, cd, "Unknown parsing error.");
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            stats.addException(ioe, COMA_NSLINKS, cd, "Unknown file reading error.");
+            stats.addException(ioe, function, cd, "Unknown file reading error.");
         } catch (URISyntaxException ex) {
             ex.printStackTrace();
-            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
+            stats.addException(ex, function, cd, "Unknown file reading error.");
         } catch (TransformerException ex) {
-            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
+            stats.addException(ex, function, cd, "Unknown file reading error.");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
+            stats.addException(ex, function, cd, "Unknown file reading error.");
         }
         return stats;
     }
@@ -137,10 +135,10 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS, cd,
+                    stats.addCritical(function, cd,
                             "In Communication: " + communicationname + " File in NSLink not found: " + nspath);
                 } else {
-                    stats.addCorrect(COMA_NSLINKS, cd,
+                    stats.addCorrect(function, cd,
                             "File in NSLink was found: " + nspath);
                 }
             }
@@ -195,10 +193,10 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS, cd,
+                    stats.addCritical(function, cd,
                             "In Communication: " + communicationname + " File in relPath not found: " + relpath);
                 } else {
-                    stats.addCorrect(COMA_NSLINKS, cd,
+                    stats.addCorrect(function, cd,
                             "File in relPath was found: " + relpath);
                 }
             }
@@ -223,14 +221,14 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_NSLINKS,
+        report.addCritical(function,
                 "Wrong NS links cannot be fixed automatically");
         return report;
     }
 
     @Override
     public Report fix(Collection<CorpusData> cdc) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_NSLINKS,
+        report.addCritical(function,
                 "Wrong NS links cannot be fixed automatically");
         return report;
     }

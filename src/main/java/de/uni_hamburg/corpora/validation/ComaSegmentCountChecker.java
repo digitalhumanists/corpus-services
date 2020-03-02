@@ -27,7 +27,10 @@ import org.xml.sax.SAXException;
 public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
 
     String comaLoc = "";
-    String cscc = "ComaSegmentCountChecker";
+
+    public ComaSegmentCountChecker() {
+        super("ComaSegmentCountChecker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -39,17 +42,17 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cscc, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, cscc, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, cscc, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, cscc, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, cscc, cd, "Transformer Exception");
+            stats.addException(ex, function, cd, "Transformer Exception");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, cscc, cd, "XPath Exception");
+            stats.addException(ex, function, cd, "XPath Exception");
         }
         return stats;
     }
@@ -81,15 +84,15 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
                         if (seg.equals("true")) // check if transcription is segmented or not
                         {
                             segmented = true;        // if segmented transcription then turn the flag true
-                        if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")) {
-                            //String text = key.getAttribute("Name");
-                            int colonIndex = key.getAttribute("Name").lastIndexOf(':');
-                            int hashIndex = key.getAttribute("Name").indexOf('#');
-                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex)); 
+                            if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")) {
+                                //String text = key.getAttribute("Name");
+                                int colonIndex = key.getAttribute("Name").lastIndexOf(':');
+                                int hashIndex = key.getAttribute("Name").indexOf('#');
+                                algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex));
+                            }
                         }
-                        }
-                        break;                    
-                }
+                        break;
+                    }
                 }
             }
         }
@@ -102,15 +105,15 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
                 if (!algorithmName.equals(algorithmNames.get(i))) {
                     error = true;
                     System.err.println("Coma file contains different segmentation algorithms: " + algorithmNames.get(i));
-                    stats.addCritical(cscc, cd, "More than one segmentation algorithm: " + algorithmNames.get(i) + " and " + algorithmName);
+                    stats.addCritical(function, cd, "More than one segmentation algorithm: " + algorithmNames.get(i) + " and " + algorithmName);
                     break;
                 }
             }
             if (!error) {
-                stats.addCorrect(cscc, cd, "Only segmentation " + algorithmNames.get(1));
+                stats.addCorrect(function, cd, "Only segmentation " + algorithmNames.get(1));
             }
         } else {
-            stats.addWarning(cscc, cd, "No segment counts added yet. Use Coma > Maintenance > Update segment counts to add them. ");
+            stats.addWarning(function, cd, "No segment counts added yet. Use Coma > Maintenance > Update segment counts to add them. ");
         }
         return stats; // return the report with warnings
     }
@@ -139,8 +142,9 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {

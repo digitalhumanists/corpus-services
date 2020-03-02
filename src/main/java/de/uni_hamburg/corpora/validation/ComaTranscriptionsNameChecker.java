@@ -28,7 +28,10 @@ import org.xml.sax.SAXException;
  */
 public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunction {
 
-    String checkname = "ComaTranscriptionsNameChecker";
+
+    public ComaTranscriptionsNameChecker() {
+        super("ComaTranscriptionsNameChecker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -40,17 +43,17 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, checkname + ": Unknown parsing error");
+            stats.addException(pce, function + ": Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, checkname + ": Unknown parsing error");
+            stats.addException(saxe, function + ": Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, checkname + ": Unknown file reading error");
+            stats.addException(ioe, function + ": Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, checkname + ": Unknown file reading error");
+            stats.addException(ex, function + ": Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, checkname, cd, "Unknown file reading error.");
+            stats.addException(ex, function, cd, "Unknown file reading error.");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, checkname, cd, "Unknown file reading error.");
+            stats.addException(ex, function, cd, "Unknown file reading error.");
         }
         return stats;
     }
@@ -65,7 +68,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Document doc = null;
         ComaData ccd = new ComaData();
-        cd = (ComaData) ccd;
+        ccd = (ComaData) cd;
         doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document      
         NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
         Report stats = new Report(); //create a new report
@@ -114,10 +117,10 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                         // issue a warning if necessary
                         System.err.println("Basic transcription name and segmented transcription name do not match "
                                 + "for communication " + communicationName + ", id: " + communicationID + ".");
-                        stats.addCritical(checkname, cd, "Transcript name mismatch exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
+                        stats.addCritical(function, cd, "Transcript name mismatch exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
                                 + " for communication " + communicationName + ".");
                     } else {
-                        stats.addCorrect(checkname, cd, "Transcript name matches exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
+                        stats.addCorrect(function, cd, "Transcript name matches exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
                                 + " for communication " + communicationName + ".");
                     }
                 }
@@ -126,10 +129,10 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                     if (!basicFileName.substring(0, basicFileName.lastIndexOf(".")).equals(segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_")))) {
                         System.err.println("Basic file name and segmented file name do not match "
                                 + "for communication " + communicationName + ", id: " + communicationID + ".");
-                        stats.addCritical(checkname, cd, "Basic file name mismatch exb: " + basicFileName.substring(0, basicFileName.lastIndexOf(".")) + " exs: " + segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_"))
+                        stats.addCritical(function, cd, "Basic file name mismatch exb: " + basicFileName.substring(0, basicFileName.lastIndexOf(".")) + " exs: " + segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_"))
                                 + " for communication " + communicationName + ".");
                     } else {
-                        stats.addCorrect(checkname, cd, "Basic file name matches exb: " + basicFileName.substring(0, basicFileName.lastIndexOf(".")) + " exs: " + segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_"))
+                        stats.addCorrect(function, cd, "Basic file name matches exb: " + basicFileName.substring(0, basicFileName.lastIndexOf(".")) + " exs: " + segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_"))
                                 + " for communication " + communicationName + ".");
                     }
                 }
@@ -138,17 +141,17 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                     if (!basicNSLink.substring(0, basicNSLink.lastIndexOf(".")).equals(segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_")))) {
                         System.err.println("Basic NSLink and segmented NSLink do not match "
                                 + "for communication " + communicationName + ", id: " + communicationID + ".");
-                        stats.addCritical(checkname, cd, "NSLink filename mismatch exb: " + basicNSLink.substring(0, basicNSLink.lastIndexOf(".")) + " exs: " + segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_"))
+                        stats.addCritical(function, cd, "NSLink filename mismatch exb: " + basicNSLink.substring(0, basicNSLink.lastIndexOf(".")) + " exs: " + segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_"))
                                 + " for communication " + communicationName + ".");
                     } else {
-                        stats.addCorrect(checkname, cd, "NSLink filename matches exb: " + basicNSLink.substring(0, basicNSLink.lastIndexOf(".")) + " exs: " + segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_"))
+                        stats.addCorrect(function, cd, "NSLink filename matches exb: " + basicNSLink.substring(0, basicNSLink.lastIndexOf(".")) + " exs: " + segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_"))
                                 + " for communication " + communicationName + ".");
                     }
                 }
             } else {
                 System.err.println("No transcriptions found "
                         + "for communication " + communicationName + ", id: " + communicationID + ".");
-                stats.addCorrect(checkname, cd, "No transcript found to be compared "
+                stats.addCorrect(function, cd, "No transcript found to be compared "
                         + "for communication " + communicationName + ".");
             }
 
@@ -204,15 +207,15 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                             cd.updateUnformattedString(TypeConverter.JdomDocument2String(jdomDoc));
                             cio.write(cd, cd.getURL());
                         } catch (TransformerException ex) {
-                            stats.addException(ex, checkname, cd, "Unknown Transformer Exception");
+                            stats.addException(ex, function, cd, "Unknown Transformer Exception");
                         } catch (ParserConfigurationException ex) {
-                            stats.addException(ex, checkname, cd, "Unknown Parser Exception");
+                            stats.addException(ex, function, cd, "Unknown Parser Exception");
                         } catch (UnsupportedEncodingException ex) {
-                            stats.addException(ex, checkname, cd, "Unknown Encoding Exception");
+                            stats.addException(ex, function, cd, "Unknown Encoding Exception");
                         } catch (XPathExpressionException ex) {
-                            stats.addException(ex, checkname, cd, "Unknown Xpath Exception");
+                            stats.addException(ex, function, cd, "Unknown Xpath Exception");
                         }
-                        stats.addCorrect(checkname, cd, "Transcription/Name (" + transcriptName + ") changed to base file name (" + baseFileName + ").");
+                        stats.addCorrect(function, cd, "Transcription/Name (" + transcriptName + ") changed to base file name (" + baseFileName + ").");
 
                     }
                 }
@@ -220,7 +223,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
             } else {
                 String message = "No transcription found  for communication " + communicationName + ", id: " + communicationID + ".";
                 System.err.println(message);
-                stats.addCorrect(checkname, cd, message);
+                stats.addCorrect(function, cd, message);
             }
 
         }

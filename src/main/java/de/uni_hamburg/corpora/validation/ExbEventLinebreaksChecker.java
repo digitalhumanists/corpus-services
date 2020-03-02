@@ -36,10 +36,13 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction {
 
     boolean linebreak = false;
-    String elb = "ExbEventLinebreaksChecker";
     String xpathContext = "//event";
     XPath context;
     Document doc;
+
+    public ExbEventLinebreaksChecker() {
+        super("ExbEventLinebreaksChecker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -51,19 +54,19 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, elb, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, elb, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, elb, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, elb, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
-            stats.addException(ex, elb, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-             stats.addException(ex, elb, cd, "Unknown parsing error");
+             stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (XPathExpressionException ex) {
-             stats.addException(ex, elb, cd, "Unknown parsing error");
+             stats.addException(ex, function, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -90,15 +93,15 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                     if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
                     linebreak = true;
                     System.err.println("Exb is containing line ending in an event: " + escapeHtml4(s));
-                    stats.addCritical(elb, cd, "Exb is containing line ending in an event: " + escapeHtml4(s));
+                    stats.addCritical(function, cd, "Exb is containing line ending in an event: " + escapeHtml4(s));
                 }
                 }
             }
             if (!linebreak) {
-                stats.addCorrect(elb, cd, "CorpusData file does not contain line ending in an event");
+                stats.addCorrect(function, cd, "CorpusData file does not contain line ending in an event");
             }
         } else {
-            stats.addCorrect(elb, cd, "CorpusData file does not contain any event");
+            stats.addCorrect(function, cd, "CorpusData file does not contain any event");
         }
         return stats; // return the report with warnings
     }
@@ -127,30 +130,30 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                             String snew = s.replaceAll("[\r\n]", "");    //replace all replace with replacement
                             //TODO Attributes?
                             e.setText(snew);
-                            stats.addCorrect(elb, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                            stats.addCorrect(function, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                         }
                     }
                     
                 }
                 if (!linebreak) {
-                    stats.addCorrect(elb, cd, "CorpusData file does not contain line ending in an event");
+                    stats.addCorrect(function, cd, "CorpusData file does not contain line ending in an event");
                 }
             } else {
-                stats.addCorrect(elb, cd, "CorpusData file does not contain any event");
+                stats.addCorrect(function, cd, "CorpusData file does not contain any event");
             }
             
          } catch (ParserConfigurationException pce) {
-            stats.addException(pce, elb, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, elb, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, elb, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
-            stats.addException(ex, elb, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-             stats.addException(ex, elb, cd, "Unknown parsing error");
+             stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (XPathExpressionException ex) {
-             stats.addException(ex, elb, cd, "Unknown parsing error");
+             stats.addException(ex, function, cd, "Unknown parsing error");
         }
         return stats; // return the report with warnings
     }

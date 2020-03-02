@@ -33,6 +33,10 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     ArrayList<String> allTagStrings;
     String tierLoc = "";
 
+    public ExbAnnotationPanelCheck() {
+        super("ExbAnnotationPanelCheck");
+    }
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and

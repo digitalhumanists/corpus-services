@@ -37,10 +37,10 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     String OUTPUT_ZIP_FILE = "";
     Boolean AUDIO = false;
     Report stats = new Report();
-    String zc = "ZipCorpus";
     CorpusData comadata;
 
     public ZipCorpus() {
+        super("ZipCorpus");
         fileList = new ArrayList<String>();
     }
 
@@ -98,9 +98,9 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
             //remember close it
             zos.close();
             System.out.println("Done");
-            stats.addCorrect(zc, comadata, "Successfully created zip file at " + zipFile);
+            stats.addCorrect(function, comadata, "Successfully created zip file at " + zipFile);
         } catch (IOException ex) {
-            stats.addException(ex, zc, comadata, "Unknown IO exception");
+            stats.addException(ex, function, comadata, "Unknown IO exception");
         }
     return stats;
     }
@@ -117,13 +117,13 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf") || node.getName().endsWith(".mp3")) {
                     System.out.println(node.getName());
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
-                    stats.addCorrect(zc, comadata, node.getAbsoluteFile().toString() + " added to filelist");
+                    stats.addCorrect(function, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
             } else {
                 if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf")) {
                     System.out.println(node.getName());
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
-                    stats.addCorrect(zc, comadata, node.getAbsoluteFile().toString() + " added to filelist");
+                    stats.addCorrect(function, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
             }
         }
@@ -183,7 +183,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             AUDIO = false;
         } else {
-            stats.addCritical(zc, cd, "Parameter coma not recognized: " + s);
+            stats.addCritical(function, cd, "Parameter coma not recognized: " + s);
         }
     }
 

@@ -13,7 +13,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +32,10 @@ import org.xml.sax.SAXException;
 public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
 
     String comaLoc = "";
-    String cscc = "ComaTierOverviewCreator";
+
+    public ComaTierOverviewCreator() {
+        super("ComaTierOverviewCreator");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -45,19 +47,19 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cscc, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, cscc, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, cscc, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, cscc, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, cscc, cd, "Transformer Exception");
+            stats.addException(ex, function, cd, "Transformer Exception");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, cscc, cd, "XPath Exception");
+            stats.addException(ex, function, cd, "XPath Exception");
         } catch (JexmaraldaException ex) {
-            stats.addException(ex, cscc, cd, "Exmaralda Exception");
+            stats.addException(ex, function, cd, "Exmaralda Exception");
         }
         return stats;
     }
@@ -130,7 +132,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             overviewTable = h1 + header + content + footer;
 
         } else {
-            stats.addWarning(cscc, cd, "No tiers found in the linked exbs. ");
+            stats.addWarning(function, cd, "No tiers found in the linked exbs. ");
         }
         //now each exb linked in the coma file
         //TODO
@@ -187,7 +189,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                     + "</table>";
             communicationsTable = h1 + header + content + footer;
         } else {
-            stats.addWarning(cscc, cd, "No linked exbs found in the coma file. ");
+            stats.addWarning(function, cd, "No linked exbs found in the coma file. ");
         }
 
         String result = htmltemplate + overviewTable + communicationsTable;
@@ -196,7 +198,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         URL overviewurl = new URL(cd.getParentURL(), "curation/tier_overview.html");
         cio.write(result, overviewurl);
 
-        stats.addCorrect(cscc, cd, "created tier overview at " + overviewurl);
+        stats.addCorrect(function, cd, "created tier overview at " + overviewurl);
 
         return stats; // return the report with warnings
     }

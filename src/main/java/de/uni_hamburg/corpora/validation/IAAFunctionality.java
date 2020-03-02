@@ -43,6 +43,10 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     private int noOfAnnotations = 0;     // total no of annotations
     private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
 
+    public IAAFunctionality() {
+        super("iaa-functionality");
+    }
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and

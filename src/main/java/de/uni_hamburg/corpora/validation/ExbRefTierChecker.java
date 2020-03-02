@@ -1,6 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.ComaData;
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -28,7 +28,10 @@ import org.xml.sax.SAXException;
 public class ExbRefTierChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
-    final String ertc = "exbreftierchecker";
+
+    public ExbRefTierChecker() {
+        super("exbreftierchecker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -99,9 +102,9 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
     private Report testRefIDs(CorpusData cd, Boolean fix) throws IOException, SAXException{
         Report stats = new Report(); // create a new report for the transcript
         Document doc = null;
-        ComaData ccd = new ComaData();
-        cd = (ComaData) ccd;
-        doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document      
+        BasicTranscriptionData bcd = new BasicTranscriptionData();
+        bcd = (BasicTranscriptionData) cd;
+        doc = TypeConverter.JdomDocument2W3cDocument(bcd.getJdom()); // get the file as a document      
         String transcriptName;
         if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
             transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
@@ -125,8 +128,8 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         // when there is no reference tier present
         if (refTiers.size() == 0) {  
             String message = "There is no reference tier present in transcript " + transcriptName;
-            stats.addWarning(ertc, cd, message);
-            exmaError.addError(ertc, cd.getURL().getFile(), "", "", false, message);
+            stats.addWarning(function, cd, message);
+            exmaError.addError(function, cd.getURL().getFile(), "", "", false, message);
         } 
         
         // when there are reference tier/s present
@@ -173,14 +176,14 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                 event.setTextContent(correctRef);
 
                                 String message = "Fixed: False numbering in ref ID '"+wholeRef+"' to '"+correctNo+"' (" + eventReference+")";
-                                stats.addCorrect(ertc, cd, message);
+                                stats.addCorrect(function, cd, message);
                             }
                             
                             // if only to be tested
                             else{
                                 String message = "False numbering in ref ID '"+wholeRef+"' ("+eventReference+")";
-                                stats.addCritical(ertc, cd, message);
-                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                stats.addCritical(function, cd, message);
+                                exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                             }                            
                             
                         }
@@ -205,14 +208,14 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                         event.setTextContent(correctRef);
 
                                         String message = "Fixed: False speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
-                                        stats.addCorrect(ertc, cd, message);
+                                        stats.addCorrect(function, cd, message);
                                     } 
                                     
                                     // if only to be tested
                                     else{
                                         String message = "False speaker code in ref ID '"+wholeRef+"' (should be '"+tierSpeaker+"' in "+eventReference+")";
-                                        stats.addCritical(ertc, cd, message);
-                                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                        stats.addCritical(function, cd, message);
+                                        exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                                     }
                                     
                                  }
@@ -224,14 +227,14 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                     event.setTextContent(correctRef);
 
                                     String message = "Fixed: Missing speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
-                                    stats.addCorrect(ertc, cd, message);                                
+                                    stats.addCorrect(function, cd, message);                                
                                 } 
 
                                 // if only to be tested
                                 else{
                                     String message = "Missing speaker code in ref ID '"+wholeRef+"' (should contain '"+tierSpeaker+"' in "+eventReference+")";
-                                    stats.addCritical(ertc, cd, message);
-                                    exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                    stats.addCritical(function, cd, message);
+                                    exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                                 }
                                 
                              }
@@ -242,8 +245,8 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                     // ref ID does not contain any "."
                     else {
                          String message = "Unknown format of ref ID '"+wholeRef+"' in " + transcriptName;
-                         stats.addCritical(ertc, cd, message);
-                         exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                         stats.addCritical(function, cd, message);
+                         exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                     }
                 }
             }
@@ -256,11 +259,11 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         try {
             cio.write(cd, cd.getURL());
         } catch (TransformerException ex) {
-            stats.addCritical(ertc, cd, "Transformer error");
+            stats.addCritical(function, cd, "Transformer error");
         } catch (ParserConfigurationException ex) {
-            stats.addCritical(ertc, cd, "Transformer error");
+            stats.addCritical(function, cd, "Transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addCritical(ertc, cd, "Transformer error");
+            stats.addCritical(function, cd, "Transformer error");
         }
 
 

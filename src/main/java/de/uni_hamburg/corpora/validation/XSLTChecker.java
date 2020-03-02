@@ -37,10 +37,13 @@ import org.jdom.xpath.XPath;
 public class XSLTChecker extends Checker implements CorpusFunction {
 
     String xslresource = "/xsl/nslc-checks.xsl";
-    String xc = "XSLTChecker";
     String filename = "";
     String UTTERANCEENDSYMBOLS = "[.!?…:]";
     String FSMpath = "";
+
+    public XSLTChecker() {
+        super("XSLTChecker");
+    }
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
@@ -132,21 +135,21 @@ public class XSLTChecker extends Checker implements CorpusFunction {
             scanner.close();
 
         } catch (TransformerConfigurationException ex) {
-            report.addException(ex, xc, cd, "unknown tranformation configuration error");
+            report.addException(ex, function, cd, "unknown tranformation configuration error");
         } catch (TransformerException ex) {
-            report.addException(ex, xc, cd, "unknown tranformation error");
+            report.addException(ex, function, cd, "unknown tranformation error");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, xc, cd, "unknown parsing error");
+            report.addException(ex, function, cd, "unknown parsing error");
         } catch (SAXException ex) {
-            report.addException(ex, xc, cd, "unknown XML error");
+            report.addException(ex, function, cd, "unknown XML error");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, xc, cd, "unknown XPath error");
+            report.addException(ex, function, cd, "unknown XPath error");
         } catch (IOException ex) {
-            report.addException(ex, xc, cd, "unknown IO error");
+            report.addException(ex, function, cd, "unknown IO error");
         } catch (JDOMException ex) {
-            report.addException(ex, xc, cd, "unknown JDOM error");
+            report.addException(ex, function, cd, "unknown JDOM error");
         } catch (URISyntaxException ex) {
-            report.addException(ex, xc, cd, "unknown URISyntax error");
+            report.addException(ex, function, cd, "unknown URISyntax error");
         }
 
         return r;
