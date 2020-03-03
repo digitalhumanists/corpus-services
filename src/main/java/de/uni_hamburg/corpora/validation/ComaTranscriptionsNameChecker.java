@@ -169,8 +169,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
         // fix transcription names (XPath: //Transcription/Name) which are unequals base of filename (XPath: //Transcription/Filename)
         Document doc = null;
         ComaData ccd = new ComaData();
-        cd = (ComaData) ccd;
-
+        ccd = (ComaData) cd;
         doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document       
         NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
         Report stats = new Report(); //create a new report
