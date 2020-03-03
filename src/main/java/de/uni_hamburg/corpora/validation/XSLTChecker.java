@@ -68,7 +68,7 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         try {
 
             //get UtteranceEndSymbols form FSM if supplied
-            if(FSMpath.equals("")){
+            if(!FSMpath.equals("")){
                 setUtteranceEndSymbols(FSMpath);
             }
             // get the XSLT stylesheet
@@ -175,12 +175,12 @@ public class XSLTChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
     
-     public void setUtteranceEndSymbols(String s) throws MalformedURLException, JDOMException, IOException, URISyntaxException {
+     public void setUtteranceEndSymbols(String fsmPath) throws MalformedURLException, JDOMException, IOException, URISyntaxException {
             //now get the UtteranceEndSymbols from the FSM XML file
             //XPath: "//fsm/char-set[@id='UtteranceEndSymbols']/char"
             UTTERANCEENDSYMBOLS = "";
             CorpusIO cio = new CorpusIO();
-            URL url = Paths.get(s).toUri().toURL();
+            URL url = Paths.get(fsmPath).toUri().toURL();
             String fsmstring = cio.readExternalResourceAsString(url.toString());
             Document fsmdoc = de.uni_hamburg.corpora.utilities.TypeConverter.String2JdomDocument(fsmstring);
             XPath xpath = XPath.newInstance("//fsm/char-set[@id='UtteranceEndSymbols']/char");
