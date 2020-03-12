@@ -529,7 +529,7 @@ public class Report {
         SimpleDateFormat simpleDateFormat =new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
         System.out.println(date);
-        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + date + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}";
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + date + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
         return line;
     }
 

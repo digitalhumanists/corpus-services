@@ -203,13 +203,13 @@ public class ReportItem {
     public boolean isFix() {
         if ((this.severity == Severity.CORRECT) ||
                (this.severity == Severity.NOTE) || (this.severity == Severity.CRITICAL) ||
-              (this.severity == Severity.MISSING)) {
+              (this.severity == Severity.MISSING)  || (this.severity == Severity.WARNING)) {
             return false;
         } else if (this.severity == Severity.IFIXEDITFORYOU)
                 {
             return true;
         } else {
-            System.out.println("Missed a severity case in isBad :-(");
+            System.out.println("Missed a severity case in isFix :-(");
             return true;
         }
     }
