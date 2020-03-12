@@ -773,10 +773,10 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                         keyElement.setText(String.format(tierTextFormat,
                                     tiers.get(category)));
                         desc.addContent(keyElement);
-                        stats.addNote(function,
+                        stats.addFix(function, cd,
                                     "Tier was missing from COMA: "
-                                    + tierID,
-                                    "The default description has been added.");
+                                    + tierID +
+                                    ": The default description has been added.");
                         addedTiers.add(category);
                     } else {
                         stats.addWarning(function,

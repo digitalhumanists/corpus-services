@@ -176,7 +176,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                 event.setTextContent(correctRef);
 
                                 String message = "Fixed: False numbering in ref ID '"+wholeRef+"' to '"+correctNo+"' (" + eventReference+")";
-                                stats.addCorrect(function, cd, message);
+                                stats.addFix(function, cd, message);
                             }
                             
                             // if only to be tested
@@ -208,7 +208,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                         event.setTextContent(correctRef);
 
                                         String message = "Fixed: False speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
-                                        stats.addCorrect(function, cd, message);
+                                        stats.addFix(function, cd, message);
                                     } 
                                     
                                     // if only to be tested
@@ -227,7 +227,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                     event.setTextContent(correctRef);
 
                                     String message = "Fixed: Missing speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
-                                    stats.addCorrect(function, cd, message);                                
+                                    stats.addFix(function, cd, message);                                
                                 } 
 
                                 // if only to be tested

@@ -145,7 +145,16 @@ public class Report {
         stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
                 cd.getURL().toString(), description, statId));
     }
-
+    
+    /**
+     * Add a critical error in named statistics bucket. with CorpusData object
+     */
+    public void addFix(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.IFIXEDITFORYOU,
+                cd.getURL().toString(), description, statId));
+    }
+    
     /**
      * Add a non-critical error in named statistics bucket.
      */
@@ -474,5 +483,39 @@ public class Report {
 
             }
         return onlyerrorStats;
+    }
+    
+    /**
+     * Generate summaries for all buckets.
+     */
+    public String getFixJson() {
+        String fj = "";
+        for (Map.Entry<String, Collection<ReportItem>> kfj
+                : statistics.entrySet()) {
+            fj += getFixingLines(kfj.getKey());
+        }
+        return fj;
+    }
+    
+        /**
+     * Generate error report for given bucket. Includes only severe errors and
+     * problems in detail.
+     */
+    public String getFixingLines(String statId) {
+        Collection<ReportItem> stats = statistics.get(statId);
+        String rv = MessageFormat.format("{0}:\n", statId);
+        int suppressed = 0;
+        for (ReportItem s : stats) {
+            if (s.isFix()) {
+                rv += s.getSummary() + "\n";
+            } else {
+                suppressed += 1;
+            }
+        }
+        if (suppressed != 0) {
+            rv += MessageFormat.format("{0} notes hidden\n",
+                    suppressed);
+        }
+        return rv;
     }
 }

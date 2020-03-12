@@ -98,6 +98,7 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
                                 newKey.setText(value.toString());
                                 e.getChild("Description").addContent(
                                         newKey);
+                                report.addFix(function, cd, "Updated segment count " + key.toString() + ":" + value.toString() + "for transcription " + e.getAttributeValue("Name"));
                             }
                         }
 
