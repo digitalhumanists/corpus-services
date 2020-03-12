@@ -11,10 +11,13 @@ package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.ReportItem.Severity;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Statistics report is a container class to facilitate building reports for
@@ -145,7 +148,7 @@ public class Report {
         stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
                 cd.getURL().toString(), description, statId));
     }
-    
+
     /**
      * Add a critical error in named statistics bucket. with CorpusData object
      */
@@ -154,7 +157,7 @@ public class Report {
         stat.add(new ReportItem(ReportItem.Severity.IFIXEDITFORYOU,
                 cd.getURL().toString(), description, statId));
     }
-    
+
     /**
      * Add a non-critical error in named statistics bucket.
      */
@@ -475,47 +478,59 @@ public class Report {
             errorStats.addAll(kv.getValue());
         }
         for (ReportItem ri : errorStats) {
-               if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
-                   //now make the Location relative to the base dir
-                   ri.getLocation();
-                   onlyerrorStats.add(ri);
-                }
-
+            if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
+                //now make the Location relative to the base dir
+                ri.getLocation();
+                onlyerrorStats.add(ri);
             }
+
+        }
         return onlyerrorStats;
     }
-    
+
     /**
      * Generate summaries for all buckets.
      */
     public String getFixJson() {
-        String fj = "";
+        String rv = "";
         for (Map.Entry<String, Collection<ReportItem>> kfj
                 : statistics.entrySet()) {
-            fj += getFixingLines(kfj.getKey());
-        }
-        return fj;
-    }
-    
-        /**
-     * Generate error report for given bucket. Includes only severe errors and
-     * problems in detail.
-     */
-    public String getFixingLines(String statId) {
-        Collection<ReportItem> stats = statistics.get(statId);
-        String rv = MessageFormat.format("{0}:\n", statId);
-        int suppressed = 0;
-        for (ReportItem s : stats) {
-            if (s.isFix()) {
-                rv += s.getSummary() + "\n";
-            } else {
-                suppressed += 1;
-            }
-        }
-        if (suppressed != 0) {
-            rv += MessageFormat.format("{0} notes hidden\n",
-                    suppressed);
+            rv += getFixLine(kfj.getKey());
         }
         return rv;
     }
+
+    /**
+     * Generate a one-line text-only message summarising the named bucket.
+     */
+    public String getFixLine(String statId) {
+        Collection<ReportItem> stats = statistics.get(statId);
+        int fix = 0;
+        int good = 0;
+        int severe = 0;
+        int badish = 0;
+        int unk = 0;
+        String line = "";
+        for (ReportItem s : stats) {
+            if (s.isFix()) {
+                fix += 1;
+            } else if (s.isSevere()) {
+                severe += 1;
+            } else if (s.isBad()) {
+                badish += 1;
+            } else if (s.isGood()) {
+                good += 1;
+            } else {
+                unk += 1;
+            }
+        }
+        //"2020-02-17T11:41:00Z"
+        String pattern = "yyyy-MM-ddThh:mm:ssZ";
+        SimpleDateFormat simpleDateFormat =new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(new Date());
+        System.out.println(date);
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + date + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}";
+        return line;
+    }
+
 }
