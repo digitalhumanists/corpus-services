@@ -151,7 +151,7 @@ public class ReportItem {
      */
     public boolean isGood() {
         if ((this.severity == Severity.CORRECT) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU))  {
             return true;
         } else if ((this.severity == Severity.WARNING) ||
                (this.severity == Severity.CRITICAL) ||
@@ -168,7 +168,7 @@ public class ReportItem {
      */
     public boolean isBad() {
         if ((this.severity == Severity.CORRECT) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU)) {
             return false;
         } else if ((this.severity == Severity.WARNING) ||
                (this.severity == Severity.CRITICAL) ||
@@ -186,7 +186,7 @@ public class ReportItem {
     public boolean isSevere() {
         if ((this.severity == Severity.CORRECT) ||
                (this.severity == Severity.WARNING) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU)){
             return false;
         } else if ((this.severity == Severity.CRITICAL) ||
               (this.severity == Severity.MISSING)) {

@@ -525,7 +525,7 @@ public class Report {
             }
         }
         //"2020-02-17T11:41:00Z"
-        String pattern = "yyyy-MM-ddThh:mm:ssZ";
+        String pattern = "yyyy-MM-ddhh:mm:ssZ";
         SimpleDateFormat simpleDateFormat =new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
         System.out.println(date);
