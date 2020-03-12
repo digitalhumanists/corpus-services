@@ -239,7 +239,7 @@ public class CorpusMagician {
                 cio.write(exmaErrorListString, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
             }
-            if (iserrorsonly) {
+            if (isfixesjson) {
             String fixJson = report.getFixJson();
             if (fixJson != null) {            
                 cio.write(fixJson, fixJsonlocation);
