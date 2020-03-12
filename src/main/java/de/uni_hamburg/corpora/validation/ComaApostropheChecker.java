@@ -86,7 +86,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
                 CorpusIO cio = new CorpusIO();
                 cd.updateUnformattedString(comaFile);
                 cio.write(cd, cd.getURL());    // write back to coma file with allowed apostrophes ´
-                stats.addCorrect(function, cd, "Corrected the apostrophes"); // fix report
+                stats.addFix(function, cd, "Corrected the apostrophes"); // fix report
             } else {
                 stats.addCorrect(function, cd, "Coma file does not contain apostrophes");
             }

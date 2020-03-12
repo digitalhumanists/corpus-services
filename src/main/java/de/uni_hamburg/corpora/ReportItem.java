@@ -196,6 +196,23 @@ public class ReportItem {
             return true;
         }
     }
+    
+        /**
+     * whether the stuff should be counted towards bad statistic.
+     */
+    public boolean isFix() {
+        if ((this.severity == Severity.CORRECT) ||
+               (this.severity == Severity.NOTE) || (this.severity == Severity.CRITICAL) ||
+              (this.severity == Severity.MISSING)) {
+            return false;
+        } else if (this.severity == Severity.IFIXEDITFORYOU)
+                {
+            return true;
+        } else {
+            System.out.println("Missed a severity case in isBad :-(");
+            return true;
+        }
+    }
 
     /**
      * Location of error in filename:lines.columns format if any.

@@ -28,7 +28,6 @@ import org.xml.sax.SAXException;
  */
 public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunction {
 
-
     public ComaTranscriptionsNameChecker() {
         super("ComaTranscriptionsNameChecker");
     }
@@ -194,27 +193,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
 
                         // fix the transcription Name
                         transcription.getElementsByTagName("Name").item(0).setTextContent(baseFileName);
-
-                        //then save file
-                        CorpusIO cio = new CorpusIO();
-                        cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
-                        XMLData xml = (XMLData) cd;
-                        org.jdom.Document jdomDoc = TypeConverter.W3cDocument2JdomDocument(doc);
-                        xml.setJdom(jdomDoc);
-                        cd = (CorpusData) xml;
-                        try {
-                            cd.updateUnformattedString(TypeConverter.JdomDocument2String(jdomDoc));
-                            cio.write(cd, cd.getURL());
-                        } catch (TransformerException ex) {
-                            stats.addException(ex, function, cd, "Unknown Transformer Exception");
-                        } catch (ParserConfigurationException ex) {
-                            stats.addException(ex, function, cd, "Unknown Parser Exception");
-                        } catch (UnsupportedEncodingException ex) {
-                            stats.addException(ex, function, cd, "Unknown Encoding Exception");
-                        } catch (XPathExpressionException ex) {
-                            stats.addException(ex, function, cd, "Unknown Xpath Exception");
-                        }
-                        stats.addCorrect(function, cd, "Transcription/Name (" + transcriptName + ") changed to base file name (" + baseFileName + ").");
+                        stats.addFix(function, cd, "Transcription/Name (" + transcriptName + ") changed to base file name (" + baseFileName + ").");
 
                     }
                 }
@@ -226,7 +205,25 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
             }
 
         }
-
+        //then save file
+        CorpusIO cio = new CorpusIO();
+        cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
+        XMLData xml = (XMLData) cd;
+        org.jdom.Document jdomDoc = TypeConverter.W3cDocument2JdomDocument(doc);
+        xml.setJdom(jdomDoc);
+        cd = (CorpusData) xml;
+        try {
+            cd.updateUnformattedString(TypeConverter.JdomDocument2String(jdomDoc));
+            cio.write(cd, cd.getURL());
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown Transformer Exception");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(ex, function, cd, "Unknown Parser Exception");
+        } catch (UnsupportedEncodingException ex) {
+            stats.addException(ex, function, cd, "Unknown Encoding Exception");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown Xpath Exception");
+        }
         return stats;
     }
 

@@ -61,7 +61,7 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
             if (cd != null) {
-                report.addCorrect(function, cd, "made timeline consistent");
+                report.addFix(function, cd, "made timeline consistent");
             } else {
                 report.addCritical(function, cd, "making timeline consistent not possible");
             }

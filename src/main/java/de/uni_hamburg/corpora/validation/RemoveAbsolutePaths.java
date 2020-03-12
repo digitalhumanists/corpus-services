@@ -189,7 +189,7 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
                                 CorpusIO cio = new CorpusIO();
                                 cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                                 cio.write(cd, cd.getURL());
-                                report.addCorrect(function, cd, "removed absolute path");
+                                report.addFix(function, cd, "removed absolute path");
                             } else {
                                 report.addCritical(function, cd,
                                         "relative path " + pabs.toString() + " cannot be figured out");
