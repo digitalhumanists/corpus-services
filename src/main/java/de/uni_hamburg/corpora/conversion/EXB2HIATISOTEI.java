@@ -638,7 +638,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         language = lang;
     }
 
-    public void setINEL() {
+    public void setInel() {
         INEL = true;
     }
 

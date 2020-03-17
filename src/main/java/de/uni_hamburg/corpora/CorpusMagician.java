@@ -4,7 +4,6 @@ import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
-import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
@@ -510,7 +509,8 @@ public class CorpusMagician {
                     corpusfunctions.add(xci);
                     break;
                 case "exb2inelisotei":
-                    EXB2INELISOTEI eiit = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiit = new EXB2HIATISOTEI();
+                    eiit.setInel();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey(lang)) {
@@ -522,17 +522,20 @@ public class CorpusMagician {
                     break;
                 //Maybe get rid of those special cases too!
                 case "exb2inelisoteisel":
-                    EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitsel = new EXB2HIATISOTEI();
+                    eiitsel.setInel();
                     eiitsel.setLanguage("sel");
                     corpusfunctions.add(eiitsel);
                     break;
                 case "exb2inelisoteidlg":
-                    EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitdlg = new EXB2HIATISOTEI();
+                    eiitdlg.setInel();
                     eiitdlg.setLanguage("dlg");
                     corpusfunctions.add(eiitdlg);
                     break;
                 case "exb2inelisoteixas":
-                    EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitxas = new EXB2HIATISOTEI();
+                    eiitxas.setInel();
                     eiitxas.setLanguage("xas");
                     corpusfunctions.add(eiitxas);
                     break;
@@ -543,6 +546,10 @@ public class CorpusMagician {
                         if (cfProperties.containsKey(lang)) {
                             ehit.setLanguage(cfProperties.getProperty(lang));
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
+                        }
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                            ehit.setInel();
+                            System.out.println("Mode set to inel");
                         }
                     }
                     corpusfunctions.add(ehit);

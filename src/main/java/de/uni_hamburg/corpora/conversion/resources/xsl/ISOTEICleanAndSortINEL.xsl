@@ -453,6 +453,12 @@
     <xsl:template match="//*:seg[@type = 'utterance']/*:anchor[not(following-sibling::*)]">
         <!-- do not copy the last anchor? --> </xsl:template>
 
+<!-- Here still seems to be an error: 
+        
+        Matches both "*:pause[(data(@dur) = "short") and (exists((first(preceding-sibling::element()))[(exists(self::*:pause)) and (data(@dur) = "short")]))]" on line 203 of and "*:pause[((data(@dur) = "short") and (exists((first(following-sibling::element()))[(exists(self::*:pause)) and (data(@dur) = "short")]))) and (exists((following-sibling::element()[2])[(exists(self::*:pause)) and (data(@dur) = "short")]))]" on line 189
+        
+        -->
+
     <!-- matches a short pause followed by a short pause followed by something other than a short pause -->
     <!-- changed because there was ambiguity wrt short pause preceded by a short pause -->
     <xsl:template
