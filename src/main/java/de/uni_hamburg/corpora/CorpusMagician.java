@@ -402,7 +402,7 @@ public class CorpusMagician {
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
                             cog.setInel();
                             System.out.println("Mode set to inel");
                         }
@@ -445,7 +445,7 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
                             xc.setXSLresource("/xsl/inel-checks.xsl");
                             System.out.println("Mode set to inel");
                         }
@@ -547,7 +547,7 @@ public class CorpusMagician {
                             ehit.setLanguage(cfProperties.getProperty(lang));
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
-                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
                             ehit.setInel();
                             System.out.println("Mode set to inel");
                         }
