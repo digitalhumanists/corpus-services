@@ -123,7 +123,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             //HIAT Segmentation
             //TODO need to be a parameter in the future
             HIATSegmentation segmentation;
-            if (FSM != null) {
+            if (!FSM.equals("")) {
                 //reading the FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
                 InputStream is = getClass().getResourceAsStream(FSM);
                 String fsmstring = TypeConverter.InputStream2String(is);
@@ -230,6 +230,9 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                 System.out.println("STEP 2 completed.");
                 cio.write(teiDocument, new URL(intermediate2));
                 Document transformedDocument = null;
+                if(INEL){
+                    xslt.setParameter("mode", "inel");
+                }
                 String result2
                         = xslt.transform(TypeConverter.JdomDocument2String(teiDocument), transform_stylesheet);
                 transformedDocument = IOUtilities.readDocumentFromString(result2);
