@@ -110,7 +110,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             boolean includeFullText, String XPath2Morphemes) {
         try {
             if (INEL) {
-                SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtteranceINEL.xsl";
                 SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSortINEL.xsl";
             }
 //we create a BasicTranscription form the CorpusData
