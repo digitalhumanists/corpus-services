@@ -33,7 +33,8 @@ import org.xml.sax.SAXException;
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
     boolean inel = false;
-
+    String xslpath = "/xsl/Output_metadata_summary.xsl";
+    
     public ComaOverviewGeneration() {
         super("coma-overview");
     }
@@ -44,15 +45,14 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         String xsl;
         try{
 
-            // get the XSLT stylesheet
-            if(inel){
-            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary_INEL.xsl"));    
-            }else {
-            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
-            }
+            // get the XSLT stylesheet as String
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslpath));
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
-        
+            //set an parameter for INEL
+            if(inel){  
+                xt.setParameter("mode", "inel");
+            }
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
             //get location to save new result
