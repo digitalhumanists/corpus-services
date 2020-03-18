@@ -96,13 +96,13 @@
                 <!-- do nothing -->
             </xsl:when>
             <xsl:when test="text() = '('">
-                <xsl:if test="mode='normal'">
+                <xsl:if test="$mode='normal'">
                     <xsl:element name="uncertain-start"/>
                 </xsl:if>
                 
             </xsl:when>
             <xsl:when test="text() = ')'">
-                <xsl:if test="mode='normal'">
+                <xsl:if test="$mode='normal'">
                     <xsl:element name="uncertain-end"/>
                 </xsl:if>
             </xsl:when>

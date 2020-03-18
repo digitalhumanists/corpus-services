@@ -93,10 +93,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     * and gives back a report how it worked
      */
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
-        if (INEL){
-        return convertCD2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);    
+        if (INEL) {
+            return convertCD2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
         } else {
-        return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
+            return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         }
     }
 
@@ -109,9 +109,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) {
         try {
-            if (INEL) {
-                SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSortINEL.xsl";
-            }
 //we create a BasicTranscription form the CorpusData
             BasicTranscriptionData btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
@@ -229,7 +226,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                 System.out.println("STEP 2 completed.");
                 cio.write(teiDocument, new URL(intermediate2));
                 Document transformedDocument = null;
-                if(INEL){
+                if (INEL) {
                     xslt.setParameter("mode", "inel");
                 }
                 String result2
