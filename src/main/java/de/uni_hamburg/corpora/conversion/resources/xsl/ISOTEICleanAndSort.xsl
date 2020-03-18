@@ -714,7 +714,7 @@
     </xsl:template>
 
     <!-- we need to treat the mc tier differently!!! -->
-    <!-- hopefully we can adapt the data correctly iin the future and won't need this -->
+    <!-- hopefully we can adapt the data correctly in the future and won't need this -->
     <xsl:template name="morph-to-morph-mc">
         <!--<xsl:variable name="morpheme-annotation-start" select="./@start"/>
         <xsl:variable name="morpheme-annotation-end" select="./@end"/>

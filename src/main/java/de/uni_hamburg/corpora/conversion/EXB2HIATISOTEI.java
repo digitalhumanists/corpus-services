@@ -22,6 +22,7 @@ import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
+import de.uni_hamburg.corpora.validation.ExbSegmenter;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -119,7 +120,8 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             //HIAT Segmentation
             //TODO need to be a parameter in the future
             HIATSegmentation segmentation;
-            if (!FSM.equals("")) {
+            
+            if (!FSM.equals("")) {      
                 //reading the FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
                 InputStream is = getClass().getResourceAsStream(FSM);
                 String fsmstring = TypeConverter.InputStream2String(is);
@@ -641,6 +643,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         INEL = true;
     }
 
+    public void setFSM(String newfsm) {
+        FSM = newfsm;
+    }
+    
     @Override
     public Report check(CorpusData cd) {
         //convert the file
