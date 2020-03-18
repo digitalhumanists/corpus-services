@@ -110,7 +110,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) {
         try {
-//we create a BasicTranscription form the CorpusData
+            //we create a BasicTranscription form the CorpusData
             BasicTranscriptionData btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
             //normalize the exb (!)
@@ -118,19 +118,18 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             System.out.println((cd.getURL()).getFile());
             System.out.println("started writing document...");
             //HIAT Segmentation
-            //TODO need to be a parameter in the future
-            HIATSegmentation segmentation;
-            
-            if (!FSM.equals("")) {      
-                //reading the FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
+            HIATSegmentation segmentation = new HIATSegmentation();
+            /*
+                //reading the internal FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
                 InputStream is = getClass().getResourceAsStream(FSM);
                 String fsmstring = TypeConverter.InputStream2String(is);
                 URL url = Paths.get(System.getProperty("java.io.tmpdir") + "/" + "fsmstring.xml").toUri().toURL();
                 cio.write(fsmstring, url);
                 segmentation = new HIATSegmentation(url.getFile());
-            } else {
-                //default HIAT segmentation
-                segmentation = new HIATSegmentation();
+             */
+            //default HIAT segmentation
+            if (!FSM.equals("")) {
+                segmentation.pathToExternalFSM = FSM;
             }
             //create a segmented exs
             SegmentedTranscription st = segmentation.BasicToSegmented(bt);
@@ -646,7 +645,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public void setFSM(String newfsm) {
         FSM = newfsm;
     }
-    
+
     @Override
     public Report check(CorpusData cd) {
         //convert the file
