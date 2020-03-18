@@ -517,6 +517,10 @@ public class CorpusMagician {
                             eiit.setLanguage(cfProperties.getProperty(lang));
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
+                        if (cfProperties.containsKey(fsm)) {
+                            eiit.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
                     }
                     corpusfunctions.add(eiit);
                     break;
@@ -524,18 +528,30 @@ public class CorpusMagician {
                 case "exb2inelisoteisel":
                     EXB2HIATISOTEI eiitsel = new EXB2HIATISOTEI();
                     eiitsel.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                            eiitsel.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
                     eiitsel.setLanguage("sel");
                     corpusfunctions.add(eiitsel);
                     break;
                 case "exb2inelisoteidlg":
                     EXB2HIATISOTEI eiitdlg = new EXB2HIATISOTEI();
                     eiitdlg.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                            eiitdlg.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
                     eiitdlg.setLanguage("dlg");
                     corpusfunctions.add(eiitdlg);
                     break;
                 case "exb2inelisoteixas":
                     EXB2HIATISOTEI eiitxas = new EXB2HIATISOTEI();
                     eiitxas.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                            eiitxas.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
                     eiitxas.setLanguage("xas");
                     corpusfunctions.add(eiitxas);
                     break;
@@ -550,6 +566,10 @@ public class CorpusMagician {
                         if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
                             ehit.setInel();
                             System.out.println("Mode set to inel");
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            ehit.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
                     corpusfunctions.add(ehit);
