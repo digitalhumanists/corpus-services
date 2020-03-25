@@ -59,7 +59,12 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
     static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtterance.xsl";
     static String SORT_AND_CLEAN_STYLESHEET_ISO = "/xsl/ISOTEICleanAndSort.xsl";
+    static String TIME2TOKEN_SPAN_REFERENCES = "/xsl/time2tokenSpanReferences.xsl";
+    static String REMOVE_TIME = "/xsl/removeTimepointsWithoutAbsolute.xsl";
+    static String SPANS2_ATTRIBUTES = "/xsl/spans2attributes.xsl";
+
     static String FSM = "";
+    
 
     static String BODY_NODE = "//text";
 
@@ -84,6 +89,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
 
     static Boolean INEL = false;
+    static Boolean token = false;
 
     /*
     * this method takes a CorpusData object, converts it into HIAT ISO TEI and saves it
@@ -93,6 +99,8 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
         if (INEL) {
             return convertCD2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
+        } else if (token) {
+            return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         } else {
             return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         }
@@ -264,10 +272,43 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         }
                         textNode.addContent(teiEvent);
                     }
-
-                    //for morpheme inel iso tei, sort and clean must be changed
-                    //and the generating of the ids
+                    if (token) {
+                        /* 
+                        HAMATAC ISO TEI VERSION from Thomas:
+                        (2) Ein Mapping von zeitbasierten <span>s auf tokenbasierte <span>s,
+                            d.h. @to and @from zeigen danach auf Token-IDs statt auf Timeline-IDs.
+                            Das macht ein Stylesheet:
+                            https://github.com/EXMARaLDA/exmaralda/blob/master/src/org/exmaralda/tei/xml/time2tokenSpanReferences.xsl
+                        */
+                        String result4
+                                = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), TIME2TOKEN_SPAN_REFERENCES);
+                        /*
+                        (3) Das Löschen von "überflüssigen" <when> und <anchor>-Elementen,
+                            also solchen, die im PE gebraucht wurden, um Annotationen zu
+                            spezifizieren, die aber sonst keine Information (absolute Zeitwerte)
+                            tragen. Wenn <span>s nach Schritt (2) nicht mehr auf Timeline-IDs
+                            zeigen, braucht man diese Elemente nicht mehr wirklich (schaden tun
+                            sie aber eigentlich auch nicht)
+                            macht auch ein Stylesheet:
+                            https://github.com/EXMARaLDA/exmaralda/blob/master/src/org/exmaralda/tei/xml/removeTimepointsWithoutAbsolute.xsl
+                        */
+                        String result5
+                                = xslt.transform(result4, REMOVE_TIME);
+                        String result6 
+                                = xslt.transform(result5, SPANS2_ATTRIBUTES);
+                        transformedDocument = IOUtilities.readDocumentFromString(result6);
+                        /*
+                        (4) Das Einfügen von (unique) Coma-IDs als <idno> für das Transkript
+                            und für jeden Sprecher im TEI-Header
+                        
+                        TODO
+                        
+                        
+                        */
+                    } else {
+                    //generate element ids
                     generateWordIDs(transformedDocument);
+                    }
                     cio.write(transformedDocument, new URL(intermediate4));
                     if (transformedDocument != null) {
                         //Here the annotations are taken care of
@@ -285,7 +326,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                 }
             }
         }
-
         return finalDocument;
     }
 
