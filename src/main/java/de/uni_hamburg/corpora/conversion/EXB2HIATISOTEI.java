@@ -74,6 +74,9 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     String nameOfDeepSegmentation = "SpeakerContribution_Utterance_Word";
     String nameOfFlategmentation = "SpeakerContribution_Event";
 
+    //Path to the Coma File for inserting speaker IDs
+     String comaPath = "";
+    
     //transformers for three transformations
     XSLTransformer transformer;
     XSLTransformer transformer2;
@@ -297,17 +300,19 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         String result6 
                                 = xslt.transform(result5, SPANS2_ATTRIBUTES);
                         transformedDocument = IOUtilities.readDocumentFromString(result6);
-                        /*
+
+                    }
+                    //generate element ids
+                    generateWordIDs(transformedDocument);            
+                    if(!comaPath.equals("")){
+                                            /*
                         (4) Das Einfügen von (unique) Coma-IDs als <idno> für das Transkript
                             und für jeden Sprecher im TEI-Header
                         
                         TODO
                         
                         
-                        */
-                    } else {
-                    //generate element ids
-                    generateWordIDs(transformedDocument);
+                        */    
                     }
                     cio.write(transformedDocument, new URL(intermediate4));
                     if (transformedDocument != null) {
@@ -681,6 +686,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     public void setFSM(String newfsm) {
         FSM = newfsm;
+    }
+    
+    public void setComaPath(String newcomapath) {
+        comaPath = newcomapath;
     }
 
     @Override
