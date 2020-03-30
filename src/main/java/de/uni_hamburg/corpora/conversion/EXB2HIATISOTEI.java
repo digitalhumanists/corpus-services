@@ -24,6 +24,7 @@ import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
 import org.jdom.Attribute;
@@ -35,6 +36,7 @@ import org.jdom.Text;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -182,6 +184,8 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, function, cd, "Parser error");
         } catch (XPathExpressionException ex) {
             report.addException(ex, function, cd, "XPath error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, function, cd, "ComaPath URI error");
         }
         return report;
     }
@@ -189,7 +193,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
             String nameOfDeepSegmentation,
             String nameOfFlatSegmentation,
-            boolean includeFullText, CorpusData cd) throws JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, XPathExpressionException {
+            boolean includeFullText, CorpusData cd) throws JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, XPathExpressionException, URISyntaxException {
 
         Document finalDocument = null;
         String skeleton_stylesheet = cio.readInternalResourceAsString(TEI_SKELETON_STYLESHEET_ISO);
@@ -305,12 +309,35 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     //generate element ids
                     generateWordIDs(transformedDocument);            
                     if(!comaPath.equals("")){
-                                            /*
+                       Document comaDoc = TypeConverter.String2JdomDocument(cio.readExternalResourceAsString(comaPath));
+                       //we need to find the matching communication in coma - using the exb filepath and search it in Coma?
+                       /*
                         (4) Das Einfügen von (unique) Coma-IDs als <idno> für das Transkript
                             und für jeden Sprecher im TEI-Header
                         
                         TODO
-                        
+                         // <idno type="AGD-ID">FOLK_E_00011_SE_01_T_04_DF_01</idno>
+                Element transcriptIdnoElement = new Element("idno", teiNamespace);
+                transcriptIdnoElement.setAttribute("type", "HZSK-ID");
+                transcriptIdnoElement.setText(transcriptID);                
+                finalDoc.getRootElement().addContent(0, transcriptIdnoElement);
+                
+                XPath xp1 = XPath.newInstance("//tei:person"); 
+                xp1.addNamespace(teiNamespace);
+                List<Element> personL = xp1.selectNodes(finalDoc);
+                for (Element personE : personL){
+                    // <person xml:id="SPK0" n="Sh" sex="2">
+                    String personSigle = personE.getAttributeValue("n");
+                    String xp2 = "//Speaker[Sigle='" + personSigle + "']";
+                    Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
+                    String speakerID = speakerE.getAttributeValue("Id");
+                    Element speakerIdnoElement = new Element("idno", teiNamespace);
+                    speakerIdnoElement.setAttribute("type", "HZSK-ID");
+                    speakerIdnoElement.setText(speakerID);                
+                    personE.addContent(0, speakerIdnoElement);
+                    
+                }
+
                         
                         */    
                     }
