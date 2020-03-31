@@ -310,7 +310,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     generateWordIDs(transformedDocument);            
                     if(!comaPath.equals("")){
                        Document comaDoc = TypeConverter.String2JdomDocument(cio.readExternalResourceAsString(comaPath));
-                       //we need to find the matching communication in coma - using the exb filepath and search it in Coma?
+                       //we need to find the matching communication in coma - using the exb filepath and search it in NSLinks in Coma?
                        /*
                         (4) Das Einfügen von (unique) Coma-IDs als <idno> für das Transkript
                             und für jeden Sprecher im TEI-Header
