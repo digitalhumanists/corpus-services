@@ -802,6 +802,11 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public void setInel() {
         INEL = true;
     }
+    
+    
+    public void setToken() {
+        TOKEN = true;
+    }
 
     public void setFSM(String newfsm) {
         FSM = newfsm;
