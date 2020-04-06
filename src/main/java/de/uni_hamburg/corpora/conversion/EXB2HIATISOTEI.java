@@ -37,10 +37,15 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.common.corpusbuild.TextFilter;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
@@ -66,7 +71,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     static String SPANS2_ATTRIBUTES = "/xsl/spans2attributes.xsl";
 
     static String FSM = "";
-    
 
     static String BODY_NODE = "//text";
 
@@ -76,9 +80,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     String nameOfDeepSegmentation = "SpeakerContribution_Utterance_Word";
     String nameOfFlategmentation = "SpeakerContribution_Event";
 
-    //Path to the Coma File for inserting speaker IDs
-     String comaPath = "";
-    
     //transformers for three transformations
     XSLTransformer transformer;
     XSLTransformer transformer2;
@@ -94,7 +95,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
 
     static Boolean INEL = false;
-    static Boolean token = false;
+    static Boolean TOKEN = false;
+    Boolean COMA = false;
+
+    URL cdURL;
 
     /*
     * this method takes a CorpusData object, converts it into HIAT ISO TEI and saves it
@@ -102,12 +106,128 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     * and gives back a report how it worked
      */
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
+        cdURL = cd.getURL();
+        //check if the CD file is Coma or Exb
+
+        cdURL = cd.getURL();
+        //check if the CD file is Coma or Exb
+        Class cl;
+        try {
+            cl = Class.forName("de.uni_hamburg.corpora.ComaData");
+            if (cl.isInstance(cd)) {
+                COMA = true;
+                report = convertCOMA2MORPHEMEHIATISOTEI(cd);
+            } else {
+                convertEXB2MORPHEMEHIATISOTEI(cd);
+            }
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "ClassNotFound Exception");
+
+        }
+        return report;
+    }
+
+    public Report convertCOMA2MORPHEMEHIATISOTEI(CorpusData cd) {
+        try {
+            /*
+            Following Code is based on Code from Thomas
+            https://gitlab.rrz.uni-hamburg.de/Bae2551/ids-sample/blob/master/src/java/scripts/ConvertHAMATAC.java
+            */
+            // read COMA doc
+            Namespace teiNamespace = Namespace.getNamespace("tei", "http://www.tei-c.org/ns/1.0");
+            Document comaDoc = FileIO.readDocumentFromLocalFile(cd.getURL().getPath());
+            // select communication elements in COMA xml
+            List<Element> communicationsList = XPath.selectNodes(comaDoc, "//Communication");
+            // iterate through communications
+            for (Element communicationElement : communicationsList) {
+                // select basic transcriptions
+                List<Element> transcriptionsList = XPath.selectNodes(communicationElement, "descendant::Transcription[ends-with(Filename,'.exb')]");
+                // iterate through basic transcriptions
+                for (Element transcriptionElement : transcriptionsList) {
+                    String transcriptID = transcriptionElement.getAttributeValue("Id");
+                    String nsLink = transcriptionElement.getChildText("NSLink");
+                    //choose exb fullPath
+                    String fullPath = cd.getParentURL() + "/" + nsLink;
+                    URL exburl = new URL(fullPath);
+                    //now use the method to get the iso tei version from the exb file
+                    CorpusData cdc = cio.readFileURL(exburl);
+                    Document stdoc = cd2SegmentedTranscription(cdc);
+                    Document finalDoc  = SegmentedTranscriptionToTEITranscription(stdoc,
+                    nameOfDeepSegmentation,
+                    nameOfFlategmentation,
+                    false, cd);
+                    //now add the coma id information
+                    // <idno type="AGD-ID">FOLK_E_00011_SE_01_T_04_DF_01</idno>
+                    Element transcriptIdnoElement = new Element("idno", teiNamespace);
+                    transcriptIdnoElement.setAttribute("type", "HZSK-ID");
+                    transcriptIdnoElement.setText(transcriptID);
+                    finalDoc.getRootElement().addContent(0, transcriptIdnoElement);
+                    
+                    XPath xp1 = XPath.newInstance("//tei:person");
+                    xp1.addNamespace(teiNamespace);
+                    List<Element> personL = xp1.selectNodes(finalDoc);
+                    for (Element personE : personL) {
+                        // <person xml:id="SPK0" n="Sh" sex="2">
+                        String personSigle = personE.getAttributeValue("n");
+                        String xp2 = "//Speaker[Sigle='" + personSigle + "']";
+                        Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
+                        String speakerID = speakerE.getAttributeValue("Id");
+                        Element speakerIdnoElement = new Element("idno", teiNamespace);
+                        speakerIdnoElement.setAttribute("type", "HZSK-ID");
+                        speakerIdnoElement.setText(speakerID);
+                        personE.addContent(0, speakerIdnoElement);
+                        
+                    }
+                    if (finalDoc != null) {
+                System.out.println("Merged");
+                //so is the language of the doc
+                setDocLanguage(finalDoc, language);
+                //now the completed document is saved
+                //TODO save next to the old cd
+                String filename = cdc.getURL().getFile();
+                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
+                System.out.println(url.toString());
+                cio.write(finalDoc, url);
+                System.out.println("document written.");
+                report.addCorrect(function, cdc, "ISO TEI conversion of file was successful");
+            } else {
+                report.addCritical(function, cdc, "ISO TEI conversion of file was not possible because of unknown error");
+            }
+                    
+                }
+            }
+            
+        } catch (SAXException ex) {
+            report.addException(ex, function, cd, "Unknown exception error");
+        } catch (FSMException ex) {
+            report.addException(ex, function, cd, "Unknown finite state machine error");
+        } catch (MalformedURLException ex) {
+            report.addException(ex, function, cd, "Unknown file URL reading error");
+        } catch (JDOMException ex) {
+            report.addException(ex, function, cd, "Unknown file reading error");
+        } catch (IOException ex) {
+            report.addException(ex, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            report.addException(ex, function, cd, "XSL transformer error");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, function, cd, "Parser error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, function, cd, "XPath error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, function, cd, "ComaPath URI error");
+        } catch (JexmaraldaException ex) {
+             report.addException(ex, function, cd, "Jexmeaalda error");
+        }
+        return report;
+    }
+
+    public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd) {
         if (INEL) {
-            return convertCD2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
-        } else if (token) {
-            return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
+            return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
+        } else if (TOKEN) {
+            return convertEXB2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         } else {
-            return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
+            return convertEXB2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         }
     }
 
@@ -117,35 +237,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     * converts it into ISO TEI and saves it TODO where
     * and gives back a report if it worked
      */
-    public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd,
+    public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) {
         try {
-            //we create a BasicTranscription form the CorpusData
-            BasicTranscriptionData btd = (BasicTranscriptionData) cd;
-            BasicTranscription bt = btd.getEXMARaLDAbt();
-            //normalize the exb (!)
-            bt.normalize();
-            System.out.println((cd.getURL()).getFile());
-            System.out.println("started writing document...");
-            //HIAT Segmentation
-            HIATSegmentation segmentation = new HIATSegmentation();
-            /*
-                //reading the internal FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
-                InputStream is = getClass().getResourceAsStream(FSM);
-                String fsmstring = TypeConverter.InputStream2String(is);
-                URL url = Paths.get(System.getProperty("java.io.tmpdir") + "/" + "fsmstring.xml").toUri().toURL();
-                cio.write(fsmstring, url);
-                segmentation = new HIATSegmentation(url.getFile());
-             */
-            //default HIAT segmentation
-            if (!FSM.equals("")) {
-                segmentation.pathToExternalFSM = FSM;
-            }
-            //create a segmented exs
-            SegmentedTranscription st = segmentation.BasicToSegmented(bt);
-            System.out.println("Segmented transcription created");
-            //Document from segmented transcription string
-            Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
+            Document stdoc = cd2SegmentedTranscription(cd);
             //TODO paramter in the future for deep & flat segmentation name
             //MAGIC - now the real work happens
             Document teiDoc = SegmentedTranscriptionToTEITranscription(stdoc,
@@ -188,6 +283,36 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, function, cd, "ComaPath URI error");
         }
         return report;
+    }
+    
+    public Document cd2SegmentedTranscription(CorpusData cd) throws SAXException, FSMException{
+                    //we create a BasicTranscription form the CorpusData
+            BasicTranscriptionData btd = (BasicTranscriptionData) cd;
+            BasicTranscription bt = btd.getEXMARaLDAbt();
+            //normalize the exb (!)
+            bt.normalize();
+            System.out.println((cd.getURL()).getFile());
+            System.out.println("started writing document...");
+            //HIAT Segmentation
+            HIATSegmentation segmentation = new HIATSegmentation();
+            /*
+                //reading the internal FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
+                InputStream is = getClass().getResourceAsStream(FSM);
+                String fsmstring = TypeConverter.InputStream2String(is);
+                URL url = Paths.get(System.getProperty("java.io.tmpdir") + "/" + "fsmstring.xml").toUri().toURL();
+                cio.write(fsmstring, url);
+                segmentation = new HIATSegmentation(url.getFile());
+             */
+            //default HIAT segmentation
+            if (!FSM.equals("")) {
+                segmentation.pathToExternalFSM = FSM;
+            }
+            //create a segmented exs
+            SegmentedTranscription st = segmentation.BasicToSegmented(bt);
+            System.out.println("Segmented transcription created");
+            //Document from segmented transcription string
+            Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
+            return stdoc;
     }
 
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
@@ -279,14 +404,14 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         }
                         textNode.addContent(teiEvent);
                     }
-                    if (token) {
+                    if (TOKEN) {
                         /* 
                         HAMATAC ISO TEI VERSION from Thomas:
                         (2) Ein Mapping von zeitbasierten <span>s auf tokenbasierte <span>s,
                             d.h. @to and @from zeigen danach auf Token-IDs statt auf Timeline-IDs.
                             Das macht ein Stylesheet:
                             https://github.com/EXMARaLDA/exmaralda/blob/master/src/org/exmaralda/tei/xml/time2tokenSpanReferences.xsl
-                        */
+                         */
                         String result4
                                 = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), TIME2TOKEN_SPAN_REFERENCES);
                         /*
@@ -298,49 +423,16 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                             sie aber eigentlich auch nicht)
                             macht auch ein Stylesheet:
                             https://github.com/EXMARaLDA/exmaralda/blob/master/src/org/exmaralda/tei/xml/removeTimepointsWithoutAbsolute.xsl
-                        */
+                         */
                         String result5
                                 = xslt.transform(result4, REMOVE_TIME);
-                        String result6 
+                        String result6
                                 = xslt.transform(result5, SPANS2_ATTRIBUTES);
                         transformedDocument = IOUtilities.readDocumentFromString(result6);
 
                     }
                     //generate element ids
-                    generateWordIDs(transformedDocument);            
-                    if(!comaPath.equals("")){
-                       Document comaDoc = TypeConverter.String2JdomDocument(cio.readExternalResourceAsString(comaPath));
-                       //we need to find the matching communication in coma - using the exb filepath and search it in NSLinks in Coma?
-                       /*
-                        (4) Das Einfügen von (unique) Coma-IDs als <idno> für das Transkript
-                            und für jeden Sprecher im TEI-Header
-                        
-                        TODO
-                         // <idno type="AGD-ID">FOLK_E_00011_SE_01_T_04_DF_01</idno>
-                Element transcriptIdnoElement = new Element("idno", teiNamespace);
-                transcriptIdnoElement.setAttribute("type", "HZSK-ID");
-                transcriptIdnoElement.setText(transcriptID);                
-                finalDoc.getRootElement().addContent(0, transcriptIdnoElement);
-                
-                XPath xp1 = XPath.newInstance("//tei:person"); 
-                xp1.addNamespace(teiNamespace);
-                List<Element> personL = xp1.selectNodes(finalDoc);
-                for (Element personE : personL){
-                    // <person xml:id="SPK0" n="Sh" sex="2">
-                    String personSigle = personE.getAttributeValue("n");
-                    String xp2 = "//Speaker[Sigle='" + personSigle + "']";
-                    Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
-                    String speakerID = speakerE.getAttributeValue("Id");
-                    Element speakerIdnoElement = new Element("idno", teiNamespace);
-                    speakerIdnoElement.setAttribute("type", "HZSK-ID");
-                    speakerIdnoElement.setText(speakerID);                
-                    personE.addContent(0, speakerIdnoElement);
-                    
-                }
-
-                        
-                        */    
-                    }
+                    generateWordIDs(transformedDocument);
                     cio.write(transformedDocument, new URL(intermediate4));
                     if (transformedDocument != null) {
                         //Here the annotations are taken care of
@@ -714,10 +806,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public void setFSM(String newfsm) {
         FSM = newfsm;
     }
-    
-    public void setComaPath(String newcomapath) {
-        comaPath = newcomapath;
-    }
 
     @Override
     public Report check(CorpusData cd) {
@@ -743,6 +831,8 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
+            Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
+            IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "unknown class not found error");
         }
