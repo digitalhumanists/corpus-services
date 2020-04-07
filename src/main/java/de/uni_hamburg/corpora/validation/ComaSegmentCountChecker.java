@@ -75,28 +75,32 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
             NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication     
             for (int j = 0; j < transcriptions.getLength(); j++) {   // iterate through transcriptions 
                 Element transcription = (Element) transcriptions.item(j);
-                NodeList keys = transcription.getElementsByTagName("Key");  // get keys of current transcription
-                boolean segmented = false;   // flag for distinguishing basic file from segmented file 
-                for (int k = 0; k < keys.getLength(); k++) {  // look for the key with "segmented" attribute 
-                    Element key = (Element) keys.item(k);
-                    if (key.getAttribute("Name").equals("segmented")) {
-                        String seg = key.getTextContent();
-                        if (seg.equals("true")) // check if transcription is segmented or not
-                        {
-                            segmented = true;        // if segmented transcription then turn the flag true
-                            if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")) {
-                                //String text = key.getAttribute("Name");
-                                int colonIndex = key.getAttribute("Name").lastIndexOf(':');
-                                int hashIndex = key.getAttribute("Name").indexOf('#');
-                                algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex));
-                            }
+                //System.out.println("Transcription: " + transcription.getAttribute("Id"));
+                NodeList descriptions = transcription.getElementsByTagName("Description");
+                for (int d = 0; d < descriptions.getLength(); d++) {
+                    Element description = (Element) descriptions.item(d);
+                    NodeList keys = description.getElementsByTagName("Key");
+                    // get keys of current transcription description
+                    //we need to look for the key "Description" containing the "Key" Element with the segmented attribute
+                    for (int k = 0; k < keys.getLength(); k++) {  // look for the key with "segmented" attribute 
+                        Element key = (Element) keys.item(k);
+                        //System.out.println("Key: " + key.getAttribute("Name"));
+                        //System.out.println(key.getAttribute("Name").contains("#"));
+                        //System.out.println(key.getAttribute("Name").contains(":"));
+                        if (key.getAttribute("Name").contains("#") && key.getAttribute("Name").contains(":")) {
+                            String text = key.getAttribute("Name");
+                            //System.out.println(text);
+                            int colonIndex = key.getAttribute("Name").lastIndexOf(':');
+                            int hashIndex = key.getAttribute("Name").indexOf('#');
+                            algorithmNames.add(key.getAttribute("Name").substring(hashIndex + 2, colonIndex));
                         }
-                        break;
                     }
+                    break;
                 }
+
             }
         }
-        System.out.println(algorithmNames);
+        //System.out.println(algorithmNames);
         String algorithmName = "";
         if (!algorithmNames.isEmpty()) {
             algorithmName = algorithmNames.get(0);
