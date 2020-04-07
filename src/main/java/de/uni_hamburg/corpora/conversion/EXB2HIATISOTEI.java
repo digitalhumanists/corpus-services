@@ -405,7 +405,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         textNode.addContent(teiEvent);
                     }
                     if (TOKEN) {
-                        XSLTransformer xslt2 = new XSLTransformer();
                         /* 
                         HAMATAC ISO TEI VERSION from Thomas:
                         (2) Ein Mapping von zeitbasierten <span>s auf tokenbasierte <span>s,
@@ -415,7 +414,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                          */
                         //System.out.println("Document is: " + TypeConverter.JdomDocument2String(transformedDocument));
                         String result4
-                                = xslt2.transform(TypeConverter.JdomDocument2String(transformedDocument), time_2_token_stylesheet);
+                                = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), time_2_token_stylesheet);
                         /*
                         (3) Das Löschen von "überflüssigen" <when> und <anchor>-Elementen,
                             also solchen, die im PE gebraucht wurden, um Annotationen zu
@@ -427,9 +426,9 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                             https://github.com/EXMARaLDA/exmaralda/blob/master/src/org/exmaralda/tei/xml/removeTimepointsWithoutAbsolute.xsl
                          */
                         String result5
-                                = xslt2.transform(result4, remove_time_stylesheet);
+                                = xslt.transform(result4, remove_time_stylesheet);
                         String result6
-                                = xslt2.transform(result5, spans_2_attributes_stylesheet);
+                                = xslt.transform(result5, spans_2_attributes_stylesheet);
                         transformedDocument = IOUtilities.readDocumentFromString(result6);
 
                     }
