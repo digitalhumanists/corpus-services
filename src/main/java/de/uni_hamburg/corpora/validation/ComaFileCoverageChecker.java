@@ -66,6 +66,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         directorywhitelist.add("curation");
         directorywhitelist.add("resources");
         directorywhitelist.add("metadata");
+        //they are not needed before publication
+        directorywhitelist.add("corpus-utilities");
+        directorywhitelist.add("corpus-materials");
     }
 
     /**
