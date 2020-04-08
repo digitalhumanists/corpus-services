@@ -535,7 +535,7 @@ public class Report {
         String time = simpleTimeFormat.format(new Date());
         String dateTime = date + "T" + time;
         //System.out.println(dateTime);
-        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
         return line;
     }
 
