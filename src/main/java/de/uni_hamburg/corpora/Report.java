@@ -497,6 +497,7 @@ public class Report {
                 : statistics.entrySet()) {
             rv += getFixLine(kfj.getKey());
         }
+        rv = rv + "\n";
         return rv;
     }
 
@@ -525,11 +526,16 @@ public class Report {
             }
         }
         //"2020-02-17T11:41:00Z"
-        String pattern = "yyyy-MM-ddhh:mm:ssZ";
-        SimpleDateFormat simpleDateFormat =new SimpleDateFormat(pattern);
+        //now add the T that is needed for Kibana between date and time
+        String patternDate = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(patternDate);
         String date = simpleDateFormat.format(new Date());
-        System.out.println(date);
-        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + date + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        String patternTime = "hh:mm:ssZ";
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(patternTime);
+        String time = simpleTimeFormat.format(new Date());
+        String dateTime = date + "T" + time;
+        //System.out.println(dateTime);
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
         return line;
     }
 
