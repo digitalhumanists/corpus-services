@@ -74,7 +74,7 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
-                    report.addCorrect(function, cd, "removed AutoSave info");
+                    report.addFix(function, cd, "removed AutoSave info");
                 } catch (IOException ex) {
                     report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (TransformerException ex) {
