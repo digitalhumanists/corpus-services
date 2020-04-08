@@ -54,7 +54,7 @@ public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
             //save it - overwrite exb
             cio.write(cd, cd.getURL());
             //everything worked
-            r.addCorrect(function, cd, "Added mp3 next to wav.");
+            r.addFix(function, cd, "Added mp3 next to wav.");
             
 
         } catch (TransformerConfigurationException ex) {

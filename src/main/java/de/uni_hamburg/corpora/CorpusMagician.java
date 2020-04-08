@@ -107,6 +107,7 @@ public class CorpusMagician {
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
     static boolean iserrorsonly = false;
+    static boolean isfixesjson= false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
@@ -136,6 +137,7 @@ public class CorpusMagician {
             URL url;
             fixing = cmd.hasOption("f");
             iserrorsonly = cmd.hasOption("e");
+            isfixesjson = cmd.hasOption("j");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
@@ -220,6 +222,7 @@ public class CorpusMagician {
             System.out.println("Basedirectory is " + basedirectory);
             System.out.println("BasedirectoryPath is " + basedirectory.getPath());
             URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
+            URL fixJsonlocation = new URL(basedirectory + "curation/fixes.json");
             File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
             if (!curationFolder.exists()) {
                 //the curation folder it not there and needs to be created
@@ -235,6 +238,13 @@ public class CorpusMagician {
                 exmaErrorListString = pp.indent(exmaErrorListString, "event");
                 cio.write(exmaErrorListString, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
+            }
+            if (isfixesjson) {
+            String fixJson = report.getFixJson();
+            if (fixJson != null) {            
+                cio.write(fixJson, fixJsonlocation);
+                System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
+            }
             }
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
@@ -1011,6 +1021,10 @@ public class CorpusMagician {
         Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
         fix.setRequired(false);
         options.addOption(errorsonly);
+        
+        Option fixesjson = new Option("j", "fixesjson", false, "output json file for fixes");
+        fix.setRequired(false);
+        options.addOption(fixesjson);
 
         Option settingsfile = new Option("s", "settingsfile", true, "settings file path");
         settingsfile.setRequired(false);

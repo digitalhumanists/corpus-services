@@ -131,7 +131,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                         String snew = s.replaceAll(replace, replacement);    //replace all replace with replacement
                         //TODO Attributes?
                         e.setText(snew);
-                        stats.addCorrect(function, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                        stats.addFix(function, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                     }
                 }
                 if (containsRegEx) {
