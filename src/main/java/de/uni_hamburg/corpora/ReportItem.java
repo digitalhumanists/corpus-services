@@ -566,9 +566,9 @@ public class ReportItem {
             report += "<td style='white-space: pre'>" +
                 error.getHowto() +
                 "</td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px; white-space: pre;'>(" +
                 error.getLocalisedMessage() +
-                ")</td style='white-space: pre'>\n";
+                ")</td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
             report += "</tr>";
         }
