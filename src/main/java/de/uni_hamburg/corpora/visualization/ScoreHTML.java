@@ -43,9 +43,9 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author Daniel Jettka
- * 
- * This class creates an html visualization in the Score format from an exb. 
- * 
+ *
+ * This class creates an html visualization in the Score format from an exb.
+ *
  */
 public class ScoreHTML extends Visualizer {
 
@@ -59,10 +59,11 @@ public class ScoreHTML extends Visualizer {
     String corpusname = "";
 
     public ScoreHTML() {
-
+        super("ScoreHTML");
     }
 
     public ScoreHTML(String btAsString) {
+        super("ScoreHTML");
         createFromBasicTranscription(btAsString);
     }
 
@@ -165,8 +166,8 @@ public class ScoreHTML extends Visualizer {
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
             xt.setParameter("STYLES", styles);
             xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
-            if(!corpusname.equals("")){
-            xt.setParameter("CORPUS_NAME", corpusname);
+            if (!corpusname.equals("")) {
+                xt.setParameter("CORPUS_NAME", corpusname);
             }
 
             // perform XSLT transformation
@@ -201,7 +202,7 @@ public class ScoreHTML extends Visualizer {
         }
 
         setHTML(result);
-        
+
         return result;
     }
 
@@ -298,15 +299,15 @@ public class ScoreHTML extends Visualizer {
     public URL getTargetURL() {
         return targeturl;
     }
-    
+
     public void setCorpusName(String s) {
         corpusname = s;
     }
 
     @Override
     public String getDescription() {
-               String description = "This class creates an html visualization "
-                       + "in the Score format from an exb. ";
+        String description = "This class creates an html visualization "
+                + "in the Score format from an exb. ";
         return description;
     }
 }

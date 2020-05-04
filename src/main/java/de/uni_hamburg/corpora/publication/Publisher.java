@@ -120,5 +120,7 @@ public abstract class Publisher implements CorpusFunction {
             IsUsableFor.add(cl);
         }
     }
-
+        public String getFunction(){
+        return function;
+    }
 }

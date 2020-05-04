@@ -40,12 +40,13 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 /**
  *
  * @author fsnv625
- * 
- * This class takes an exb as input and converts it into ISO standard TEI format. 
- * 
+ *
+ * This class takes an exb as input and converts it into ISO standard TEI
+ * format.
+ *
  */
-public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
-   
+public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
+
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
 
@@ -72,6 +73,10 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
     Report report;
 
     CorpusIO cio = new CorpusIO();
+
+    public EXB2HIATISOTEI() {
+        super("EXB2HIATISOTEI");
+    }
 
     /*
     * this method takes a CorpusData object, converts it into HIAT ISO TEI and saves it 
@@ -133,7 +138,7 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
         //now the completed document is saved
         //TODO save next to the old cd
         String filename = cd.getURL().getFile();
-        URL url = new URL("file://" + filename.substring(0,filename.lastIndexOf(".")) + ".xml");
+        URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + ".xml");
         System.out.println(url.toString());
         cio.write(teiDoc, url);
         System.out.println("document written.");
@@ -171,7 +176,7 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
         * method a segmented HIAT transcription with nameOfDeepSegmentation =
         * 'SpeakerContribution_Utterance_Word' nameOfFlatSegmentation =
         * 'SpeakerContribution_Event'
-        */
+         */
         Vector uElements = TEIMerge(segmentedTranscription, nameOfDeepSegmentation, nameOfFlatSegmentation, includeFullText);
 
         XPath xp = XPath.newInstance(BODY_NODE);
@@ -182,15 +187,15 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
         Element textNode = (Element) (xp.selectSingleNode(teiDocument));
         textNode.addContent(uElements);
 
-        System.out.println("STEP 2 completed.");        
-        
+        System.out.println("STEP 2 completed.");
+
         Document transformedDocument = null;
         String result2
                 = xslt.transform(TypeConverter.JdomDocument2String(teiDocument), transform_stylesheet);
         transformedDocument = IOUtilities.readDocumentFromString(result2);
         //fix for issue #89
         textNode = (Element) (xp.selectSingleNode(transformedDocument));
-        
+
         System.out.println("STEP 3 completed.");
 
         // now take care of the events from tiers of type 'd'
@@ -222,19 +227,18 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
             }
             textNode.addContent(teiEvent);
         }
-        
+
         //IOUtilities.writeDocumentToLocalFile("C:\\Dokumente und Einstellungen\\thomas\\Desktop\\Intermediate_TEI.xml", transformedDocument);
         Document finalDocument = null;
-        
+
         //TODO for morpheme inel iso tei, sort and clean must be changed!
         //and the generating of the ids
-        
         //Here the annotations are taken care of
         //this is important for the INEL morpheme segmentations
         String result3
                 = xslt.transform(TypeConverter.JdomDocument2String(transformedDocument), sort_and_clean_stylesheet);
         finalDocument = IOUtilities.readDocumentFromString(result3);
-        
+
         return finalDocument;
     }
 
@@ -553,14 +557,14 @@ public class EXB2HIATISOTEI  extends Converter implements CorpusFunction{
             report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
-    } 
+    }
 
     @Override
     public String getDescription() {
         String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
         return description;
     }
-    
+
     public void setLanguage(String lang) {
         language = lang;
     }

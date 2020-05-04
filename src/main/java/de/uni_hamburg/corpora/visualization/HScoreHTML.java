@@ -42,10 +42,11 @@ public class HScoreHTML extends Visualizer {
     String corpusname = "";
 
     public HScoreHTML() {
-
+        super("HScoreHTML");
     }
 
     public HScoreHTML(String btAsString) {
+        super("HScoreHTML");
         try {
             createFromBasicTranscription(btAsString);
         } catch (TransformerException ex) {
@@ -67,26 +68,23 @@ public class HScoreHTML extends Visualizer {
 
         String result = null;
 
+        BasicTranscription bt = basicTranscription;
+        bt.normalize();
+        basicTranscriptionString = bt.toXML();
+        String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
 
-            BasicTranscription bt = basicTranscription;
-            bt.normalize();
-            basicTranscriptionString = bt.toXML();
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
-
-            // perform XSLT transformation
-            XSLTransformer xt = new XSLTransformer();
-            xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
-            xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
-            xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
-            String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
-            if (referencedRecording != null) {
-                System.out.println("not null " + referencedRecording);
-                xt.setParameter("RECORDING_PATH", referencedRecording);
-                xt.setParameter("RECORDING_TYPE", "wav");
-            }
-            result = xt.transform(basicTranscriptionString, xsl);
-
-        
+        // perform XSLT transformation
+        XSLTransformer xt = new XSLTransformer();
+        xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
+        xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
+        xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
+        String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
+        if (referencedRecording != null) {
+            System.out.println("not null " + referencedRecording);
+            xt.setParameter("RECORDING_PATH", referencedRecording);
+            xt.setParameter("RECORDING_TYPE", "wav");
+        }
+        result = xt.transform(basicTranscriptionString, xsl);
 
         setHTML(result);
 
@@ -183,8 +181,8 @@ public class HScoreHTML extends Visualizer {
 
     @Override
     public String getDescription() {
-                String description = "This class creates an html visualization "
-                       + "in the HScore format from an exb. ";
+        String description = "This class creates an html visualization "
+                + "in the HScore format from an exb. ";
         return description;
     }
 
