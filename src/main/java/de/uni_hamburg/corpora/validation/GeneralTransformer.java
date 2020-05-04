@@ -57,7 +57,7 @@ public class GeneralTransformer extends Checker {
             String result
                     = xslt.transform(corpusdata, stylesheet);
             if (result != null) {
-                report.addCorrect(function, cd.getURL().toString(),
+                report.addFix(function, cd,
                         "XSL Transformation was successful");
                 
                 PrettyPrinter pp = new PrettyPrinter();

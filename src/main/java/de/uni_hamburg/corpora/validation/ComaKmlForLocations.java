@@ -38,7 +38,20 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     HashMap<String, String> commLocation; // hash map for holding locations where the communications took place
     HashMap<String, String> lngLat; // hash map for holding coordinates of locations
     Report stats = new Report(); //create a new report
-     
+    
+    
+    final String KEYBIRTHPLACE = "1a Place of birth";
+    final String KEYBIRTHPLACELL = "1c Place of birth (LngLat)";
+    final String KEYREGION = "2 Region";
+    final String KEYCOUNTRY = "3 Country";
+    final String KEYDOMICILE = "7a Domicile";
+    final String KEYDOMICILELL = "7c Domicile (LngLat)";
+    final String KEYOTHER = "8a Other information";
+    final String KEYCOUNTRYBARE = "Country";
+    final String KEYREGIONBARE = "Region";
+    final String KEYSETTLEMENT = "Settlement";
+    final String KEYSETTLEMENTLL = "Settlement (LngLat)";                       
+    
     public ComaKmlForLocations() {
         super("coma-kml-for-locations");
     }
@@ -112,20 +125,20 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                     for (int k = 0; k < keys.getLength(); k++) {
                         Element key = (Element) keys.item(k);
                         switch (key.getAttribute("Name")) {
-                            case "1a Place of birth":
+                            case KEYBIRTHPLACE:
                                 placeOfBirth = key.getTextContent();
                                 break;
-                            case "2 Region":
+                            case KEYREGION:
                                 region = key.getTextContent();
                                 ref = key;
                                 break;
-                            case "3 Country":
+                            case KEYCOUNTRY:
                                 country = key.getTextContent();
                                 break;
-                            case "7a Domicile":
+                            case KEYDOMICILE:
                                 domicileStr = key.getTextContent();
                                 break;
-                            case "8a Other information":
+                            case KEYOTHER:
                                 domRef = key;
                                 break;
                         }
@@ -177,13 +190,13 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             for (int j = 0; j < keys.getLength(); j++) {
                 Element key = (Element) keys.item(j);
                 switch (key.getAttribute("Name")) {
-                    case "Country":
+                    case KEYCOUNTRYBARE:
                         country = key.getTextContent();
                         break;
-                    case "Region":
+                    case KEYREGIONBARE:
                         region = key.getTextContent();
                         break;
-                    case "Settlement":
+                    case KEYSETTLEMENT:
                         settlement = key.getTextContent();
                         break;
                 }
@@ -298,26 +311,26 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                         for (int k = 0; k < keys.getLength(); k++) {
                             Element key = (Element) keys.item(k);
                             switch (key.getAttribute("Name")) {
-                                case "1a Place of birth":
+                                case KEYBIRTHPLACE:
                                     placeOfBirth = key.getTextContent();
                                     break;
-                                case "1c Place of birth (LngLat)":
+                                case KEYBIRTHPLACELL:
                                     coorFlag = true;
                                     break;
-                                case "2 Region":
+                                case KEYREGION:
                                     region = key.getTextContent();
                                     ref = key;
                                     break;
-                                case "3 Country":
+                                case KEYCOUNTRY:
                                     country = key.getTextContent();
                                     break;
-                                case "7a Domicile":
+                                case KEYDOMICILE:
                                     domicileStr = key.getTextContent();
                                     break;
-                                case "7c Domicile (LngLat)":
+                                case KEYDOMICILELL:
                                     domCoor = true;
                                     break;
-                                case "8a Other information":
+                                case KEYOTHER:
                                     domRef = key;
                                     break;
                             }
@@ -331,10 +344,13 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             }
                             if (coorFlag == false && lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
                                 Element coordinatesKey = doc.createElement("Key");
-                                coordinatesKey.setAttribute("Name", "1c Place of birth (LngLat)");
+                                coordinatesKey.setAttribute("Name", KEYBIRTHPLACELL);
                                 coordinatesKey.setTextContent(lngLat.get(placeOfBirth + "-" + languageCode));
                                 Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                 loc.insertBefore(coordinatesKey, ref);
+                                String message = "Added Key " + KEYBIRTHPLACELL + ": " + coordinatesKey + ") from KML (" + kmlFile + ") " + domicileStr + "' "
+                                        + "for speaker '" + sigleString + "'";
+                                stats.addFix(function, cd, message);
                             } else if (!lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
                                 String message = "KML (" + kmlFile + ") does not contain the birthplace '" + placeOfBirth + "' "
                                         + "from speaker '" + sigleString + "'";
@@ -351,10 +367,13 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                             }
                             if (domCoor == false && lngLat.containsKey(domicileStr + "-" + languageCode)) {
                                 Element coordinatesKey = doc.createElement("Key");
-                                coordinatesKey.setAttribute("Name", "7c Domicile (LngLat)");
+                                coordinatesKey.setAttribute("Name", KEYDOMICILELL);
                                 coordinatesKey.setTextContent(lngLat.get(domicileStr + "-" + languageCode));
                                 Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                 loc.insertBefore(coordinatesKey, domRef);
+                                String message = "Added Key " + KEYDOMICILELL + ": " + coordinatesKey + ") from KML (" + kmlFile + ") " + domicileStr + "' "
+                                        + "for speaker '" + sigleString + "'";
+                                stats.addFix(function, cd, message);
                             } else if (!lngLat.containsKey(domicileStr + "-" + languageCode)) {
                                 String message = "KML (" + kmlFile + ") does not contain the domicile '" + domicileStr + "' "
                                         + "from speaker '" + sigleString + "'";
@@ -382,16 +401,16 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 for (int j = 0; j < keys.getLength(); j++) {
                     Element key = (Element) keys.item(j);
                     switch (key.getAttribute("Name")) {
-                        case "Country":
+                        case KEYCOUNTRYBARE:
                             country = key.getTextContent();
                             break;
-                        case "Region":
+                        case KEYREGIONBARE:
                             region = key.getTextContent();
                             break;
-                        case "Settlement":
+                        case KEYSETTLEMENT:
                             settlement = key.getTextContent();
                             break;
-                        case "Settlement (LngLat)":
+                        case KEYSETTLEMENTLL:
                             coorFlag = true;
                             break;
                     }
@@ -405,10 +424,13 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                     }
                     if (coorFlag == false && lngLat.containsKey(settlement + "-" + languageCode)) {
                         Element coordinatesKey = doc.createElement("Key");
-                        coordinatesKey.setAttribute("Name", "Settlement (LngLat)");
+                        coordinatesKey.setAttribute("Name", KEYSETTLEMENTLL);
                         coordinatesKey.setTextContent(lngLat.get(settlement + "-" + languageCode));
                         Element loc = (Element) location.getElementsByTagName("Description").item(0);
                         loc.appendChild(coordinatesKey);
+                        String message = "Added Key " + KEYSETTLEMENTLL + ": " + coordinatesKey + ") from KML (" + kmlFile + ") "
+                                        + "for communication '" + communicationName + "'";
+                                stats.addFix(function, cd, message);
                     } else if (!lngLat.containsKey(settlement + "-" + languageCode)) {
                         String message = "KML (" + kmlFile + ") does not contain the settlement '" + settlement + "' "
                                 + "from communication '" + communicationName + "'";

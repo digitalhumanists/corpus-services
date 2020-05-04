@@ -85,7 +85,7 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
                     CorpusIO cio = new CorpusIO();
                     cio.write(prettyCorpusData, cd.getURL());
                     cd.updateUnformattedString(prettyCorpusData);
-                    report.addCorrect(function, cd, "CorpusData was pretty printed and saved.");
+                    report.addFix(function, cd, "CorpusData was pretty printed and saved.");
 
                 } else {
                     //do nothing because it is pretty printed already

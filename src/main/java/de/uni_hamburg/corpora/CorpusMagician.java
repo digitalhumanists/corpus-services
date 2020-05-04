@@ -36,7 +36,6 @@ import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
-import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -48,6 +47,7 @@ import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
+import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmenter;
 import de.uni_hamburg.corpora.validation.LanguageToolChecker;
@@ -107,6 +107,7 @@ public class CorpusMagician {
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
     static boolean iserrorsonly = false;
+    static boolean isfixesjson= false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
@@ -127,6 +128,7 @@ public class CorpusMagician {
     //TODO we need a webservice for this functionality too
     //in the future (for repo and external users)
     public static void main(String[] args) {
+
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url    
         System.out.println("CorpusMagician is now doing its magic.");
@@ -137,13 +139,14 @@ public class CorpusMagician {
             //if it is a folder or another corpus file we don't
             String urlstring = cmd.getOptionValue("input");
             URL url;
+            fixing = cmd.hasOption("f");
+            iserrorsonly = cmd.hasOption("e");
+            isfixesjson = cmd.hasOption("j");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
                 url = Paths.get(urlstring).toUri().toURL();
             }
-            fixing = cmd.hasOption("f");
-            iserrorsonly = cmd.hasOption("e");
             CorpusMagician corpuma = new CorpusMagician();
             //now the place where Report should end up
             //also allow normal filepaths and convert them
@@ -226,6 +229,7 @@ public class CorpusMagician {
             System.out.println("Basedirectory is " + basedirectory);
             System.out.println("BasedirectoryPath is " + basedirectory.getPath());
             URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
+            URL fixJsonlocation = new URL(basedirectory + "curation/fixes.json");
             File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
             if (!curationFolder.exists()) {
                 //the curation folder it not there and needs to be created
@@ -241,6 +245,13 @@ public class CorpusMagician {
                 exmaErrorListString = pp.indent(exmaErrorListString, "event");
                 cio.write(exmaErrorListString, errorlistlocation);
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
+            }
+            if (isfixesjson) {
+            String fixJson = report.getFixJson();
+            if (fixJson != null) {            
+                cio.write(fixJson, fixJsonlocation);
+                System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
+            }
             }
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
@@ -834,7 +845,7 @@ public class CorpusMagician {
             if (fixing) {
                 report.merge(runCorpusFunction(corpus, function, true));
             } else {
-                 report.merge(runCorpusFunction(corpus, function));
+                report.merge(runCorpusFunction(corpus, function));
             }
         }
         return report;
@@ -1017,11 +1028,19 @@ public class CorpusMagician {
         Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
         fix.setRequired(false);
         options.addOption(errorsonly);
+        
+        Option fixesjson = new Option("j", "fixesjson", false, "output json file for fixes");
+        fix.setRequired(false);
+        options.addOption(fixesjson);
 
         Option settingsfile = new Option("s", "settingsfile", true, "settings file path");
         settingsfile.setRequired(false);
         settingsfile.setArgName("FILE PATH");
         options.addOption(settingsfile);
+
+ 	Option verbose = new Option("v", "verbose", false, "output verbose help");
+        fix.setRequired(false);
+        options.addOption(verbose);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -1029,7 +1048,11 @@ public class CorpusMagician {
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
         String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
-
+        String footerverbose = "\nthe available functions are:\n";
+        for(CorpusFunction cf: corpusFunctionStrings2Classes()){
+            cf.getDescription();
+        }
+        footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
@@ -1041,6 +1064,11 @@ public class CorpusMagician {
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
             formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+            System.exit(1);
+        }
+        if (cmd.hasOption("v")) {
+            // automatically generate the help statement
+            formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
         if (cmd.hasOption("p")) {
@@ -1089,6 +1117,7 @@ public class CorpusMagician {
          System.out.println(inputFilePath);
          System.out.println(outputFilePath);
          */
+
     }
 
 }

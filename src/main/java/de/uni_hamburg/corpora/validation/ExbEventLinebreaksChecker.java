@@ -130,7 +130,7 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                             String snew = s.replaceAll("[\r\n]", "");    //replace all replace with replacement
                             //TODO Attributes?
                             e.setText(snew);
-                            stats.addCorrect(function, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                            stats.addFix(function, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                         }
                     }
                     

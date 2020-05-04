@@ -59,7 +59,7 @@ public class ExbNormalize extends Checker implements CorpusFunction {
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
             if (cd != null) {
-                report.addCorrect(function, cd, "normalized the file");
+                report.addFix(function, cd, "normalized the file");
             } else {
                 report.addCritical(function, cd, "normalizing was not possible");
             }
