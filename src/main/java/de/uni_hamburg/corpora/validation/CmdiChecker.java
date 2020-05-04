@@ -39,7 +39,7 @@ public class CmdiChecker extends Checker implements CorpusFunction {
     String cmdiLoc = "";
 
     public CmdiChecker() {
-        super("cmdi-checker");
+        super("CmdiChecker");
     }
 
     /**

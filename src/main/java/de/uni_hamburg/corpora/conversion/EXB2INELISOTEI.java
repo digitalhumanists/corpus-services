@@ -74,6 +74,9 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
 
     CorpusIO cio = new CorpusIO();
 
+        public EXB2INELISOTEI() {
+        super("EXB2INELISOTEI");
+    }
 
     /*
     * this method takes a CorpusData object, converts it into INBEL Morpheme ISO TEI and saves it 
@@ -648,14 +651,11 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         return IsUsableFor;
     }
 
-    @Override
-    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
+        return description;
     }
 
 }
