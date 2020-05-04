@@ -51,7 +51,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     //TODO - how to get the language for INEL?
     String language = "en";
     
-    final String ISO_CONV = "inel iso tei";
+    final String function = "inel iso tei";
 
     //locations of the used xsls
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
@@ -87,8 +87,8 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     /*
     * this method takes a CorpusData object, the info if the fulltext is used, and an individual String where the morpheme segmentation
     * is located as xpath,
-    * converts it into ISO TEI and saves it TODO where
-    * and gives back a report if it worked
+    * converts it into ISO TEI and saves it next to cd with _tei.xml
+    * and gives back a report if it worked or with errors
      */
     public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) {
@@ -134,31 +134,31 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
                 setDocLanguage(teiDoc, language);
                 //now the completed document is saved next to cd
                 String filename = cd.getURL().getFile();
-                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + ".xml");
+                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
                 cio.write(teiDoc, url);
 
                 System.out.println("document written.");
-                report.addCorrect(ISO_CONV, cd, "ISO TEI conversion of file was successful");
+                report.addCorrect(function, cd, "ISO TEI conversion of file was successful");
             } else {
-                report.addCritical(ISO_CONV, cd, "ISO TEI conversion of file was not possible because of unknown error");
+                report.addCritical(function, cd, "ISO TEI conversion of file was not possible because of unknown error");
             }
 
         } catch (SAXException ex) {
-            report.addException(ex, ISO_CONV, cd, "Unknown exception error");
+            report.addException(ex, function, cd, "Unknown exception error");
         } catch (FSMException ex) {
-            report.addException(ex, ISO_CONV, cd, "Unknown finite state machine error");
+            report.addException(ex, function, cd, "Unknown finite state machine error");
         } catch (MalformedURLException ex) {
-            report.addException(ex, ISO_CONV, cd, "Unknown file URL reading error");
+            report.addException(ex, function, cd, "Unknown file URL reading error");
         } catch (JDOMException ex) {
-            report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
+            report.addException(ex, function, cd, "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ex, ISO_CONV, cd, "Unknown file reading error");
+            report.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            report.addException(ex, ISO_CONV, cd, "XSL transformer error");
+            report.addException(ex, function, cd, "XSL transformer error");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, ISO_CONV, cd, "Parser error");
+            report.addException(ex, function, cd, "Parser error");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, ISO_CONV, cd, "XPath error");
+            report.addException(ex, function, cd, "XPath error");
         }
         return report;
     }

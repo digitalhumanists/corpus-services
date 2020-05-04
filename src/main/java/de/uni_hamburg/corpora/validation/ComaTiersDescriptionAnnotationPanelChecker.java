@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,6 +33,10 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
     ArrayList<String> annotations; // list for holding annotations of annotation spec file
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
+
+    public ComaTiersDescriptionAnnotationPanelChecker() {
+        super("ComaTiersDescriptionAnnotationPanelChecker");
+    }
 
     /**
      * Add annotations to the corresponding array from coma and annotation
@@ -115,17 +117,17 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
                 stats = exceptionalCheck(cd);
             }
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -179,7 +181,7 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaTiersDescriptionAnnotationPanelChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

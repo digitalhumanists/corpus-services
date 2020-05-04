@@ -21,7 +21,10 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
     String comaFile = "";
     boolean apostrophe = false;
-    String cac = "ComaApostropheChecker";
+
+    public ComaApostropheChecker() {
+        super("ComaApostropheChecker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -33,17 +36,17 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cac, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, cac, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, cac, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, cac, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, cac, cd, "Unknown transformer error");
+            stats.addException(ex, function, cd, "Unknown transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, cac, cd, "Unknown Xpath error");
+            stats.addException(ex, function, cd, "Unknown Xpath error");
         }
         return stats;
     }
@@ -60,9 +63,9 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         if (comaFile.contains("'")) {          // if coma file contains an apostrophe ' then issue warning
             apostrophe = true;
             System.err.println("Coma file is containing apostrophe(s) ’");
-            stats.addWarning(cac, cd, "Coma file is containing apostrophe(s) ’");
+            stats.addWarning(function, cd, "Coma file is containing apostrophe(s) ’");
         } else {
-            stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");
+            stats.addCorrect(function, cd, "Coma file does not contain apostrophes");
         }
         return stats; // return the report with warnings
     }
@@ -83,21 +86,21 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
                 CorpusIO cio = new CorpusIO();
                 cd.updateUnformattedString(comaFile);
                 cio.write(cd, cd.getURL());    // write back to coma file with allowed apostrophes ´
-                stats.addCorrect(cac, cd, "Corrected the apostrophes"); // fix report
+                stats.addFix(function, cd, "Corrected the apostrophes"); // fix report
             } else {
-                stats.addCorrect(cac, cd, "Coma file does not contain apostrophes");
+                stats.addCorrect(function, cd, "Coma file does not contain apostrophes");
             }
 
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cac, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, cac, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, cac, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, cac, cd, "Unknown transformer error");
+            stats.addException(ex, function, cd, "Unknown transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, cac, cd, "Unknown Xpath error");
+            stats.addException(ex, function, cd, "Unknown Xpath error");
         }
         return stats;
     }

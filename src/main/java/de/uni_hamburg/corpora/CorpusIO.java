@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import static java.lang.System.out;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
@@ -21,6 +22,7 @@ import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.output.XMLOutputter;
@@ -43,6 +45,7 @@ public class CorpusIO {
     Collection<CorpusData> cdc = new ArrayList();
     Collection<URL> recursed = new ArrayList();
     Collection<URL> alldata = new ArrayList();
+    URL basedirectory;
 
     public String CorpusData2String(CorpusData cd) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return cd.toSaveableString();
@@ -107,25 +110,25 @@ public class CorpusIO {
     }
 
     //read a single file as a corpus data object from an url
-    public CorpusData readFileURL(URL url) {
+    public CorpusData readFileURL(URL url) throws SAXException, JexmaraldaException {
         if (url.getPath().endsWith("exb")) {
             BasicTranscriptionData bt = new BasicTranscriptionData(url);
             //bt.loadFile(f);
             return bt;
-        } else if (url.getPath().endsWith("coma")) {
+        } else if (url.getPath().toLowerCase().endsWith("coma")) {
             ComaData cm = new ComaData(url);
             return cm;
-        } else if (url.getPath().endsWith("xml") && ((url.getPath().contains("Annotation") || url.getPath().contains("annotation")))) {
+        } else if (url.getPath().toLowerCase().endsWith("xml") && ((url.getPath().toLowerCase().contains("Annotation")))) {
             AnnotationSpecification as = new AnnotationSpecification(url);
             return as;
-        } else if ((url.getPath().endsWith("xml") && url.getPath().contains("cmdi")) || url.getPath().endsWith("cmdi")) {
+        } else if ((url.getPath().toLowerCase().endsWith("xml") && url.getPath().toLowerCase().contains("cmdi")) || url.getPath().toLowerCase().endsWith("cmdi")) {
             CmdiData cmdi = new CmdiData(url);
             return cmdi;
-        } else if (url.getPath().endsWith("xml")) {
+        } else if (url.getPath().toLowerCase().endsWith("xml")) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
             return usd;
-        } else if (url.getPath().endsWith("exs")) {
-            UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
+        } else if (url.getPath().toLowerCase().endsWith("exs")) {
+            SegmentedTranscriptionData usd = new SegmentedTranscriptionData(url);
             return usd;
         } else {
             System.out.println(url + " is not xml CorpusData");
@@ -135,7 +138,7 @@ public class CorpusIO {
     }
 
     //read all the files as corpus data objects from a directory url
-    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException {
+    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException, SAXException, JexmaraldaException {
         alldata = URLtoList(url);
         for (URL readurl : alldata) {
             CorpusData cdread = readFileURL(readurl);
@@ -157,7 +160,7 @@ public class CorpusIO {
         String xslstring = new String(Files.readAllBytes(Paths.get(new URL(path2resource).toURI())));
         System.out.println(path2resource);
         if (xslstring == null) {
-            throw new IOException("Stylesheet not found!");
+            throw new IOException("File not found!");
         }
         return xslstring;
     }
@@ -166,6 +169,8 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (isDirectory(url)) {
+                //if it's a directory, the directory is the basedirectory
+                basedirectory = url;
                 //we need to iterate    
                 //and add everything to the list
                 Path path = Paths.get(url.toURI());
@@ -178,6 +183,10 @@ public class CorpusIO {
                 return alldata;
             } //if the url points to a file
             else {
+                //if it's a file, the directory of the file is the basedirectory
+                URI uri = url.toURI();
+                URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
+                basedirectory = parentURI.toURL();
                 //we need to add just this file
                 alldata.add(url);
                 return alldata;
@@ -216,6 +225,10 @@ public class CorpusIO {
 
     public void zipThings() {
 
+    }
+    
+    public URL getBaseDirectory() {
+    return basedirectory;
     }
 
     void listFiles(Path path) throws IOException {

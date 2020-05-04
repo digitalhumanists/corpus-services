@@ -49,12 +49,12 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
     int comacounter = 0;
 
-    final String COMA_FILECOVERAGE = "coma-filecoverage";
     final List<String> whitelist;
     final List<String> fileendingwhitelist;
     final List<String> directorywhitelist;
 
     public ComaFileCoverageChecker() {
+        super("coma-filecoverage");
         // these are acceptable
         whitelist = new ArrayList<String>();
         whitelist.add(".git");
@@ -66,6 +66,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         directorywhitelist.add("curation");
         directorywhitelist.add("resources");
         directorywhitelist.add("metadata");
+        //they are not needed before publication
+        directorywhitelist.add("corpus-utilities");
+        directorywhitelist.add("corpus-materials");
     }
 
     /**
@@ -78,11 +81,11 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         try {
             stats = oldExceptionalCheck(s);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, COMA_FILECOVERAGE, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, COMA_FILECOVERAGE, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, COMA_FILECOVERAGE, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -111,7 +114,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     } else if (f.getName().endsWith(".coma")) {
                         comacounter++;
                         if (comacounter > 1) {
-                            stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + f.getName());
+                            stats.addCritical(function, cd, "There is more than one coma file in your corpus " + f.getName());
                         }
                         System.out.println(comacounter);
                         continue;
@@ -142,7 +145,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     } else if (f.getName().endsWith(".coma")) {
                         comacounter++;
                         if (comacounter > 1) {
-                            stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + f.getName());
+                            stats.addCritical(function, cd, "There is more than one coma file in your corpus " + f.getName());
                         }
                         System.out.println(comacounter);
                         continue;
@@ -173,7 +176,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     } else if (f.getName().endsWith(".coma")) {
                         comacounter++;
                         if (comacounter > 1) {
-                            stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + f.getName());
+                            stats.addCritical(function, cd, "There is more than one coma file in your corpus " + f.getName());
                         }
                         System.out.println(comacounter);
                         continue;
@@ -239,9 +242,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         comaPaths.addAll(RelPaths);
         for (String s : allFilesPaths) {
             if (comaPaths.contains(s)) {
-                stats.addCorrect(COMA_FILECOVERAGE, cd, "File is both in coma and filesystem" + s);
+                stats.addCorrect(function, cd, "File is both in coma and filesystem" + s);
             } else {
-                stats.addCritical(COMA_FILECOVERAGE, cd, "File on filesystem is not explained in coma" + s);
+                stats.addCritical(function, cd, "File on filesystem is not explained in coma" + s);
             }
         }
         return stats;
@@ -298,13 +301,13 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, COMA_FILECOVERAGE, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, COMA_FILECOVERAGE, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, COMA_FILECOVERAGE, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, COMA_FILECOVERAGE, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -355,7 +358,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                             } else if (a.getName().endsWith(".coma")) {
                                 comacounter++;
                                 if (comacounter > 1) {
-                                    stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + a.getName());
+                                    stats.addCritical(function, cd, "There is more than one coma file in your corpus " + a.getName());
                                 }
                                 System.out.println(comacounter);
                                 continue;
@@ -386,7 +389,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                             } else if (b.getName().endsWith(".coma")) {
                                 comacounter++;
                                 if (comacounter > 1) {
-                                    stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + b.getName());
+                                    stats.addCritical(function, cd, "There is more than one coma file in your corpus " + b.getName());
                                 }
                                 System.out.println(comacounter);
                                 continue;
@@ -417,7 +420,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                             } else if (c.getName().endsWith(".coma")) {
                                 comacounter++;
                                 if (comacounter > 1) {
-                                    stats.addCritical(COMA_FILECOVERAGE, cd, "There is more than one coma file in your corpus " + c.getName());
+                                    stats.addCritical(function, cd, "There is more than one coma file in your corpus " + c.getName());
                                 }
                                 System.out.println(comacounter);
                                 continue;
@@ -483,9 +486,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                 comaPaths.addAll(RelPaths);
                 for (String st : allFilesPaths) {
                     if (comaPaths.contains(st)) {
-                        stats.addCorrect(COMA_FILECOVERAGE, cd, "File both in coma and filesystem: " + st);
+                        stats.addCorrect(function, cd, "File both in coma and filesystem: " + st);
                     } else {
-                        stats.addCritical(COMA_FILECOVERAGE, cd, "File on filesystem is not explained in coma: " + st);
+                        stats.addCritical(function, cd, "File on filesystem is not explained in coma: " + st);
                     }
                 }
             } catch (FileNotFoundException fnfe) {
@@ -502,7 +505,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_FILECOVERAGE, cd,
+        report.addCritical(function, cd,
                 "File names which do not comply with conventions cannot be fixed automatically");
         return report;
     }

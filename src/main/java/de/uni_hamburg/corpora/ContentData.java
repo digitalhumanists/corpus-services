@@ -10,5 +10,7 @@ package de.uni_hamburg.corpora;
  * @author fsnv625
  */
 interface ContentData extends CorpusData{
-    
+   // getReferencedRecordings(); 
+    // get Speakers
+    //get Tiers
 }

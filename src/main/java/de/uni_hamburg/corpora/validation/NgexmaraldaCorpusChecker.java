@@ -48,6 +48,10 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     private String comadirname;
     final String NSLC = "nslc";
 
+    public NgexmaraldaCorpusChecker() {
+        super("NgexmaraldaCorpusChecker");
+    }
+
     public Report check() {
         Report stats = new Report();
         try {
