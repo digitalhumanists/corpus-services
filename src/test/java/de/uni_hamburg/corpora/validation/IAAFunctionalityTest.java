@@ -50,7 +50,7 @@ public class IAAFunctionalityTest {
     public void testCheck() throws Exception {
         System.out.println("check");
         //CorpusData cd = "src/test/java/de/uni_hamburg/corpora/resources/example";
-        String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
+        String corpusFolder = "src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
         IAAFunctionality instance = new IAAFunctionality();

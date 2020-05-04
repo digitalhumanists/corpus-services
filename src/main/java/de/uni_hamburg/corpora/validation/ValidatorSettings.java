@@ -11,34 +11,11 @@ package de.uni_hamburg.corpora.validation;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.net.URL;
-import java.util.Hashtable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.ErrorHandler;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
@@ -46,9 +23,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
-import org.jdom.JDOMException;
 import org.ini4j.Ini;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 
 /**

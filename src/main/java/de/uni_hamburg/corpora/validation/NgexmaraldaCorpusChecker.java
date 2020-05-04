@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
@@ -49,6 +47,10 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     private File comafile;
     private String comadirname;
     final String NSLC = "nslc";
+
+    public NgexmaraldaCorpusChecker() {
+        super("NgexmaraldaCorpusChecker");
+    }
 
     public Report check() {
         Report stats = new Report();
@@ -435,7 +437,8 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 + tierID);
                         exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
                                 + tierID);
-                    }
+
+                    }   
                     if (tierTypes.containsKey(category)) {
                         if (!tierTypes.get(category).equals(tierType)) {
                             stats.addCritical(NSLC,
@@ -444,6 +447,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                     + " description tier");
                             exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
                                     + tierID);
+
                         } else {
                             stats.addCorrect(NSLC,
                                     "Correct tier type for: " + tierID);
@@ -456,6 +460,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
+
                     }
                     if (!category.equals(tierID)) {
                         stats.addCritical(NSLC,
@@ -463,6 +468,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 + "but " + tierID + " is not " + category);
                         exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
+
                     }
                 } // for each tier
                 for (Map.Entry<String, String> entry : obligatoryTiers.entrySet()) {
@@ -697,5 +703,16 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
             Logger.getLogger(NgexmaraldaCorpusChecker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class is the check procedure for the Nganasan"
+                + " Corpus and checks if the file names in the corpus comply with"
+                + " the coma file.";
+        return description;
     }
 }

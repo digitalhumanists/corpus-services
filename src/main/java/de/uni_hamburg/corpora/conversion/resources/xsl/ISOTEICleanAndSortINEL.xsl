@@ -289,7 +289,7 @@
                     <xsl:for-each select="current-group()">
                         <xsl:choose>
                             <!-- here needs to be every tier that has word (or smaller) based annotations -->
-                            <xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc', 'hn', 'ps', 'SeR', 'SyF', 'IST', 'BOR', 'BOR-Phon', 'BOR-Morph', 'CS', 'SpeakerContribution_Event')">
+                            <xsl:when test="@level = ('mb', 'mp', 'ge', 'gg', 'gr', 'mc', 'hn', 'ps', 'SeR', 'SyF', 'IST', 'Top', 'Foc', 'BOR', 'BOR-Phon', 'BOR-Morph', 'CS', 'SpeakerContribution_Event')">
                                 <xsl:element name="span">
                                     <!-- this needs to be changed for INEL -->
                                     <xsl:attribute name="from">
@@ -546,7 +546,10 @@
         <xsl:variable name="morpheme-annotation-end" select="./@end"/>
         <xsl:variable name="annotation-name" select="./@level"/>
         <xsl:variable name="annValue" select="./@value"/>
-        <xsl:variable name="mbValue" select="$morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
+        <!-- we need to differentiate between speakers here too!  -->
+        <xsl:variable name="speaker" select="./../../@who"/>
+        <xsl:variable name="mbValue" select="//*:u[@who = $speaker]/*:annotations/*:annotation[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>
+        <!-- <xsl:variable name="mbValue" select="//*:annotations/*:annotation[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/@value"/>-->
         <!-- check if the splitting creates the same number of tokens in each tier/annotation -->
         <xsl:if test="count(tokenize($annValue, '[-=]')) != count(tokenize($mbValue, '[-=]'))">
             <xsl:message terminate="yes">
@@ -559,8 +562,10 @@
         <!-- !!! here we split the morphemes and correspond the matching annotations -->
         <xsl:variable name="position">
             <!-- need to use the correct mb node here -->
+            <!-- some problem was found here, the reference to morph ids is not correct -->
+            <!-- <xsl:value-of select="(count(preceding::annotation[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"/> -->
             <xsl:value-of
-                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '[-=]')) + 1)"
+                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding::annotation[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"
             />
         </xsl:variable>
         <xsl:variable name="tokenizedann" select="tokenize($annValue, '[-=]')"/>

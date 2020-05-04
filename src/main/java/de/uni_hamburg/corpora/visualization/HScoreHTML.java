@@ -10,9 +10,6 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.PrintWriter;
@@ -21,18 +18,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
 import org.xml.sax.SAXException;
 
 /**
@@ -54,7 +46,11 @@ public class HScoreHTML extends Visualizer {
     }
 
     public HScoreHTML(String btAsString) {
-        createFromBasicTranscription(btAsString);
+        try {
+            createFromBasicTranscription(btAsString);
+        } catch (TransformerException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -64,14 +60,14 @@ public class HScoreHTML extends Visualizer {
      * @param btAsString the EXB file represented in a String object
      * @return
      */
-    public String createFromBasicTranscription(String btAsString) {
+    public String createFromBasicTranscription(String btAsString) throws TransformerConfigurationException, TransformerException {
 
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(btAsString);
 
         String result = null;
 
-        try {
+
             BasicTranscription bt = basicTranscription;
             bt.normalize();
             basicTranscriptionString = bt.toXML();
@@ -90,9 +86,7 @@ public class HScoreHTML extends Visualizer {
             }
             result = xt.transform(basicTranscriptionString, xsl);
 
-        } catch (TransformerException ex) {
-            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
         setHTML(result);
 
@@ -161,7 +155,6 @@ public class HScoreHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         try {
             if (args.length == 0) {
@@ -186,6 +179,13 @@ public class HScoreHTML extends Visualizer {
             stats.addException(SERVICE_NAME, ioe, "input output exception");
         }
         return stats;
+    }
+
+    @Override
+    public String getDescription() {
+                String description = "This class creates an html visualization "
+                       + "in the HScore format from an exb. ";
+        return description;
     }
 
 }

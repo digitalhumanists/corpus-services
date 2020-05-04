@@ -8,8 +8,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,6 +33,10 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     ArrayList<String> allTagStrings;
     String tierLoc = "";
 
+    public ExbAnnotationPanelCheck() {
+        super("ExbAnnotationPanelCheck");
+    }
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -45,15 +47,15 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -135,9 +137,19 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbAnnotationPanelCheck.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks whether the annotations in exb "
+                + "files comply with the annotation specification panel. ";
+        return description;
     }
 
 }

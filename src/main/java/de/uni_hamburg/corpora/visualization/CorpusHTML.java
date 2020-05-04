@@ -96,7 +96,6 @@ public class CorpusHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -107,6 +106,14 @@ public class CorpusHTML extends Visualizer {
 
     public URL getTargetURL() throws MalformedURLException {
         return targeturl;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class creates an html overview of the corpus "
+                + "needed for the ingest into the repository. ";
+        return description;
+
     }
 
 }

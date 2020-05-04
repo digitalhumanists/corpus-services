@@ -12,8 +12,6 @@ import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -25,17 +23,23 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class normalises the basic transcription data using the EXMARaLDA function and fixes white spaces if set by a parameter.
+ * 
  */
 public class ExbNormalize extends Checker implements CorpusFunction {
 
     Document doc = null;
     BasicTranscriptionData btd = null;
     Boolean fixWhiteSpaces = false;
-    String ne = "NormalizeExb";
+
+    public ExbNormalize() {
+        super("NormalizeExb");
+    }
 
     @Override
     public Report check(CorpusData cd) {
-        report.addCritical(ne, cd.getURL().getFile(), "Checking option is not available");
+        report.addCritical(function, cd, "Checking option is not available");
         return report;
     }
 
@@ -55,22 +59,22 @@ public class ExbNormalize extends Checker implements CorpusFunction {
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
             if (cd != null) {
-                report.addCorrect(ne, cd, "normalized the file");
+                report.addFix(function, cd, "normalized the file");
             } else {
-                report.addCritical(ne, cd, "normalizing was not possible");
+                report.addCritical(function, cd, "normalizing was not possible");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, ne, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (IOException ex) {
-            report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         } catch (TransformerException ex) {
-           report.addException(ex, ne, cd, "unknown xml exception");
+           report.addException(ex, function, cd, "unknown xml exception");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, ne, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (SAXException ex) {
-            report.addException(ex, ne, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, ne, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         }
         return report;
     }
@@ -92,6 +96,16 @@ public class ExbNormalize extends Checker implements CorpusFunction {
         if (s.equals("true") || s.equals("wahr") || s.equals("ja") || s.equals("yes")) {
             fixWhiteSpaces = true;
         }
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class normalises the basic transcription data using "
+                + "the EXMARaLDA function and fixes white spaces if set by a parameter. ";
+        return description;
     }
 
 }

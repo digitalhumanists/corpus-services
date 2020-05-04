@@ -10,7 +10,6 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
@@ -19,8 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -38,13 +35,14 @@ import org.xml.sax.SAXException;
 
 
 /**
- * A class that can load coma data and check for potential problems with HZSK
- * repository depositing.
+ * This class validates the coma file with the respective XML schema.
+ * 
  */
-public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaXsdChecker extends Checker implements CorpusFunction {
 
-    ValidatorSettings settings;
-    final String COMA_XSD_CHECKER = "coma-xsd";
+    public ComaXsdChecker() {
+        super("coma-xsd");
+    }
 
     /**
      * Validate a coma file with XML schema from internet.
@@ -57,9 +55,9 @@ public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFu
         try {
             stats = exceptionalCheck(f);
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error.");
+            stats.addException(saxe, function, cd, "Unknown parsing error.");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Unknown reading error.");
+            stats.addException(ioe, function, cd, "Unknown reading error.");
         }
         return stats;
     }
@@ -116,19 +114,19 @@ public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFu
         try {
             stats = exceptionalCheck(cd);
         } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         }
         return stats;
     }
@@ -156,7 +154,7 @@ public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFu
     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_XSD_CHECKER,
+        report.addCritical(function,
                 "No fix is applicable for this feature.");
         return report;
     }
@@ -171,9 +169,18 @@ public class ComaXsdChecker extends Checker implements CommandLineable, CorpusFu
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaXsdChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class validates the coma file with the respective XML schema. ";
+        return description;
     }
 
 }

@@ -11,13 +11,13 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -30,6 +30,7 @@ import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.XMLOutputter;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -133,7 +134,6 @@ public class TypeConverter {
             SAXBuilder builder = new SAXBuilder();
             stream = new ByteArrayInputStream(stringRespresentingDocument.getBytes("UTF-8"));
             newDocument = builder.build(stream);
-            return newDocument;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(TypeConverter.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JDOMException ex) {
@@ -203,7 +203,30 @@ public class TypeConverter {
         return writer.toString();
     }
     
-    
+        /**
+     * Converts a org.jdom.Document object into a String object.
+     *
+     * @param s org.jdom.Document object that shall be converted to String
+     * object
+     * @return String object that was created from org.jdom.Document object
+     */
+    public static org.w3c.dom.Document String2W3cDocument(String stringRespresentingDocument) {
+        org.w3c.dom.Document w3cDoc = null;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            w3cDoc = builder.parse(new InputSource(new StringReader(stringRespresentingDocument)));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(TypeConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TypeConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(TypeConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(TypeConverter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return w3cDoc;
+    }
     
     
 

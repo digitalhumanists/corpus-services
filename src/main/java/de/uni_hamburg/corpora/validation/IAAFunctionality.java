@@ -11,8 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -44,6 +42,10 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     HashMap<String, String> subCategoryToCategory; // hash map for holding parent categories for sub categories
     private int noOfAnnotations = 0;     // total no of annotations
     private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
+
+    public IAAFunctionality() {
+        super("iaa-functionality");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -222,8 +224,24 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IAAFunctionality.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class calculates IAA according to Krippendorff's"
+                + " alpha for exb files; only cares for annotation labels, assuming"
+                + " that transcription structure and text remains the same. Checks"
+                + " and puts them in the error lists if different versions of the"
+                + " same file have different annotations for the same event/token."
+                + " Moreover, this functionality includes the inter-annotator agreement:"
+                + " percentage of overlapping choices between the annotators.";
+        return description;
+    }
+
 }

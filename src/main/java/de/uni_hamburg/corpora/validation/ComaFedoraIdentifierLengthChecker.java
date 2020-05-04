@@ -11,20 +11,13 @@ package de.uni_hamburg.corpora.validation;
 
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -39,10 +32,8 @@ import javax.xml.xpath.XPathExpressionException;
  * A class that can load coma data and check for potential problems with HZSK
  * repository depositing.
  */
-public class ComaFedoraIdentifierLengthChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaFedoraIdentifierLengthChecker extends Checker implements CorpusFunction {
 
-    ValidatorSettings settings;
-    final String COMA_PID_LENGTH = "coma-pid-length";
     String comaLoc = "";
 
     /**
@@ -52,6 +43,10 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Comman
      */
     
 
+    public ComaFedoraIdentifierLengthChecker() {
+        super("coma-pid-length");
+    }
+    
     public static void main(String[] args) {
         ComaFedoraIdentifierLengthChecker checker = new ComaFedoraIdentifierLengthChecker();
         Report stats = checker.doMain(args);
@@ -70,15 +65,15 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Comman
         try {
             stats = exceptionalCheck(cd);
         } catch(ParserConfigurationException pce) {
-            stats.addException(pce,  COMA_PID_LENGTH, cd, "Unknown parsing error");
+            stats.addException(pce,  function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, COMA_PID_LENGTH, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, COMA_PID_LENGTH, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, COMA_PID_LENGTH, cd, "Unknown XPath error");
+            stats.addException(ex, function, cd, "Unknown XPath error");
         } catch (TransformerException ex) {
-            stats.addException(ex, COMA_PID_LENGTH, cd, "Unknown Transformer error");
+            stats.addException(ex, function, cd, "Unknown Transformer error");
         }
         return stats;
     }
@@ -106,23 +101,23 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Comman
             }
         }
         if (corpusPrefix.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH, cd,
+            stats.addWarning(function, cd,
                 "Missing Key[@name='HZSK:corpusprefix']. " +
                 "PID length cannot be estimated accurately. " +
                 "Add that key in coma.");
             corpusPrefix = "muster";
         } else {
-            stats.addCorrect(COMA_PID_LENGTH,cd,
+            stats.addCorrect(function,cd,
                 "HZSK corpus prefix OK: " + corpusPrefix);
         }
         if (corpusVersion.equals("")) {
-            stats.addWarning(COMA_PID_LENGTH, cd,
+            stats.addWarning(function, cd,
                 "Missing Key[@name='HZSK:corpusprefix']. " +
                 "PID length cannot be estimated accurately. " +
                 "Add that key in coma.");
             corpusVersion = "0.0";
         } else {
-            stats.addCorrect(COMA_PID_LENGTH, cd, 
+            stats.addCorrect(function, cd, 
                 "HZSK corpus version OK: " + corpusVersion);
         }
         
@@ -145,11 +140,11 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Comman
             
             //test length of Fedora PID and report
             if (fedoraPID.length() >= 64) {
-                stats.addCritical(COMA_PID_LENGTH, comaLoc + 
+                stats.addCritical(function, cd,
                     "Fedora PID would be too long (max. 64) for communication name (" + fedoraPID.length() + " chars): " + fedoraPID );
                     // + " You could shorten it to: " + shortenedCommuniationName + ", or change the corpus prefix");
             } else {
-                stats.addCorrect(COMA_PID_LENGTH, comaLoc + ": " +
+                stats.addCorrect(function, cd,
                     "Fedora PID can be generated for communication: " + fedoraPID);
             }
         }
@@ -162,7 +157,7 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Comman
     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_PID_LENGTH,
+        report.addCritical(function,
             "Communication IDs which do not comply with Fedora PID cannot be fixed automatically. ");
         return report;
     }
@@ -177,9 +172,19 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Comman
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaFedoraIdentifierLengthChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class loads coma data and check for potential "
+                + "problems with HZSK repository depositing; it checks the Exmaralda "
+                + ".coma file for ID's that violate Fedora's PID limits. ";
+        return description;
+    }
 }

@@ -10,33 +10,19 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.io.File;
-import java.util.Hashtable;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.cli.Option;
 import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -47,7 +33,7 @@ import org.jdom.JDOMException;
 /**
  * A command-line tool for checking EXB files.
  */
-public class ExbSegmentationChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbSegmentationChecker extends Checker implements CorpusFunction {
 
     static String filename;
     static BasicTranscription bt;
@@ -55,10 +41,14 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
     static File exbfile;
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
-    final String EXB_SEG = "exb-segmentation-checker";
     String segmentationName = "GENERIC";
     String path2ExternalFSM = "";
+    
+    public ExbSegmentationChecker() {
+        super("exb-segmentation-checker");
+    }
 
+ 
     public static Report check(File f) {
         Report stats = new Report();
         try {
@@ -109,6 +99,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
         }
     }
 
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -124,9 +115,9 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         }
         return stats;
     }
@@ -163,8 +154,8 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
         for (Object o : v) {
             FSMException fsme = (FSMException) o;
             String text = fsme.getMessage();
-            stats.addCritical(EXB_SEG, cd, text);
-            exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
+            stats.addCritical(function, cd, text);
+            exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
         }
         return stats;
     }
@@ -174,7 +165,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_SEG,
+        report.addCritical(function, cd,
                 "Automatic fix is not yet supported.");
         return report;
     }
@@ -190,7 +181,7 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
+             report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
@@ -201,5 +192,16 @@ public class ExbSegmentationChecker extends Checker implements CommandLineable, 
 
     public void setExternalFSM(String s) {
         path2ExternalFSM = s;
+    }
+    
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class takes a CorpusDataObject that is an Exb, "
+                + "checks if there are SegmentationErrors using EXMARaLDA Code and"
+                + " returns the errors in the Report and in the ExmaErrors.";
+        return description;
     }
 }
