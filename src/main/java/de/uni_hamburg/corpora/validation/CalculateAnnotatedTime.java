@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,7 +22,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * The class that calculates annotated time for exb files.
+ * This class calculates annotated time for an exb file and computes the duration of each annotation in the exb.
  *
  */
 public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
@@ -32,6 +30,10 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     String annotLoc = "";
     //HashMap<String, HashMap<String, String>> eventMap; // hash map for holding events of annotation tiers
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
+
+    public CalculateAnnotatedTime() {
+        super("calculate-annotated-time");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -43,15 +45,15 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, annotLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, annotLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, annotLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Unknown transformer error");
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Unknown XPath error");
         }
         return stats;
     }
@@ -213,9 +215,18 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IAAFunctionality.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class calculates annotated time for an exb file and computes the duration of each annotation in the exb.";
+        return description;
     }
 
 }

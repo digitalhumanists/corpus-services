@@ -33,6 +33,7 @@ public class Corpus {
     private Collection<CmdiData> cmdidata = new ArrayList();
     //all the data together
     Collection<CorpusData> cdc;
+    URL basedirectory;
 
     public Corpus() {
 
@@ -41,6 +42,7 @@ public class Corpus {
     public Corpus(URL url) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         CorpusIO cio = new CorpusIO();
         cdc = cio.read(url);
+        basedirectory = cio.getBaseDirectory();
         for (CorpusData cd : cdc) {
             if (cd instanceof ContentData) {
                 contentdata.add((ContentData) cd);
@@ -125,4 +127,7 @@ public class Corpus {
         this.cmdidata = cmdidata;
     }
 
+    public URL getBaseDirectory() {
+    return basedirectory;
+    }
 }

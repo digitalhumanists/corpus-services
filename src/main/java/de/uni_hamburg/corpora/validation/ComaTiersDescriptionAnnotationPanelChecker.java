@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,8 +34,11 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
     HashMap<String, Collection<String>> annotationsInComa; // list for holding annotations of coma file
     ArrayList<String> annotations; // list for holding annotations of annotation spec file
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
-    String ctdapc = "ComaTiersDescriptionAnnotationPanelChecker";
-    
+
+    public ComaTiersDescriptionAnnotationPanelChecker() {
+        super("ComaTiersDescriptionAnnotationPanelChecker");
+    }
+
     /**
      * Add annotations to the corresponding array from coma and annotation
      * specification file.
@@ -117,17 +118,17 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
                 stats = exceptionalCheck(cd);
             }
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, comaLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, comaLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, comaLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, comaLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -148,20 +149,20 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
                 if (!annotations.contains(annotType)) { // check if annotations not present in annotation spec file
                     System.err.println("Coma file is containing annotation (" + annotType
                             + ") for " + name + " not specified by annotation spec file!");
-                    stats.addWarning(ctdapc, cd, "annotation error: annotation in annotation panel ("
+                    stats.addWarning(function, cd, "annotation error: annotation in annotation panel ("
                             + annotType + ") in communication " + name + " not specified!");
                     int index = cd.getURL().getFile().lastIndexOf("/");
                     String filePath = cd.getURL().getFile().substring(0, index) + "/" + name + "/" + name +".exb";
                     exmaError.addError("tier-checker-with-annotation", filePath, "", "", false, "annotation error: annotation in annotation panel("
                             + annotType + ") for communication " + name + " not specified in the annotation specification file!");
                 } else {
-                    stats.addCorrect(ctdapc, cd, "annotation in annotation panel ("
+                    stats.addCorrect(function, cd, "annotation in annotation panel ("
                             + annotType + ") in communication " + name + " was found.");
                 }
             }
         }
         } else {
-             stats.addNote(ctdapc, cd, "No annotations found in coma.");
+             stats.addNote(function, cd, "No annotations found in coma.");
         }
 
         return stats; // return the report with warnings
@@ -188,8 +189,19 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaTiersDescriptionAnnotationPanelChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks out that all annotations are from"
+                + " the annotation specification file and that there are no annotations"
+                + " in the coma file not existing in the annotation specification file.";
+        return description;
     }
 }

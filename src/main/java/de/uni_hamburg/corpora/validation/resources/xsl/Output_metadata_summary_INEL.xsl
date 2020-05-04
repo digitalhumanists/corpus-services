@@ -59,7 +59,7 @@
             <thead>
                 <tr>
                     <th class="info">Number of Sentences Whole Corpus</th>
-                    <th class="info">Number of Tokens Whole Corpus</th>
+                    <th class="info">Number of Words Whole Corpus</th>
                     <th class="info">Duration of Audio (hh:mm:ss) Whole Corpus</th>
                     <th class="info">Number Exb Whole Corpus</th>
                     <th class="info">Number Exs Whole Corpus</th>
@@ -102,7 +102,7 @@
                     <th>Communication Name</th>
                     <th>Duration of Audio (hh:mm:ss)</th>
                     <th>Number of Sentences</th>
-                    <th>Number of Tokens</th>
+                    <th>Number of Words</th>
                     <th>Transcribed by</th>
                     <th>Glossed by</th>
                     <th>Has EXB</th>

@@ -25,9 +25,15 @@ import javax.xml.xpath.XPathExpressionException;
 /**
  *
  * @author anne
+ * 
+ * This class adds the path to an MP3 file next to the WAV file linked as a recording in an exb file.
+ * 
  */
 public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
-     final String function = "add-mp3-next-2-wav";
+
+    public ExbMP3Next2WavAdder() {
+        super("add-mp3-next-2-wav");
+    }
      
     @Override
     public Report check(CorpusData cd){
@@ -48,7 +54,7 @@ public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
             //save it - overwrite exb
             cio.write(cd, cd.getURL());
             //everything worked
-            r.addCorrect(function, cd, "Added mp3 next to wav.");
+            r.addFix(function, cd, "Added mp3 next to wav.");
             
 
         } catch (TransformerConfigurationException ex) {
@@ -86,4 +92,15 @@ public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
         }
             return IsUsableFor;
     }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class adds the path to an MP3 file next to the WAV file "
+                + "linked as a recording in an exb file.";
+        return description;
+    }
+
 }

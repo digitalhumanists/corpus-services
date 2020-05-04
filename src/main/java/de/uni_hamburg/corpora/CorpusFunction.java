@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author fsnv625
  */
-public interface CorpusFunction extends CommandLineable{
+public interface CorpusFunction {
 
 public Report execute(CorpusData cd);
 
@@ -26,5 +26,7 @@ public Report execute(Collection<CorpusData> cdc, boolean fix);
 public Collection<Class<? extends CorpusData>> getIsUsableFor();
 
 public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc);
+
+public String getDescription();
 
 }

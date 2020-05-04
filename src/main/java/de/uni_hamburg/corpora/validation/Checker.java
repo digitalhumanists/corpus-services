@@ -6,20 +6,14 @@
  */
 package de.uni_hamburg.corpora.validation;
 
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.validation.StringChecker;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -42,11 +36,13 @@ public abstract class Checker implements CorpusFunction {
     //They are only allowed to be used in the main method, not the other CorpusFunction methods
     ValidatorSettings settings;
     CorpusData cd;
-    Report report;
+    Report report = new Report();
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
             extends CorpusData>>();
-
-    public Checker() {
+    final String function;
+   
+    Checker(String func) {
+        function = func;
     }
 
     public Report execute(Corpus c) {
@@ -67,22 +63,22 @@ public abstract class Checker implements CorpusFunction {
             try {
                 report = fix(cd);
             } catch (JexmaraldaException je) {
-                report.addException(je, "Unknown parsing error");
+                report.addException(je, function, cd, "Unknown parsing error");
             } catch (JDOMException jdome) {
-                report.addException(jdome, "Unknown parsing error");
+                report.addException(jdome, function, cd, "Unknown parsing error");
             } catch (SAXException saxe) {
-                report.addException(saxe, "Unknown parsing error");
+                report.addException(saxe, function, cd, "Unknown parsing error");
             } catch (IOException ioe) {
-                report.addException(ioe, "File reading error");
+                report.addException(ioe, function, cd, "File reading error");
             }
             return report;
         } else {
             try {
                 report = check(cd);
             } catch (SAXException saxe) {
-                report.addException(saxe, "Unknown parsing error");
+                report.addException(saxe, function, cd, "Unknown parsing error");
             } catch (JexmaraldaException je) {
-                report.addException(je, "Unknown parsing error");
+                report.addException(je, function, cd, "Unknown parsing error");
             }
             return report;
         }
@@ -93,27 +89,27 @@ public abstract class Checker implements CorpusFunction {
         if (fix) {
             try {
                 return fix(cdc);
-            } catch (SAXException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JDOMException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+           } catch (JexmaraldaException je) {
+                report.addException(je, function, cd, "Unknown parsing error");
+            } catch (JDOMException jdome) {
+                report.addException(jdome, function, cd, "Unknown parsing error");
+            } catch (SAXException saxe) {
+                report.addException(saxe, function, cd, "Unknown parsing error");
+            } catch (IOException ioe) {
+                report.addException(ioe, function, cd, "File reading error");
             }
             return report;
         } else {
             try {
                 return check(cdc);
-            } catch (SAXException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SAXException saxe) {
+                report.addException(saxe, function, cd, "Unknown parsing error");
+            } catch (JexmaraldaException je) {
+                report.addException(je, function, cd, "Unknown parsing error");
             } catch (IOException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+                report.addException(ex, function, cd, "File reading error");
             } catch (JDOMException ex) {
-                Logger.getLogger(Checker.class.getName()).log(Level.SEVERE, null, ex);
+                report.addException(ex, function, cd, "Unknown parsing error");
             }
             return report;
         }
@@ -194,4 +190,7 @@ public abstract class Checker implements CorpusFunction {
         }
     }
 
+    public String getFunction(){
+        return function;
+    }
 }

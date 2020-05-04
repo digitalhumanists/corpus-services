@@ -9,53 +9,37 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.ExmaErrorList;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.CommandLine;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
  * A class that checks all file names in a directory to be deposited in HZSK
  * repository.
  */
-public class FilenameChecker extends Checker implements CommandLineable, CorpusFunction {
+public class FilenameChecker extends Checker implements CorpusFunction {
 
     Pattern acceptable;
     Pattern unacceptable;
-    ValidatorSettings settings;
-
-    final String FILENAME_CONVENTIONS = "filename-conventions";
     String fileLoc = "";
+
+    public FilenameChecker() {
+        super("filename-conventions");
+    }
 
     /**
      * Check for existence of files in a coma file.
@@ -67,7 +51,7 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         try {
             stats = oldExceptionalCheck(rootdir);
         } catch (IOException ioe) {
-            stats.addException(ioe, "Unknown reading error");
+            stats.addException(ioe, function, cd, "Unknown reading error");
         }
         return stats;
     }
@@ -84,21 +68,21 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         Matcher matchAccepting = acceptable.matcher(filename);
         boolean allesGut = true;
         if (!matchAccepting.matches()) {
-            stats.addWarning(FILENAME_CONVENTIONS,
+            stats.addWarning(function,
                     filename + " does not follow "
                     + "filename conventions for HZSK corpora");
             allesGut = false;
         }
         Matcher matchUnaccepting = unacceptable.matcher(filename);
         if (matchUnaccepting.find()) {
-            stats.addWarning(FILENAME_CONVENTIONS,
+            stats.addWarning(function,
                     filename + " contains "
                     + "characters that may break in HZSK repository");
             allesGut = false;
         }
 
         if (allesGut) {
-            stats.addCorrect(FILENAME_CONVENTIONS,
+            stats.addCorrect(function,
                     filename + " is OK by HZSK standards.");
         }
         if (f.isDirectory()) {
@@ -166,13 +150,13 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, fileLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, fileLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, fileLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, fileLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -222,25 +206,25 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
         Matcher matchAccepting = acceptable.matcher(filename);
         boolean allesGut = true;
         if (!matchAccepting.matches()) {
-            stats.addWarning(FILENAME_CONVENTIONS,
+            stats.addWarning(function,
                     filename + " does not follow "
                     + "filename conventions for HZSK corpora");
-            exmaError.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " does not follow "
+            exmaError.addError(function, cd.getURL().getFile(), "", "", false, "Error: " + filename + " does not follow "
                     + "filename conventions for HZSK corpora");
             allesGut = false;
         }
         Matcher matchUnaccepting = unacceptable.matcher(filename);
         if (matchUnaccepting.find()) {
-            stats.addWarning(FILENAME_CONVENTIONS,
+            stats.addWarning(function,
                     filename + " contains "
                     + "characters that may break in HZSK repository");
-            exmaError.addError(FILENAME_CONVENTIONS, cd.getURL().getFile(), "", "", false, "Error: " + filename + " contains "
+            exmaError.addError(function, cd.getURL().getFile(), "", "", false, "Error: " + filename + " contains "
                     + "characters that may break in HZSK repository");
             allesGut = false;
         }
 
         if (allesGut) {
-            stats.addCorrect(FILENAME_CONVENTIONS,
+            stats.addCorrect(function,
                     filename + " is OK by HZSK standards.");
         }
         return stats;
@@ -251,7 +235,7 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(FILENAME_CONVENTIONS,
+        report.addCritical(function, cd,
                 "File names which do not comply with conventions cannot be fixed automatically");
         return report;
     }
@@ -271,9 +255,20 @@ public class FilenameChecker extends Checker implements CommandLineable, CorpusF
             IsUsableFor.add(clSecond);
             IsUsableFor.add(clThird);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FilenameChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks if all file names in the directory"
+                + " to be deposited in HZSK repository; checks if there is a file"
+                + " which is not named according to coma file.";
+        return description;
     }
 
 }

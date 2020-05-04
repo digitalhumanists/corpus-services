@@ -11,10 +11,8 @@ import de.uni_hamburg.corpora.validation.ComaErrorReportGenerator;
 import java.net.URL;
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Collection;
 
@@ -33,10 +31,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.XMLConstants;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.ErrorHandler;
-
-import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**

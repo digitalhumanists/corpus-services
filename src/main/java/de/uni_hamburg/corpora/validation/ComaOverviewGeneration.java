@@ -26,48 +26,58 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ * 
+ * This class creates a sort- and filterable html overview in table form 
+ * of the content of the coma file to make error checking and harmonizing easier.
  */
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
-    final String COMA_OVERVIEW = "coma-overview";
+    boolean inel = false;
+
+    public ComaOverviewGeneration() {
+        super("coma-overview");
+    }
 
     @Override
     public Report check(CorpusData cd){
         Report r = new Report();
-        
+        String xsl;
         try{
 
             // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
-
+            if(inel){
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary_INEL.xsl"));    
+            }else {
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
+            }
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
         
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
-            //get locatino to save new result
+            //get location to save new result
             URL overviewurl = new URL(cd.getParentURL(), "curation/coma_overview.html");
             CorpusIO cio = new CorpusIO();
             //save it
             cio.write(result, overviewurl);
             //everything worked
-            r.addCorrect(COMA_OVERVIEW, cd, "created html overview at " + overviewurl);
+            r.addCorrect(function, cd, "created html overview at " + overviewurl);
             
 
         } catch (TransformerConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Transformer configuration error");
+            r.addException(ex, function, cd, "Transformer configuration error");
         } catch (TransformerException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Transformer error");
+            r.addException(ex, function, cd, "Transformer error");
         } catch (MalformedURLException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Malformed URL error");
+            r.addException(ex, function, cd, "Malformed URL error");
         } catch (IOException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown input/output error");
+            r.addException(ex, function, cd, "Unknown input/output error");
         } catch (ParserConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown Parser error");
+            r.addException(ex, function, cd, "Unknown Parser error");
         } catch (SAXException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XML error");
+            r.addException(ex, function, cd, "Unknown XML error");
         } catch (XPathExpressionException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XPath error");
+            r.addException(ex, function, cd, "Unknown XPath error");
         }
         
         return r;
@@ -89,6 +99,20 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             report.addException(ex, "Usable class not found.");
         }
             return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class creates a sort- and filterable html overview in table form "
+                + " of the content of the coma file to make error checking and harmonizing easier. ";
+        return description;
+    }
+    
+     public void setInel() {
+            inel = true;
     }
 
 }
