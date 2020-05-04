@@ -36,10 +36,9 @@ import org.w3c.dom.NodeList;
  */
 public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
 
-    final String EXB_REFS = "exb-referenced-file";
-
-
-    CorpusData cd;
+    public ExbFileReferenceChecker() {
+        super("exb-referenced-file");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -53,17 +52,17 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (IOException ioe) {
-            stats.addException(ioe, "Reading error");
+            stats.addException(ioe, function, cd, "Reading error");
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, "Unknown URI parsing error");
+            stats.addException(ex, function, cd, "Unknown URI parsing error");
         }
         return stats;
     }
@@ -86,7 +85,7 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
             String url = reffile.getAttribute("url");
             if (!url.isEmpty()) {
                 if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                    stats.addCritical(EXB_REFS, cd, "Referenced-file " + url
+                    stats.addCritical(function, cd, "Referenced-file " + url
                             + " points to absolute local path, fix to relative path first");
                 }
                 boolean found = false;
@@ -102,14 +101,14 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
                 }
                 if (!found) {
                     reffilesMissing++;
-                    stats.addCritical(EXB_REFS, cd, "File in referenced-file NOT found: " + url);
-                    exmaError.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
+                    stats.addCritical(function, cd, "File in referenced-file NOT found: " + url);
+                    exmaError.addError(function, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
                 } else {
                     reffilesFound++;
-                    stats.addCorrect(EXB_REFS, cd, "File in referenced-file was found: " + url);
+                    stats.addCorrect(function, cd, "File in referenced-file was found: " + url);
                 }
             } else {
-            stats.addCorrect(EXB_REFS, cd, "No file was referenced in this transcription");
+            stats.addCorrect(function, cd, "No file was referenced in this transcription");
             }
         }
         return stats;
@@ -121,7 +120,7 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         this.cd = cd;
-        report.addCritical(EXB_REFS,
+        report.addCritical(function, cd,
                 "Automatic fix is not yet supported.");
         return report;
     }

@@ -19,8 +19,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.cli.Option;
@@ -43,10 +41,14 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     static File exbfile;
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
-    final String EXB_SEG = "exb-segmentation-checker";
     String segmentationName = "GENERIC";
     String path2ExternalFSM = "";
+    
+    public ExbSegmentationChecker() {
+        super("exb-segmentation-checker");
+    }
 
+ 
     public static Report check(File f) {
         Report stats = new Report();
         try {
@@ -97,6 +99,7 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
         }
     }
 
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -112,9 +115,9 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         }
         return stats;
     }
@@ -151,8 +154,8 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
         for (Object o : v) {
             FSMException fsme = (FSMException) o;
             String text = fsme.getMessage();
-            stats.addCritical(EXB_SEG, cd, text);
-            exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
+            stats.addCritical(function, cd, text);
+            exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
         }
         return stats;
     }
@@ -162,7 +165,7 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_SEG,
+        report.addCritical(function, cd,
                 "Automatic fix is not yet supported.");
         return report;
     }
@@ -178,7 +181,7 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
+             report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }

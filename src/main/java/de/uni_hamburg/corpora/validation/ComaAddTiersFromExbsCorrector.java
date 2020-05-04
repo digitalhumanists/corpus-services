@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -48,9 +46,9 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
     String tierNameFormat = "Tier %2$s (%1$s):";
     String tierTextFormat = "%s";
     String comaLoc = "";
-    final String ADD_TIERS = "coma-add-tiers-from-exb";
 
     public ComaAddTiersFromExbsCorrector() {
+        super("coma-add-tiers-from-exb");
     }
 
     /**
@@ -252,13 +250,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         try {
             stats = exceptionalFix();
         } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         }
         return stats;
     }
@@ -354,7 +352,7 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                 Set<String> addedTiers = new HashSet<String>();
                 for (String tierID : tierIDs) {
                     if (skipTiers.contains(tierID)) {
-                        stats.addNote(ADD_TIERS,
+                        stats.addNote(function,
                                     "Skipped a tier: " + tierID,
                                     "This tier does not need to be included in "
                                     + "coma file");
@@ -400,13 +398,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                         keyElement.setText(String.format(tierTextFormat,
                                     tiers.get(category)));
                         desc.addContent(keyElement);
-                        stats.addNote(ADD_TIERS,
+                        stats.addNote(function,
                                     "Tier was missing from COMA: "
                                     + tierID,
                                     "The default description has been added.");
                         addedTiers.add(category);
                     } else {
-                        stats.addWarning(ADD_TIERS,
+                        stats.addWarning(function,
                                     "Unrecognised tier category: "
                                     + category,
                                     "Tier must be added manually to coma");
@@ -418,13 +416,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
             CorpusIO cio = new CorpusIO();
             cio.write(corpus, settings.getOutputFile().toURI().toURL());           
         } catch (TransformerException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         } catch (UnsupportedEncodingException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         }
         return stats;
     }
@@ -440,13 +438,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         try {
             stats = exceptionalCheck(cd);
         } catch (JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch (JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         }
         return stats;
     }
@@ -559,7 +557,7 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                 
                 for (String tierID : tierIDs) {
                     if (skipTiers.contains(tierID)) {
-                        stats.addNote(ADD_TIERS,
+                        stats.addNote(function,
                                     "Skipped a tier: " + tierID,
                                     "This tier does not need to be included in "
                                     + "coma file");
@@ -605,12 +603,12 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                         keyElement.setText(String.format(tierTextFormat,
                                     tiers.get(category)));
                         desc.addContent(keyElement);
-                        stats.addNote(ADD_TIERS,
+                        stats.addNote(function,
                                     "Tier is missing from COMA: "
                                     + tierID);
                         addedTiers.add(category);
                     } else {
-                        stats.addWarning(ADD_TIERS,
+                        stats.addWarning(function,
                                     "Unrecognised tier category: "
                                     + category,
                                     "Tier must be added manually to coma");
@@ -729,7 +727,7 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                 
                 for (String tierID : tierIDs) {
                     if (skipTiers.contains(tierID)) {
-                        stats.addNote(ADD_TIERS,
+                        stats.addNote(function,
                                     "Skipped a tier: " + tierID,
                                     "This tier does not need to be included in "
                                     + "coma file");
@@ -775,13 +773,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
                         keyElement.setText(String.format(tierTextFormat,
                                     tiers.get(category)));
                         desc.addContent(keyElement);
-                        stats.addNote(ADD_TIERS,
+                        stats.addFix(function, cd,
                                     "Tier was missing from COMA: "
-                                    + tierID,
-                                    "The default description has been added.");
+                                    + tierID +
+                                    ": The default description has been added.");
                         addedTiers.add(category);
                     } else {
-                        stats.addWarning(ADD_TIERS,
+                        stats.addWarning(function,
                                     "Unrecognised tier category: "
                                     + category,
                                     "Tier must be added manually to coma");
@@ -793,13 +791,13 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
             CorpusIO cio = new CorpusIO();
             cio.write(corpus, settings.getOutputFile().toURI().toURL());                      
         } catch (TransformerException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         } catch (UnsupportedEncodingException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, ADD_TIERS, cd, "unknown transformer error");
+            stats.addException(ex, function, cd, "unknown transformer error");
         }
         return stats;
     }
@@ -814,34 +812,11 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
 
-    
-    /** 
-     * Execute function for calling check and fix functions if necessary.
-     */ 
-    public Report execute(CorpusData cd, boolean fix) {  
-        Report report = new Report();
-        try {
-            if(fix){
-                report.merge(fix(cd));
-            }else{
-                report.merge(check(cd));
-            }
-        } catch (SAXException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JDOMException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JexmaraldaException ex) {
-            Logger.getLogger(ComaAddTiersFromExbsCorrector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return report;
-    }
 
     /**Default function which returns a two/three line description of what 
      * this class is about.

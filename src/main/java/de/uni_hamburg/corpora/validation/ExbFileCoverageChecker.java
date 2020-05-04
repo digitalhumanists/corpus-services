@@ -17,8 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,11 +35,11 @@ import org.xml.sax.SAXException;
  */
 public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
 
-    final String EXB_FILECOVERAGE = "exb-filecoverage";
     static List<String> whitelist;
     static List<String> fileendingwhitelist;
 
     public ExbFileCoverageChecker() {
+        super("exb-filecoverage");
         // these are acceptable
         setWhitelist();
         
@@ -59,17 +57,17 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, EXB_FILECOVERAGE, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, EXB_FILECOVERAGE, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, EXB_FILECOVERAGE, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, EXB_FILECOVERAGE, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            Logger.getLogger(ExbFileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Unknown tranformer error");
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbFileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Unknown XPath error");
         }
         return stats;
     }
@@ -92,7 +90,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
             String url = reffile.getAttribute("url");
             if (!url.isEmpty()) {
                 if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                    stats.addCritical(EXB_FILECOVERAGE, cd, "Referenced-file " + url
+                    stats.addCritical(function, cd, "Referenced-file " + url
                             + " points to absolute local path, fix to relative path first");
                 }
                 refsInExb.add(url);
@@ -106,13 +104,13 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         for (String absolutePath : files) {
             String relativePath = absolutePath.substring(absolutePath.indexOf(exbFolder.getAbsolutePath())+exbFolder.getAbsolutePath().length()+File.separator.length());
             if (refsInExb.contains(absolutePath)) {
-                stats.addCritical(EXB_FILECOVERAGE, cd, "Referenced-file " + absolutePath
+                stats.addCritical(function, cd, "Referenced-file " + absolutePath
                         + " points to absolute local path, fix to relative path first");
             } else if (refsInExb.contains(relativePath)) {
-                stats.addCorrect(EXB_FILECOVERAGE, cd, "File " + relativePath + " found in the exb as a reference.");
+                stats.addCorrect(function, cd, "File " + relativePath + " found in the exb as a reference.");
             } else {
-                stats.addCritical(EXB_FILECOVERAGE, cd, "File " + relativePath + " CANNOT be found in the exb as a reference!");
-                exmaError.addError(EXB_FILECOVERAGE, cd.getURL().getFile(), "", "", false, "File " + relativePath + " CANNOT be found in the exb as a reference!");
+                stats.addCritical(function, cd, "File " + relativePath + " CANNOT be found in the exb as a reference!");
+                exmaError.addError(function, cd.getURL().getFile(), "", "", false, "File " + relativePath + " CANNOT be found in the exb as a reference!");
             }
         }
         return stats;
@@ -123,7 +121,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_FILECOVERAGE, cd,
+        report.addCritical(function, cd,
                 "No fix is supported yet");
         return report;
     }

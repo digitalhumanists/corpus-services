@@ -12,8 +12,6 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,11 +29,14 @@ import org.xml.sax.SAXException;
 public class ReportStatistics extends Checker implements CorpusFunction {
 
     private static final String HTML_REPORT = "report-output.html";
-    private final String SERVICE_NAME = "ReportStatistics";
     String REPORT_STATISTICS;
     Report stats;
     CorpusData cd;
     String corpusname = "";
+
+    public ReportStatistics() {
+        super("ReportStatistics");
+    }
 
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
@@ -43,17 +44,17 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (IOException ex) {
-            stats.addException(SERVICE_NAME, ex, "Input Output Exception");
+            stats.addException(ex, function, cd, "Input Output Exception");
         } catch (ParserConfigurationException ex) {
-            stats.addException(SERVICE_NAME, ex, "Parser Exception");
+            stats.addException(ex, function, cd, "Parser Exception");
         } catch (SAXException ex) {
-            stats.addException(SERVICE_NAME, ex, "XML Exception");
+            stats.addException(ex, function, cd, "XML Exception");
         } catch (XPathExpressionException ex) {
-            stats.addException(SERVICE_NAME, ex, "XPath Exception");
+            stats.addException(ex, function, cd, "XPath Exception");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(ReportStatistics.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "URI");
         } catch (TransformerException ex) {
-            Logger.getLogger(ReportStatistics.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Transformer");
         }
         return stats;
     }
@@ -135,13 +136,13 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 htmlOut.print(reportStatistics);
                 htmlOut.close();
                 
-                stats.addNote(SERVICE_NAME, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
+                stats.addFix(function, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
             } else {
-                stats.addMissing(SERVICE_NAME, cd, "Corpus Report file not found "
+                stats.addMissing(function, cd, "Corpus Report file not found "
                         + "at '" + htmlReportPath + "'. Report Statistics (graphic overview) not updated.");
             }
         } else {
-            stats.addMissing(SERVICE_NAME, cd, "Report Statistics file not found at "
+            stats.addMissing(function, cd, "Report Statistics file not found at "
                     + "'" + reportStatisticsPath + "'. Report Statistics (graphic overview) not updated.");
         }
         return stats;

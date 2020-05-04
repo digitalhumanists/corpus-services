@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -39,7 +37,10 @@ import org.xml.sax.SAXException;
 
 public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
-    final String EXB_DTD_CHECKER = "exb-dtd";
+
+    public ExbSchemaChecker() {
+        super("exb-dtd");
+    }
 
     /**
      * Validate an exb file with a DTD file.
@@ -56,19 +57,19 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
+            stats.addException(jdome, function, cd, "Unknown parsing error");
         } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
+            stats.addException(ioe, function, cd, "Reading/writing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Reading/writing error");
+            stats.addException(ex, function, cd, "Reading/writing error");
         }
         return stats;
     }
@@ -97,7 +98,7 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
     */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_DTD_CHECKER,
+        report.addCritical(function, cd,
                 "No fix is applicable for this feature.");
         return report;
     }
@@ -112,7 +113,7 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaXsdChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

@@ -35,13 +35,16 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
 
     //ToDo 
     boolean containsRegEx = false;
-    String cdrr = "CorpusDataRegexReplacer";
     String replace = "'";
     String replacement = "´";
     boolean coma = false;
-    String xpathContext = "/test";
+    String xpathContext = "//*";
     Document doc = null;
     XPath context;
+
+    public CorpusDataRegexReplacer() {
+        super("CorpusDataRegexReplacer");
+    }
 
     @Override
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
@@ -49,19 +52,19 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cdrr, cd, "Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, cdrr, cd, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, cdrr, cd, "Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (URISyntaxException ex) {
-            stats.addException(ex, cdrr, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
-            stats.addException(ex, cdrr, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (TransformerException ex) {
-            stats.addException(ex, cdrr, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, cdrr, cd, "Unknown parsing error");
+            stats.addException(ex, function, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -90,21 +93,21 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     s = a.getValue();
                 }
                 else {
-                    stats.addWarning(cdrr, cd, "Xpath " + escapeHtml4(xpathContext) + " does not lead to Element or Attribute");
+                    stats.addWarning(function, cd, "Xpath " + escapeHtml4(xpathContext) + " does not lead to Element or Attribute");
                     s ="";
                 }
                 if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
                     containsRegEx = true;
                     System.err.println("CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
-                    stats.addCritical(cdrr, cd, "CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
+                    stats.addCritical(function, cd, "CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
                 }
 
             }
             if (!containsRegEx) {
-                stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
+                stats.addCorrect(function, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
             }
         } else {
-            stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
+            stats.addCorrect(function, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
         }
         return stats; // return the report with warnings
     }
@@ -128,7 +131,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                         String snew = s.replaceAll(replace, replacement);    //replace all replace with replacement
                         //TODO Attributes?
                         e.setText(snew);
-                        stats.addCorrect(cdrr, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                        stats.addFix(function, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                     }
                 }
                 if (containsRegEx) {
@@ -136,24 +139,24 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     cio.write(cd, cd.getURL());
                 } else {
-                    stats.addCorrect(cdrr, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
+                    stats.addCorrect(function, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
                 }
             } else {
-                stats.addCorrect(cdrr, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
+                stats.addCorrect(function, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
             }
             
          } catch (SAXException ex) {
-            report.addException(ex, cdrr, cd, "Unknown exception error");
+            stats.addException(ex, function, cd, "Unknown exception error");
         } catch (JDOMException ex) {
-            report.addException(ex, cdrr, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ex, cdrr, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            report.addException(ex, cdrr, cd, "XSL transformer error");
+            stats.addException(ex, function, cd, "XSL transformer error");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, cdrr, cd, "Parser error");
+            stats.addException(ex, function, cd, "Parser error");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, cdrr, cd, "XPath error");
+            stats.addException(ex, function, cd, "XPath error");
         }
         return stats;
     }
@@ -192,7 +195,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             coma = false;
         } else {
-            report.addCritical(cdrr, cd, "Parameter coma not recognized: " + escapeHtml4(s));
+            report.addCritical(function, cd, "Parameter coma not recognized: " + escapeHtml4(s));
         }
     }
 

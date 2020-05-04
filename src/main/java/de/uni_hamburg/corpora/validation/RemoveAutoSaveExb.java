@@ -31,7 +31,10 @@ import javax.xml.xpath.XPathExpressionException;
 public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
 
     Document doc = null;
-    String rase = "RemoveAutoSaveExb";
+
+    public RemoveAutoSaveExb() {
+        super("RemoveAutoSaveExb");
+    }
 
     @Override
     public Report check(CorpusData cd) {
@@ -40,13 +43,13 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
             List al = findAllAutoSaveInstances(xml);
             //if there is no autosave, nothing needs to be done
             if (al.isEmpty()) {
-                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
+                report.addCorrect(function, cd, "there is no autosave info left, nothing to do");
             } else {
-                report.addCritical(rase, cd, "autosave info needs to be removed");
+                report.addCritical(function, cd, "autosave info needs to be removed");
                 exmaError.addError("RemoveAutoSaveExb", cd.getURL().getFile(), "", "", false, "autosave info needs to be removed");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, rase, cd, "Jdom Exception");
+            report.addException(ex, function, cd, "Jdom Exception");
         }
         return report;
     }
@@ -71,23 +74,23 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
-                    report.addCorrect(rase, cd, "removed AutoSave info");
+                    report.addFix(function, cd, "removed AutoSave info");
                 } catch (IOException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (TransformerException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (ParserConfigurationException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (SAXException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (XPathExpressionException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 }
             } else {
-                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
+                report.addCorrect(function, cd, "there is no autosave info left, nothing to do");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, rase, cd, "Jdom Exception");
+            report.addException(ex, function, cd, "Jdom Exception");
         }
                     return report;
     }

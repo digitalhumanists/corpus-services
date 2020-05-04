@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -9,10 +10,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -31,7 +28,10 @@ import org.xml.sax.SAXException;
 public class ExbRefTierChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
-    final String ertc = "exbreftierchecker";
+
+    public ExbRefTierChecker() {
+        super("exbreftierchecker");
+    }
 
     /**
      * Default check function which calls the exceptionalCheck function so that
@@ -43,15 +43,15 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (XPathExpressionException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
+            stats.addException(ex, function, cd,  "Unknown file reading error");
         }
         return stats;
     }
@@ -93,36 +93,18 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
     
     
     private Report testRefIDs(CorpusData cd, Boolean fix) throws IOException, SAXException{
-        
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
-        try {
-            db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Document doc = null;
-        try {
-            doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        } catch (TransformerException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(ExbRefTierChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         Report stats = new Report(); // create a new report for the transcript
-        
+        Document doc = null;
+        BasicTranscriptionData bcd = new BasicTranscriptionData();
+        bcd = (BasicTranscriptionData) cd;
+        doc = TypeConverter.JdomDocument2W3cDocument(bcd.getJdom()); // get the file as a document      
         String transcriptName;
         if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
             transcriptName = doc.getElementsByTagName("transcription-name").item(0).getTextContent(); // get transcript name
@@ -146,8 +128,8 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         // when there is no reference tier present
         if (refTiers.size() == 0) {  
             String message = "There is no reference tier present in transcript " + transcriptName;
-            stats.addWarning(ertc, cd, message);
-            exmaError.addError(ertc, cd.getURL().getFile(), "", "", false, message);
+            stats.addWarning(function, cd, message);
+            exmaError.addError(function, cd.getURL().getFile(), "", "", false, message);
         } 
         
         // when there are reference tier/s present
@@ -194,14 +176,14 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                 event.setTextContent(correctRef);
 
                                 String message = "Fixed: False numbering in ref ID '"+wholeRef+"' to '"+correctNo+"' (" + eventReference+")";
-                                stats.addCorrect(ertc, cd, message);
+                                stats.addFix(function, cd, message);
                             }
                             
                             // if only to be tested
                             else{
                                 String message = "False numbering in ref ID '"+wholeRef+"' ("+eventReference+")";
-                                stats.addCritical(ertc, cd, message);
-                                exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                stats.addCritical(function, cd, message);
+                                exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                             }                            
                             
                         }
@@ -226,14 +208,14 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                         event.setTextContent(correctRef);
 
                                         String message = "Fixed: False speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
-                                        stats.addCorrect(ertc, cd, message);
+                                        stats.addFix(function, cd, message);
                                     } 
                                     
                                     // if only to be tested
                                     else{
                                         String message = "False speaker code in ref ID '"+wholeRef+"' (should be '"+tierSpeaker+"' in "+eventReference+")";
-                                        stats.addCritical(ertc, cd, message);
-                                        exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                        stats.addCritical(function, cd, message);
+                                        exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                                     }
                                     
                                  }
@@ -245,14 +227,14 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                                     event.setTextContent(correctRef);
 
                                     String message = "Fixed: Missing speaker code in ref ID '"+wholeRef+"' to '"+tierSpeaker+"' (" + eventReference+")";
-                                    stats.addCorrect(ertc, cd, message);                                
+                                    stats.addFix(function, cd, message);                                
                                 } 
 
                                 // if only to be tested
                                 else{
                                     String message = "Missing speaker code in ref ID '"+wholeRef+"' (should contain '"+tierSpeaker+"' in "+eventReference+")";
-                                    stats.addCritical(ertc, cd, message);
-                                    exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                                    stats.addCritical(function, cd, message);
+                                    exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                                 }
                                 
                              }
@@ -263,8 +245,8 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
                     // ref ID does not contain any "."
                     else {
                          String message = "Unknown format of ref ID '"+wholeRef+"' in " + transcriptName;
-                         stats.addCritical(ertc, cd, message);
-                         exmaError.addError(ertc, cd.getURL().getFile(), tierId, eventStart, false, message);
+                         stats.addCritical(function, cd, message);
+                         exmaError.addError(function, cd.getURL().getFile(), tierId, eventStart, false, message);
                     }
                 }
             }
@@ -277,11 +259,11 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
         try {
             cio.write(cd, cd.getURL());
         } catch (TransformerException ex) {
-            stats.addCritical(ertc, cd, "Transformer error");
+            stats.addCritical(function, cd, "Transformer error");
         } catch (ParserConfigurationException ex) {
-            stats.addCritical(ertc, cd, "Transformer error");
+            stats.addCritical(function, cd, "Transformer error");
         } catch (XPathExpressionException ex) {
-            stats.addCritical(ertc, cd, "Transformer error");
+            stats.addCritical(function, cd, "Transformer error");
         }
 
 

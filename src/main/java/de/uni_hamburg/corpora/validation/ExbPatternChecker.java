@@ -43,7 +43,7 @@ public class ExbPatternChecker {
     List<String> conventions = new ArrayList<String>();
     List<String> problems = new ArrayList<String>();
 
-    final String EXB_PATTERNS = "exb-patterns";
+    final String function = "exb-patterns";
 
     private void tryLoadBasicTranscription(String filename)
         throws SAXException, JexmaraldaException {
@@ -103,7 +103,7 @@ public class ExbPatternChecker {
                 for (Pattern pattern : correctPatterns) {
                     Matcher matcher = pattern.matcher(text);
                     if (!matcher.matches()) {
-                        stats.addCritical(EXB_PATTERNS,
+                        stats.addCritical(function,
                                     "Text: " + text + " does not fit to the " +
                                     "conventions given.", "Expression was: " +
                                     conventions.get(k));
@@ -113,7 +113,7 @@ public class ExbPatternChecker {
                 for (Pattern pattern : errorPatterns) {
                     Matcher matcher = pattern.matcher(text);
                     if (matcher.matches()) {
-                        stats.addCritical(EXB_PATTERNS,
+                        stats.addCritical(function,
                                     "Text: " + text + " does not fit to the " +
                                     "conventions given.", "Expression was: " +
                                     errorPatterns.get(k));

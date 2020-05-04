@@ -33,11 +33,14 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
     Document doc = null;
     BasicTranscriptionData btd = null;
     Boolean interpolateTimeline = false;
-    String ne = "MakeTimelineConsistent";
+
+    public ExbMakeTimelineConsistent() {
+        super("MakeTimelineConsistent");
+    }
 
     @Override
     public Report check(CorpusData cd) {
-        report.addCritical(ne, cd.getURL().getFile(), "Checking option is not available");
+        report.addCritical(function, cd, "Checking option is not available");
         return report;
     }
 
@@ -58,22 +61,22 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
             CorpusIO cio = new CorpusIO();
             cio.write(cd, cd.getURL());
             if (cd != null) {
-                report.addCorrect(ne, cd, "made timeline consistent");
+                report.addFix(function, cd, "made timeline consistent");
             } else {
-                report.addCritical(ne, cd, "making timeline consistent not possible");
+                report.addCritical(function, cd, "making timeline consistent not possible");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, ne, cd, "unknown xml exception");
+            report.addException(ex, function, cd, "unknown xml exception");
         } catch (IOException ex) {
-            report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         } catch (TransformerException ex) {
-            report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         } catch (SAXException ex) {
-            report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, ne, cd, "unknown IO exception");
+            report.addException(ex, function, cd, "unknown IO exception");
         }
         return report;
     }

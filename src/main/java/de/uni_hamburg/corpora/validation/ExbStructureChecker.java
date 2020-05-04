@@ -17,8 +17,6 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.Option;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -39,7 +37,11 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
     File exbfile;
     ValidatorSettings settings;
 
-    final String EXB_STRUCTURE = "exb-structure";
+    final String function = "exb-structure";
+
+    public ExbStructureChecker() {
+        super("exb-structure");
+    }
 
     /**
      * Check for structural errors.
@@ -52,9 +54,9 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
             exbName = f.getName();
             stats = exceptionalCheck(f);
         } catch (JexmaraldaException je) {
-            stats.addException("exb-parse", je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException("exb-parse", saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         }
         return stats;
     }
@@ -75,27 +77,27 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
                 = bt.getAnnotationMismatches();
 
         for (String tierID : duplicateTranscriptionTiers) {
-            stats.addCritical(EXB_STRUCTURE, exbName + ": "
+            stats.addCritical(function, exbName + ": "
                     + "More than one transcription tier for one "
                     + "speaker. Tier: " + tierID, "Open in PartiturEditor, "
                     + "change tier type or merge tiers.");
         }
         for (String tliID : temporalAnomalies) {
-            stats.addCritical(EXB_STRUCTURE, exbName + ": "
+            stats.addCritical(function, exbName + ": "
                     + "Temporal anomaly at timeline item: " + tliID);
         }
         for (String tierID : orphanedTranscriptionTiers) {
-            stats.addCritical(EXB_STRUCTURE, exbName + ": "
+            stats.addCritical(function, exbName + ": "
                     + "Orphaned transcription tier:" + tierID);
         }
         for (String tierID : orphanedAnnotationTiers) {
-            stats.addCritical(EXB_STRUCTURE, exbName + ": "
+            stats.addCritical(function, exbName + ": "
                     + "Orphaned annotation tier:" + tierID);
         }
         for (String tierID : annotationMismatches.keySet()) {
             String[] eventIDs = annotationMismatches.get(tierID);
             for (String eventID : eventIDs) {
-                stats.addCritical(EXB_STRUCTURE, exbName + ": "
+                stats.addCritical(function, exbName + ": "
                         + "Annotation mismatch: tier " + tierID
                         + " event " + eventID);
             }
@@ -142,13 +144,13 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
             exbName = cd.getFilename();
             stats = exceptionalCheck(cd);
         } catch (JexmaraldaException je) {
-            stats.addException("exb-parse", je, "Unknown parsing error");
+            stats.addException(je, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException("exb-parse", saxe, "Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (JDOMException ex) {
-            Logger.getLogger(ExbStructureChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Unknown JDOM error");
         } catch (IOException ex) {
-            Logger.getLogger(ExbStructureChecker.class.getName()).log(Level.SEVERE, null, ex);
+            stats.addException(ex, function, cd, "Unknown IO error");
         }
         return stats;
     }
@@ -173,39 +175,39 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
                 = bt.getAnnotationMismatches();
 
         for (String tierID : duplicateTranscriptionTiers) {
-            stats.addCritical(EXB_STRUCTURE, cd,
+            stats.addCritical(function, cd,
                     "More than one transcription tier for one "
                     + "speaker. Tier: " + tierID + "Open in PartiturEditor, "
                     + "change tier type or merge tiers.");
-            exmaError.addError(EXB_STRUCTURE, filename, tierID, "", false,
+            exmaError.addError(function, filename, tierID, "", false,
                     "More than one transcription tier for one speaker. Tier: "
                     + tierID + ". Change tier type or merge tiers.");
         }
         for (String tliID : temporalAnomalies) {
-            stats.addCritical(EXB_STRUCTURE, cd,
+            stats.addCritical(function, cd,
                     "Temporal anomaly at timeline item: " + tliID);
-            exmaError.addError(EXB_STRUCTURE, filename, "", "", false,
+            exmaError.addError(function, filename, "", "", false,
                     "Temporal anomaly at timeline item: " + tliID);
         }
         for (String tierID : orphanedTranscriptionTiers) {
-            stats.addCritical(EXB_STRUCTURE, cd,
+            stats.addCritical(function, cd,
                     "Orphaned transcription tier:" + tierID);
-            exmaError.addError(EXB_STRUCTURE, filename, tierID, "", false,
+            exmaError.addError(function, filename, tierID, "", false,
                     "Orphaned transcription tier:" + tierID);
         }
         for (String tierID : orphanedAnnotationTiers) {
-            stats.addCritical(EXB_STRUCTURE, cd, 
+            stats.addCritical(function, cd, 
                     "Orphaned annotation tier:" + tierID);
-            exmaError.addError(EXB_STRUCTURE, filename, tierID, "", false,
+            exmaError.addError(function, filename, tierID, "", false,
                     "Orphaned annotation tier:" + tierID);
         }
         for (String tierID : annotationMismatches.keySet()) {
             String[] eventIDs = annotationMismatches.get(tierID);
             for (String eventID : eventIDs) {
-                stats.addCritical(EXB_STRUCTURE, cd,
+                stats.addCritical(function, cd,
                         "Annotation mismatch: tier " + tierID
                         + " event " + eventID);
-                exmaError.addError(EXB_STRUCTURE, filename, tierID, eventID, false,
+                exmaError.addError(function, filename, tierID, eventID, false,
                         "Annotation mismatch: tier " + tierID
                         + " event " + eventID);
             }
@@ -218,7 +220,7 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_STRUCTURE,
+        report.addCritical(function,
                 "No fix is applicable for this feature yet.");
         return report;
     }
@@ -234,7 +236,7 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbStructureChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }

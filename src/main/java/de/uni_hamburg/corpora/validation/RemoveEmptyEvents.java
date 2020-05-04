@@ -31,7 +31,10 @@ import javax.xml.xpath.XPathExpressionException;
 public class RemoveEmptyEvents extends Checker implements CorpusFunction {
 
     Document doc = null;
-    String rase = "RemoveEmptyEvents";
+
+    public RemoveEmptyEvents() {
+        super("RemoveEmptyEvents");
+    }
 
     @Override
     public Report check(CorpusData cd) {
@@ -40,13 +43,13 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
             List al = findAllEmptyEvents(xml);
             //if there is no autosave, nothing needs to be done
             if (al.isEmpty()) {
-                report.addCorrect(rase, cd, "there are no empty events left");
+                report.addCorrect(function, cd, "there are no empty events left");
             } else {
-                report.addCritical(rase, cd, "empty events need to be removed");
-                exmaError.addError(rase, cd.getURL().getFile(), "", "", false, "empty events need to be removed");
+                report.addCritical(function, cd, "empty events need to be removed");
+                exmaError.addError(function, cd.getURL().getFile(), "", "", false, "empty events need to be removed");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, rase, cd, "Jdom Exception");
+            report.addException(ex, function, cd, "Jdom Exception");
         }
         return report;
     }
@@ -71,23 +74,23 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
-                    report.addCorrect(rase, cd, "removed empty event");
+                    report.addFix(function, cd, "removed empty event");
                 } catch (IOException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (TransformerException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (ParserConfigurationException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (SAXException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (XPathExpressionException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 }
             } else {
-                report.addCorrect(rase, cd, "there are no empty events left");
+                report.addCorrect(function, cd, "there are no empty events left");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, rase, cd, "Jdom Exception");
+            report.addException(ex, function, cd, "Jdom Exception");
         }
                     return report;
     }

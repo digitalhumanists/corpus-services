@@ -562,8 +562,10 @@
         <!-- !!! here we split the morphemes and correspond the matching annotations -->
         <xsl:variable name="position">
             <!-- need to use the correct mb node here -->
+            <!-- some problem was found here, the reference to morph ids is not correct -->
+            <!-- <xsl:value-of select="(count(preceding::annotation[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"/> -->
             <xsl:value-of
-                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding-sibling::*[@level = 'mb' and @value != '']/tokenize(@value, '[-=]')) + 1)"
+                select="(count($morphemes[@level = 'mb' and @start = $morpheme-annotation-start and @end = $morpheme-annotation-end]/preceding::annotation[@level = 'mb' and @value != '']/tokenize(@value, '[-=]'))) + 1"
             />
         </xsl:variable>
         <xsl:variable name="tokenizedann" select="tokenize($annValue, '[-=]')"/>

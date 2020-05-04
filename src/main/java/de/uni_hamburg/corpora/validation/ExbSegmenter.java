@@ -19,12 +19,13 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.HashSet;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -38,12 +39,15 @@ import org.exmaralda.partitureditor.jexmaralda.segment.AbstractSegmentation;
 import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.SegmentedTranscription;
 import org.jdom.Document;
+import org.jdom.Element;
 import org.jdom.JDOMException;
+
+import org.exmaralda.coma.helpers.*;
 
 /**
  * This class checks Exmaralda exb files for segmentation problems and creates
  * segmented exs from the exbs.
- * 
+ *
  */
 public class ExbSegmenter extends Checker implements CorpusFunction {
 
@@ -53,9 +57,12 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
     static File exbfile;
     AbstractSegmentation segmentation;
     static ValidatorSettings settings;
-    final String EXB_SEG = "exb-segmentation-checker";
     String segmentationName = "GENERIC";
     String path2ExternalFSM = "";
+
+    public ExbSegmenter() {
+        super("exb-segmenter");
+    }
 
     public static Report check(File f) {
         Report stats = new Report();
@@ -122,9 +129,9 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         }
         return stats;
     }
@@ -161,8 +168,8 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         for (Object o : v) {
             FSMException fsme = (FSMException) o;
             String text = fsme.getMessage();
-            stats.addCritical(EXB_SEG, cd, text);
-            exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
+            stats.addCritical(function, cd, text);
+            exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
         }
         return stats;
     }
@@ -180,23 +187,24 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         } catch (JexmaraldaException je) {
             je.printStackTrace();
         } catch (IOException ex) {
-            stats.addException(ex, "Unknown read error");
+            stats.addException(ex, function, cd, "Unknown read error");
         } catch (JDOMException ex) {
-            stats.addException(ex, "Unknown JDOM error");
+            stats.addException(ex, function, cd, "Unknown JDOM error");
         } catch (FSMException ex) {
-            stats.addException(ex, "Unknown FSM error");
+            stats.addException(ex, function, cd, "Unknown FSM error");
         } catch (TransformerException ex) {
-             stats.addException(ex, "Unknown Transformer error");
+            stats.addException(ex, function, cd, "Unknown Transformer error");
         } catch (ParserConfigurationException ex) {
-             stats.addException(ex, "Unknown Parser error");
+            stats.addException(ex, function, cd, "Unknown Parser error");
         } catch (XPathExpressionException ex) {
-             stats.addException(ex, "Unknown XPath error");
+            stats.addException(ex, function, cd, "Unknown XPath error");
+        } catch (URISyntaxException ex) {
+            stats.addException(ex, function, cd, "Unknown URI error");
         }
         return stats;
     }
-    
-    
-    public Report exceptionalFix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException, FSMException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException {
+
+    public Report exceptionalFix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException, FSMException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
         Report stats = new Report();
         btd = new BasicTranscriptionData(cd.getURL());
         if (segmentationName.equals("HIAT")) {
@@ -219,21 +227,26 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         if (!path2ExternalFSM.equals("")) {
             segmentation.pathToExternalFSM = path2ExternalFSM;
         }
-        List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
-        if (v.isEmpty()){
-        SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());
-        URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
         CorpusIO cio = new CorpusIO();
-        Document doc = TypeConverter.String2JdomDocument(st.toXML());
-        cio.write(doc, url);
-        stats.addCorrect(EXB_SEG, cd, "Exs successfully created at " + url);
+        List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
+        if (v.isEmpty()) {
+            SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());
+            st.setEXBSource(cd.getFilename());
+            //add the udMetadata!!!!
+            //finally found the missing method :) :)
+            org.exmaralda.partitureditor.jexmaralda.segment.SegmentCountForMetaInformation
+                    .count(st);
+            Document doc = TypeConverter.String2JdomDocument(st.toXML());
+            URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
+            cio.write(doc, url);
+            stats.addFix(function, cd, "Exs successfully created at " + url);
         } else {
             for (Object o : v) {
-            FSMException fsme = (FSMException) o;
-            String text = fsme.getMessage();
-            stats.addCritical(EXB_SEG, cd, text);
-            exmaError.addError(EXB_SEG, filename, fsme.getTierID(), fsme.getTLI(), false, text);
-        }
+                FSMException fsme = (FSMException) o;
+                String text = fsme.getMessage();
+                stats.addCritical(function, cd, text);
+                exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
+            }
         }
         return stats;
     }
@@ -249,7 +262,7 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbSegmenter.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
     }
@@ -262,8 +275,116 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
         path2ExternalFSM = s;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    public Document setMetadataInformation(Document partitur) {
+        //SEE org.exmaralda.coma.models.TranscriptionMetadata
+        Element root = partitur.getRootElement();
+        String id = "";
+        HashMap<String, HashMap<String, String>> speakers = new HashMap<String, HashMap<String, String>>();
+        HashMap<String, String> metadata = new HashMap<String, String>();
+        boolean segmented;
+        Element metaInformation;
+        Element spkTable;
+        HashMap<String, String> machineTags = new HashMap<String, String>();
+        HashSet<String> mediaFiles = new HashSet<String>();
+        if ((root.getName().equals("basic-transcription"))
+                || (root.getName().equals("segmented-transcription"))) {
+            if (root.getAttributeValue("Id") == null) {
+                id = "CID" + new GUID().makeID();
+                root.setAttribute("Id", id);
+                // attribut machen
+                // speichern
+            } else {
+                id = root.getAttributeValue("Id");
+            }
+            segmented = root.getName().equals("segmented-transcription");
+            metaInformation = root.getChild("head").getChild(
+                    "meta-information");
+            metadata.put("project-name",
+                    metaInformation.getChild("project-name").getText()
+                            .trim());
+            metadata.put("transcription-name",
+                    metaInformation.getChild("transcription-name")
+                            .getText());
+            metadata.put("comment", metaInformation.getChild("comment")
+                    .getText());
+            metadata.put("transcription-convention", metaInformation
+                    .getChild("transcription-convention").getText().trim());
+            for (Element e : (List<Element>) metaInformation
+                    .getChildren("referenced-file")) {
+                if (e.getAttributeValue("url").length() > 0) {
+                    mediaFiles.add(e.getAttributeValue("url"));
+                }
+            }
+            for (Element e : (List<Element>) metaInformation.getChild(
+                    "ud-meta-information").getChildren()) {
+                if ((e.getAttributeValue("attribute-name").startsWith("#"))) {
+                    machineTags.put(e.getAttributeValue("attribute-name")
+                            .substring(2), e.getText().trim());
+                } else {
+                    metadata.put(
+                            "ud_" + e.getAttributeValue("attribute-name"),
+                            e.getText().trim());
+                }
+            }
+            spkTable = (Element) root.getChild("head").getChild(
+                    "speakertable");
+            for (Element s : (List<Element>) spkTable.getChildren()) {
+                String sid = "SID" + new GUID().makeID();
+                speakers.put(sid, new HashMap<String, String>());
+                speakers.get(sid).put("id", s.getAttributeValue("id"));
+                speakers.get(sid).put("@abbreviation",
+                        s.getChildText("abbreviation"));
+                speakers.get(sid).put(
+                        "@sex",
+                        (s.getChild("sex").getAttributeValue("value")
+                                .equals("m") ? "male" : "female"));
+                speakers.get(sid).put("@abbreviation",
+                        s.getChildText("abbreviation"));
+                int count = 0;
+                for (Element ul : (List<Element>) s.getChild(
+                        "languages-used").getChildren()) {
+                    count++;
+                    metadata.put("@language-used-" + count,
+                            ul.getAttributeValue("lang"));
+                }
+                count = 0;
+                for (Element l1e : (List<Element>) s.getChild("l1")
+                        .getChildren()) {
+                    speakers.get(sid).put("@l1" + count,
+                            l1e.getAttributeValue("lang"));
+                    count++;
+                }
+                count = 0;
+                for (Element l2e : (List<Element>) s.getChild("l2")
+                        .getChildren()) {
+                    speakers.get(sid).put("@l2" + count,
+                            l2e.getAttributeValue("lang"));
+
+                    count++;
+                }
+
+                for (Element udi : (List<Element>) s.getChild(
+                        "ud-speaker-information").getChildren()) {
+                    speakers.get(sid).put(
+                            "ud_"
+                            + udi.getAttributeValue(
+                                    "attribute-name").trim(),
+                            udi.getText());
+
+                    // }
+                }
+                if (s.getChild("comment").getText().length() > 0) {
+                    speakers.get(sid).put("comment",
+                            s.getChild("comment").getText());
+                }
+            }
+        }
+        return partitur;
+    }
+
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
