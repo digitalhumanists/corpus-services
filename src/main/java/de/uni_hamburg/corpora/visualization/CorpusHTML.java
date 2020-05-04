@@ -34,7 +34,7 @@ public class CorpusHTML extends Visualizer {
     CorpusData cod;
 
     public CorpusHTML() {
-
+        super("CorpusHTML");
     }
 
     public String createFromComa(String coma) {

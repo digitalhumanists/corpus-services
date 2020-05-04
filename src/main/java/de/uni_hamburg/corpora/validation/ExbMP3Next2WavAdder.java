@@ -32,7 +32,7 @@ import javax.xml.xpath.XPathExpressionException;
 public class ExbMP3Next2WavAdder extends Checker implements CorpusFunction {
 
     public ExbMP3Next2WavAdder() {
-        super("add-mp3-next-2-wav");
+        super("ExbMP3Next2WavAdder");
     }
      
     @Override
