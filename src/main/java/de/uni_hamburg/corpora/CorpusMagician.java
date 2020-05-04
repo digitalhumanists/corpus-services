@@ -36,7 +36,6 @@ import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
 import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
-import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
@@ -48,6 +47,7 @@ import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
+import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmenter;
 import de.uni_hamburg.corpora.validation.LanguageToolChecker;
@@ -128,6 +128,7 @@ public class CorpusMagician {
     //TODO we need a webservice for this functionality too
     //in the future (for repo and external users)
     public static void main(String[] args) {
+
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url    
         System.out.println("CorpusMagician is now doing its magic.");
@@ -1031,13 +1032,21 @@ public class CorpusMagician {
         settingsfile.setArgName("FILE PATH");
         options.addOption(settingsfile);
 
+ 	Option verbose = new Option("v", "verbose", false, "output verbose help");
+        fix.setRequired(false);
+        options.addOption(verbose);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
         String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
-
+        String footerverbose = "\nthe available functions are:\n";
+        for(CorpusFunction cf: corpusFunctionStrings2Classes()){
+            cf.getDescription();
+        }
+        footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
@@ -1049,6 +1058,11 @@ public class CorpusMagician {
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
             formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+            System.exit(1);
+        }
+        if (cmd.hasOption("v")) {
+            // automatically generate the help statement
+            formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
         if (cmd.hasOption("p")) {
@@ -1097,6 +1111,7 @@ public class CorpusMagician {
          System.out.println(inputFilePath);
          System.out.println(outputFilePath);
          */
+
     }
 
 }
