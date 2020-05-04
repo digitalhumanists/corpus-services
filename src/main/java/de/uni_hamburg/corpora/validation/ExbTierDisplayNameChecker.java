@@ -29,7 +29,7 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
     String tierLoc = "";
 
     public ExbTierDisplayNameChecker() {
-        super("tier-displayname-checker");
+        super("ExbTierDisplayNameChecker");
     }
 
     /**

@@ -57,7 +57,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
     JLanguageTool langTool;
 
     public LanguageToolChecker() {
-        super("languagetoolchecker");
+        super("LanguageToolChecker");
     }
 
     public Report check(File f) {
