@@ -42,6 +42,7 @@ import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
+import de.uni_hamburg.corpora.validation.Checker;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
@@ -96,7 +97,7 @@ public class CorpusMagician {
     //one file I want to run a check on
     CorpusData corpusData;
     //all functions there are in the code
-    static Collection<String> allExistingCFs = new ArrayList<String>();
+    static Collection<String> allExistingCFs;
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
     static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
@@ -160,7 +161,7 @@ public class CorpusMagician {
                 CorpusMagician.chosencorpusfunctions.add(cf);
             }
             System.out.println(CorpusMagician.chosencorpusfunctions.toString());
-            corpusfunctions = corpusFunctionStrings2Classes();
+            corpusfunctions = corpusFunctionStrings2Classes(chosencorpusfunctions);
 
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
@@ -310,6 +311,7 @@ public class CorpusMagician {
     //probably need to check for implementations of CorpusFunction?
     //TODO
     public static Collection<String> getAllExistingCFs() {
+        allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
@@ -322,7 +324,7 @@ public class CorpusMagician {
         allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("FileCoverageChecker");
-        allExistingCFs.add("FileCoverageCheckerInel");
+        //allExistingCFs.add("FileCoverageCheckerInel");
         allExistingCFs.add("NormalizeEXB");
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
@@ -336,7 +338,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaTiersDescriptionAnnotationPanelChecker");
         allExistingCFs.add("ExbTierDisplayNameChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
-        allExistingCFs.add("XsltCheckerInel");
+        //allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
@@ -375,6 +377,11 @@ public class CorpusMagician {
         }
         return all;
     }
+    
+        public  static Collection<CorpusFunction> getAllExistingCFsAsCFs() {
+           
+        return  corpusFunctionStrings2Classes(getAllExistingCFs());
+    }
 
     //TODO checks which functions can be run on specified data
     public Collection<CorpusFunction> getUsableFunctions(CorpusData cd) {
@@ -399,16 +406,17 @@ public class CorpusMagician {
         return chosencorpusfunctions;
     }
 
-    public static Collection<CorpusFunction> corpusFunctionStrings2Classes() {
-        for (String function : chosencorpusfunctions) {
+    public static Collection<CorpusFunction> corpusFunctionStrings2Classes(Collection<String> corpusfunctionstrings) {
+        Collection<CorpusFunction> cf2strcorpusfunctions = new ArrayList<CorpusFunction>();
+        for (String function : corpusfunctionstrings) {
             switch (function.toLowerCase()) {
                 case "comaapostrophechecker":
                     ComaApostropheChecker cac = new ComaApostropheChecker();
-                    corpusfunctions.add(cac);
+                    cf2strcorpusfunctions.add(cac);
                     break;
                 case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
-                    corpusfunctions.add(cnslc);
+                    cf2strcorpusfunctions.add(cnslc);
                     break;
                 case "comaoverviewgeneration":
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
@@ -419,39 +427,39 @@ public class CorpusMagician {
                             System.out.println("Mode set to inel");
                         }
                     }
-                    corpusfunctions.add(cog);
+                    cf2strcorpusfunctions.add(cog);
                     break;
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
-                    corpusfunctions.add(cscc);
+                    cf2strcorpusfunctions.add(cscc);
                     break;
                 case "exbfilereferencechecker":
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
-                    corpusfunctions.add(efrc);
+                    cf2strcorpusfunctions.add(efrc);
                     break;
                 case "exbfilecoveragechecker":
                     ExbFileCoverageChecker efcc = new ExbFileCoverageChecker();
-                    corpusfunctions.add(efcc);
+                    cf2strcorpusfunctions.add(efcc);
                     break;
                 case "exbannotationpanelcheck":
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
-                    corpusfunctions.add(eapc);
+                    cf2strcorpusfunctions.add(eapc);
                     break;
                 case "filecoveragechecker":
                     ComaFileCoverageChecker fcc = new ComaFileCoverageChecker();
-                    corpusfunctions.add(fcc);
+                    cf2strcorpusfunctions.add(fcc);
                     break;
                 case "prettyprintdata":
                     PrettyPrintData pd = new PrettyPrintData();
-                    corpusfunctions.add(pd);
+                    cf2strcorpusfunctions.add(pd);
                     break;
                 case "removeabsolutepaths":
                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
-                    corpusfunctions.add(rap);
+                    cf2strcorpusfunctions.add(rap);
                     break;
                 case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
-                    corpusfunctions.add(rase);
+                    cf2strcorpusfunctions.add(rase);
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
@@ -466,47 +474,47 @@ public class CorpusMagician {
                             System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(xc);
+                    cf2strcorpusfunctions.add(xc);
                     break;
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
-                    corpusfunctions.add(catfec);
+                    cf2strcorpusfunctions.add(catfec);
                     break;
                 case "comaxsdchecker":
                     ComaXsdChecker cxsd = new ComaXsdChecker();
-                    corpusfunctions.add(cxsd);
+                    cf2strcorpusfunctions.add(cxsd);
                     break;
                 case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
-                    corpusfunctions.add(ngex);
+                    cf2strcorpusfunctions.add(ngex);
                     break;
                 case "filenamechecker":
                     FilenameChecker fnc = new FilenameChecker();
-                    corpusfunctions.add(fnc);
+                    cf2strcorpusfunctions.add(fnc);
                     break;
                 case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
-                    corpusfunctions.add(cmdi);
+                    cf2strcorpusfunctions.add(cmdi);
                     break;
                 case "comafedoraidentifierlengthchecker":
                     ComaFedoraIdentifierLengthChecker cplc = new ComaFedoraIdentifierLengthChecker();
-                    corpusfunctions.add(cplc);
+                    cf2strcorpusfunctions.add(cplc);
                     break;
                 case "comatranscriptionsnamechecker":
                     ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
-                    corpusfunctions.add(cnc);
+                    cf2strcorpusfunctions.add(cnc);
                     break;
                 case "comatiersdescriptionannotationpanelchecker":
                     ComaTiersDescriptionAnnotationPanelChecker tcwa = new ComaTiersDescriptionAnnotationPanelChecker();
-                    corpusfunctions.add(tcwa);
+                    cf2strcorpusfunctions.add(tcwa);
                     break;
                 case "exbtierdisplaynamechecker":
                     ExbTierDisplayNameChecker tc = new ExbTierDisplayNameChecker();
-                    corpusfunctions.add(tc);
+                    cf2strcorpusfunctions.add(tc);
                     break;
                 case "ngtiercheckerwithannotation":
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
-                    corpusfunctions.add(ngtcwa);
+                    cf2strcorpusfunctions.add(ngtcwa);
                     break;
                 //not needed anymore because of mode parameter
                 case "xsltcheckerinel":
@@ -518,7 +526,7 @@ public class CorpusMagician {
                             System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(xci);
+                    cf2strcorpusfunctions.add(xci);
                     break;
                 case "exb2inelisotei":
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
@@ -529,23 +537,23 @@ public class CorpusMagician {
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
                     }
-                    corpusfunctions.add(eiit);
+                    cf2strcorpusfunctions.add(eiit);
                     break;
                 //Maybe get rid of those special cases too!
                 case "exb2inelisoteisel":
                     EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
                     eiitsel.setLanguage("sel");
-                    corpusfunctions.add(eiitsel);
+                    cf2strcorpusfunctions.add(eiitsel);
                     break;
                 case "exb2inelisoteidlg":
                     EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
                     eiitdlg.setLanguage("dlg");
-                    corpusfunctions.add(eiitdlg);
+                    cf2strcorpusfunctions.add(eiitdlg);
                     break;
                 case "exb2inelisoteixas":
                     EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
                     eiitxas.setLanguage("xas");
-                    corpusfunctions.add(eiitxas);
+                    cf2strcorpusfunctions.add(eiitxas);
                     break;
                 case "exb2hiatisotei":
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
@@ -556,7 +564,7 @@ public class CorpusMagician {
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
                     }
-                    corpusfunctions.add(ehit);
+                    cf2strcorpusfunctions.add(ehit);
                     break;
                 case "normalizeexb":
                     ExbNormalize ne = new ExbNormalize();
@@ -567,15 +575,15 @@ public class CorpusMagician {
                             System.out.println("FixWhitespace set to " + cfProperties.getProperty("whitespace"));
                         }
                     }
-                    corpusfunctions.add(ne);
+                    cf2strcorpusfunctions.add(ne);
                     break;
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
-                    corpusfunctions.add(gap);
+                    cf2strcorpusfunctions.add(gap);
                     break;
                 case "iaafunctionality":
                     IAAFunctionality iaa = new IAAFunctionality();
-                    corpusfunctions.add(iaa);
+                    cf2strcorpusfunctions.add(iaa);
                     break;
                 case "filecoveragecheckerinel":
                     ComaFileCoverageChecker fcci = new ComaFileCoverageChecker();
@@ -583,7 +591,7 @@ public class CorpusMagician {
                     fcci.addWhiteListString("report-output.html");
                     fcci.addWhiteListString("Segmentation_Errors.xml");
                     fcci.addWhiteListString("Structure_Errors.xml");
-                    corpusfunctions.add(fcci);
+                    cf2strcorpusfunctions.add(fcci);
                     break;
                 case "comakmlforlocations":
                     ComaKmlForLocations ckml = new ComaKmlForLocations();
@@ -594,11 +602,11 @@ public class CorpusMagician {
                             System.out.println("KML file path set to " + cfProperties.getProperty(kml));
                         }
                     }
-                    corpusfunctions.add(ckml);
+                    cf2strcorpusfunctions.add(ckml);
                     break;
                 case "reportstatistics":
                     ReportStatistics rs = new ReportStatistics();
-                    corpusfunctions.add(rs);
+                    cf2strcorpusfunctions.add(rs);
                     break;
                 case "corpusdataregexreplacer":
                     //ToDo                   
@@ -623,7 +631,7 @@ public class CorpusMagician {
                             System.out.println("Replace in Coma set to " + cfProperties.getProperty("coma"));
                         }
                     }
-                    corpusfunctions.add(cdrr);
+                    cf2strcorpusfunctions.add(cdrr);
                     break;
                 case "zipcorpus":
                     ZipCorpus zc = new ZipCorpus();
@@ -642,7 +650,7 @@ public class CorpusMagician {
                             System.out.println("Should contain audio set to " + cfProperties.getProperty("audio"));
                         }
                     }
-                    corpusfunctions.add(zc);
+                    cf2strcorpusfunctions.add(zc);
                     break;
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
@@ -652,15 +660,15 @@ public class CorpusMagician {
                             System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
                         }
                     }
-                    corpusfunctions.add(shtml);
+                    cf2strcorpusfunctions.add(shtml);
                     break;
                 case "hscorehtml":
                     HScoreHTML hshtml = new HScoreHTML();
-                    corpusfunctions.add(hshtml);
+                    cf2strcorpusfunctions.add(hshtml);
                     break;
                 case "corpushtml":
                     CorpusHTML chtml = new CorpusHTML();
-                    corpusfunctions.add(chtml);
+                    cf2strcorpusfunctions.add(chtml);
                     break;
                 case "listhtml":
                     ListHTML lhtml = new ListHTML();
@@ -679,11 +687,11 @@ public class CorpusMagician {
                             System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(lhtml);
+                    cf2strcorpusfunctions.add(lhtml);
                     break;
                 case "exbeventlinebreakschecker":
                     ExbEventLinebreaksChecker elb = new ExbEventLinebreaksChecker();
-                    corpusfunctions.add(elb);
+                    cf2strcorpusfunctions.add(elb);
                     break;
                 case "maketimelineconsistent":
                     ExbMakeTimelineConsistent emtc = new ExbMakeTimelineConsistent();
@@ -694,11 +702,11 @@ public class CorpusMagician {
                             System.out.println("FixWhitespace set to " + cfProperties.getProperty("interpolate"));
                         }
                     }
-                    corpusfunctions.add(emtc);
+                    cf2strcorpusfunctions.add(emtc);
                     break;
                 case "exbstructurechecker":
                     ExbStructureChecker esc = new ExbStructureChecker();
-                    corpusfunctions.add(esc);
+                    cf2strcorpusfunctions.add(esc);
                     break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker eseg = new ExbSegmentationChecker();
@@ -713,7 +721,7 @@ public class CorpusMagician {
                             System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(eseg);
+                    cf2strcorpusfunctions.add(eseg);
                     break;
                 case "exbsegmenter":
                     ExbSegmenter esegr = new ExbSegmenter();
@@ -728,11 +736,11 @@ public class CorpusMagician {
                             System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(esegr);
+                    cf2strcorpusfunctions.add(esegr);
                     break;
                 case "calculateannotatedtime":
                     CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
-                    corpusfunctions.add(cat);
+                    cf2strcorpusfunctions.add(cat);
                     break;
                 case "addcsvmetadatatocoma":
                     AddCSVMetadataToComa acmtc = new AddCSVMetadataToComa();
@@ -747,15 +755,15 @@ public class CorpusMagician {
                             System.out.println("CSV file set for " + cfProperties.getProperty("speaker"));
                         }
                     }
-                    corpusfunctions.add(acmtc);
+                    cf2strcorpusfunctions.add(acmtc);
                     break;
                 case "removeemptyevents":
                     RemoveEmptyEvents ree = new RemoveEmptyEvents();
-                    corpusfunctions.add(ree);
+                    cf2strcorpusfunctions.add(ree);
                     break;
                 case "comatieroverviewcreator":
                     ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
-                    corpusfunctions.add(ctoc);
+                    cf2strcorpusfunctions.add(ctoc);
                     break;
                 case "generaltransformer":
                     GeneralTransformer gt = new GeneralTransformer();
@@ -781,23 +789,23 @@ public class CorpusMagician {
                             System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
                         }
                     }
-                    corpusfunctions.add(gt);
+                    cf2strcorpusfunctions.add(gt);
                     break;
                 case "exbmp3next2wavadder":
                     ExbMP3Next2WavAdder emn2wa = new ExbMP3Next2WavAdder();
-                    corpusfunctions.add(emn2wa);
+                    cf2strcorpusfunctions.add(emn2wa);
                     break;
                 case "exbreftierchecker":
                     ExbRefTierChecker ertc = new ExbRefTierChecker();
-                    corpusfunctions.add(ertc);
+                    cf2strcorpusfunctions.add(ertc);
                     break;
                 case "exbscriptmixchecker":
                     ExbScriptMixChecker esmc = new ExbScriptMixChecker();
-                    corpusfunctions.add(esmc);
+                    cf2strcorpusfunctions.add(esmc);
                     break;
                 case "duplicatetiercontentchecker":
                     DuplicateTierContentChecker duplc = new DuplicateTierContentChecker();
-                    corpusfunctions.add(duplc);
+                    cf2strcorpusfunctions.add(duplc);
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey("tiers")) {
@@ -808,7 +816,7 @@ public class CorpusMagician {
                     break;
                 case "comaupdatesegmentcounts":
                     ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
-                    corpusfunctions.add(cusc);
+                    cf2strcorpusfunctions.add(cusc);
                     break;
                 case "languagetoolchecker":
                     LanguageToolChecker ltc = new LanguageToolChecker();
@@ -823,13 +831,13 @@ public class CorpusMagician {
                             System.out.println("Tier to check set to " + cfProperties.getProperty("tier"));
                         }
                     }
-                    corpusfunctions.add(ltc);
+                    cf2strcorpusfunctions.add(ltc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
         }
-        return corpusfunctions;
+        return cf2strcorpusfunctions;
     }
 
     //TODO
@@ -1032,43 +1040,39 @@ public class CorpusMagician {
         settingsfile.setArgName("FILE PATH");
         options.addOption(settingsfile);
 
- 	Option verbose = new Option("v", "verbose", false, "output verbose help");
-        fix.setRequired(false);
-        options.addOption(verbose);
-
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
-        String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
-        String footerverbose = "\nthe available functions are:\n";
-        for(CorpusFunction cf: corpusFunctionStrings2Classes()){
-            cf.getDescription();
+        //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
+        String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
+        String desc;
+        for(CorpusFunction cf: getAllExistingCFsAsCFs()){
+            desc = cf.getFunction() + ":   " + cf.getDescription();
+            footerverbose += desc + "\n\n";
         }
         footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+            formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
 
+        //TODO
+        //in reality this never works because there will be an error since the required parameters are missing - but that returns the help as well....
         if (cmd.hasOption("h")) {
-            // automatically generate the help statement
-            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
-            System.exit(1);
-        }
-        if (cmd.hasOption("v")) {
             // automatically generate the help statement
             formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
+        
         if (cmd.hasOption("p")) {
             if (cmd.hasOption("s")) {
                 System.out.println("Options s and p for parameters are not allowed at the same time!!");
-                formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+                formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
                 System.exit(1);
             } else {
                 cfProperties = cmd.getOptionProperties("p");

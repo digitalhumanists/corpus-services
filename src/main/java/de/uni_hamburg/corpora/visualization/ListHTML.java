@@ -62,10 +62,11 @@ public class ListHTML extends Visualizer {
     String segmentationAlgorithm = "GENERIC";
 
     public ListHTML() {
-
+        super("ListHTML");
     }
 
     public ListHTML(String btAsString, String segmAlgorithm) {
+        super("ListHTML");
         createFromBasicTranscription(btAsString, segmAlgorithm);
     }
 
