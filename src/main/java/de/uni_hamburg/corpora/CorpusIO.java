@@ -45,7 +45,6 @@ public class CorpusIO {
     Collection<CorpusData> cdc = new ArrayList();
     Collection<URL> recursed = new ArrayList();
     Collection<URL> alldata = new ArrayList();
-    URL basedirectory;
 
     public String CorpusData2String(CorpusData cd) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return cd.toSaveableString();
@@ -169,8 +168,6 @@ public class CorpusIO {
         if (isLocalFile(url)) {
             //if the url points to a directory
             if (isDirectory(url)) {
-                //if it's a directory, the directory is the basedirectory
-                basedirectory = url;
                 //we need to iterate    
                 //and add everything to the list
                 Path path = Paths.get(url.toURI());
@@ -183,10 +180,6 @@ public class CorpusIO {
                 return alldata;
             } //if the url points to a file
             else {
-                //if it's a file, the directory of the file is the basedirectory
-                URI uri = url.toURI();
-                URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
-                basedirectory = parentURI.toURL();
                 //we need to add just this file
                 alldata.add(url);
                 return alldata;
@@ -227,9 +220,6 @@ public class CorpusIO {
 
     }
     
-    public URL getBaseDirectory() {
-    return basedirectory;
-    }
 
     void listFiles(Path path) throws IOException {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
