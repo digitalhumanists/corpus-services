@@ -74,7 +74,7 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
-                    report.addCorrect(function, cd, "removed empty event");
+                    report.addFix(function, cd, "removed empty event");
                 } catch (IOException ex) {
                     report.addException(ex, function, cd, "Input/Output Exception");
                 } catch (TransformerException ex) {

@@ -239,7 +239,7 @@ public class ExbSegmenter extends Checker implements CorpusFunction {
             Document doc = TypeConverter.String2JdomDocument(st.toXML());
             URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
             cio.write(doc, url);
-            stats.addCorrect(function, cd, "Exs successfully created at " + url);
+            stats.addFix(function, cd, "Exs successfully created at " + url);
         } else {
             for (Object o : v) {
                 FSMException fsme = (FSMException) o;

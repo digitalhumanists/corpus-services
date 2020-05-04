@@ -136,7 +136,7 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 htmlOut.print(reportStatistics);
                 htmlOut.close();
                 
-                stats.addNote(function, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
+                stats.addFix(function, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
             } else {
                 stats.addMissing(function, cd, "Corpus Report file not found "
                         + "at '" + htmlReportPath + "'. Report Statistics (graphic overview) not updated.");
