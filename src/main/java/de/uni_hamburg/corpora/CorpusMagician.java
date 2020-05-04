@@ -42,7 +42,6 @@ import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
-import de.uni_hamburg.corpora.validation.Checker;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
@@ -101,6 +100,7 @@ public class CorpusMagician {
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
     static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
+    static Collection<CorpusData> neededcorpusdatatypes = new ArrayList<CorpusData>();
     //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
@@ -166,13 +166,20 @@ public class CorpusMagician {
             System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             corpusfunctions = corpusFunctionStrings2Classes(chosencorpusfunctions);
 
-            //here is the heap space problem: everything is read all at one
-            //and kept in the heap space the whole time
             //if the input is a coma file we have a structured corpus
             //if it is a folder or another corpus file we don't
             //we can maybe minmize the heapspace when having a structured corpus
             corpuma.initCorpusWithURL(url);
-            //and here is another problem, all the corpusfiles are given as objects
+            //now all chosen functions must be run
+            //if we have the coma file, we just give Coma as Input and the Functions need to take care of using the
+            //iterating function
+            //maybe first we find out which files the chosencorpusfunctions need
+            for (CorpusFunction cf : corpusfunctions){
+                for (CorpusData cdcf : cf.getIsUsableFor()){
+                    
+                }
+                neededcorpusdatatypes
+            }
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
             /*
@@ -298,6 +305,7 @@ public class CorpusMagician {
     }
 
     //creates a corpus object from an URL (filepath or "real" url)
+    //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
     public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         corpus = new Corpus(url);
         //get the basedirectory
@@ -912,7 +920,7 @@ public class CorpusMagician {
             for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
-                if (cd != null && cl.isInstance(cd)) {
+                if (cd != null && cd instanceof cl) {
                     Report newReport = runCorpusFunction(cd, cf, fix);
                     report.merge(newReport);
                 }
