@@ -29,4 +29,5 @@ public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc);
 
 public String getDescription();
 
+public String getFunction();
 }

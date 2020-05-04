@@ -39,23 +39,23 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     private Document coma;
     private String SpeakerOrCommunication;
     private Boolean IsSpeaker;
-    final String function = "add-csv-metadata-to-coma";
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath) {
-        //super(corpusPath);
+        super("AddCSVMetadataToComa");
     }
 
     public AddCSVMetadataToComa() {
+        super("AddCSVMetadataToComa");
     }
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath, String csvPath, String SpeakerOrCommunication) {
-        //super(corpusPath);
+        super("AddCSVMetadataToComa");
         this.comaFile = corpusPath;
         this.csvFile = csvPath;
         this.SpeakerOrCommunication = SpeakerOrCommunication;

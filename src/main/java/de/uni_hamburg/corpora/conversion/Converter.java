@@ -42,8 +42,10 @@ public abstract class Converter implements CorpusFunction{
     Report report;
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
             extends CorpusData>>();
-
-    public Converter() {
+        final String function;
+   
+    Converter(String func) {
+        function = func;
     }
 
     public Report execute(Corpus c) {
@@ -190,6 +192,10 @@ public abstract class Converter implements CorpusFunction{
         for (Class cl : cdc){
         IsUsableFor.add(cl);
         }
+    }
+    
+        public String getFunction(){
+        return function;
     }
 
 }

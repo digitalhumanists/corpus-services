@@ -44,7 +44,7 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
 
     public IAAFunctionality() {
-        super("iaa-functionality");
+        super("IAAFunctionality");
     }
 
     /**

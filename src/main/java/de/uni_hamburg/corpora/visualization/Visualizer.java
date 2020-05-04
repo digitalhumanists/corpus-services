@@ -42,10 +42,12 @@ public abstract class Visualizer implements CorpusFunction {
     CorpusData cd;
     Report report;
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
+    final String function;
 
-    public Visualizer() {
-
+    public Visualizer(String func) {
+        function = func;
     }
+
 
     /**
      * Manually set the HTML content of the visualization
@@ -162,5 +164,8 @@ public abstract class Visualizer implements CorpusFunction {
         for (Class<? extends CorpusData> cl : cdc){
         IsUsableFor.add(cl);
         }
+    }
+            public String getFunction(){
+        return function;
     }
 }
