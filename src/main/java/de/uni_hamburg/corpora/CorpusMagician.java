@@ -132,15 +132,18 @@ public class CorpusMagician {
         System.out.println("CorpusMagician is now doing its magic.");
         try {
             createCommandLineOptions(args);
+            //the input can be a filepath or an url pointing to a file or a folder
+            //if the input is a coma file we have a structured corpus
+            //if it is a folder or another corpus file we don't
             String urlstring = cmd.getOptionValue("input");
             URL url;
-            fixing = cmd.hasOption("f");
-            iserrorsonly = cmd.hasOption("e");
             if (urlstring.startsWith("file://")) {
                 url = new URL(urlstring);
             } else {
                 url = Paths.get(urlstring).toUri().toURL();
             }
+            fixing = cmd.hasOption("f");
+            iserrorsonly = cmd.hasOption("e");
             CorpusMagician corpuma = new CorpusMagician();
             //now the place where Report should end up
             //also allow normal filepaths and convert them
@@ -161,6 +164,9 @@ public class CorpusMagician {
 
             //here is the heap space problem: everything is read all at one
             //and kept in the heap space the whole time
+            //if the input is a coma file we have a structured corpus
+            //if it is a folder or another corpus file we don't
+            //we can maybe minmize the heapspace when having a structured corpus
             corpuma.initCorpusWithURL(url);
             //and here is another problem, all the corpusfiles are given as objects
             report = corpuma.runChosencorpusfunctions();
@@ -828,7 +834,7 @@ public class CorpusMagician {
             if (fixing) {
                 report.merge(runCorpusFunction(corpus, function, true));
             } else {
-                report.merge(runCorpusFunction(corpus, function));
+                 report.merge(runCorpusFunction(corpus, function));
             }
         }
         return report;
