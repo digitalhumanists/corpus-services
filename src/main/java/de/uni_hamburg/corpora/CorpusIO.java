@@ -167,7 +167,9 @@ public class CorpusIO {
         alldata = URLtoList(url);
         for (URL readurl : alldata) {
             CorpusData cdread = readFileURL(readurl);
+            if(!cdc.contains(cdread)){
             cdc.add(cdread);
+            }
         }
         return cdc;
     }

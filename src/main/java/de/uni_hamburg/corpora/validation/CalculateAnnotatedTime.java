@@ -66,7 +66,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         Report stats = new Report();
         for (CorpusData cdata : c.getBasicTranscriptionData()) {
             try {
-                stats = function(cdata, false);
+                stats.merge(function(cdata, false));
             } catch (SAXException ex) {
                 Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {

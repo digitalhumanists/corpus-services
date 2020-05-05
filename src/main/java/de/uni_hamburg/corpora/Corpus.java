@@ -35,7 +35,7 @@ public class Corpus {
     Collection<SegmentedTranscriptionData> segmentedtranscriptiondata = new ArrayList();
     ComaData comadata;
     //all the data together
-    Collection<CorpusData> cdc;
+    Collection<CorpusData> cdc = new ArrayList<CorpusData>();
     URL basedirectory;
 
     public Corpus() {
@@ -55,7 +55,10 @@ public class Corpus {
         Collection<URL> urllist = coma.getReferencedCorpusDataURLs();
         basedirectory = coma.getParentURL();
         for (URL url : urllist) {
+            CorpusData cddd = cio.readFileURL(url, clcds);
+            if(!cdc.contains(cddd)){
             cdc.add(cio.readFileURL(url, clcds));
+            }
         }
         //Now create the needed 
         for (CorpusData cd : cdc) {
