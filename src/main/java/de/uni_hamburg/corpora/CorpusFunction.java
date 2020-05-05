@@ -5,7 +5,13 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.io.IOException;
 import java.util.Collection;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -15,11 +21,13 @@ public interface CorpusFunction {
 
 public Report execute(CorpusData cd);
 
+public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException;
+
 public Report execute(Corpus c);
 
 public Report execute(CorpusData cd, boolean fix);
 
-public Report execute(Collection<CorpusData> cdc, boolean fix);
+public Report execute(Corpus c, boolean fix);
 
 public Collection<Class<? extends CorpusData>> getIsUsableFor();
 

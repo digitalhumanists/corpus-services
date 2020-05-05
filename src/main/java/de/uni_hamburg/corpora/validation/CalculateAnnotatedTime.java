@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,7 +25,8 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * This class calculates annotated time for an exb file and computes the duration of each annotation in the exb.
+ * This class calculates annotated time for an exb file and computes the
+ * duration of each annotation in the exb.
  *
  */
 public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
@@ -43,7 +47,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) throws JexmaraldaException {
         Report stats = new Report();
         try {
-            stats = exceptionalCheck(cd);
+            stats = function(cd, false);
         } catch (ParserConfigurationException pce) {
             stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
@@ -58,12 +62,35 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         return stats;
     }
 
+    @Override
+    public Report check(Corpus c) {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            try {
+                stats = function(cdata, false);
+            } catch (SAXException ex) {
+                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParserConfigurationException ex) {
+                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException ex) {
+                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (TransformerException ex) {
+                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (XPathExpressionException ex) {
+                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return stats;
+    }
+
     /**
      * The primary functionality of the class; it accepts the basic
      * transcription files of the corpus one by one and computes the duration of
      * each annotation in the exb.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -197,14 +224,6 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     }
 
     /**
-     * Fix is not supported for this functionality.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -220,8 +239,9 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
