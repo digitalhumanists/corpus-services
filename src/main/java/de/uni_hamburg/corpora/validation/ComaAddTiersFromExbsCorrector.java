@@ -831,7 +831,20 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
 
     @Override
     public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    Report stats = new Report();
+    CorpusData cdata = c.getComaData();
+        try {
+            stats = exceptionalCheck(cdata);
+        } catch (JexmaraldaException je) {
+            stats.addException(je, function, cdata, "Unknown parsing error");
+        } catch (JDOMException jdome) {
+            stats.addException(jdome, function, cdata, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cdata, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cdata, "Reading/writing error");
+        }
+        return stats;    
     }
 
     @Override

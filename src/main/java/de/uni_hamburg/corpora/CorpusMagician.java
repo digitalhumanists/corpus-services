@@ -75,8 +75,6 @@ import org.apache.commons.cli.ParseException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -130,8 +128,8 @@ public class CorpusMagician {
     static String mode = "mode";
     static URL reportlocation;
     static URL inputurl;
-    Boolean isCorpus = false;
-    Boolean isCollection = false;
+    boolean isCorpus = false;
+    boolean isCollection = false;
 
     public CorpusMagician() {
     }
@@ -226,11 +224,12 @@ public class CorpusMagician {
             basedirectory = cdata.getParentURL();
             //it could be a ComaFile if it is a Metadata file
             if (cdata instanceof ComaData) {
+                //if it is we set the boolean
+                isCorpus = true;
+                System.out.println("It's a corpus" + isCorpus);
                 //TODO
                 //only read the filetypes from clcds!
                 corpus = new Corpus((ComaData) cdata, clcds);
-                //if it is we set the boolean
-                isCorpus = true;
                 //otherwise it is a single file I want to check
             } else {
                 corpusData = cdata;
@@ -912,7 +911,7 @@ public class CorpusMagician {
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on
     public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf, boolean fix) {
-        Report report = new Report();
+        Report reporter = new Report();
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
@@ -922,11 +921,11 @@ public class CorpusMagician {
             {
                 if (cd != null && cl.isInstance(cd)) {
                     Report newReport = runCorpusFunction(cd, cf, fix);
-                    report.merge(newReport);
+                    reporter.merge(newReport);
                 }
             }
         }
-        return report;
+        return reporter;
     }
 
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {

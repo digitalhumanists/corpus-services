@@ -9,6 +9,8 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -155,7 +157,25 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
 
     @Override
     public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Report stats = new Report();
+        try {
+            for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats = exceptionalCheck(cdata);
+            }
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown file reading error");
+        } catch (JexmaraldaException ex) {
+            Logger.getLogger(ExbAnnotationPanelCheck.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stats;       
     }
 
     @Override
