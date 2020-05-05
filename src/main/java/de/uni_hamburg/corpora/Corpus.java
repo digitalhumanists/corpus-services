@@ -42,57 +42,35 @@ public class Corpus {
     }
 
     //only read in the files we need!
-    public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
+    public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException {
         CorpusIO cio = new CorpusIO();
-        URL url = coma.getParentURL();
         //todo: only read what we need :)
+        //cl.isInstance(cd) - needs to be read already for this :/
         //TODO
-        //get the needed files from the NSLinks in the coma file!
+        //get the needed files from the NSLinks in the coma file as URLs
         // public Collection<URL> URLtoList(URL url)
-        
-        if (cio.isDirectory(url)) {
-            cdc = cio.read(url);
-            //read in the File Types of the unstr. folder
-            for (CorpusData cd : cdc) {
-                if (cd instanceof ContentData) {
-                    contentdata.add((ContentData) cd);
-                    if (cd instanceof BasicTranscriptionData){
-                        basictranscriptiondata.add((BasicTranscriptionData) cd);
-                    } else if (cd instanceof SegmentedTranscriptionData){
-                        segmentedtranscriptiondata.add((SegmentedTranscriptionData) cd);
-                    }
-                } else if (cd instanceof Recording) {
-                    recording.add((Recording) cd);
-                } else if (cd instanceof AdditionalData) {
-                    additionaldata.add((AdditionalData) cd);
-                } else if (cd instanceof Metadata) {
-                    metadata.add((Metadata) cd);
-                    if(cd instanceof ComaData){
-                        comadata = (ComaData) cd;
-                    }
-                } else if (cd instanceof AnnotationSpecification) {
-                    annotationspecification.add((AnnotationSpecification) cd);
-                } else if (cd instanceof ConfigParameters) {
-                    configparameters.add((ConfigParameters) cd);
-                } else if (cd instanceof CmdiData) {
-                    cmdidata.add((CmdiData) cd);
-                }
-            }
-            basedirectory = url;
-            //the URL points to one file - could be a coma or another file
-        } else {
-            CorpusData cd = cio.readFileURL(url);
+        Collection<URL> urllist = coma.getReferencedCorpusDataURLs();
+        basedirectory = coma.getParentURL();
+        for (URL url : urllist) {
+            cdc.add(cio.readFileURL(url, clcds));
+        }
+        //Now create the needed 
+        for (CorpusData cd : cdc) {
             if (cd instanceof ContentData) {
                 contentdata.add((ContentData) cd);
+                if (cd instanceof BasicTranscriptionData) {
+                    basictranscriptiondata.add((BasicTranscriptionData) cd);
+                } else if (cd instanceof SegmentedTranscriptionData) {
+                    segmentedtranscriptiondata.add((SegmentedTranscriptionData) cd);
+                }
             } else if (cd instanceof Recording) {
                 recording.add((Recording) cd);
             } else if (cd instanceof AdditionalData) {
                 additionaldata.add((AdditionalData) cd);
             } else if (cd instanceof Metadata) {
                 metadata.add((Metadata) cd);
-                //it could be a ComaFile if it is a Metadata file
                 if (cd instanceof ComaData) {
-                    //if it is we set the boolean
+                    comadata = (ComaData) cd;
                 }
             } else if (cd instanceof AnnotationSpecification) {
                 annotationspecification.add((AnnotationSpecification) cd);
@@ -101,7 +79,7 @@ public class Corpus {
             } else if (cd instanceof CmdiData) {
                 cmdidata.add((CmdiData) cd);
             }
-            basedirectory = cd.getParentURL();
+
         }
     }
 

@@ -75,6 +75,8 @@ import org.apache.commons.cli.ParseException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -185,6 +187,8 @@ public class CorpusMagician {
             report.addException(ex, "A URI was incorrect");
         } catch (XPathExpressionException ex) {
             report.addException(ex, "An Xpath expression was incorrect");
+        } catch (ClassNotFoundException ex) {
+             report.addException(ex, "Class not found");
         }
 
     }
@@ -209,7 +213,7 @@ public class CorpusMagician {
 
     //creates a corpus object from an URL (filepath or "real" url)
     //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
-    public void initDataWithURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
+    public void initDataWithURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException {
         if (cio.isDirectory(url)) {
             //TODO
             //only read the filetypes from clcds!
