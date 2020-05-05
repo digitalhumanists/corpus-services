@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
@@ -114,6 +115,11 @@ public class CorpusHTML extends Visualizer {
                 + "needed for the ingest into the repository. ";
         return description;
 
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

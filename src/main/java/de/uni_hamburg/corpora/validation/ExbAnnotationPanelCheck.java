@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -150,6 +151,16 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
         String description = "This class checks whether the annotations in exb "
                 + "files comply with the annotation specification panel. ";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -18,6 +19,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.xml.sax.SAXException;
 
 /**
@@ -106,6 +108,16 @@ public class ExbNormalize extends Checker implements CorpusFunction {
         String description = "This class normalises the basic transcription data using "
                 + "the EXMARaLDA function and fixes white spaces if set by a parameter. ";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

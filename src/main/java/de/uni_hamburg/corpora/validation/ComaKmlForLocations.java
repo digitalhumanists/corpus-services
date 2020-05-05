@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -486,5 +487,15 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 + " location information; creates a list of different location names;"
                 + " gets geo-coordinates for the location names via Google API.";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -31,6 +32,8 @@ import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This is the check procedure for the Nganasan Corpus
@@ -714,5 +717,15 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                 + " Corpus and checks if the file names in the corpus comply with"
                 + " the coma file.";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

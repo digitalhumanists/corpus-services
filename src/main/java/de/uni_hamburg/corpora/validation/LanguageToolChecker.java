@@ -10,6 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -23,6 +24,8 @@ import java.util.Collection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.CommandLine;
@@ -331,5 +334,15 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
 
     public void setTierToCheck(String ttc) {
         tierToCheck = ttc;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

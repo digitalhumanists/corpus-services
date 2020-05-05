@@ -14,6 +14,9 @@ import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -38,6 +41,7 @@ public abstract class Checker implements CorpusFunction {
     Report report = new Report();
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     final String function;
+    Boolean fix;
 
     //we could have the description here too later 
     Checker(String func) {
@@ -95,6 +99,11 @@ public abstract class Checker implements CorpusFunction {
 
     //To implement in the class
     public abstract Report check(Corpus c);
+    
+    //To implement in the class
+    public abstract Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException;
+    
+
 
     //To implement in the class
     //If there is no possibility to fix it throw a warning that says that
@@ -124,4 +133,5 @@ public abstract class Checker implements CorpusFunction {
     public String getFunction() {
         return function;
     }
+    
 }

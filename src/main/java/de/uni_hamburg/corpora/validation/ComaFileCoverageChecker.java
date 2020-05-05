@@ -8,6 +8,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -36,6 +37,8 @@ import org.xml.sax.SAXException;
 
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URISyntaxException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * A class that can load coma data and check for potential problems with HZSK
@@ -559,6 +562,16 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                 + " it checks Exmaralda coma file for file references if a referenced "
                 + "file does not exist, issues a warning;";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
