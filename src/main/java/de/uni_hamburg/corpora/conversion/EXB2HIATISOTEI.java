@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -83,7 +84,20 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     * next to the CorpusData object
     * and gives back a report how it worked
      */
-    public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException,
+
+    /**
+     *
+     * @param cd
+     * @return
+     * @throws SAXException
+     * @throws FSMException
+     * @throws XSLTransformException
+     * @throws JDOMException
+     * @throws IOException
+     * @throws Exception
+     */
+
+    public Report function(CorpusData cd) throws SAXException,
             FSMException,
             XSLTransformException,
             JDOMException,
@@ -538,7 +552,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         //save the converted file next to corpus data file (url)
         report = new Report();
         try {
-            report = convertCD2MORPHEMEHIATISOTEI(cd);
+            report = function(cd);
         } catch (XSLTransformException ex) {
             report.addException(ex, function, cd, "unknown XSLT error");
         } catch (Exception ex) {
@@ -567,5 +581,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     public void setLanguage(String lang) {
         language = lang;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

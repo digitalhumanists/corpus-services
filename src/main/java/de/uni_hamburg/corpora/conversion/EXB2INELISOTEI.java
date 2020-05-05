@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -83,7 +84,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     * next to the CorpusData object
     * and gives back a report how it worked
      */
-    public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
+    public Report function(CorpusData cd) {
         return convertCD2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
     }
 
@@ -636,7 +637,7 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
         //String for filename where it should be written
         //better be a URL?
         report = new Report();
-        report = convertCD2MORPHEMEHIATISOTEI(cd);
+        report = function(cd);
         return report;
     }
 
@@ -656,6 +657,11 @@ public class EXB2INELISOTEI extends Converter implements CorpusFunction {
     public String getDescription() {
         String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
         return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
