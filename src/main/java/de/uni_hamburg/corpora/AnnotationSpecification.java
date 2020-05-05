@@ -31,6 +31,10 @@ class AnnotationSpecification implements CorpusData, XMLData {
     String filename;
     String filenamewithoutending;
 
+    public AnnotationSpecification(){
+        
+    }
+    
     public AnnotationSpecification(URL url) {
         try {
             this.url = url;

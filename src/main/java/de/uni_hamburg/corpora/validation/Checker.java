@@ -14,7 +14,6 @@ import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -37,10 +36,9 @@ public abstract class Checker implements CorpusFunction {
     ValidatorSettings settings;
     CorpusData cd;
     Report report = new Report();
-    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
-            extends CorpusData>>();
+    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     final String function;
-   
+
     //we could have the description here too later 
     Checker(String func) {
         function = func;
@@ -80,42 +78,50 @@ public abstract class Checker implements CorpusFunction {
             return report;
         }
     }
-    
+
     public Report execute(Corpus c, boolean fix) {
         report = new Report();
-        if (fix) {           
-                report = fix(c);           
+        if (fix) {
+            report = fix(c);
             return report;
-        } else {           
-                report = check(c);
+        } else {
+            report = check(c);
             return report;
         }
     }
 
     //To implement in the class
     public abstract Report check(CorpusData cd) throws SAXException, JexmaraldaException;
-    
+
     //To implement in the class
     public abstract Report check(Corpus c);
 
     //To implement in the class
     //If there is no possibility to fix it throw a warning that says that
-    public abstract Report fix(CorpusData cd) throws
-            SAXException, JDOMException, IOException, JexmaraldaException;
-    
+    public Report fix(CorpusData cd) throws
+            SAXException, JDOMException, IOException, JexmaraldaException {
+        report.addCritical(function,
+                "Automatic fix is not yet supported.");
+        return report;
+    }
+
     //To implement in the class
     //If there is no possibility to fix it throw a warning that says that
-    public abstract Report fix(Corpus c);
+    public Report fix(Corpus c){
+                report.addCritical(function,
+                "Automatic fix is not yet supported.");
+        return report;
+    }
 
     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
 
-    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
-        for (Class<? extends CorpusData> cl : cdc){
-        IsUsableFor.add(cl);
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
+        for (Class<? extends CorpusData> cl : cdc) {
+            IsUsableFor.add(cl);
         }
     }
 
-    public String getFunction(){
+    public String getFunction() {
         return function;
     }
 }

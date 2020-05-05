@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import static java.lang.System.out;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
@@ -35,8 +34,6 @@ import org.xml.sax.SAXException;
  */
 public class CorpusIO {
 
-    public CorpusIO() {
-    }
 
     //The content in here probably has not much to do with what we decided in UML now,
     //need to be reworked
@@ -45,7 +42,23 @@ public class CorpusIO {
     Collection<CorpusData> cdc = new ArrayList();
     Collection<URL> recursed = new ArrayList();
     Collection<URL> alldata = new ArrayList();
+    Collection<Class<? extends CorpusData>> allCorpusDataTypes = new ArrayList();
+    BasicTranscriptionData bt = new BasicTranscriptionData();
+    ComaData coma = new ComaData();
+    AnnotationSpecification asp = new AnnotationSpecification();
+    CmdiData cmdidata = new CmdiData();
+    UnspecifiedXMLData usdata = new UnspecifiedXMLData();
+    SegmentedTranscriptionData segdata = new SegmentedTranscriptionData();
 
+    public CorpusIO() {
+        allCorpusDataTypes.add(bt.getClass());
+        allCorpusDataTypes.add(coma.getClass());
+        allCorpusDataTypes.add(asp.getClass());
+        allCorpusDataTypes.add(cmdidata.getClass());
+        allCorpusDataTypes.add(usdata.getClass());
+        allCorpusDataTypes.add(segdata.getClass());
+    }
+        
     public String CorpusData2String(CorpusData cd) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return cd.toSaveableString();
     }
@@ -109,35 +122,40 @@ public class CorpusIO {
     }
 
     //read a single file as a corpus data object from an url
-    public CorpusData readFileURL(URL url) throws SAXException, JexmaraldaException {
-        if (url.getPath().endsWith("exb")) {
-            BasicTranscriptionData bt = new BasicTranscriptionData(url);
-            //bt.loadFile(f);
-            return bt;
-        } else if (url.getPath().toLowerCase().endsWith("coma")) {
+    //only read it if it is needed
+    public CorpusData readFileURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws SAXException, JexmaraldaException, ClassNotFoundException{
+        if (url.getPath().endsWith("exb") && clcds.contains(bt.getClass())) {
+            BasicTranscriptionData btd = new BasicTranscriptionData(url);
+            return btd;
+        } else if (url.getPath().toLowerCase().endsWith("coma") && clcds.contains(coma.getClass())) {
             ComaData cm = new ComaData(url);
             return cm;
-        } else if (url.getPath().toLowerCase().endsWith("xml") && ((url.getPath().toLowerCase().contains("Annotation")))) {
+        } else if (url.getPath().toLowerCase().endsWith("xml") && ((url.getPath().toLowerCase().contains("Annotation"))) && clcds.contains(asp.getClass())) {
             AnnotationSpecification as = new AnnotationSpecification(url);
             return as;
-        } else if ((url.getPath().toLowerCase().endsWith("xml") && url.getPath().toLowerCase().contains("cmdi")) || url.getPath().toLowerCase().endsWith("cmdi")) {
+        } else if ((url.getPath().toLowerCase().endsWith("xml") && url.getPath().toLowerCase().contains("cmdi")) && clcds.contains(cmdidata.getClass()) || url.getPath().toLowerCase().endsWith("cmdi") && clcds.contains(cmdidata.getClass())) {
             CmdiData cmdi = new CmdiData(url);
             return cmdi;
-        } else if (url.getPath().toLowerCase().endsWith("xml")) {
+        } else if (url.getPath().toLowerCase().endsWith("xml") && clcds.contains(usdata.getClass())) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
             return usd;
-        } else if (url.getPath().toLowerCase().endsWith("exs")) {
-            SegmentedTranscriptionData usd = new SegmentedTranscriptionData(url);
-            return usd;
+        } else if (url.getPath().toLowerCase().endsWith("exs") && clcds.contains(segdata.getClass())) {
+            SegmentedTranscriptionData seg = new SegmentedTranscriptionData(url);
+            return seg;
         } else {
             System.out.println(url + " is not xml CorpusData");
             CorpusData cd = null;
             return cd;
         }
     }
+            
+    //read a single file as a corpus data object from an url
+    public CorpusData readFileURL(URL url) throws SAXException, JexmaraldaException, ClassNotFoundException {
+       return readFileURL(url, allCorpusDataTypes);
+    }
 
     //read all the files as corpus data objects from a directory url
-    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException, SAXException, JexmaraldaException {
+    public Collection<CorpusData> read(URL url) throws URISyntaxException, IOException, SAXException, JexmaraldaException, ClassNotFoundException {
         alldata = URLtoList(url);
         for (URL readurl : alldata) {
             CorpusData cdread = readFileURL(readurl);
@@ -147,7 +165,7 @@ public class CorpusIO {
     }
     
     //read only the files as corpus data objects from a directory url that are specified in the Collection
-    public Collection<CorpusData> read(URL url, Collection<Class<? extends CorpusData>> chosencdc) throws URISyntaxException, IOException, SAXException, JexmaraldaException {
+    public Collection<CorpusData> read(URL url, Collection<Class<? extends CorpusData>> chosencdc) throws URISyntaxException, IOException, SAXException, JexmaraldaException, ClassNotFoundException {
         //To do
         alldata = URLtoList(url);
         for (URL readurl : alldata) {

@@ -31,85 +31,45 @@ public class Corpus {
     Collection<AnnotationSpecification> annotationspecification = new ArrayList();
     Collection<ConfigParameters> configparameters = new ArrayList();
     private Collection<CmdiData> cmdidata = new ArrayList();
+    Collection<BasicTranscriptionData> basictranscriptiondata = new ArrayList();
+    Collection<SegmentedTranscriptionData> segmentedtranscriptiondata = new ArrayList();
+    ComaData comadata;
     //all the data together
     Collection<CorpusData> cdc;
     URL basedirectory;
 
     public Corpus() {
-
     }
 
-    //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
-    public Corpus(URL url) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
+    //only read in the files we need!
+    public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
         CorpusIO cio = new CorpusIO();
-        //check if the input is an unsorted directory
-        if (cio.isDirectory(url)) {
-            cdc = cio.read(url);
-            //read in the File Types of the unstr. folder
-            for (CorpusData cd : cdc) {
-                if (cd instanceof ContentData) {
-                    contentdata.add((ContentData) cd);
-                } else if (cd instanceof Recording) {
-                    recording.add((Recording) cd);
-                } else if (cd instanceof AdditionalData) {
-                    additionaldata.add((AdditionalData) cd);
-                } else if (cd instanceof Metadata) {
-                    metadata.add((Metadata) cd);
-                } else if (cd instanceof AnnotationSpecification) {
-                    annotationspecification.add((AnnotationSpecification) cd);
-                } else if (cd instanceof ConfigParameters) {
-                    configparameters.add((ConfigParameters) cd);
-                } else if (cd instanceof CmdiData) {
-                    cmdidata.add((CmdiData) cd);
-                }
-            }
-            basedirectory = url;
-            //the URL points to one file - could be a coma or another file
-        } else {
-            CorpusData cd = cio.readFileURL(url);
-            if (cd instanceof ContentData) {
-                contentdata.add((ContentData) cd);
-            } else if (cd instanceof Recording) {
-                recording.add((Recording) cd);
-            } else if (cd instanceof AdditionalData) {
-                additionaldata.add((AdditionalData) cd);
-            } else if (cd instanceof Metadata) {
-                metadata.add((Metadata) cd);
-                //it could be a ComaFile if it is a Metadata file
-                if (cd instanceof ComaData) {
-                    //if it is we set the boolean
-                    
-                }
-            } else if (cd instanceof AnnotationSpecification) {
-                annotationspecification.add((AnnotationSpecification) cd);
-            } else if (cd instanceof ConfigParameters) {
-                configparameters.add((ConfigParameters) cd);
-            } else if (cd instanceof CmdiData) {
-                cmdidata.add((CmdiData) cd);
-            }
-            basedirectory = cd.getParentURL();
-        }
-    }
-    
-    //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
-    
-//only read in the files we need!
-    public Corpus(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
-        CorpusIO cio = new CorpusIO();
-        //check if the input is an unsorted directory
+        URL url = coma.getParentURL();
+        //todo: only read what we need :)
+        //TODO
+        //get the needed files from the NSLinks in the coma file!
         // public Collection<URL> URLtoList(URL url)
+        
         if (cio.isDirectory(url)) {
             cdc = cio.read(url);
             //read in the File Types of the unstr. folder
             for (CorpusData cd : cdc) {
                 if (cd instanceof ContentData) {
                     contentdata.add((ContentData) cd);
+                    if (cd instanceof BasicTranscriptionData){
+                        basictranscriptiondata.add((BasicTranscriptionData) cd);
+                    } else if (cd instanceof SegmentedTranscriptionData){
+                        segmentedtranscriptiondata.add((SegmentedTranscriptionData) cd);
+                    }
                 } else if (cd instanceof Recording) {
                     recording.add((Recording) cd);
                 } else if (cd instanceof AdditionalData) {
                     additionaldata.add((AdditionalData) cd);
                 } else if (cd instanceof Metadata) {
                     metadata.add((Metadata) cd);
+                    if(cd instanceof ComaData){
+                        comadata = (ComaData) cd;
+                    }
                 } else if (cd instanceof AnnotationSpecification) {
                     annotationspecification.add((AnnotationSpecification) cd);
                 } else if (cd instanceof ConfigParameters) {
@@ -177,6 +137,18 @@ public class Corpus {
         return cmdidata;
     }
 
+    public Collection<BasicTranscriptionData> getBasicTranscriptionData() {
+        return basictranscriptiondata;
+    }
+
+    public Collection<SegmentedTranscriptionData> getSegmentedTranscriptionData() {
+        return segmentedtranscriptiondata;
+    }
+
+    public ComaData getComaData() {
+        return comadata;
+    }
+
     public void setMetadata(Collection<Metadata> metadata) {
         this.metadata = metadata;
     }
@@ -207,6 +179,18 @@ public class Corpus {
 
     public void setCmdidata(Collection<CmdiData> cmdidata) {
         this.cmdidata = cmdidata;
+    }
+
+    public void setBasicTranscriptionData(Collection<BasicTranscriptionData> basictranscriptions) {
+        this.basictranscriptiondata = basictranscriptions;
+    }
+
+    public void setSegmentedTranscriptionData(Collection<SegmentedTranscriptionData> segmentedtranscriptions) {
+        this.segmentedtranscriptiondata = segmentedtranscriptions;
+    }
+
+    public void setComaData(ComaData coma) {
+        this.comadata = coma;
     }
 
     public URL getBaseDirectory() {

@@ -224,7 +224,7 @@ public class CorpusMagician {
             if (cdata instanceof ComaData) {
                 //TODO
                 //only read the filetypes from clcds!
-                corpus = new Corpus(url, clcds);
+                corpus = new Corpus((ComaData) cdata, clcds);
                 //if it is we set the boolean
                 isCorpus = true;
                 //otherwise it is a single file I want to check
