@@ -37,6 +37,10 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
     String filename;
     String filenamewithoutending;
 
+    public CmdiData() {
+
+    }
+
     public CmdiData(URL url) {
         try {
             this.url = url;
@@ -63,7 +67,7 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
     }
 
     @Override
-    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return toPrettyPrintedXML();
     }
 
@@ -72,7 +76,7 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
         return originalstring;
     }
 
-    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         PrettyPrinter pp = new PrettyPrinter();
         String prettyCorpusData = pp.indent(toUnformattedString(), "event");
         //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
@@ -88,8 +92,8 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
     public URL getParentURL() {
         return parenturl;
     }
-    
-        @Override
+
+    @Override
     public Document getJdom() {
         return jdom;
     }

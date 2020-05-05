@@ -36,6 +36,10 @@ public class UnspecifiedXMLData implements CorpusData, XMLData {
     String filename;
     String filenamewithoutending;
 
+    public UnspecifiedXMLData() {
+
+    }
+
     public UnspecifiedXMLData(URL url) {
         try {
             this.url = url;
@@ -71,7 +75,7 @@ public class UnspecifiedXMLData implements CorpusData, XMLData {
         return originalstring;
     }
 
-    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         PrettyPrinter pp = new PrettyPrinter();
         String prettyCorpusData = pp.indent(toUnformattedString(), "event");
         //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
