@@ -40,6 +40,9 @@ public class Corpus {
 
     public Corpus() {
     }
+    
+     public Corpus(URL url) {
+    }
 
     //only read in the files we need!
     public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException {

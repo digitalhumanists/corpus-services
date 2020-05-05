@@ -35,9 +35,13 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     URL url;
     String originalstring;
     URL parenturl;
-        String filename;
+    String filename;
     String filenamewithoutending;
     List segmentCounts;
+
+    public SegmentedTranscriptionData() {
+
+    }
 
     public SegmentedTranscriptionData(URL url) {
         try {
@@ -130,12 +134,12 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     public void setFilenameWithoutFileEnding(String s) {
         filenamewithoutending = s;
     }
-    
+
     public List getSegmentCounts() throws JDOMException {
         XPath context = XPath.newInstance("/segmented-transcription/head/meta-information/ud-meta-information/ud-information[starts-with(@attribute-name,'#')]");
         List allContextInstances = context.selectNodes(jdom);
         segmentCounts = allContextInstances;
         return segmentCounts;
     }
-    
+
 }
