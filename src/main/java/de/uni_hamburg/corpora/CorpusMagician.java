@@ -100,7 +100,7 @@ public class CorpusMagician {
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
     static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
-    static Collection<CorpusData> neededcorpusdatatypes = new ArrayList<CorpusData>();
+    static Collection<Class<? extends CorpusData>> neededcorpusdatatypes = new ArrayList<Class<? extends CorpusData>>();
     //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
@@ -108,7 +108,7 @@ public class CorpusMagician {
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
     static boolean iserrorsonly = false;
-    static boolean isfixesjson= false;
+    static boolean isfixesjson = false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
@@ -165,21 +165,22 @@ public class CorpusMagician {
             }
             System.out.println(CorpusMagician.chosencorpusfunctions.toString());
             corpusfunctions = corpusFunctionStrings2Classes(chosencorpusfunctions);
-
+            //first we find out which files the chosencorpusfunctions need as input
+            for (CorpusFunction cf : corpusfunctions) {
+                for (Class<? extends CorpusData> cecd : cf.getIsUsableFor()) {
+                    if (!neededcorpusdatatypes.contains(cecd)) {
+                        neededcorpusdatatypes.add(cecd);
+                    }
+                }
+            }
             //if the input is a coma file we have a structured corpus
             //if it is a folder or another corpus file we don't
             //we can maybe minmize the heapspace when having a structured corpus
+            //we only want to have the data as objects that will be really needed in the functions
             corpuma.initCorpusWithURL(url);
             //now all chosen functions must be run
             //if we have the coma file, we just give Coma as Input and the Functions need to take care of using the
             //iterating function
-            //maybe first we find out which files the chosencorpusfunctions need
-            for (CorpusFunction cf : corpusfunctions){
-                for (CorpusData cdcf : cf.getIsUsableFor()){
-                    
-                }
-                neededcorpusdatatypes
-            }
             report = corpuma.runChosencorpusfunctions();
             //this is a possible solution, but not working yet
             /*
@@ -255,11 +256,11 @@ public class CorpusMagician {
                 System.out.println("Wrote ErrorList at " + errorlistlocation);
             }
             if (isfixesjson) {
-            String fixJson = report.getFixJson();
-            if (fixJson != null) {            
-                cio.write(fixJson, fixJsonlocation);
-                System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
-            }
+                String fixJson = report.getFixJson();
+                if (fixJson != null) {
+                    cio.write(fixJson, fixJsonlocation);
+                    System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
+                }
             }
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
@@ -391,10 +392,10 @@ public class CorpusMagician {
         }
         return all;
     }
-    
-        public  static Collection<CorpusFunction> getAllExistingCFsAsCFs() {
-           
-        return  corpusFunctionStrings2Classes(getAllExistingCFs());
+
+    public static Collection<CorpusFunction> getAllExistingCFsAsCFs() {
+
+        return corpusFunctionStrings2Classes(getAllExistingCFs());
     }
 
     //TODO checks which functions can be run on specified data
@@ -920,7 +921,7 @@ public class CorpusMagician {
             for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
             //of the class cl, run the function
             {
-                if (cd != null && cd instanceof cl) {
+                if (cd != null && cl.isInstance(cd)) {
                     Report newReport = runCorpusFunction(cd, cf, fix);
                     report.merge(newReport);
                 }
@@ -1044,7 +1045,7 @@ public class CorpusMagician {
         Option errorsonly = new Option("e", "errorsonly", false, "output only errors");
         fix.setRequired(false);
         options.addOption(errorsonly);
-        
+
         Option fixesjson = new Option("j", "fixesjson", false, "output json file for fixes");
         fix.setRequired(false);
         options.addOption(fixesjson);
@@ -1062,7 +1063,7 @@ public class CorpusMagician {
         //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
         String desc;
-        for(CorpusFunction cf: getAllExistingCFsAsCFs()){
+        for (CorpusFunction cf : getAllExistingCFsAsCFs()) {
             desc = cf.getFunction() + ":   " + cf.getDescription();
             footerverbose += desc + "\n\n";
         }
@@ -1082,7 +1083,7 @@ public class CorpusMagician {
             formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
-        
+
         if (cmd.hasOption("p")) {
             if (cmd.hasOption("s")) {
                 System.out.println("Options s and p for parameters are not allowed at the same time!!");
@@ -1129,7 +1130,6 @@ public class CorpusMagician {
          System.out.println(inputFilePath);
          System.out.println(outputFilePath);
          */
-
     }
 
 }
