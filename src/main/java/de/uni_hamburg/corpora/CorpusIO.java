@@ -34,9 +34,6 @@ import org.xml.sax.SAXException;
  */
 public class CorpusIO {
 
-
-    //The content in here probably has not much to do with what we decided in UML now,
-    //need to be reworked
     //that's the local filepath or repository url
     URL url;
     Collection<CorpusData> cdc = new ArrayList();
@@ -63,22 +60,6 @@ public class CorpusIO {
         return cd.toSaveableString();
     }
 
-
-    /*
-     * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
-     *
-
-     public abstract Collection getAllTranscripts();
-
-     public abstract Collection getAllAudioFiles();
-
-     public abstract Collection getAllVideoFiles();
-
-     public abstract String getAudioLinkForTranscript();
-
-     public abstract String getVideoLinkForTranscript();
-
-     */
     public void write(CorpusData cd, URL url) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         write(cd.toSaveableString(), cd.getURL());
     }
@@ -121,6 +102,22 @@ public class CorpusIO {
         //TODO
     }
 
+        /*
+     * The following methods need to be in the Iterators for Coma and CMDI that don't exist yet
+     *
+
+     public abstract Collection getAllTranscripts();
+
+     public abstract Collection getAllAudioFiles();
+
+     public abstract Collection getAllVideoFiles();
+
+     public abstract String getAudioLinkForTranscript();
+
+     public abstract String getVideoLinkForTranscript();
+
+     */
+    
     //read a single file as a corpus data object from an url
     //only read it if it is needed
     public CorpusData readFileURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws SAXException, JexmaraldaException, ClassNotFoundException{
