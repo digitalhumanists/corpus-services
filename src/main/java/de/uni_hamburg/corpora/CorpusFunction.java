@@ -17,8 +17,6 @@ public Report execute(CorpusData cd);
 
 public Report execute(Corpus c);
 
-public Report execute(Collection<CorpusData> cdc);
-
 public Report execute(CorpusData cd, boolean fix);
 
 public Report execute(Collection<CorpusData> cdc, boolean fix);

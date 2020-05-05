@@ -57,6 +57,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -91,15 +92,18 @@ public class CorpusMagician {
 
     //the whole corpus I want to run checks on
     static Corpus corpus;
+    //a collection of unordered files I want to run checks on
+    Collection<CorpusData> cdc;
+    //a single file I want to run checks on
+    CorpusData corpusData;
     //Basedirectory if it exists
     static URL basedirectory;
-    //one file I want to run a check on
-    CorpusData corpusData;
     //all functions there are in the code
     static Collection<String> allExistingCFs;
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
     static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
+    //need to have Map or something for this
     static Collection<Class<? extends CorpusData>> neededcorpusdatatypes = new ArrayList<Class<? extends CorpusData>>();
     //the final Report
     static Report report = new Report();
@@ -122,6 +126,10 @@ public class CorpusMagician {
     static String corpusname = "corpusname";
     static String kml = "kml";
     static String mode = "mode";
+    static URL reportlocation;
+    static URL inputurl;
+    Boolean isCorpus = false;
+    Boolean isCollection = false;
 
     public CorpusMagician() {
     }
@@ -133,39 +141,15 @@ public class CorpusMagician {
         //first args needs to be the URL
         //check if it's a filepath, we could just convert it to an url    
         System.out.println("CorpusMagician is now doing its magic.");
+        CorpusMagician corpuma = new CorpusMagician();
         try {
+            //create the options for the commandline
             createCommandLineOptions(args);
-            //the input can be a filepath or an url pointing to a file or a folder
-            //if the input is a coma file we have a structured corpus
-            //if it is a folder or another corpus file we don't
-            String urlstring = cmd.getOptionValue("input");
-            URL url;
-            fixing = cmd.hasOption("f");
-            iserrorsonly = cmd.hasOption("e");
-            isfixesjson = cmd.hasOption("j");
-            if (urlstring.startsWith("file://")) {
-                url = new URL(urlstring);
-            } else {
-                url = Paths.get(urlstring).toUri().toURL();
-            }
-            CorpusMagician corpuma = new CorpusMagician();
-            //now the place where Report should end up
-            //also allow normal filepaths and convert them
-            String reportstring = cmd.getOptionValue("output");
-            URL reportlocation;
-            if (reportstring.startsWith("file://")) {
-                reportlocation = new URL(reportstring);
-            } else {
-                reportlocation = Paths.get(reportstring).toUri().toURL();
-            }
-            //now add the functionsstrings to array
-            String[] corpusfunctionarray = cmd.getOptionValues("c");
-            for (String cf : corpusfunctionarray) {
-                CorpusMagician.chosencorpusfunctions.add(cf);
-            }
-            System.out.println(CorpusMagician.chosencorpusfunctions.toString());
+            //read the options specified on the commandline
+            readCommandLineOptions();
+            //convert strings from commandline to corpusfunction objects
             corpusfunctions = corpusFunctionStrings2Classes(chosencorpusfunctions);
-            //first we find out which files the chosencorpusfunctions need as input
+            //find out which files the chosencorpusfunctions need as input
             for (CorpusFunction cf : corpusfunctions) {
                 for (Class<? extends CorpusData> cecd : cf.getIsUsableFor()) {
                     if (!neededcorpusdatatypes.contains(cecd)) {
@@ -173,95 +157,18 @@ public class CorpusMagician {
                     }
                 }
             }
+            //the input can be a filepath or an url pointing to a file or a folder
             //if the input is a coma file we have a structured corpus
             //if it is a folder or another corpus file we don't
             //we can maybe minmize the heapspace when having a structured corpus
             //we only want to have the data as objects that will be really needed in the functions
-            corpuma.initCorpusWithURL(url);
+            corpuma.initDataWithURL(inputurl, neededcorpusdatatypes);
+            //We can only init an corpus object if we know it's a structured corpus
             //now all chosen functions must be run
             //if we have the coma file, we just give Coma as Input and the Functions need to take care of using the
             //iterating function
             report = corpuma.runChosencorpusfunctions();
-            //this is a possible solution, but not working yet
-            /*
-             if (cmd.hasOption("s")) {
-             corpuma.initCorpusWithURL(url);
-             //and here is another problem, all the corpusfiles are given as objects
-             report = corpuma.runChosencorpusfunctions();
-             } else {
-             //if we don't have so much heap space, we want things to be slower
-             //so we just save a string array lsit of all the available files/urls/datastreams
-             alldata = corpuma.createListofData(url);
-             for (URL allurl : alldata) {
-             try {
-             File f = new File(allurl.getFile());
-             CorpusData cd;
-             cd = cio.toCorpusData(f);
-             if (cd != null) {
-             if (fixing) {
-             report.merge(runCorpusFunctions(cd, corpusfunctions, true));
-             } else {
-             report.merge(runCorpusFunctions(cd, corpusfunctions));
-             }
-             }
-             } catch (SAXException ex) {
-             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (JexmaraldaException ex) {
-             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-             }
-
-             }
-             }
-             */
-            System.out.println(report.getFullReports());
-            String reportOutput;
-            if (reportlocation.getFile().endsWith("html")) {
-                if (iserrorsonly) {
-                    //ToDo
-                    //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
-                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
-                } else {
-                    reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
-                }
-            } else {
-                //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
-                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
-            }
-            String absoluteReport = reportOutput;
-            if (absoluteReport != null && basedirectory != null && absoluteReport.contains(basedirectory.toString())) {
-                absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
-            }
-            if (absoluteReport != null) {
-                cio.write(absoluteReport, reportlocation);
-            }
-            //create the error list file
-            System.out.println("Basedirectory is " + basedirectory);
-            System.out.println("BasedirectoryPath is " + basedirectory.getPath());
-            URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
-            URL fixJsonlocation = new URL(basedirectory + "curation/fixes.json");
-            File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
-            if (!curationFolder.exists()) {
-                //the curation folder it not there and needs to be created
-                curationFolder.mkdirs();
-            }
-            // new File(url.getFile()
-            Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
-            String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
-            if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
-                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "../");
-            }
-            if (exmaErrorListString != null) {
-                exmaErrorListString = pp.indent(exmaErrorListString, "event");
-                cio.write(exmaErrorListString, errorlistlocation);
-                System.out.println("Wrote ErrorList at " + errorlistlocation);
-            }
-            if (isfixesjson) {
-                String fixJson = report.getFixJson();
-                if (fixJson != null) {
-                    cio.write(fixJson, fixJsonlocation);
-                    System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
-                }
-            }
+            createReports();
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
         } catch (IOException ex) {
@@ -300,18 +207,31 @@ public class CorpusMagician {
         allExistingCFs.add(cf.getClass().getName());
     }
 
-    //creates a new empty corpus object
-    public void initCorpus() {
-        corpus = new Corpus();
-    }
-
     //creates a corpus object from an URL (filepath or "real" url)
     //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
-        corpus = new Corpus(url);
-        //get the basedirectory
-        //URL can be a path to a file too, then basedirectroy is different
-        basedirectory = corpus.getBaseDirectory();
+    public void initDataWithURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
+        if (cio.isDirectory(url)) {
+            //TODO
+            //only read the filetypes from clcds!
+            cdc = cio.read(url, clcds);
+            basedirectory = url;
+            isCollection = true;
+        } else {
+            CorpusData cdata = cio.readFileURL(url);
+            //get the basedirectory
+            basedirectory = cdata.getParentURL();
+            //it could be a ComaFile if it is a Metadata file
+            if (cdata instanceof ComaData) {
+                //TODO
+                //only read the filetypes from clcds!
+                corpus = new Corpus(url, clcds);
+                //if it is we set the boolean
+                isCorpus = true;
+                //otherwise it is a single file I want to check
+            } else {
+                corpusData = cdata;
+            }
+        }
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
@@ -855,16 +775,37 @@ public class CorpusMagician {
         return cf2strcorpusfunctions;
     }
 
-    //TODO
-    //run the chosen functions on the chosen corpus
+    //run the chosen functions on the chosen corpus data
     Report runChosencorpusfunctions() {
-        for (CorpusFunction function : corpusfunctions) {
-            if (fixing) {
-                report.merge(runCorpusFunction(corpus, function, true));
-            } else {
-                report.merge(runCorpusFunction(corpus, function));
+        //it's an unordered Collection of corpus data
+        if (isCollection) {
+            for (CorpusFunction function : corpusfunctions) {
+                if (fixing) {
+                    report.merge(runCorpusFunction(cdc, function, true));
+                } else {
+                    report.merge(runCorpusFunction(cdc, function));
+                }
+            }
+            //Congrats - It's a corpus!
+        } else if (isCorpus) {
+            for (CorpusFunction function : corpusfunctions) {
+                if (fixing) {
+                    report.merge(runCorpusFunction(corpus, function, true));
+                } else {
+                    report.merge(runCorpusFunction(corpus, function));
+                }
+            }
+            //must be a single file then
+        } else {
+            for (CorpusFunction function : corpusfunctions) {
+                if (fixing) {
+                    report.merge(runCorpusFunction(corpusData, function, true));
+                } else {
+                    report.merge(runCorpusFunction(corpusData, function));
+                }
             }
         }
+
         return report;
     }
 
@@ -944,6 +885,46 @@ public class CorpusMagician {
         return report;
     }
 
+    //run one function on a corpus, that means all the files in the corpus
+    //the funciton can run on
+    public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf) {
+        Report report = new Report();
+        //find out on which objects this corpus function can run
+        //choose those from the corpus
+        //and run the checks on those files recursively
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
+            for (CorpusData cd : cdc) //if the corpus files are an instance
+            //of the class cl, run the function
+            {
+                if (cl.isInstance(cd)) {
+                    Report newReport = runCorpusFunction(cd, cf);
+                    report.merge(newReport);
+                }
+            }
+        }
+        return report;
+    }
+
+    //run one function on a corpus, that means all the files in the corpus
+    //the funciton can run on
+    public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf, boolean fix) {
+        Report report = new Report();
+        //find out on which objects this corpus function can run
+        //choose those from the corpus
+        //and run the checks on those files recursively
+        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
+            for (CorpusData cd : cdc) //if the corpus files are an instance
+            //of the class cl, run the function
+            {
+                if (cd != null && cl.isInstance(cd)) {
+                    Report newReport = runCorpusFunction(cd, cf, fix);
+                    report.merge(newReport);
+                }
+            }
+        }
+        return report;
+    }
+
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {
         return cf.execute(cd);
     }
@@ -995,6 +976,83 @@ public class CorpusMagician {
 
     public Collection<String> getChosencorpusfunctions() {
         return chosencorpusfunctions;
+    }
+
+    public static void createReports() throws IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, XPathExpressionException {
+        System.out.println(report.getFullReports());
+        String reportOutput;
+        if (reportlocation.getFile().endsWith("html")) {
+            if (iserrorsonly) {
+                //ToDo
+                //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
+                reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
+            } else {
+                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+            }
+        } else {
+            //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
+            reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
+        }
+        String absoluteReport = reportOutput;
+        if (absoluteReport != null && basedirectory != null && absoluteReport.contains(basedirectory.toString())) {
+            absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+        }
+        if (absoluteReport != null) {
+            cio.write(absoluteReport, reportlocation);
+        }
+        //create the error list file
+        System.out.println("Basedirectory is " + basedirectory);
+        System.out.println("BasedirectoryPath is " + basedirectory.getPath());
+        URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
+        URL fixJsonlocation = new URL(basedirectory + "curation/fixes.json");
+        File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
+        if (!curationFolder.exists()) {
+            //the curation folder it not there and needs to be created
+            curationFolder.mkdirs();
+        }
+        Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
+        String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
+        if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
+            exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "../");
+        }
+        if (exmaErrorListString != null) {
+            exmaErrorListString = pp.indent(exmaErrorListString, "event");
+            cio.write(exmaErrorListString, errorlistlocation);
+            System.out.println("Wrote ErrorList at " + errorlistlocation);
+        }
+        if (isfixesjson) {
+            String fixJson = report.getFixJson();
+            if (fixJson != null) {
+                cio.write(fixJson, fixJsonlocation);
+                System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
+            }
+        }
+    }
+
+    public static void readCommandLineOptions() throws MalformedURLException {
+        String urlstring = cmd.getOptionValue("input");
+        fixing = cmd.hasOption("f");
+        iserrorsonly = cmd.hasOption("e");
+        isfixesjson = cmd.hasOption("j");
+        if (urlstring.startsWith("file://")) {
+            inputurl = new URL(urlstring);
+        } else {
+            inputurl = Paths.get(urlstring).toUri().toURL();
+        }
+        //now the place where Report should end up
+        //also allow normal filepaths and convert them
+        String reportstring = cmd.getOptionValue("output");
+        if (reportstring.startsWith("file://")) {
+            reportlocation = new URL(reportstring);
+        } else {
+            reportlocation = Paths.get(reportstring).toUri().toURL();
+        }
+        //now add the functionsstrings to array
+        String[] corpusfunctionarray = cmd.getOptionValues("c");
+        for (String cf : corpusfunctionarray) {
+            CorpusMagician.chosencorpusfunctions.add(cf);
+        }
+        System.out.println(CorpusMagician.chosencorpusfunctions.toString());
     }
 
     private static void createCommandLineOptions(String[] args) throws FileNotFoundException, IOException {

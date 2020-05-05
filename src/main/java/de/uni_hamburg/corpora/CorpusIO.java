@@ -145,6 +145,17 @@ public class CorpusIO {
         }
         return cdc;
     }
+    
+    //read only the files as corpus data objects from a directory url that are specified in the Collection
+    public Collection<CorpusData> read(URL url, Collection<Class<? extends CorpusData>> chosencdc) throws URISyntaxException, IOException, SAXException, JexmaraldaException {
+        //To do
+        alldata = URLtoList(url);
+        for (URL readurl : alldata) {
+            CorpusData cdread = readFileURL(readurl);
+            cdc.add(cdread);
+        }
+        return cdc;
+    }
 
     public String readInternalResourceAsString(String path2resource) throws JDOMException, IOException {
         String xslstring = TypeConverter.InputStream2String(getClass().getResourceAsStream(path2resource));

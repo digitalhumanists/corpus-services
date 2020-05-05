@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.Collection;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
-import static de.uni_hamburg.corpora.CorpusIO.isDirectory;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -35,7 +34,6 @@ public class Corpus {
     //all the data together
     Collection<CorpusData> cdc;
     URL basedirectory;
-    Boolean comastructured = false;
 
     public Corpus() {
 
@@ -80,7 +78,61 @@ public class Corpus {
                 //it could be a ComaFile if it is a Metadata file
                 if (cd instanceof ComaData) {
                     //if it is we set the boolean
-                    comastructured = true;
+                    
+                }
+            } else if (cd instanceof AnnotationSpecification) {
+                annotationspecification.add((AnnotationSpecification) cd);
+            } else if (cd instanceof ConfigParameters) {
+                configparameters.add((ConfigParameters) cd);
+            } else if (cd instanceof CmdiData) {
+                cmdidata.add((CmdiData) cd);
+            }
+            basedirectory = cd.getParentURL();
+        }
+    }
+    
+    //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
+    
+//only read in the files we need!
+    public Corpus(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
+        CorpusIO cio = new CorpusIO();
+        //check if the input is an unsorted directory
+        // public Collection<URL> URLtoList(URL url)
+        if (cio.isDirectory(url)) {
+            cdc = cio.read(url);
+            //read in the File Types of the unstr. folder
+            for (CorpusData cd : cdc) {
+                if (cd instanceof ContentData) {
+                    contentdata.add((ContentData) cd);
+                } else if (cd instanceof Recording) {
+                    recording.add((Recording) cd);
+                } else if (cd instanceof AdditionalData) {
+                    additionaldata.add((AdditionalData) cd);
+                } else if (cd instanceof Metadata) {
+                    metadata.add((Metadata) cd);
+                } else if (cd instanceof AnnotationSpecification) {
+                    annotationspecification.add((AnnotationSpecification) cd);
+                } else if (cd instanceof ConfigParameters) {
+                    configparameters.add((ConfigParameters) cd);
+                } else if (cd instanceof CmdiData) {
+                    cmdidata.add((CmdiData) cd);
+                }
+            }
+            basedirectory = url;
+            //the URL points to one file - could be a coma or another file
+        } else {
+            CorpusData cd = cio.readFileURL(url);
+            if (cd instanceof ContentData) {
+                contentdata.add((ContentData) cd);
+            } else if (cd instanceof Recording) {
+                recording.add((Recording) cd);
+            } else if (cd instanceof AdditionalData) {
+                additionaldata.add((AdditionalData) cd);
+            } else if (cd instanceof Metadata) {
+                metadata.add((Metadata) cd);
+                //it could be a ComaFile if it is a Metadata file
+                if (cd instanceof ComaData) {
+                    //if it is we set the boolean
                 }
             } else if (cd instanceof AnnotationSpecification) {
                 annotationspecification.add((AnnotationSpecification) cd);
