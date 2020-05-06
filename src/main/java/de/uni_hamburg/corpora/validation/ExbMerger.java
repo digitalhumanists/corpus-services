@@ -1,11 +1,13 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,11 +16,13 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -49,6 +53,9 @@ public class ExbMerger extends Checker implements CorpusFunction {
     //private int noOfAnnotations = 0;     // total no of annotations
     //private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
 
+    public ExbMerger(){
+        
+    }
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -64,6 +71,10 @@ public class ExbMerger extends Checker implements CorpusFunction {
             stats.addException(saxe, exbLoc + ": Unknown parsing error");
         } catch (IOException ioe) {
             stats.addException(ioe, exbLoc + ": Unknown file reading error");
+        } catch (TransformerException ex) {
+            Logger.getLogger(ExbMerger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (XPathExpressionException ex) {
+            Logger.getLogger(ExbMerger.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stats;
     }
@@ -75,7 +86,7 @@ public class ExbMerger extends Checker implements CorpusFunction {
      * inter annotator agreement according to Krippendorff's alpha.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -464,5 +475,20 @@ public class ExbMerger extends Checker implements CorpusFunction {
             Logger.getLogger(ExbMerger.class.getName()).log(Level.SEVERE, null, ex);
         }
         return IsUsableFor;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
