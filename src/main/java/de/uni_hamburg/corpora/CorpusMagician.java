@@ -1028,7 +1028,7 @@ public class CorpusMagician {
     private static void createCommandLineOptions(String[] args) throws FileNotFoundException, IOException {
         Options options = new Options();
 
-        Option input = new Option("i", "input", true, "input file path");
+        Option input = new Option("i", "input", true, "input file path (coma file for corpus, folder or other file for unstructured data)");
         input.setRequired(true);
         input.setArgName("FILE PATH");
         options.addOption(input);
@@ -1091,13 +1091,15 @@ public class CorpusMagician {
         //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
         String desc;
-        String usable = "\nThe function can be used on:\n";
+        String usable;
         for (CorpusFunction cf : getAllExistingCFsAsCFs()) {
+            usable = "\nThe function can be used on:\n";
            for (Class cl : cf.getIsUsableFor()){
-               usable += cl.getName();
+               usable += cl.getSimpleName() + " ";
            }
             desc = cf.getFunction() + ":   " + cf.getDescription();
-            footerverbose += desc + "\n\n";
+            footerverbose += desc + usable + "\n\n";
+            usable = "";
         }
         footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         try {
