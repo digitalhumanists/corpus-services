@@ -32,6 +32,8 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
 
     public CalculateAnnotatedTime() {
+        //has no fixing option
+        super(false);
     }
 
     /**
@@ -39,44 +41,18 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
      * the primal functionality of the feature can be implemented, and
      * additionally checks for parser configuration, SAXE and IO exceptions.
      */
-    public Report check(CorpusData cd) throws JexmaraldaException {
+    public Report check(CorpusData cd) throws JexmaraldaException, SAXException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
         Report stats = new Report();
-        try {
             stats = function(cd, false);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        }
         return stats;
     }
 
     @Override
-    public Report check(Corpus c) {
+    public Report check(Corpus c) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report();
-        try {
             for (CorpusData cdata : c.getBasicTranscriptionData()) {
                 stats.merge(function(cdata, false));
             }
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        } catch (JexmaraldaException ex) {
-            stats.addException(ex, function, cd, "Unknown Jexmaralda error");
-        }
         return stats;
     }
 
@@ -224,7 +200,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
      * used.
      */
     @Override
-    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor(){
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);

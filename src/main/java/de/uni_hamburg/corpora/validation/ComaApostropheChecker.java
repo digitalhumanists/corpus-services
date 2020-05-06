@@ -99,7 +99,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         } catch (XPathExpressionException ex) {
             stats.addException(ex, function, cd, "Unknown Xpath error");
         } catch (URISyntaxException ex) {
-             stats.addException(ex, function, cd, "Unknown URI error");
+            stats.addException(ex, function, cd, "Unknown URI error");
         }
         return stats;
     }
@@ -136,43 +136,15 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     public Report check(Corpus c) {
         Report stats = new Report();
         cd = c.getComaData();
-        try {
-            stats = function(cd, false);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown Xpath error");
-        } catch (URISyntaxException ex) {
-             stats.addException(ex, function, cd, "Unknown URI error");
-        }
+        stats = check(cd);
         return stats;
     }
 
-        @Override
+    @Override
     public Report fix(Corpus c) {
         Report stats = new Report();
         cd = c.getComaData();
-        try {
-            stats = function(cd, true);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown Xpath error");
-        } catch (URISyntaxException ex) {
-             stats.addException(ex, function, cd, "Unknown URI error");
-        }
+        stats = fix(cd);
         return stats;
     }
 }
