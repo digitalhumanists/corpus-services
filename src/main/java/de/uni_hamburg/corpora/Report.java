@@ -491,20 +491,27 @@ public class Report {
     /**
      * Generate summaries for all buckets.
      */
-    public String getFixJson() {
+    public String getFixJson(String corpusname) {
         String rv = "";
         for (Map.Entry<String, Collection<ReportItem>> kfj
                 : statistics.entrySet()) {
-            rv += getFixLine(kfj.getKey());
+            rv += getFixLine(kfj.getKey(), corpusname);
         }
         rv = rv + "\n";
         return rv;
     }
 
     /**
+     * Generate summaries for all buckets.
+     */
+    public String getFixJson() {
+        return getFixJson("");
+    }
+
+    /**
      * Generate a one-line text-only message summarising the named bucket.
      */
-    public String getFixLine(String statId) {
+    public String getFixLine(String statId, String corpusname) {
         Collection<ReportItem> stats = statistics.get(statId);
         int fix = 0;
         int good = 0;
@@ -535,7 +542,11 @@ public class Report {
         String time = simpleTimeFormat.format(new Date());
         String dateTime = date + "T" + time;
         //System.out.println(dateTime);
-        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        if (!corpusname.equals("")) {
+            line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"corpus\": \"" + corpusname + "\", \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        } else {
+            line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        }
         return line;
     }
 
