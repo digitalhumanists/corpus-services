@@ -11,18 +11,17 @@ https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/dev
 # Info
 
 Additional info on the Corpus services can be found here:
-https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
-https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab
-https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/Setting_up_-_Libraries
-https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-to_add_a_new_function
+* https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
+* https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/Setting_up_-_Libraries
+* https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-to_add_a_new_function
 
+Advanced: https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab
 
 # Functions
 
-The usable functions can be found here:
+The usable functions can be found in the help output:
 
-src/main/java/de/uni_hamburg/corpora/CorpusMagician.java
-in the method getAllExistingCFs(), which returns a String Collection of all the available functions. 
+`java -jar hzsk-corpus-services-0.2-jar-with-dependencies.jar -h`
 
 # Compilation
 

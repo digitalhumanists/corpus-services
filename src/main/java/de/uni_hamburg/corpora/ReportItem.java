@@ -67,6 +67,8 @@ public class ReportItem {
     private String lines;
     /** Errors with file parsing can also include the columns when known.*/
     private String columns;
+    //name of the function that caused the error
+    private String function;
 
     /**
      * Default constructor should only be used when nothing at all is known
@@ -76,17 +78,20 @@ public class ReportItem {
         what = "Totally unknown error";
         howto = "No known fixes";
         e = null;
+        function = "Unknown function";
     }
 
     public ReportItem(Severity s, String what) {
         this.severity = s;
         this.what = what;
+        this.function = "Unknown function";
     }
 
     public ReportItem(Severity s, Throwable e, String what) {
         this.severity = s;
         this.e = e;
         this.what = what;
+        this.function = "Unknown function";
     }
 
     public ReportItem(Severity s, Throwable e, String filename, String what) {
@@ -94,12 +99,14 @@ public class ReportItem {
         this.e = e;
         this.what = what;
         this.filename = filename;
+        this.function = "Unknown function";
     }
     
-    public ReportItem(Severity s, String filename, String what) {
+    public ReportItem(Severity s, String filename, String what, String function) {
         this.severity = s;
         this.what = what;
         this.filename = filename;
+        this.function = function;
     }
     
     /**
@@ -115,6 +122,7 @@ public class ReportItem {
         this.filename = saxpe.getSystemId();
         this.lines = "" + saxpe.getLineNumber();
         this.columns = "" + saxpe.getColumnNumber();
+        this.function = "Unknown function";
     }
 
 
@@ -123,11 +131,12 @@ public class ReportItem {
      * can be constructed from filename and descriptions.
      */
     public ReportItem(Severity s, String filename,
-            String what, String howto) {
+            String what, String function, String howto) {
         this.severity = s;
         this.filename = filename;
         this.what = what;
         this.howto = howto;
+        this.function = function;
     }
 
     /**
@@ -142,7 +151,7 @@ public class ReportItem {
      */
     public boolean isGood() {
         if ((this.severity == Severity.CORRECT) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU))  {
             return true;
         } else if ((this.severity == Severity.WARNING) ||
                (this.severity == Severity.CRITICAL) ||
@@ -159,7 +168,7 @@ public class ReportItem {
      */
     public boolean isBad() {
         if ((this.severity == Severity.CORRECT) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU)) {
             return false;
         } else if ((this.severity == Severity.WARNING) ||
                (this.severity == Severity.CRITICAL) ||
@@ -177,13 +186,30 @@ public class ReportItem {
     public boolean isSevere() {
         if ((this.severity == Severity.CORRECT) ||
                (this.severity == Severity.WARNING) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU)){
             return false;
         } else if ((this.severity == Severity.CRITICAL) ||
               (this.severity == Severity.MISSING)) {
             return true;
         } else {
             System.out.println("Missed a severity case in isSevere :-(");
+            return true;
+        }
+    }
+    
+        /**
+     * whether the stuff should be counted towards bad statistic.
+     */
+    public boolean isFix() {
+        if ((this.severity == Severity.CORRECT) ||
+               (this.severity == Severity.NOTE) || (this.severity == Severity.CRITICAL) ||
+              (this.severity == Severity.MISSING)  || (this.severity == Severity.WARNING)) {
+            return false;
+        } else if (this.severity == Severity.IFIXEDITFORYOU)
+                {
+            return true;
+        } else {
+            System.out.println("Missed a severity case in isFix :-(");
             return true;
         }
     }
@@ -221,6 +247,17 @@ public class ReportItem {
     public String getHowto() {
         if (this.howto != null) {
             return this.howto;
+        } else {
+            return "";
+        }
+    }
+    
+    /**
+     * A suggested fix to the error.
+     */
+    public String getFunction() {
+        if (this.function != null) {
+            return this.function;
         } else {
             return "";
         }
@@ -438,13 +475,13 @@ public class ReportItem {
                     break;
             }
             report += error.getLocation() + "</td>";
-            report += "<td style='border: red solid 1px'>" +
+            report += "<td style='border: red solid 1px; white-space: pre'>" +
                 error.getWhat() +
                 "</td>";
-            report += "<td style='border: green solid 1px'>" +
+            report += "<td style='border: green solid 1px; white-space: pre'>" +
                 error.getHowto() +
                 "</td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px; white-space: pre'>(" +
                 error.getLocalisedMessage() +
                 ")</td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
@@ -483,15 +520,21 @@ public class ReportItem {
         
         //add custom CSS
         report += "<style>"+
+                "body{padding:15px;}"+
                 ".critical{ background:#ffdddd; } "+
                 ".other{ background:#ffd39e; } "+
                 ".warning{ background:#fafcc2; } "+
+                ".char_Cyrillic{ color:#b51d0d; } "+
+                ".char_Greek{ background:#022299; } "+
+                ".char_Armenian{ background:#ad7600; } "+
+                ".char_Georgian{ background:#9c026d; } "+
                 "</style>\n";
         report += "   </head>\n   <body>\n";
         
         report += "<table>\n  <thead><tr>" +
             "<th>Type</th>"+
-            "<th>File:line.column</th>"+
+            "<th>Function</th>"+
+            "<th>Filename:line.column</th>"+
             "<th>Error</th>" +
             "<th>Fix</th>"+
             "<th>Original</th>" +
@@ -515,14 +558,15 @@ public class ReportItem {
                     report += "<tr class='other'><td style='border-left: black solid 3px'>Other</td><td>";
                     break;
             }
+            report += error.getFunction() + "</td><td>";
             report += error.getLocation() + "</td>";
-            report += "<td>" +
+            report += "<td style='white-space: pre'>" +
                 error.getWhat() +
                 "</td>";
-            report += "<td>" +
+            report += "<td style='white-space: pre'>" +
                 error.getHowto() +
                 "</td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px; white-space: pre;'>(" +
                 error.getLocalisedMessage() +
                 ")</td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
@@ -535,7 +579,7 @@ public class ReportItem {
                   "    $('table').DataTable({ 'iDisplayLength': 50 });\n" +
                   "} );</script>";
         
-        report += "   <footer>" + summarylines + "</footer>";
+        report += "   <footer style='white-space: pre'>" + summarylines + "</footer>";
         report += "   </body>\n</html>";
         
         return report;

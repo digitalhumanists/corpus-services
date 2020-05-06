@@ -9,10 +9,8 @@ import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 
@@ -44,10 +42,12 @@ public abstract class Visualizer implements CorpusFunction {
     CorpusData cd;
     Report report;
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
+    final String function;
 
-    public Visualizer() {
-
+    public Visualizer(String func) {
+        function = func;
     }
+
 
     /**
      * Manually set the HTML content of the visualization
@@ -164,5 +164,8 @@ public abstract class Visualizer implements CorpusFunction {
         for (Class<? extends CorpusData> cl : cdc){
         IsUsableFor.add(cl);
         }
+    }
+            public String getFunction(){
+        return function;
     }
 }

@@ -1,6 +1,6 @@
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,11 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -28,6 +31,10 @@ class AnnotationSpecification implements CorpusData, XMLData {
     String filename;
     String filenamewithoutending;
 
+    public AnnotationSpecification(){
+        
+    }
+    
     public AnnotationSpecification(URL url) {
         try {
             this.url = url;
@@ -54,7 +61,7 @@ class AnnotationSpecification implements CorpusData, XMLData {
     }
 
     @Override
-    public String toSaveableString() {
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return toPrettyPrintedXML();
     }
 
@@ -63,9 +70,10 @@ class AnnotationSpecification implements CorpusData, XMLData {
         return originalstring;
     }
 
-    private String toPrettyPrintedXML() {
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 

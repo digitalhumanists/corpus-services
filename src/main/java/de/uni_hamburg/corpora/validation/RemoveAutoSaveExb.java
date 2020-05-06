@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.XMLData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -20,8 +21,10 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
@@ -30,7 +33,10 @@ import java.util.logging.Logger;
 public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
 
     Document doc = null;
-    String rase = "RemoveAutoSaveExb";
+
+    public RemoveAutoSaveExb() {
+        super("RemoveAutoSaveExb");
+    }
 
     @Override
     public Report check(CorpusData cd) {
@@ -39,13 +45,13 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
             List al = findAllAutoSaveInstances(xml);
             //if there is no autosave, nothing needs to be done
             if (al.isEmpty()) {
-                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
+                report.addCorrect(function, cd, "there is no autosave info left, nothing to do");
             } else {
-                report.addCritical(rase, cd, "autosave info needs to be removed");
+                report.addCritical(function, cd, "autosave info needs to be removed");
                 exmaError.addError("RemoveAutoSaveExb", cd.getURL().getFile(), "", "", false, "autosave info needs to be removed");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, rase, cd, "Jdom Exception");
+            report.addException(ex, function, cd, "Jdom Exception");
         }
         return report;
     }
@@ -70,15 +76,23 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
                     cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
-                    report.addCorrect(rase, cd, "removed AutoSave info");
+                    report.addFix(function, cd, "removed AutoSave info");
                 } catch (IOException ex) {
-                    report.addException(ex, rase, cd, "Input/Output Exception");
+                    report.addException(ex, function, cd, "Input/Output Exception");
+                } catch (TransformerException ex) {
+                    report.addException(ex, function, cd, "Input/Output Exception");
+                } catch (ParserConfigurationException ex) {
+                    report.addException(ex, function, cd, "Input/Output Exception");
+                } catch (SAXException ex) {
+                    report.addException(ex, function, cd, "Input/Output Exception");
+                } catch (XPathExpressionException ex) {
+                    report.addException(ex, function, cd, "Input/Output Exception");
                 }
             } else {
-                report.addCorrect(rase, cd, "there is no autosave info left, nothing to do");
+                report.addCorrect(function, cd, "there is no autosave info left, nothing to do");
             }
         } catch (JDOMException ex) {
-            report.addException(ex, rase, cd, "Jdom Exception");
+            report.addException(ex, function, cd, "Jdom Exception");
         }
                     return report;
     }
@@ -106,4 +120,23 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
         return allAutoSaveInfo;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class removes auto save information present in"
+                + " exb and exs files.";
+        return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

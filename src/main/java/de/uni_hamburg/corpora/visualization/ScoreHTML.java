@@ -5,17 +5,16 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,23 +24,29 @@ import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.common.corpusbuild.FileIO;
 import org.exmaralda.partitureditor.interlinearText.HTMLParameters;
 import org.exmaralda.partitureditor.interlinearText.InterlinearText;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.convert.ItConverter;
 import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
+import org.exmaralda.partitureditor.jexmaralda.convert.ItConverter;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
 import org.jdom.JDOMException;
+import org.jdom.filter.ElementFilter;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Daniel Jettka
+ *
+ * This class creates an html visualization in the Score format from an exb.
+ *
  */
 public class ScoreHTML extends Visualizer {
 
@@ -52,12 +57,14 @@ public class ScoreHTML extends Visualizer {
     Report stats;
     URL targeturl;
     CorpusData cd;
+    String corpusname = "";
 
     public ScoreHTML() {
-
+        super("ScoreHTML");
     }
 
     public ScoreHTML(String btAsString) {
+        super("ScoreHTML");
         createFromBasicTranscription(btAsString);
     }
 
@@ -159,6 +166,10 @@ public class ScoreHTML extends Visualizer {
             xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
             xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
             xt.setParameter("STYLES", styles);
+            xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
+            if (!corpusname.equals("")) {
+                xt.setParameter("CORPUS_NAME", corpusname);
+            }
 
             // perform XSLT transformation
             result = xt.transform(xml, xsl);
@@ -192,7 +203,7 @@ public class ScoreHTML extends Visualizer {
         }
 
         setHTML(result);
-        
+
         return result;
     }
 
@@ -237,6 +248,14 @@ public class ScoreHTML extends Visualizer {
             stats.addException(SERVICE_NAME, ex, "Malformed URL used");
         } catch (IOException ex) {
             stats.addException(SERVICE_NAME, ex, "Input Output Exception");
+        } catch (TransformerException ex) {
+            stats.addException(SERVICE_NAME, ex, "Transformer Exception");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(SERVICE_NAME, ex, "Parser Exception");
+        } catch (SAXException ex) {
+            stats.addException(SERVICE_NAME, ex, "XML Exception");
+        } catch (XPathExpressionException ex) {
+            stats.addException(SERVICE_NAME, ex, "XPath Exception");
         }
         return stats;
     }
@@ -252,7 +271,6 @@ public class ScoreHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         try {
             if (args.length == 0) {
@@ -281,5 +299,21 @@ public class ScoreHTML extends Visualizer {
 
     public URL getTargetURL() {
         return targeturl;
+    }
+
+    public void setCorpusName(String s) {
+        corpusname = s;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class creates an html visualization "
+                + "in the Score format from an exb. ";
+        return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
