@@ -22,6 +22,8 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -291,6 +293,12 @@ public class ExbMergerGUI extends javax.swing.JFrame {
         } catch (SAXException ex) {
             Logger.getLogger(ExbMergerGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(ExbMergerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(ExbMergerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(ExbMergerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (XPathExpressionException ex) {
             Logger.getLogger(ExbMergerGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (doc.getElementsByTagName("transcription-name").getLength() > 0) {   // check if transcript name exists for the exb file
