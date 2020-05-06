@@ -75,11 +75,14 @@ import org.apache.commons.cli.ParseException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
@@ -128,8 +131,8 @@ public class CorpusMagician {
     static String mode = "mode";
     static URL reportlocation;
     static URL inputurl;
-    boolean isCorpus = false;
-    boolean isCollection = false;
+    static boolean isCorpus = false;
+    static boolean isCollection = false;
 
     public CorpusMagician() {
     }
@@ -187,6 +190,8 @@ public class CorpusMagician {
             report.addException(ex, "An Xpath expression was incorrect");
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "Class not found");
+        } catch (JDOMException ex) {
+            report.addException(ex, "JDOM error");
         }
 
     }
@@ -211,7 +216,7 @@ public class CorpusMagician {
 
     //creates a corpus object from an URL (filepath or "real" url)
     //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
-    public void initDataWithURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException {
+    public void initDataWithURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException, JDOMException {
         if (cio.isDirectory(url)) {
             //TODO
             //only read the filetypes from clcds!
@@ -831,7 +836,7 @@ public class CorpusMagician {
 
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on
-    public Report runCorpusFunction(Corpus c, CorpusFunction cf) {     
+    public Report runCorpusFunction(Corpus c, CorpusFunction cf) {
         return runCorpusFunction(c, cf, false);
     }
 
@@ -984,7 +989,12 @@ public class CorpusMagician {
             System.out.println("Wrote ErrorList at " + errorlistlocation);
         }
         if (isfixesjson) {
-            String fixJson = report.getFixJson();
+            String fixJson = "";
+            if (isCorpus) {
+                fixJson = report.getFixJson(corpus.getCorpusName());
+            } else {
+                fixJson = report.getFixJson();
+            }
             if (fixJson != null) {
                 cio.write(fixJson, fixJsonlocation);
                 System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);

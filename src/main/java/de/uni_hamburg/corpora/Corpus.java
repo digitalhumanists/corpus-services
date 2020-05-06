@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
@@ -37,15 +38,16 @@ public class Corpus {
     //all the data together
     Collection<CorpusData> cdc = new ArrayList<CorpusData>();
     URL basedirectory;
+    String corpusname;
 
     public Corpus() {
     }
-    
-     public Corpus(URL url) {
+
+    public Corpus(URL url) {
     }
 
     //only read in the files we need!
-    public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException {
+    public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException, JDOMException {
         CorpusIO cio = new CorpusIO();
         //todo: only read what we need :)
         //cl.isInstance(cd) - needs to be read already for this :/
@@ -54,10 +56,11 @@ public class Corpus {
         // public Collection<URL> URLtoList(URL url)
         Collection<URL> urllist = coma.getReferencedCorpusDataURLs();
         basedirectory = coma.getParentURL();
+        corpusname = coma.getCorpusName();
         for (URL url : urllist) {
             CorpusData cddd = cio.readFileURL(url, clcds);
-            if(cddd!=null && !cdc.contains(cddd)){
-            cdc.add(cddd);
+            if (cddd != null && !cdc.contains(cddd)) {
+                cdc.add(cddd);
             }
         }
         //Coma is coma is 
@@ -79,12 +82,13 @@ public class Corpus {
                 //can only be CMDI since it's a coma file...
                 metadata.add((Metadata) cd);
                 if (cd instanceof CmdiData) {
-                cmdidata.add((CmdiData) cd);
-            } else if (cd instanceof AnnotationSpecification) {
-                annotationspecification.add((AnnotationSpecification) cd);
-            } else if (cd instanceof ConfigParameters) {
-                configparameters.add((ConfigParameters) cd);
-            } }
+                    cmdidata.add((CmdiData) cd);
+                } else if (cd instanceof AnnotationSpecification) {
+                    annotationspecification.add((AnnotationSpecification) cd);
+                } else if (cd instanceof ConfigParameters) {
+                    configparameters.add((ConfigParameters) cd);
+                }
+            }
         }
         //we don't need to check it because we know it
         cdc.add(coma);
@@ -180,5 +184,13 @@ public class Corpus {
 
     public URL getBaseDirectory() {
         return basedirectory;
+    }
+
+    public String getCorpusName() {
+        return corpusname;
+    }
+
+    public void setCorpusName(String s) {
+        corpusname = s;
     }
 }
