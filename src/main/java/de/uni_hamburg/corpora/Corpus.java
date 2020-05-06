@@ -56,10 +56,12 @@ public class Corpus {
         basedirectory = coma.getParentURL();
         for (URL url : urllist) {
             CorpusData cddd = cio.readFileURL(url, clcds);
-            if(!cdc.contains(cddd)){
-            cdc.add(cio.readFileURL(url, clcds));
+            if(cddd!=null && !cdc.contains(cddd)){
+            cdc.add(cddd);
             }
         }
+        //Coma is coma is 
+        comadata = coma;
         //Now create the needed 
         for (CorpusData cd : cdc) {
             if (cd instanceof ContentData) {
@@ -74,19 +76,18 @@ public class Corpus {
             } else if (cd instanceof AdditionalData) {
                 additionaldata.add((AdditionalData) cd);
             } else if (cd instanceof Metadata) {
+                //can only be CMDI since it's a coma file...
                 metadata.add((Metadata) cd);
-                if (cd instanceof ComaData) {
-                    comadata = (ComaData) cd;
-                }
+                if (cd instanceof CmdiData) {
+                cmdidata.add((CmdiData) cd);
             } else if (cd instanceof AnnotationSpecification) {
                 annotationspecification.add((AnnotationSpecification) cd);
             } else if (cd instanceof ConfigParameters) {
                 configparameters.add((ConfigParameters) cd);
-            } else if (cd instanceof CmdiData) {
-                cmdidata.add((CmdiData) cd);
-            }
-
+            } }
         }
+        //we don't need to check it because we know it
+        cdc.add(coma);
     }
 
     public Collection<CorpusData> getCorpusData() {

@@ -186,7 +186,7 @@ public class CorpusMagician {
         } catch (XPathExpressionException ex) {
             report.addException(ex, "An Xpath expression was incorrect");
         } catch (ClassNotFoundException ex) {
-             report.addException(ex, "Class not found");
+            report.addException(ex, "Class not found");
         }
 
     }
@@ -814,7 +814,7 @@ public class CorpusMagician {
 
     //run multiple functions on a corpus, that means all the files in the corpus
     //the function can run on
-    public Report runCorpusFunction(Corpus c, Collection<CorpusFunction> cfc) {
+    public Report runCorpusFunctions(Corpus c, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
             Report newReport = runCorpusFunction(c, cf);
@@ -825,33 +825,14 @@ public class CorpusMagician {
 
     //run multiple functions on the set corpus, that means all the files in the corpus
     //the function can run on
-    public Report runCorpusFunction(Collection<CorpusFunction> cfc) {
-        Report report = new Report();
-        for (CorpusFunction cf : cfc) {
-            Report newReport = runCorpusFunction(corpus, cf);
-            report.merge(newReport);
-        }
-        return report;
+    public Report runCorpusFunctions(Collection<CorpusFunction> cfc) {
+        return runCorpusFunctions(corpus, cfc);
     }
 
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on
-    public Report runCorpusFunction(Corpus c, CorpusFunction cf) {
-        Report report = new Report();
-        //find out on which objects this corpus function can run
-        //choose those from the corpus
-        //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
-            //of the class cl, run the function
-            {
-                if (cl.isInstance(cd)) {
-                    Report newReport = runCorpusFunction(cd, cf);
-                    report.merge(newReport);
-                }
-            }
-        }
-        return report;
+    public Report runCorpusFunction(Corpus c, CorpusFunction cf) {     
+        return runCorpusFunction(c, cf, false);
     }
 
     //run one function on a corpus, that means all the files in the corpus
@@ -861,15 +842,17 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
-            //of the class cl, run the function
-            {
-                if (cd != null && cl.isInstance(cd)) {
-                    Report newReport = runCorpusFunction(cd, cf, fix);
-                    report.merge(newReport);
-                }
+        Collection<Class<? extends CorpusData>> usableTypes = cf.getIsUsableFor();
+
+        //if the corpus files are an instance
+        //of the class cl, run the function
+        for (CorpusData cd : c.getCorpusData()) {
+            System.out.println("Processing file:" + cd.getFilename());
+            if (usableTypes.contains(cd.getClass())) {
+                Report newReport = runCorpusFunction(cd, cf, fix);
+                report.merge(newReport);
             }
+
         }
         return report;
     }
@@ -877,13 +860,24 @@ public class CorpusMagician {
     //run one function on a corpus, that means all the files in the corpus
     //the function can run on
     public Report runCorpusFunction(CorpusFunction cf) {
+        return runCorpusFunction(corpus, cf, false);
+    }
+
+    //run one function on a corpus, that means all the files in the corpus
+    //the funciton can run on
+    public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf, boolean fix) {
         Report report = new Report();
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            Report newReport = runCorpusFunction(corpus, cf);
-            report.merge(newReport);
+        Collection<Class<? extends CorpusData>> usableTypes = cf.getIsUsableFor();
+        //if the corpus files are an instance
+        //of the class cl, run the function
+        for (CorpusData cd : cdc) {
+            if (usableTypes.contains(cd.getClass())) {
+                Report newReport = runCorpusFunction(cd, cf, fix);
+                report.merge(newReport);
+            }
         }
         return report;
     }
@@ -891,41 +885,7 @@ public class CorpusMagician {
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on
     public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf) {
-        Report report = new Report();
-        //find out on which objects this corpus function can run
-        //choose those from the corpus
-        //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : cdc) //if the corpus files are an instance
-            //of the class cl, run the function
-            {
-                if (cl.isInstance(cd)) {
-                    Report newReport = runCorpusFunction(cd, cf);
-                    report.merge(newReport);
-                }
-            }
-        }
-        return report;
-    }
-
-    //run one function on a corpus, that means all the files in the corpus
-    //the funciton can run on
-    public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf, boolean fix) {
-        Report reporter = new Report();
-        //find out on which objects this corpus function can run
-        //choose those from the corpus
-        //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : cdc) //if the corpus files are an instance
-            //of the class cl, run the function
-            {
-                if (cd != null && cl.isInstance(cd)) {
-                    Report newReport = runCorpusFunction(cd, cf, fix);
-                    reporter.merge(newReport);
-                }
-            }
-        }
-        return reporter;
+        return runCorpusFunction(cdc, cf, false);
     }
 
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {

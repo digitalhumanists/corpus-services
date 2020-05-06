@@ -96,43 +96,46 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
                     = bt.getBody().getCommonTimeline().getInconsistencies();
             Hashtable<String, String[]> annotationMismatches
                     = bt.getAnnotationMismatches();
-
-            for (String tierID : duplicateTranscriptionTiers) {
-                stats.addCritical(function, cd,
-                        "More than one transcription tier for one "
-                        + "speaker. Tier: " + tierID + "Open in PartiturEditor, "
-                        + "change tier type or merge tiers.");
-                exmaError.addError(function, filename, tierID, "", false,
-                        "More than one transcription tier for one speaker. Tier: "
-                        + tierID + ". Change tier type or merge tiers.");
-            }
-            for (String tliID : temporalAnomalies) {
-                stats.addCritical(function, cd,
-                        "Temporal anomaly at timeline item: " + tliID);
-                exmaError.addError(function, filename, "", "", false,
-                        "Temporal anomaly at timeline item: " + tliID);
-            }
-            for (String tierID : orphanedTranscriptionTiers) {
-                stats.addCritical(function, cd,
-                        "Orphaned transcription tier:" + tierID);
-                exmaError.addError(function, filename, tierID, "", false,
-                        "Orphaned transcription tier:" + tierID);
-            }
-            for (String tierID : orphanedAnnotationTiers) {
-                stats.addCritical(function, cd,
-                        "Orphaned annotation tier:" + tierID);
-                exmaError.addError(function, filename, tierID, "", false,
-                        "Orphaned annotation tier:" + tierID);
-            }
-            for (String tierID : annotationMismatches.keySet()) {
-                String[] eventIDs = annotationMismatches.get(tierID);
-                for (String eventID : eventIDs) {
+            if (duplicateTranscriptionTiers.length == 0 && orphanedTranscriptionTiers.length == 0 && orphanedAnnotationTiers.length == 0 && temporalAnomalies.length == 0) {
+                stats.addCorrect(function, cd, "No structure errors found.");
+            } else {
+                for (String tierID : duplicateTranscriptionTiers) {
                     stats.addCritical(function, cd,
-                            "Annotation mismatch: tier " + tierID
-                            + " event " + eventID);
-                    exmaError.addError(function, filename, tierID, eventID, false,
-                            "Annotation mismatch: tier " + tierID
-                            + " event " + eventID);
+                            "More than one transcription tier for one "
+                            + "speaker. Tier: " + tierID + "Open in PartiturEditor, "
+                            + "change tier type or merge tiers.");
+                    exmaError.addError(function, filename, tierID, "", false,
+                            "More than one transcription tier for one speaker. Tier: "
+                            + tierID + ". Change tier type or merge tiers.");
+                }
+                for (String tliID : temporalAnomalies) {
+                    stats.addCritical(function, cd,
+                            "Temporal anomaly at timeline item: " + tliID);
+                    exmaError.addError(function, filename, "", "", false,
+                            "Temporal anomaly at timeline item: " + tliID);
+                }
+                for (String tierID : orphanedTranscriptionTiers) {
+                    stats.addCritical(function, cd,
+                            "Orphaned transcription tier:" + tierID);
+                    exmaError.addError(function, filename, tierID, "", false,
+                            "Orphaned transcription tier:" + tierID);
+                }
+                for (String tierID : orphanedAnnotationTiers) {
+                    stats.addCritical(function, cd,
+                            "Orphaned annotation tier:" + tierID);
+                    exmaError.addError(function, filename, tierID, "", false,
+                            "Orphaned annotation tier:" + tierID);
+                }
+                for (String tierID : annotationMismatches.keySet()) {
+                    String[] eventIDs = annotationMismatches.get(tierID);
+                    for (String eventID : eventIDs) {
+                        stats.addCritical(function, cd,
+                                "Annotation mismatch: tier " + tierID
+                                + " event " + eventID);
+                        exmaError.addError(function, filename, tierID, eventID, false,
+                                "Annotation mismatch: tier " + tierID
+                                + " event " + eventID);
+                    }
                 }
             }
         }
