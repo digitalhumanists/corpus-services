@@ -37,7 +37,6 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     String tierLoc = "";
 
     public ExbAnnotationPanelCheck() {
-        super("ExbAnnotationPanelCheck");
     }
 
     /**

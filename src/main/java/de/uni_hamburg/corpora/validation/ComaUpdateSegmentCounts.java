@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -36,7 +34,6 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
     String path2ExternalFSM = "";
 
     public ComaUpdateSegmentCounts() {
-        super("coma-update-segment-counts");
     }
 
     /**

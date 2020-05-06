@@ -42,7 +42,6 @@ import org.xml.sax.SAXException;
 public class ComaXsdChecker extends Checker implements CorpusFunction {
 
     public ComaXsdChecker() {
-        super("coma-xsd");
     }
 
     /**

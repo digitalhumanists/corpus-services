@@ -40,7 +40,6 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
     static List<String> fileendingwhitelist;
 
     public ExbFileCoverageChecker() {
-        super("exb-filecoverage");
         // these are acceptable
         setWhitelist();
         

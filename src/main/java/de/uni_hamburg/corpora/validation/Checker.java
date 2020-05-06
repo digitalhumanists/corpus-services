@@ -45,9 +45,8 @@ public abstract class Checker implements CorpusFunction {
     final String function;
     Boolean fix;
 
-    //we could have the description here too later 
-    Checker(String func) {
-        function = func;
+    Checker() {
+        function = this.getClass().getSimpleName();
     }
 
     public Report execute(Corpus c) {
@@ -101,11 +100,9 @@ public abstract class Checker implements CorpusFunction {
 
     //To implement in the class
     public abstract Report check(Corpus c);
-    
+
     //To implement in the class
     public abstract Report function(CorpusData cd, Boolean fix) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
-    
-
 
     //To implement in the class
     //If there is no possibility to fix it throw a warning that says that
@@ -118,8 +115,8 @@ public abstract class Checker implements CorpusFunction {
 
     //To implement in the class
     //If there is no possibility to fix it throw a warning that says that
-    public Report fix(Corpus c){
-                report.addCritical(function,
+    public Report fix(Corpus c) {
+        report.addCritical(function,
                 "Automatic fix is not yet supported.");
         return report;
     }
@@ -135,5 +132,5 @@ public abstract class Checker implements CorpusFunction {
     public String getFunction() {
         return function;
     }
-    
+
 }

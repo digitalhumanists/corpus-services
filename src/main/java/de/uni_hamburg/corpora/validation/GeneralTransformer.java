@@ -38,7 +38,6 @@ public class GeneralTransformer extends Checker {
     boolean exs = false;
 
     public GeneralTransformer() {
-        super("GeneralTransformer");
     }
 
     @Override

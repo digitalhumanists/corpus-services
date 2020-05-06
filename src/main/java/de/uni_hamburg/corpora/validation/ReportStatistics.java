@@ -36,7 +36,6 @@ public class ReportStatistics extends Checker implements CorpusFunction {
     String corpusname = "";
 
     public ReportStatistics() {
-        super("ReportStatistics");
     }
 
     @Override

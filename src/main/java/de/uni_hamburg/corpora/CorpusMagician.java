@@ -1091,7 +1091,11 @@ public class CorpusMagician {
         //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
         String desc;
+        String usable = "\nThe function can be used on:\n";
         for (CorpusFunction cf : getAllExistingCFsAsCFs()) {
+           for (Class cl : cf.getIsUsableFor()){
+               usable += cl.getName();
+           }
             desc = cf.getFunction() + ":   " + cf.getDescription();
             footerverbose += desc + "\n\n";
         }

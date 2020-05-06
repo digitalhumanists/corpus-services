@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -60,7 +62,7 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     String path2ExternalFSM = "";
 
     public ExbSegmentationChecker() {
-        super("ExbSegmenter");
+        //super("ExbSegmenter");
     }
 
     /**
@@ -152,7 +154,8 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
         }
         CorpusIO cio = new CorpusIO();
         List v = segmentation.getSegmentationErrors(btd.getEXMARaLDAbt());
-            if (v.isEmpty() && fix) {
+            if (v.isEmpty()) {
+                if (fix){
                 SegmentedTranscription st = segmentation.BasicToSegmented(btd.getEXMARaLDAbt());
                 st.setEXBSource(cd.getFilename());
                 //add the udMetadata!!!!
@@ -163,6 +166,9 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
                 URL url = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_s.exs");
                 cio.write(doc, url);
                 stats.addFix(function, cd, "Exs successfully created at " + url);
+                } else{
+                    stats.addCorrect(function, cd, "No segmentation errors found with segmentation " + segmentationName);
+                }
             } else {
                 for (Object o : v) {
                     FSMException fsme = (FSMException) o;
@@ -318,7 +324,13 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     public Report check(Corpus c) {
         Report stats = new Report();
         for (CorpusData cdata : c.getBasicTranscriptionData()){
-            
+            try {
+                stats.merge(check(cdata));
+            } catch (SAXException ex) {
+                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException ex) {
+                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return stats;
     }
@@ -327,7 +339,13 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
         Report stats = new Report();
         //exmaralda/src/org/exmaralda/coma/actions/SegmentTranscriptionAction.java
         for (CorpusData cdata : c.getBasicTranscriptionData()){
-            //fix(cdata);
+            try {
+                stats.merge(fix(cdata));
+            } catch (SAXException ex) {
+                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException ex) {
+                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         /*
         for (File segTr : segmentedTranscriptions.keySet()) {

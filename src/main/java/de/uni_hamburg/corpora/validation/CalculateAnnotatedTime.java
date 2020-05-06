@@ -32,7 +32,6 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
 
     public CalculateAnnotatedTime() {
-        super("CalculateAnnotatedTime");
     }
 
     /**
