@@ -12,6 +12,7 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
@@ -101,7 +102,7 @@ public abstract class Checker implements CorpusFunction {
     public abstract Report check(Corpus c);
     
     //To implement in the class
-    public abstract Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
+    public abstract Report function(CorpusData cd, Boolean fix) throws URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
     
 
 

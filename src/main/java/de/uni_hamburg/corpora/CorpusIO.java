@@ -140,7 +140,7 @@ public class CorpusIO {
             SegmentedTranscriptionData seg = new SegmentedTranscriptionData(url);
             return seg;
         } else {
-            System.out.println(url + " is not xml CorpusData");
+            System.out.println(url + " will not be read");
             CorpusData cd = null;
             return cd;
         }
@@ -167,7 +167,7 @@ public class CorpusIO {
         alldata = URLtoList(url);
         for (URL readurl : alldata) {
             CorpusData cdread = readFileURL(readurl);
-            if(!cdc.contains(cdread)){
+            if(cdread!=null &&!cdc.contains(cdread)){
             cdc.add(cdread);
             }
         }

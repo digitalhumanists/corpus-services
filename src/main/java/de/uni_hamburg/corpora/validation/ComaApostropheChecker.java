@@ -8,6 +8,8 @@ import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -36,7 +38,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     public Report check(CorpusData cd) {
         Report stats = new Report();
         try {
-            stats = exceptionalCheck(cd);
+            stats = function(cd, false);
         } catch (ParserConfigurationException pce) {
             stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
@@ -58,14 +60,23 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
      * coma file contains apostrophe ’and add that warning to the report which
      * it returns.
      */
-    private Report exceptionalCheck(CorpusData cd) // check whether there's any illegal apostrophes '
+    @Override
+    public Report function(CorpusData cd, Boolean fix) // check whether there's any illegal apostrophes '
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Report stats = new Report();         // create a new report
         comaFile = cd.toSaveableString();     // read the coma file as a string
         if (comaFile.contains("'")) {          // if coma file contains an apostrophe ' then issue warning
             apostrophe = true;
-            System.err.println("Coma file is containing apostrophe(s) ’");
-            stats.addWarning(function, cd, "Coma file is containing apostrophe(s) ’");
+            if (fix) {
+                comaFile = comaFile.replaceAll("'", "’");    //replace all 's with ´s
+                CorpusIO cio = new CorpusIO();
+                cd.updateUnformattedString(comaFile);
+                cio.write(cd, cd.getURL());    // write back to coma file with allowed apostrophes ´
+                stats.addFix(function, cd, "Corrected the apostrophes"); // fix report
+            } else {
+                System.err.println("Coma file is containing apostrophe(s) ’");
+                stats.addWarning(function, cd, "Coma file is containing apostrophe(s) ’");
+            }
         } else {
             stats.addCorrect(function, cd, "Coma file does not contain apostrophes");
         }
@@ -80,19 +91,7 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     public Report fix(CorpusData cd) {
         Report stats = new Report();         // create a new report
         try {
-
-            comaFile = cd.toSaveableString();     // read the coma file as a string
-            if (comaFile.contains("'")) {         // if coma file contains an apostrophe ’ then issue warning
-                apostrophe = true;                // flag points out if there are illegal apostrophes
-                comaFile = comaFile.replaceAll("'", "’");    //replace all 's with ´s
-                CorpusIO cio = new CorpusIO();
-                cd.updateUnformattedString(comaFile);
-                cio.write(cd, cd.getURL());    // write back to coma file with allowed apostrophes ´
-                stats.addFix(function, cd, "Corrected the apostrophes"); // fix report
-            } else {
-                stats.addCorrect(function, cd, "Coma file does not contain apostrophes");
-            }
-
+            stats = function(cd, true);
         } catch (ParserConfigurationException pce) {
             stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
@@ -103,6 +102,8 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
             stats.addException(ex, function, cd, "Unknown transformer error");
         } catch (XPathExpressionException ex) {
             stats.addException(ex, function, cd, "Unknown Xpath error");
+        } catch (URISyntaxException ex) {
+             stats.addException(ex, function, cd, "Unknown URI error");
         }
         return stats;
     }
@@ -123,8 +124,9 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -136,11 +138,45 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
 
     @Override
     public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Report stats = new Report();
+        cd = c.getComaData();
+        try {
+            stats = function(cd, false);
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown Xpath error");
+        } catch (URISyntaxException ex) {
+             stats.addException(ex, function, cd, "Unknown URI error");
+        }
+        return stats;
     }
 
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        @Override
+    public Report fix(Corpus c) {
+        Report stats = new Report();
+        cd = c.getComaData();
+        try {
+            stats = function(cd, true);
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown Xpath error");
+        } catch (URISyntaxException ex) {
+             stats.addException(ex, function, cd, "Unknown URI error");
+        }
+        return stats;
     }
 }
