@@ -38,8 +38,6 @@ import java.util.regex.Pattern;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.math.BigInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -57,7 +55,6 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
     MessageDigest md = null;
 
     public DuplicateTierContentChecker() {
-        super("DuplicateTierContentChecker");
     }
     
     

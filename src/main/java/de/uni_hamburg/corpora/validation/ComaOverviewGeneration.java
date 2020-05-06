@@ -36,7 +36,6 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
     boolean inel = false;
 
     public ComaOverviewGeneration() {
-        super("ComaOverviewGeneration");
     }
 
     @Override

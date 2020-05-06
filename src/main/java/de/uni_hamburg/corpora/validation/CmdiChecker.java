@@ -42,7 +42,6 @@ public class CmdiChecker extends Checker implements CorpusFunction {
     String cmdiLoc = "";
 
     public CmdiChecker() {
-        super("CmdiChecker");
     }
 
     /**

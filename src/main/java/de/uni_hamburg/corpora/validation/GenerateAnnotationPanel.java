@@ -44,7 +44,6 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     int iterateExbs = 0;
 
     public GenerateAnnotationPanel() {
-        super("GenerateAnnotationPanel");
     }
 
     /**

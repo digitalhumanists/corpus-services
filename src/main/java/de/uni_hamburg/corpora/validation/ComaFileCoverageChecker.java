@@ -57,7 +57,6 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
     final List<String> directorywhitelist;
 
     public ComaFileCoverageChecker() {
-        super("coma-filecoverage");
         // these are acceptable
         whitelist = new ArrayList<String>();
         whitelist.add(".git");
