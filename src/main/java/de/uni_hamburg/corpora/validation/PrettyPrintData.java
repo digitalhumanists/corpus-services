@@ -49,7 +49,6 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     String prettyCorpusData = "";
 
     public PrettyPrintData() {
-        super("PrettyPrintData");
     }
 
     public Report check(CorpusData cd) {

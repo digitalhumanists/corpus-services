@@ -24,7 +24,6 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     boolean apostrophe = false;
 
     public ComaApostropheChecker() {
-        super("ComaApostropheChecker");
     }
 
     /**

@@ -30,7 +30,6 @@ import org.xml.sax.SAXException;
 public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunction {
 
     public ComaTranscriptionsNameChecker() {
-        super("ComaTranscriptionsNameChecker");
     }
 
     /**

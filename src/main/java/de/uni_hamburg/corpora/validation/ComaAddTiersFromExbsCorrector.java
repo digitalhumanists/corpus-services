@@ -49,7 +49,6 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
     String comaLoc = "";
 
     public ComaAddTiersFromExbsCorrector() {
-        super("ComaAddTiersFromExbsCorrector");
     }
 
     /**

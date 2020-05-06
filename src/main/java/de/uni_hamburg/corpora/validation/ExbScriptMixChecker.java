@@ -53,7 +53,6 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     Map<String, Pattern> dictScripts = new HashMap<>();
     
     public ExbScriptMixChecker() {
-        super("ScriptMixChecker");
         dictScripts.put("Cyrillic", rxCyr);
         dictScripts.put("Latin", rxLat);
         dictScripts.put("Greek", rxGreek);
