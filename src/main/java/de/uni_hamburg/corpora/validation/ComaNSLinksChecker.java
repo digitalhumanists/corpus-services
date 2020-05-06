@@ -44,7 +44,6 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
     String communicationname;
 
     public ComaNSLinksChecker() {
-        super("coma-nslinks");
     }
 
     /**

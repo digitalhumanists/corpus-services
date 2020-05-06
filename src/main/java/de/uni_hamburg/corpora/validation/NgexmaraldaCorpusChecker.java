@@ -52,7 +52,6 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     final String NSLC = "nslc";
 
     public NgexmaraldaCorpusChecker() {
-        super("NgexmaraldaCorpusChecker");
     }
 
     public Report check() {

@@ -30,7 +30,6 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
 
     public ComaSegmentCountChecker() {
-        super("ComaSegmentCountChecker");
     }
 
     /**

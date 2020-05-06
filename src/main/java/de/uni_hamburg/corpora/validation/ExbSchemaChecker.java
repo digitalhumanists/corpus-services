@@ -40,7 +40,6 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
 
     public ExbSchemaChecker() {
-        super("exb-dtd");
     }
 
     /**
