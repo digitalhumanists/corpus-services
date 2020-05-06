@@ -107,7 +107,7 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
         }
         if (corpusVersion.equals("")) {
             stats.addWarning(function, cd,
-                "Missing Key[@name='HZSK:corpusprefix']. " +
+                "Missing Key[@name='HZSK:corpusversion']. " +
                 "PID length cannot be estimated accurately. " +
                 "Add that key in coma.");
             corpusVersion = "0.0";
