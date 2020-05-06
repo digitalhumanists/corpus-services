@@ -10,6 +10,7 @@
 package de.uni_hamburg.corpora.validation;
 
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -46,13 +47,7 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
     public ComaFedoraIdentifierLengthChecker() {
         super("coma-pid-length");
     }
-    
-    public static void main(String[] args) {
-        ComaFedoraIdentifierLengthChecker checker = new ComaFedoraIdentifierLengthChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
-    }
+   
     
     /**
     * Default check function which calls the exceptionalCheck function so that the
@@ -186,5 +181,15 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
                 + "problems with HZSK repository depositing; it checks the Exmaralda "
                 + ".coma file for ID's that violate Fedora's PID limits. ";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

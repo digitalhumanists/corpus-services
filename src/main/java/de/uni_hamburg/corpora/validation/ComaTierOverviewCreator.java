@@ -2,6 +2,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.ComaData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -16,6 +17,8 @@ import java.util.Collections;
 import java.util.TreeSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -60,6 +63,8 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             stats.addException(ex, function, cd, "XPath Exception");
         } catch (JexmaraldaException ex) {
             stats.addException(ex, function, cd, "Exmaralda Exception");
+        } catch (ClassNotFoundException ex) {
+             stats.addException(ex, function, cd, "Class not found Exception");
         }
         return stats;
     }
@@ -70,11 +75,11 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
      * Issues warnings and returns report which is composed of errors.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
         Report stats = new Report();
         ComaData ccd = (ComaData) cd;
         CorpusIO cio = new CorpusIO();
-        ArrayList<URL> resulturls;
+        Collection<URL> resulturls;
         ArrayList<Tier> tiers = new ArrayList<>();
         ArrayList<BasicTranscriptionData> btds = new ArrayList<>();
         String htmltemplate = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/tier_overview_datatable_template.html"));
@@ -236,5 +241,15 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                 + " of all tiers existing in the exbs linked in the coma file to make error "
                 + "checking and harmonizing easier. ";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

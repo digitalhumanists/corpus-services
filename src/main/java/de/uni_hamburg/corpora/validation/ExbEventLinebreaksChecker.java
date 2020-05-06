@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -23,6 +24,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Element;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
@@ -183,5 +185,15 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                 + "linebreaks or fixes linebreaks in the events and adds those "
                 + "warnings to the report which it returns.";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

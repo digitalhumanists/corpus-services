@@ -9,6 +9,7 @@
 
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -826,5 +827,28 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
         String description = "This class loads coma data and for all communications adds "
                 + "all tiers found in the linked exb as a key value pairs to the description. ";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+    Report stats = new Report();
+    CorpusData cdata = c.getComaData();
+        try {
+            stats = exceptionalCheck(cdata);
+        } catch (JexmaraldaException je) {
+            stats.addException(je, function, cdata, "Unknown parsing error");
+        } catch (JDOMException jdome) {
+            stats.addException(jdome, function, cdata, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cdata, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cdata, "Reading/writing error");
+        }
+        return stats;    
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

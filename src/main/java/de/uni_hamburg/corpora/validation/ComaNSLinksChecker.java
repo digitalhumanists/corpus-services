@@ -204,30 +204,9 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         return stats;
     }
     
-    public static void main(String[] args) {
-        ComaNSLinksChecker checker = new ComaNSLinksChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
-    }
-
-    @Override
-    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
-        for (CorpusData cd : cdc) {
-            report.merge(check(cd));
-        }
-        return report;
-    }
 
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "Wrong NS links cannot be fixed automatically");
-        return report;
-    }
-
-    @Override
-    public Report fix(Collection<CorpusData> cdc) throws SAXException, JDOMException, IOException, JexmaraldaException {
         report.addCritical(function, cd,
                 "Wrong NS links cannot be fixed automatically");
         return report;
@@ -260,5 +239,15 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         String description = "This class checks for existence of files linked in the "
                 + "coma file.";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
