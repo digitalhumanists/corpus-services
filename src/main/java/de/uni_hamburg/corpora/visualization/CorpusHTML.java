@@ -5,7 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
-import de.uni_hamburg.corpora.ComaData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
@@ -14,12 +14,12 @@ import de.uni_hamburg.corpora.utilities.XSLTransformer;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -35,7 +35,7 @@ public class CorpusHTML extends Visualizer {
     CorpusData cod;
 
     public CorpusHTML() {
-
+        super("CorpusHTML");
     }
 
     public String createFromComa(String coma) {
@@ -74,6 +74,14 @@ public class CorpusHTML extends Visualizer {
             stats.addException(ex, SERVICE_NAME, cd, "Malformed URL used");
         } catch (IOException ex) {
             stats.addException(ex, SERVICE_NAME, cd, "Unknown Input Output error");
+        } catch (TransformerException ex) {
+            stats.addException(SERVICE_NAME, ex, "Transformer Exception");
+        } catch (ParserConfigurationException ex) {
+            stats.addException(SERVICE_NAME, ex, "Parser Exception");
+        } catch (SAXException ex) {
+            stats.addException(SERVICE_NAME, ex, "XML Exception");
+        } catch (XPathExpressionException ex) {
+            stats.addException(SERVICE_NAME, ex, "XPath Exception");
         }
         return stats;
     }
@@ -89,7 +97,6 @@ public class CorpusHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -100,6 +107,19 @@ public class CorpusHTML extends Visualizer {
 
     public URL getTargetURL() throws MalformedURLException {
         return targeturl;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class creates an html overview of the corpus "
+                + "needed for the ingest into the repository. ";
+        return description;
+
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

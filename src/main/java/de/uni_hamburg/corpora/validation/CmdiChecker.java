@@ -8,8 +8,8 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import java.io.File;
@@ -17,8 +17,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -29,6 +27,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 
@@ -36,11 +36,14 @@ import org.jdom.JDOMException;
  * A class that can load cmdi data and check for potential problems with HZSK
  * repository depositing.
  */
-public class CmdiChecker extends Checker implements CorpusFunction, CommandLineable, StringChecker {
+public class CmdiChecker extends Checker implements CorpusFunction {
 
     ValidatorSettings settings;
-    final String CMDI_MISC = "cmdi-misc";
     String cmdiLoc = "";
+
+    public CmdiChecker() {
+        super("CmdiChecker");
+    }
 
     /**
      * Check for existence of files in a cmdi file.
@@ -85,22 +88,22 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             Element restype = (Element) restypes.item(0);
             if (restype.getTextContent().equals("LandingPage")) {
                 hasLandingPage = true;
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                stats.addCorrect(function, cmdiLoc + ": "
                         + "Good resource type LandingPage");
             } else if (restype.getTextContent().equals("Resource")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                stats.addCorrect(function, cmdiLoc + ": " +
                     "Good resource type Resource");
             } else if (restype.getTextContent().equals("SearchPage")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                stats.addCorrect(function, cmdiLoc + ": " +
                     "Good resource type SearchPage");
             } else if (restype.getTextContent().equals("SearchService")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                stats.addCorrect(function, cmdiLoc + ": " +
                     "Good resource type SearchService");
             } else if (restype.getTextContent().equals("Metadata")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": " +
+                stats.addCorrect(function, cmdiLoc + ": " +
                     "Good resource type Metadata");
             } else {
-                stats.addWarning(CMDI_MISC, cmdiLoc + ": "
+                stats.addWarning(function, cmdiLoc + ": "
                         + "Unrecognised resource type "
                         + restype.getTextContent());
             }
@@ -108,21 +111,21 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             Element resref = (Element) resrefs.item(0);
             String url = resref.getTextContent();
             if (!isUrlHandleOrHzsk(url)) {
-                stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+                stats.addCritical(function, cmdiLoc + ": "
                         + "Invalid URL for reesource proxy:"
                         + url,
                         "URLs should start with http://hdl.handle.net... or "
                         + "https://corpora.uni-hamburg.de/repository/...");
             } else {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                stats.addCorrect(function, cmdiLoc + ": "
                         + "Good resource proxy URL " + url);
             }
         }
         if (!hasLandingPage) {
-            stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+            stats.addCritical(function, cmdiLoc + ": "
                     + "Missing landing page");
         } else {
-            stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+            stats.addCorrect(function, cmdiLoc + ": "
                     + "Good landing page found");
         }
         NodeList gis = doc.getElementsByTagName("GeneralInfo");
@@ -145,14 +148,14 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                 Element e = (Element) n;
                 if (e.getTagName().equals("PID")) {
                     if (!isUrlHandleOrHzsk(e.getTextContent())) {
-                        stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+                        stats.addCritical(function, cmdiLoc + ": "
                                 + "Invalid URL for PID:"
                                 + e.getTextContent(),
                                 "URLs should start with "
                                 + "http://hdl.handle.net... or "
                                 + "https://corpora.uni-hamburg.de/repository/...");
                     } else {
-                        stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                        stats.addCorrect(function, cmdiLoc + ": "
                                 + "Good PID URL: "
                                 + e.getTextContent());
                     }
@@ -160,18 +163,18 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                 } else if (e.getTagName().equals("Description")) {
                     if (e.getAttribute("xml:lang").equals("en")) {
                         englishDesc = true;
-                        stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                        stats.addCorrect(function, cmdiLoc + ": "
                                 + "English Description present");
                     }
                 } else if (e.getTagName().equals("Title")) {
                     if (e.getAttribute("xml:lang").equals("en")) {
                         englishTitle = true;
-                        stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                        stats.addCorrect(function, cmdiLoc + ": "
                                 + "English title present");
                     }
                 } else if (e.getTagName().equals("LegalOwner")) {
                     legalOwner = true;
-                    stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                    stats.addCorrect(function, cmdiLoc + ": "
                             + "LegalOwner present");
                 } else {
                     System.out.println("DEBUG: GeneralInfo/" + e.getTagName());
@@ -179,17 +182,17 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                 }
             }
             if (!englishTitle) {
-                stats.addWarning(CMDI_MISC, cmdiLoc + ": "
+                stats.addWarning(function, cmdiLoc + ": "
                         + "English title missing from General Info "
                         + "(needed by FCS for example)");
             }
             if (!englishDesc) {
-                stats.addWarning(CMDI_MISC, cmdiLoc + ": "
+                stats.addWarning(function, cmdiLoc + ": "
                         + "English Description missing from General Info "
                         + "(needed by FCS for example)");
             }
             if (!pidFound) {
-                stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+                stats.addCritical(function, cmdiLoc + ": "
                         + "PID missing");
             }
         }
@@ -246,28 +249,28 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             }
         }
         if (!corpusType) {
-            stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+            stats.addCritical(function, cmdiLoc + ": "
                     + "Corpus type is needed for repo web pages");
         } else {
-            stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+            stats.addCorrect(function, cmdiLoc + ": "
                     + "Corpus type included");
         }
         if (!genre) {
-            stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+            stats.addCritical(function, cmdiLoc + ": "
                     + "Genre is needed for repo web pages");
         } else {
-            stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+            stats.addCorrect(function, cmdiLoc + ": "
                     + "Genre included");
         }
         if (!modality) {
-            stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+            stats.addCritical(function, cmdiLoc + ": "
                     + "Modality is needed for repo web pages");
         } else {
-            stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+            stats.addCorrect(function, cmdiLoc + ": "
                     + "modality included");
         }
         if (!timeCoverage) {
-            stats.addWarning(CMDI_MISC, cmdiLoc + ": "
+            stats.addWarning(function, cmdiLoc + ": "
                     + "time coverage is missing (recommended for VLO)");
         }
     }
@@ -282,10 +285,10 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             Element e = (Element) n;
             String tc = e.getTextContent();
             if (tc.matches("[0-9]+/[0-9]+")) {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                stats.addCorrect(function, cmdiLoc + ": "
                         + "Good time coverage");
             } else {
-                stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+                stats.addCritical(function, cmdiLoc + ": "
                         + "TimeCoverage should be YYYY/YYYY for VLO");
             }
         }
@@ -309,11 +312,11 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
                 }
             }
             if (!engFound) {
-                stats.addCritical(CMDI_MISC, cmdiLoc + ": "
+                stats.addCritical(function, cmdiLoc + ": "
                         + "Each subject language must have @xml:lang eng "
                         + "filled in");
             } else {
-                stats.addCorrect(CMDI_MISC, cmdiLoc + ": "
+                stats.addCorrect(function, cmdiLoc + ": "
                         + "Goog language data");
             }
         }
@@ -384,7 +387,7 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(CMDI_MISC,
+        report.addCritical(function,
                 "Automatic fix is not yet supported.");
         return report;
     }
@@ -400,9 +403,29 @@ public class CmdiChecker extends Checker implements CorpusFunction, CommandLinea
             Class cl = Class.forName("de.uni_hamburg.corpora.CmdiData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CmdiChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class loads cmdi data and check for potential "
+                + "problems with HZSK repository depositing.";
+        return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

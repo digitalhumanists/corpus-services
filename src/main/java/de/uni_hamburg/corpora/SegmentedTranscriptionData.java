@@ -5,20 +5,25 @@
  */
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -30,8 +35,13 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     URL url;
     String originalstring;
     URL parenturl;
-        String filename;
+    String filename;
     String filenamewithoutending;
+    List segmentCounts;
+
+    public SegmentedTranscriptionData() {
+
+    }
 
     public SegmentedTranscriptionData(URL url) {
         try {
@@ -42,7 +52,7 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             parenturl = parentURI.toURL();
-             filename = FilenameUtils.getName(url.getPath());
+            filename = FilenameUtils.getName(url.getPath());
             filenamewithoutending = FilenameUtils.getBaseName(url.getPath());
         } catch (JDOMException ex) {
             Logger.getLogger(SegmentedTranscriptionData.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,7 +69,7 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     }
 
     @Override
-    public String toSaveableString() {
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         return toPrettyPrintedXML();
     }
 
@@ -68,9 +78,10 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
         return originalstring;
     }
 
-    private String toPrettyPrintedXML() {
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 
@@ -123,4 +134,12 @@ public class SegmentedTranscriptionData implements CorpusData, ContentData, XMLD
     public void setFilenameWithoutFileEnding(String s) {
         filenamewithoutending = s;
     }
+
+    public List getSegmentCounts() throws JDOMException {
+        XPath context = XPath.newInstance("/segmented-transcription/head/meta-information/ud-meta-information/ud-information[starts-with(@attribute-name,'#')]");
+        List allContextInstances = context.selectNodes(jdom);
+        segmentCounts = allContextInstances;
+        return segmentCounts;
+    }
+
 }

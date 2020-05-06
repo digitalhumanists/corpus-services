@@ -11,11 +11,8 @@
 package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import java.io.IOException;
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -39,14 +36,14 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 /**
  * A command-line tool for checking EXB files.
  */
-public class ExbPatternChecker implements CommandLineable  {
+public class ExbPatternChecker {
 
     BasicTranscription bt;
     ValidatorSettings settings;
     List<String> conventions = new ArrayList<String>();
     List<String> problems = new ArrayList<String>();
 
-    final String EXB_PATTERNS = "exb-patterns";
+    final String function = "exb-patterns";
 
     private void tryLoadBasicTranscription(String filename)
         throws SAXException, JexmaraldaException {
@@ -106,7 +103,7 @@ public class ExbPatternChecker implements CommandLineable  {
                 for (Pattern pattern : correctPatterns) {
                     Matcher matcher = pattern.matcher(text);
                     if (!matcher.matches()) {
-                        stats.addCritical(EXB_PATTERNS,
+                        stats.addCritical(function,
                                     "Text: " + text + " does not fit to the " +
                                     "conventions given.", "Expression was: " +
                                     conventions.get(k));
@@ -116,7 +113,7 @@ public class ExbPatternChecker implements CommandLineable  {
                 for (Pattern pattern : errorPatterns) {
                     Matcher matcher = pattern.matcher(text);
                     if (matcher.matches()) {
-                        stats.addCritical(EXB_PATTERNS,
+                        stats.addCritical(function,
                                     "Text: " + text + " does not fit to the " +
                                     "conventions given.", "Expression was: " +
                                     errorPatterns.get(k));

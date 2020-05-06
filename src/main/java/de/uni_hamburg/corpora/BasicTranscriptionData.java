@@ -8,30 +8,27 @@
  */
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.jdom.Document;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.SAXException;
 import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
@@ -93,6 +90,9 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
         url = f.toURI().toURL();
     }
 
+    /*
+    * uses the field of the Exmaralda Basic transcription to update the jdom field
+    */
     public void updateJdomDoc() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
         String xmlString = bt.toXML();
         SAXBuilder builder = new SAXBuilder();
@@ -119,13 +119,14 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //utilities\PrettyPrinter.java here to pretty print the files, so they
     //will always get pretty printed in the same way
     //TODO
-    private String toPrettyPrintedXML() {
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+    private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 
-    public String toSaveableString() {
+    public String toSaveableString() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException  {
         return toPrettyPrintedXML();
     }
 
@@ -166,6 +167,15 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
             System.exit(1);
         } catch (JexmaraldaException je) {
             je.printStackTrace();
+            System.exit(1);
+        } catch (TransformerException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        } catch (ParserConfigurationException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        } catch (XPathExpressionException ex) {
+            ex.printStackTrace();
             System.exit(1);
         }
     }

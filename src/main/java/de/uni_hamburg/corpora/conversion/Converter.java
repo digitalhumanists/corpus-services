@@ -14,8 +14,6 @@ import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -44,8 +42,10 @@ public abstract class Converter implements CorpusFunction{
     Report report;
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
             extends CorpusData>>();
-
-    public Converter() {
+        final String function;
+   
+    Converter(String func) {
+        function = func;
     }
 
     public Report execute(Corpus c) {
@@ -92,27 +92,27 @@ public abstract class Converter implements CorpusFunction{
         if (fix) {
             try {
                 return fix(cdc);
-            } catch (SAXException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JDOMException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException je) {
+                report.addException(je, "Unknown parsing error");
+            } catch (JDOMException jdome) {
+                report.addException(jdome, "Unknown parsing error");
+            } catch (SAXException saxe) {
+                report.addException(saxe, "Unknown parsing error");
+            } catch (IOException ioe) {
+                report.addException(ioe, "File reading error");
             }
             return report;
         } else {
             try {
                 return check(cdc);
-            } catch (SAXException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SAXException saxe) {
+                report.addException(saxe, "Unknown parsing error");
+            } catch (JexmaraldaException je) {
+                report.addException(je, "Unknown parsing error");
             } catch (IOException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+                report.addException(ex, "File reading error");
             } catch (JDOMException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+                report.addException(ex, "Unknown parsing error");
             }
             return report;
         }
@@ -192,6 +192,10 @@ public abstract class Converter implements CorpusFunction{
         for (Class cl : cdc){
         IsUsableFor.add(cl);
         }
+    }
+    
+        public String getFunction(){
+        return function;
     }
 
 }

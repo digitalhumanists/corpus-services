@@ -5,16 +5,8 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
-import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
-import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.Report;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
-import org.xml.sax.SAXException;
 
 /**
  *

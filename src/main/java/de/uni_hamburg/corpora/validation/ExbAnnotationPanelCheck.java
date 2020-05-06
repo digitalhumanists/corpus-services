@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -13,6 +14,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.Event;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
@@ -33,6 +36,10 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     ArrayList<String> allTagStrings;
     String tierLoc = "";
 
+    public ExbAnnotationPanelCheck() {
+        super("ExbAnnotationPanelCheck");
+    }
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -43,11 +50,15 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
         try {
             stats = exceptionalCheck(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
+            stats.addException(saxe, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown file reading error");
         }
         return stats;
     }
@@ -57,7 +68,7 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
      * specification file first, then checks if tiers in exb files are correct.
      */
     private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -129,9 +140,47 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbAnnotationPanelCheck.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks whether the annotations in exb "
+                + "files comply with the annotation specification panel. ";
+        return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        Report stats = new Report();
+        try {
+            for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats = exceptionalCheck(cdata);
+            }
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown file reading error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown file reading error");
+        } catch (JexmaraldaException ex) {
+            Logger.getLogger(ExbAnnotationPanelCheck.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stats;       
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
