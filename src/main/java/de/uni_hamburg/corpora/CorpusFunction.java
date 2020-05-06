@@ -5,7 +5,16 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.io.IOException;
 import java.util.Collection;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
+import org.jdom.transform.XSLTransformException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -14,14 +23,12 @@ import java.util.Collection;
 public interface CorpusFunction {
 
 public Report execute(CorpusData cd);
-
+ 
 public Report execute(Corpus c);
-
-public Report execute(Collection<CorpusData> cdc);
 
 public Report execute(CorpusData cd, boolean fix);
 
-public Report execute(Collection<CorpusData> cdc, boolean fix);
+public Report execute(Corpus c, boolean fix);
 
 public Collection<Class<? extends CorpusData>> getIsUsableFor();
 

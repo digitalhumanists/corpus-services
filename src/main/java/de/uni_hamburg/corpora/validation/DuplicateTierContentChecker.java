@@ -8,6 +8,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -37,6 +38,8 @@ import java.util.regex.Pattern;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.math.BigInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -81,7 +84,9 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
             stats.addException(ex, function, cd, "unknown xml exception.");
         } catch (XPathExpressionException ex) {
             stats.addException(ex, function, cd, "unknown xml exception.");
-        }        
+        } catch (ClassNotFoundException ex) {        
+              stats.addException(ex, function, cd, "unknown class not found exception.");
+        }
         return stats;
     }
 
@@ -160,7 +165,7 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
      * exbs and reports those that have (nearly) identical transcription/
      * translation tiers to some other exbs.
      */
-    public Report exceptionalCheck(CorpusData cd) throws NoSuchAlgorithmException, TransformerException, ParserConfigurationException, SAXException, IOException, JDOMException, XPathExpressionException, JexmaraldaException {
+    public Report exceptionalCheck(CorpusData cd) throws NoSuchAlgorithmException, TransformerException, ParserConfigurationException, SAXException, IOException, JDOMException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
         System.out.println("Duplicate check started.");
         
         md = MessageDigest.getInstance("MD5");
@@ -233,6 +238,16 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
                 + " linked there, reads them and checks if there are duplicate"
                 + " or near-duplicate exbs in the corpus.";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

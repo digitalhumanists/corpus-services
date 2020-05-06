@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -11,6 +12,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -124,6 +127,8 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
             report.addException(ex, function, cd, "unknown xml exception");
         } catch (JDOMException ex) {
             report.addException(ex, function, cd, "unknown xml exception");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "class not found exception");
         }
         return stats;
     }
@@ -154,6 +159,16 @@ public class ComaUpdateSegmentCounts extends Checker implements CorpusFunction {
                 + " the linked exbs and saves the coma file afterwards without changing"
                 + " exbs.";
         return description;
+    }
+
+    @Override
+    public Report check(Corpus c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.publication;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -17,6 +18,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
 
 /**
  * This class zips all the needed files of the corpus into a zip folder
@@ -193,6 +201,11 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 + "corpus file in the resources folder. It only takes exb, exs, coma, pdf and optionally mp3, "
                 + "and the folder structure. ";
         return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
