@@ -18,7 +18,6 @@ import de.uni_hamburg.corpora.validation.ExbFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.ExbRefTierChecker;
 import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
-import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.ComaFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.FilenameChecker;
@@ -49,7 +48,7 @@ import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
 import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
 import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
-import de.uni_hamburg.corpora.validation.ExbSegmenter;
+import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
@@ -75,8 +74,6 @@ import org.apache.commons.cli.ParseException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -667,7 +664,7 @@ public class CorpusMagician {
                     cf2strcorpusfunctions.add(eseg);
                     break;
                 case "exbsegmenter":
-                    ExbSegmenter esegr = new ExbSegmenter();
+                    ExbSegmentationChecker esegr = new ExbSegmentationChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey(segmentation)) {
