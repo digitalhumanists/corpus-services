@@ -37,7 +37,6 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
 
     public ComaTiersDescriptionAnnotationPanelChecker() {
-        super("ComaTiersDescriptionAnnotationPanelChecker");
     }
 
     /**

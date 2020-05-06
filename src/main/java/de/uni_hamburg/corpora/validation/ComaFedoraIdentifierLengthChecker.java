@@ -45,7 +45,6 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
     
 
     public ComaFedoraIdentifierLengthChecker() {
-        super("coma-pid-length");
     }
    
     

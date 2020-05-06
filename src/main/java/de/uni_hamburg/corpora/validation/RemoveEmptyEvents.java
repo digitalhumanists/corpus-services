@@ -35,7 +35,6 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
     Document doc = null;
 
     public RemoveEmptyEvents() {
-        super("RemoveEmptyEvents");
     }
 
     @Override

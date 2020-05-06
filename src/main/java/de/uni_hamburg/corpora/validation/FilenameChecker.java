@@ -41,7 +41,6 @@ public class FilenameChecker extends Checker implements CorpusFunction {
     String fileLoc = "";
 
     public FilenameChecker() {
-        super("filename-conventions");
     }
 
     /**
