@@ -101,7 +101,7 @@ public abstract class Checker implements CorpusFunction {
     public abstract Report check(Corpus c);
     
     //To implement in the class
-    public abstract Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException;
+    public abstract Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
     
 
 

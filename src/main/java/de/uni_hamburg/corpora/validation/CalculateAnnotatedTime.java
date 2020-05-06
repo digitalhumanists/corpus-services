@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,12 +28,11 @@ import org.xml.sax.SAXException;
  */
 public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
 
-    String annotLoc = "";
     //HashMap<String, HashMap<String, String>> eventMap; // hash map for holding events of annotation tiers
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
 
     public CalculateAnnotatedTime() {
-        super("calculate-annotated-time");
+        super("CalculateAnnotatedTime");
     }
 
     /**
@@ -64,22 +61,22 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     @Override
     public Report check(Corpus c) {
         Report stats = new Report();
-        for (CorpusData cdata : c.getBasicTranscriptionData()) {
-            try {
+        try {
+            for (CorpusData cdata : c.getBasicTranscriptionData()) {
                 stats.merge(function(cdata, false));
-            } catch (SAXException ex) {
-                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ParserConfigurationException ex) {
-                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (TransformerException ex) {
-                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (XPathExpressionException ex) {
-                Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (ParserConfigurationException pce) {
+            stats.addException(pce, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            stats.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            stats.addException(ioe, function, cd, "Unknown file reading error");
+        } catch (TransformerException ex) {
+            stats.addException(ex, function, cd, "Unknown transformer error");
+        } catch (XPathExpressionException ex) {
+            stats.addException(ex, function, cd, "Unknown XPath error");
+        } catch (JexmaraldaException ex) {
+            stats.addException(ex, function, cd, "Unknown Jexmaralda error");
         }
         return stats;
     }
@@ -179,20 +176,20 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                     SS = SS.substring(0, 5);
                 }
                 tierH.put(tierDisplay, MM + ":" + SS); // add total duration of each tier into the hash map
-                stats.addNote("calculate-annotated-time", tierDisplay + "  " + MM + ":" + SS); // display it on the report
+                stats.addNote(function, cd, tierDisplay + "  " + MM + ":" + SS); // display it on the report
             }
         }
         // show the annotation time for each label in every tier
-        stats.addNote("calculate-annotated-time", "Labels per Tier");
+        stats.addNote(function, cd, "Labels per Tier");
         Set perTier = eventMap.keySet();
         for (Object per : perTier) {
             String tierName = (String) per;
-            stats.addNote("calculate-annotated-time", tierName);
+            stats.addNote(function, cd, tierName);
             HashMap map = new HashMap(eventMap.get(tierName));
             Set perMap = map.keySet();
             for (Object obj : perMap) {
                 String label = (String) obj;
-                stats.addNote("calculate-annotated-time", label + "    " + map.get(label));
+                stats.addNote(function, cd, label + "    " + map.get(label));
                 System.out.println(label + "    " + map.get(label));
             }
         }
