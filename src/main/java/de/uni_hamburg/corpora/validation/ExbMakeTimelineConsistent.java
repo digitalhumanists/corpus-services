@@ -37,7 +37,6 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
     Boolean interpolateTimeline = false;
 
     public ExbMakeTimelineConsistent() {
-        super("MakeTimelineConsistent");
     }
 
     @Override

@@ -36,7 +36,6 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
 
     public NgTierCheckerWithAnnotation() {
-        super("NgTierCheckerWithAnnotation");
     }
 
     /**

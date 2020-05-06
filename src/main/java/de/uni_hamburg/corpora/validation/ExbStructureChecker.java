@@ -18,18 +18,10 @@ import java.io.IOException;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Collection;
-import java.util.ArrayList;
-import org.apache.commons.cli.Option;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.exmaralda.partitureditor.partiture.transcriptionActions.GetSegmentationErrorsAction;
 import org.jdom.JDOMException;
 
 /**
@@ -46,7 +38,6 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
     final String function = "exb-structure";
 
     public ExbStructureChecker() {
-        super("ExbStructureChecker");
     }
 
     /**
