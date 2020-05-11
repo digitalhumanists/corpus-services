@@ -43,11 +43,11 @@ public abstract class Visualizer implements CorpusFunction {
     Report report;
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     final String function;
+    Boolean canfix = false;
 
     public Visualizer(String func) {
         function = func;
     }
-
 
     /**
      * Manually set the HTML content of the visualization
@@ -111,8 +111,8 @@ public abstract class Visualizer implements CorpusFunction {
         setHTML(Pattern.compile("<div[^>]*id=\"mediaplayer\".*?</div>", Pattern.DOTALL).matcher(html).replaceAll("<div id=\"mediaplayer\" class=\"sidebarcontrol\"></div>"));
 
     }
-    
-     //always take a coma file and the relative paths in there to generate a list of the files
+
+    //always take a coma file and the relative paths in there to generate a list of the files
     //
     //Methode arbeitet anhand von Liste von Dateien, im Moment wird diese aus Coma ausgelesen
     public Report execute(Corpus c) {
@@ -132,16 +132,16 @@ public abstract class Visualizer implements CorpusFunction {
         return report;
 
     }
-    
+
     //no fix boolean needed
-    public Report execute(CorpusData cd, boolean fix){
+    public Report execute(CorpusData cd, boolean fix) {
         report = new Report();
         report = visualize(cd);
         return report;
     }
 
     //no fix boolean needed
-    public Report execute(Collection<CorpusData> cdc, boolean fix){
+    public Report execute(Collection<CorpusData> cdc, boolean fix) {
         report = new Report();
         visualize(cdc);
         return report;
@@ -157,15 +157,21 @@ public abstract class Visualizer implements CorpusFunction {
         }
         return report;
     }
-    
-     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
 
-    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
-        for (Class<? extends CorpusData> cl : cdc){
-        IsUsableFor.add(cl);
+    public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
+
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
+        for (Class<? extends CorpusData> cl : cdc) {
+            IsUsableFor.add(cl);
         }
     }
-            public String getFunction(){
+
+    public String getFunction() {
         return function;
     }
+
+    public Boolean getCanFix() {
+        return canfix;
+    }
+
 }

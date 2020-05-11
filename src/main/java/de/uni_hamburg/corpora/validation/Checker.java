@@ -10,11 +10,13 @@ import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -38,15 +40,16 @@ public abstract class Checker implements CorpusFunction {
     //I will keep the settings for now, so they can stay as they are for the Moment
     //and we know where to refactor when we change them
     //They are only allowed to be used in the main method, not the other CorpusFunction methods
-    ValidatorSettings settings;
     CorpusData cd;
     Report report = new Report();
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     final String function;
-    Boolean fix;
+    Boolean canfix;
 
-    Checker() {
+    Checker(boolean hasfixingoption) {
         function = this.getClass().getSimpleName();
+        canfix = hasfixingoption;
+
     }
 
     public Report execute(Corpus c) {
@@ -59,67 +62,93 @@ public abstract class Checker implements CorpusFunction {
 
     public Report execute(CorpusData cd, boolean fix) {
         report = new Report();
-        if (fix) {
-            try {
-                report = fix(cd);
-            } catch (JexmaraldaException je) {
-                report.addException(je, function, cd, "Unknown parsing error");
-            } catch (JDOMException jdome) {
-                report.addException(jdome, function, cd, "Unknown parsing error");
-            } catch (SAXException saxe) {
-                report.addException(saxe, function, cd, "Unknown parsing error");
-            } catch (IOException ioe) {
-                report.addException(ioe, function, cd, "File reading error");
+        try {
+            if (fix) {
+
+                if (canfix) {
+                    report = function(cd, fix);
+                } else {
+                    report.addCritical(function,
+                            "Automatic fix is not available, doing check instead.");
+                    report = function(cd, false);
+                }
+
+                return report;
+            } else {
+                report = function(cd, fix);
             }
-            return report;
-        } else {
-            try {
-                report = check(cd);
-            } catch (SAXException saxe) {
-                report.addException(saxe, function, cd, "Unknown parsing error");
-            } catch (JexmaraldaException je) {
-                report.addException(je, function, cd, "Unknown parsing error");
-            }
-            return report;
+        } catch (JexmaraldaException je) {
+            report.addException(je, function, cd, "Unknown parsing error");
+        } catch (JDOMException jdome) {
+            report.addException(jdome, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            report.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            report.addException(ioe, function, cd, "File reading error");
+        } catch (FSMException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, function, cd, "File reading erro");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (TransformerException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (NoSuchAlgorithmException ex) {
+            report.addException(ex, function, cd, "File reading error");
         }
+        return report;
     }
 
     public Report execute(Corpus c, boolean fix) {
         report = new Report();
-        if (fix) {
-            report = fix(c);
-            return report;
-        } else {
-            report = check(c);
-            return report;
+        try {
+            if (fix) {
+
+                if (canfix) {
+                    report = function(c, fix);
+                } else {
+                    report.addCritical(function,
+                            "Automatic fix is not yet supported.");
+                }
+                return report;
+            } else {
+                report = function(c, fix);
+            }
+        } catch (JexmaraldaException je) {
+            report.addException(je, function, cd, "Unknown parsing error");
+        } catch (JDOMException jdome) {
+            report.addException(jdome, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            report.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            report.addException(ioe, function, cd, "File reading error");
+        } catch (FSMException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, function, cd, "File reading erro");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (TransformerException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (NoSuchAlgorithmException ex) {
+            report.addException(ex, function, cd, "File reading error");
         }
-    }
-
-    //To implement in the class
-    public abstract Report check(CorpusData cd) throws SAXException, JexmaraldaException;
-
-    //To implement in the class
-    public abstract Report check(Corpus c);
-
-    //To implement in the class
-    public abstract Report function(CorpusData cd, Boolean fix) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
-
-    //To implement in the class
-    //If there is no possibility to fix it throw a warning that says that
-    public Report fix(CorpusData cd) throws
-            SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
-                "Automatic fix is not yet supported.");
         return report;
     }
 
     //To implement in the class
-    //If there is no possibility to fix it throw a warning that says that
-    public Report fix(Corpus c) {
-        report.addCritical(function,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
+    public abstract Report function(CorpusData cd, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
+
+    //To implement in the class
+    public abstract Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
 
@@ -133,4 +162,7 @@ public abstract class Checker implements CorpusFunction {
         return function;
     }
 
+    public Boolean getCanFix() {
+        return canfix;
+    }
 }

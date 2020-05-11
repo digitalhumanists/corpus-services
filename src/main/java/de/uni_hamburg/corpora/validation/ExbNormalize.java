@@ -12,6 +12,7 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -25,9 +26,10 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
- * 
- * This class normalises the basic transcription data using the EXMARaLDA function and fixes white spaces if set by a parameter.
- * 
+ *
+ * This class normalises the basic transcription data using the EXMARaLDA
+ * function and fixes white spaces if set by a parameter.
+ *
  */
 public class ExbNormalize extends Checker implements CorpusFunction {
 
@@ -36,17 +38,12 @@ public class ExbNormalize extends Checker implements CorpusFunction {
     Boolean fixWhiteSpaces = false;
 
     public ExbNormalize() {
+        super(true);
     }
 
     @Override
-    public Report check(CorpusData cd) {
-        report.addCritical(function, cd, "Checking option is not available");
-        return report;
-    }
-
-    @Override
-    public Report fix(CorpusData cd) {
-        try {
+    public Report function(CorpusData cd, Boolean fix) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException, JDOMException {
+        if (fix) {
             btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
             bt.normalize();
@@ -64,18 +61,8 @@ public class ExbNormalize extends Checker implements CorpusFunction {
             } else {
                 report.addCritical(function, cd, "normalizing was not possible");
             }
-        } catch (JDOMException ex) {
-            report.addException(ex, function, cd, "unknown xml exception");
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "unknown IO exception");
-        } catch (TransformerException ex) {
-           report.addException(ex, function, cd, "unknown xml exception");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "unknown xml exception");
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "unknown xml exception");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "unknown xml exception");
+        } else {
+            report.addCritical(function, cd, "Checking option is not available");
         }
         return report;
     }
@@ -99,8 +86,9 @@ public class ExbNormalize extends Checker implements CorpusFunction {
         }
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -110,13 +98,12 @@ public class ExbNormalize extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 
 }

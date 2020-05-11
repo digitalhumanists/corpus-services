@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,6 +31,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
@@ -49,59 +51,30 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     String prettyCorpusData = "";
 
     public PrettyPrintData() {
+        //fixing is possible
+        super(true);
     }
 
-    public Report check(CorpusData cd) {
-        try {
-            // if no diff - all fine, nothing needs to be done
-            if (CorpusDataIsAlreadyPretty(cd)) {
-                report.addCorrect(function, cd, "Already pretty printed.");
-            } // if difference then - needs to be pretty printed
-            else {
-                report.addCritical(function, cd, "Needs to be pretty printed.");
-            }
-
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "Causes an Input/Output error.");
-        } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "Causes an Transformer error.");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "Causes an Parser error.");
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "Causes an XML error.");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "Causes an Xpath error.");
-        }
-        return report;
-    }
-
-    public Report fix(CorpusData cd) {
-        // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
-        try {
+    public Report function(CorpusData cd, Boolean fix) throws IOException, TransformerException, ParserConfigurationException, SAXException, XPathExpressionException {
+        // if no diff - all fine, nothing needs to be done
+        if (CorpusDataIsAlreadyPretty(cd)) {
+            report.addCorrect(function, cd, "Already pretty printed.");
+        } // if difference then - needs to be pretty printed
+        else if (fix) {
             if (cd.toUnformattedString() == null) {
                 report.addCritical(function, cd, "Could not create the unformatted String!");
-            } else if (!CorpusDataIsAlreadyPretty(cd)) {
+            } else {
                 //save it instead of the old file
                 CorpusIO cio = new CorpusIO();
                 cio.write(prettyCorpusData, cd.getURL());
                 cd.updateUnformattedString(prettyCorpusData);
                 report.addFix(function, cd, "CorpusData was pretty printed and saved.");
 
-            } else {
-                //do nothing because it is pretty printed already
-                report.addCorrect(function, cd, "Was already pretty printed.");
             }
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "Causes an Input/Output error.");
-        } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "Causes an Transformer error.");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "Causes an Parser error.");
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "Causes an XML error.");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "Causes an Xpath error.");
+        } else {
+            report.addCritical(function, cd, "Needs to be pretty printed.");
         }
+
         return report;
     }
 
@@ -202,68 +175,11 @@ public class PrettyPrintData extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
         Report stats = new Report();
-        try {
-            for (CorpusData cdata : c.getCorpusData()) {
-
-                // if no diff - all fine, nothing needs to be done
-                if (CorpusDataIsAlreadyPretty(cdata)) {
-                    stats.addCorrect(function, cdata, "Already pretty printed.");
-                } // if difference then - needs to be pretty printed
-                else {
-                    stats.addCritical(function, cdata, "Needs to be pretty printed.");
-                }
-            }
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "Causes an Input/Output error.");
-        } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "Causes an Transformer error.");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "Causes an Parser error.");
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "Causes an XML error.");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "Causes an Xpath error.");
+        for (CorpusData cdata : c.getCorpusData()) {
+            stats.merge(function(cdata, fix));
         }
         return stats;
-    }
-
-    public Report fix(Corpus c) {
-        Report stats = new Report();
-        // take the data, change datatosaveable string, method indent() in utilities\PrettyPrinter.java
-        try {
-            for (CorpusData cdata : c.getCorpusData()) {
-            if (cd.toUnformattedString() == null) {
-                stats.addCritical(function, cd, "Could not create the unformatted String!");
-            } else if (!CorpusDataIsAlreadyPretty(cd)) {
-                //save it instead of the old file
-                CorpusIO cio = new CorpusIO();
-                cio.write(prettyCorpusData, cd.getURL());
-                cd.updateUnformattedString(prettyCorpusData);
-                stats.addFix(function, cd, "CorpusData was pretty printed and saved.");
-
-            } else {
-                //do nothing because it is pretty printed already
-                stats.addCorrect(function, cd, "Was already pretty printed.");
-            }
-            }
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "Causes an Input/Output error.");
-        } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "Causes an Transformer error.");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "Causes an Parser error.");
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "Causes an XML error.");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "Causes an Xpath error.");
-        }
-        return report;
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

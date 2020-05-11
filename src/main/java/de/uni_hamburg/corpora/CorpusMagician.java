@@ -17,10 +17,10 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.ExbRefTierChecker;
-import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
+import de.uni_hamburg.corpora.validation.ExbCalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.ComaFileCoverageChecker;
-import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.ComaFilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
 import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
@@ -45,7 +45,6 @@ import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
-import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
 import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
@@ -303,7 +302,6 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmenter");
         allExistingCFs.add("ExbScriptMixChecker");
         allExistingCFs.add("DuplicateTierContentChecker");
-        allExistingCFs.add("ComaUpdateSegmentCounts");
         allExistingCFs.add("LanguageToolChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
@@ -429,7 +427,7 @@ public class CorpusMagician {
                     cf2strcorpusfunctions.add(ngex);
                     break;
                 case "filenamechecker":
-                    FilenameChecker fnc = new FilenameChecker();
+                    ComaFilenameChecker fnc = new ComaFilenameChecker();
                     cf2strcorpusfunctions.add(fnc);
                     break;
                 case "cmdichecker":
@@ -679,7 +677,7 @@ public class CorpusMagician {
                     cf2strcorpusfunctions.add(esegr);
                     break;
                 case "calculateannotatedtime":
-                    CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
+                    ExbCalculateAnnotatedTime cat = new ExbCalculateAnnotatedTime();
                     cf2strcorpusfunctions.add(cat);
                     break;
                 case "addcsvmetadatatocoma":
@@ -753,10 +751,6 @@ public class CorpusMagician {
                             System.out.println("Tier names set to " + cfProperties.getProperty("tiers"));
                         }
                     }
-                    break;
-                case "comaupdatesegmentcounts":
-                    ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
-                    cf2strcorpusfunctions.add(cusc);
                     break;
                 case "languagetoolchecker":
                     LanguageToolChecker ltc = new LanguageToolChecker();
@@ -1091,14 +1085,16 @@ public class CorpusMagician {
         //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
         String desc;
+        String hasfix;
         String usable;
         for (CorpusFunction cf : getAllExistingCFsAsCFs()) {
-            usable = "\nThe function can be used on:\n";
-           for (Class cl : cf.getIsUsableFor()){
-               usable += cl.getSimpleName() + " ";
-           }
             desc = cf.getFunction() + ":   " + cf.getDescription();
-            footerverbose += desc + usable + "\n\n";
+            usable = "\nThe function can be used on:\n";
+            for (Class cl : cf.getIsUsableFor()) {
+                usable += cl.getSimpleName() + " ";
+            }
+            hasfix = "\nThe function has a fixing option: " + cf.getCanFix().toString();
+            footerverbose += desc + hasfix + usable + "\n\n";
             usable = "";
         }
         footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";

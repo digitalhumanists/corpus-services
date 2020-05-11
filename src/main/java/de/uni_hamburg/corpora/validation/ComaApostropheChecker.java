@@ -24,31 +24,8 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     boolean apostrophe = false;
 
     public ComaApostropheChecker() {
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = function(cd, false);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown Xpath error");
-        }
-        return stats;
+        //can fix
+        super(true);
     }
 
     /**
@@ -77,31 +54,6 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
             stats.addCorrect(function, cd, "Coma file does not contain apostrophes");
         }
         return stats; // return the report with warnings
-    }
-
-    @Override
-    /**
-     * One of the main functionalities of the feature; fix apostrophes ' with
-     * apostrophes ´ add them to the report which it returns in the end.
-     */
-    public Report fix(CorpusData cd) {
-        Report stats = new Report();         // create a new report
-        try {
-            stats = function(cd, true);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown Xpath error");
-        } catch (URISyntaxException ex) {
-             stats.addException(ex, function, cd, "Unknown URI error");
-        }
-        return stats;
     }
 
     /**
@@ -133,46 +85,10 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        Report stats = new Report();
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
+        Report stats;
         cd = c.getComaData();
-        try {
-            stats = function(cd, false);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown Xpath error");
-        } catch (URISyntaxException ex) {
-             stats.addException(ex, function, cd, "Unknown URI error");
-        }
-        return stats;
-    }
-
-        @Override
-    public Report fix(Corpus c) {
-        Report stats = new Report();
-        cd = c.getComaData();
-        try {
-            stats = function(cd, true);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown Xpath error");
-        } catch (URISyntaxException ex) {
-             stats.addException(ex, function, cd, "Unknown URI error");
-        }
+        stats = function(cd, fix);
         return stats;
     }
 }

@@ -137,4 +137,5 @@ public class CmdiData implements CorpusData, XMLData, Metadata {
     public Collection<URL> getReferencedCorpusDataURLs() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+   
 }

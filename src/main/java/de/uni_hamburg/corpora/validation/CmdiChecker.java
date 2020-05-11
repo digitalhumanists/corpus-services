@@ -8,29 +8,21 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.CmdiData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.cli.Option;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
+import static de.uni_hamburg.corpora.utilities.TypeConverter.JdomDocument2W3cDocument;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 
 /**
  * A class that can load cmdi data and check for potential problems with HZSK
@@ -42,25 +34,8 @@ public class CmdiChecker extends Checker implements CorpusFunction {
     String cmdiLoc = "";
 
     public CmdiChecker() {
-    }
-
-    /**
-     * Check for existence of files in a cmdi file.
-     *
-     * @return true, if all files were found, false otherwise
-     */
-    public Report check(String data) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(data);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cmdiLoc + ": Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, cmdiLoc + ": Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, cmdiLoc + ": Unknown file reading error");
-        }
-        return stats;
+        //no fix available
+        super(false);
     }
 
     private boolean isUrlHandleOrHzsk(String url) {
@@ -73,11 +48,10 @@ public class CmdiChecker extends Checker implements CorpusFunction {
         }
     }
 
-    private Report exceptionalCheck(String data)
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(data));
+        CmdiData cmdi = (CmdiData) cd;
+        Document doc = JdomDocument2W3cDocument(cmdi.getJdom());
         NodeList rps = doc.getElementsByTagName("ResourceProxy");
         Report stats = new Report();
         boolean hasLandingPage = false;
@@ -321,75 +295,6 @@ public class CmdiChecker extends Checker implements CorpusFunction {
         }
     }
 
-    public Report doMain(String[] args) {
-        settings = new ValidatorSettings("CmdiChecker",
-                "Checks CLARIN .cmdi file for various common practices ",
-                "If input is a directory, performs recursive "
-                + "check from that directory, otherwise checks input file");
-        settings.handleCommandLine(args, new ArrayList<Option>());
-        if (settings.isVerbose()) {
-            System.out.println("Checking CMDI files for metadata...");
-        }
-        Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            if (settings.isVerbose()) {
-                System.out.println(" * " + f.getName());
-            }
-            try {
-                cmdiLoc = f.getName();
-                String s = TypeConverter.InputStream2String(new FileInputStream(f));
-                stats = check(s);
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-        return stats;
-    }
-
-    public static void main(String[] args) {
-        CmdiChecker checker = new CmdiChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getWarningReports());
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            File f;
-            if (cd.getURL().toString().contains("file:/")) {
-                f = new File(cd.getURL().toString().substring(cd.getURL().toString().indexOf("file:/") + 6));
-            } else {
-                f = new File(cd.getURL().toString());
-            }
-            cmdiLoc = f.getName();
-            String s = TypeConverter.InputStream2String(new FileInputStream(f));
-            stats = exceptionalCheck(s);  
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, cmdiLoc + ": Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, cmdiLoc + ": Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, cmdiLoc + ": Unknown file reading error");
-        }
-        return stats;
-    }
-
-    /**
-     * No fix is applicable for this feature.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
 
     /**
      * Default function which determines for what type of files (basic
@@ -418,13 +323,12 @@ public class CmdiChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException {
+        Report stats = new Report();
+        for(CmdiData cmdid : c.getCmdidata()){
+            stats.merge(function(cmdid, false));
+        }
+        return stats;
     }
 
 }
