@@ -39,8 +39,6 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
     ValidatorSettings settings;
     String filename;
 
-    final String function = "exb-structure";
-
     public ExbStructureChecker() {
         //fixing is not possible
         super(false);

@@ -1093,7 +1093,7 @@ public class CorpusMagician {
             for (Class cl : cf.getIsUsableFor()) {
                 usable += cl.getSimpleName() + " ";
             }
-            hasfix = "\nThe function has a fixing option: " + cf.getCanFix().toString() + "\n";
+            hasfix = "\nThe function has a fixing option: " + cf.getCanFix().toString();
             footerverbose += desc + hasfix + usable + "\n\n";
             usable = "";
         }
