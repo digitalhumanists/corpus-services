@@ -12,6 +12,7 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -43,14 +44,9 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
     }
 
     @Override
-    public Report check(CorpusData cd) {
-        report.addCritical(function, cd, "Checking option is not available");
-        return report;
-    }
+    public Report function(CorpusData cd, Boolean fix) throws JDOMException, IOException, TransformerException, ParserConfigurationException, SAXException, XPathExpressionException {
+        if (fix) {
 
-    @Override
-    public Report fix(CorpusData cd) {
-        try {
             btd = (BasicTranscriptionData) cd;
             BasicTranscription bt = btd.getEXMARaLDAbt();
             bt.getBody().getCommonTimeline().makeConsistent();
@@ -69,18 +65,9 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
             } else {
                 report.addCritical(function, cd, "making timeline consistent not possible");
             }
-        } catch (JDOMException ex) {
-            report.addException(ex, function, cd, "unknown xml exception");
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "unknown IO exception");
-        } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "unknown IO exception");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "unknown IO exception");
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "unknown IO exception");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "unknown IO exception");
+
+        } else {
+            report.addCritical(function, cd, "Checking option is not available");
         }
         return report;
     }
@@ -117,12 +104,11 @@ public class ExbMakeTimelineConsistent extends Checker implements CorpusFunction
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 }

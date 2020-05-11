@@ -295,19 +295,6 @@ public class CmdiChecker extends Checker implements CorpusFunction {
         }
     }
 
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException, IOException, ParserConfigurationException {
-        Report stats = new Report();
-            cmdiLoc = cd.getFilename();
-            stats = function(cd, false);  
-        return stats;
-    }
-
 
     /**
      * Default function which determines for what type of files (basic
@@ -336,7 +323,7 @@ public class CmdiChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) throws SAXException, IOException, ParserConfigurationException {
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException {
         Report stats = new Report();
         for(CmdiData cmdid : c.getCmdidata()){
             stats.merge(function(cmdid, false));

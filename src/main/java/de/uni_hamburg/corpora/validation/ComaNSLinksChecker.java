@@ -34,48 +34,29 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
- * This class checks for existence of files linked in the 
- * coma file.
+ * This class checks for existence of files linked in the coma file.
  */
 public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
     String referencePath = "./";
     String comaLoc = "";
     String communicationname;
+    Report stats = new Report(); //create a new report
 
     public ComaNSLinksChecker() {
         //no fixing available
         super(false);
     }
 
-    /**
-     * Check for existence of files in a coma file.
-     *
-     * @return true, if all files were found, false otherwise
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error.");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error.");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            stats.addException(ioe, function, cd, "Unknown file reading error.");
-        } catch (URISyntaxException ex) {
-            ex.printStackTrace();
-            stats.addException(ex, function, cd, "Unknown file reading error.");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error.");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error.");
-        }
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, JDOMException, IOException, JexmaraldaException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
+        cd = c.getComaData();
+        stats = function(cd, fix);
         return stats;
     }
 
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Document doc = TypeConverter.JdomDocument2W3cDocument(TypeConverter.String2JdomDocument(cd.toSaveableString()));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
@@ -182,7 +163,7 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
                         found = true;
                     }
                 }
-               if (cdcoma.getBasedirectory() != null) {
+                if (cdcoma.getBasedirectory() != null) {
                     URI uri = cdcoma.getBasedirectory().toURI();
                     URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
                     String basePath
@@ -204,14 +185,6 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         }
         return stats;
     }
-    
-
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "Wrong NS links cannot be fixed automatically");
-        return report;
-    }
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
@@ -224,16 +197,9 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    @Override
-    public Report execute(Corpus c) {
-        for (CorpusData cd : c.getCorpusData()) {
-            report.merge(check(cd));
-        }
-        return report;
-    }
-
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -242,13 +208,4 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
         return description;
     }
 
-    @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

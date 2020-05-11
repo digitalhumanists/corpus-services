@@ -27,53 +27,32 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.CommandLine;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
  * A class that checks all file names in a directory to be deposited in HZSK
  * repository.
  */
-public class FilenameChecker extends Checker implements CorpusFunction {
+public class ComaFilenameChecker extends Checker implements CorpusFunction {
 
     Pattern acceptable;
     Pattern unacceptable;
     String fileLoc = "";
     ValidatorSettings settings;
 
-    public FilenameChecker() {
+    public ComaFilenameChecker() {
         //fixing is not possible
         super(false);
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        }
-        return stats;
     }
 
     /**
      * Main functionality of the feature; checks if there is a file which is not
      * named according to coma file.
      *
-     * @return true, if all files were found, false otherwise.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         File f = new File(cd.getURL().toString());
         String filename = f.getName();
@@ -160,13 +139,11 @@ public class FilenameChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 
 }

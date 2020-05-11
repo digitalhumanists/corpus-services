@@ -11,13 +11,10 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import static de.uni_hamburg.corpora.utilities.TypeConverter.JdomDocument2W3cDocument;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -40,17 +37,6 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
     public ComaSegmentCountChecker() {
         //fixing is available
         super(true);
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) throws ClassNotFoundException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
-        Report stats = new Report();
-            stats = function(cd, false);
-        return stats;
     }
 
     /**
@@ -205,7 +191,10 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws ClassNotFoundException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 }

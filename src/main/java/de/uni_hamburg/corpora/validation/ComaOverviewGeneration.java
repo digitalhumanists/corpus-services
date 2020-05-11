@@ -21,15 +21,14 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author fsnv625
- * 
- * This class creates a sort- and filterable html overview in table form 
- * of the content of the coma file to make error checking and harmonizing easier.
+ *
+ * This class creates a sort- and filterable html overview in table form of the
+ * content of the coma file to make error checking and harmonizing easier.
  */
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
@@ -41,20 +40,20 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(CorpusData cd){
+    public Report function(CorpusData cd, Boolean fix) {
         Report r = new Report();
         String xsl;
-        try{
+        try {
 
             // get the XSLT stylesheet
-            if(inel){
-            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary_INEL.xsl"));    
-            }else {
-            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
+            if (inel) {
+                xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary_INEL.xsl"));
+            } else {
+                xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
             }
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
-        
+
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
             //get location to save new result
@@ -64,7 +63,6 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             cio.write(result, overviewurl);
             //everything worked
             r.addCorrect(function, cd, "created html overview at " + overviewurl);
-            
 
         } catch (TransformerConfigurationException ex) {
             r.addException(ex, function, cd, "Transformer configuration error");
@@ -81,25 +79,26 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         } catch (XPathExpressionException ex) {
             r.addException(ex, function, cd, "Unknown XPath error");
         }
-        
+
         return r;
-        
+
     }
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-        Class cl1;   
+        Class cl1;
         try {
             cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");
-             IsUsableFor.add(cl1);
+            IsUsableFor.add(cl1);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "Usable class not found.");
         }
-            return IsUsableFor;
+        return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -107,19 +106,17 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
                 + " of the content of the coma file to make error checking and harmonizing easier. ";
         return description;
     }
-    
-     public void setInel() {
-            inel = true;
+
+    public void setInel() {
+        inel = true;
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 
 }
