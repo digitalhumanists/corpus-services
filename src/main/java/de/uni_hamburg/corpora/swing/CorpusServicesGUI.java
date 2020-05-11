@@ -842,7 +842,13 @@ public class CorpusServicesGUI extends javax.swing.JFrame {
             } catch (URISyntaxException ex) {
                 message(f.getName() + " not added to list (file could not be read).");
             } catch (IOException ex) {
-                Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
+                 message(f.getName() + " not added to list (file could not be read).");
+            } catch (SAXException ex) {
+                 message(f.getName() + " not added to list (file could not be read).");
+            } catch (JexmaraldaException ex) {
+                 message(f.getName() + " not added to list (file could not be read).");
+            } catch (ClassNotFoundException ex) {
+                 message(f.getName() + " not added to list (file could not be read).");
             }
         }
         done = 0;
@@ -884,7 +890,7 @@ public class CorpusServicesGUI extends javax.swing.JFrame {
                             message("Added function " + str + " to list");
                         }
 
-                        Collection<CorpusFunction> cfs = corpusFunctionStrings2Classes();
+                        Collection<CorpusFunction> cfs = corpusFunctionStrings2Classes(corpuma.getChosencorpusfunctions());
                         for (CorpusFunction cf : cfs) {
                             //make sure to run it only on the data the check is allowed for
                             report.merge(corpuma.runCorpusFunction(cd, cf));
