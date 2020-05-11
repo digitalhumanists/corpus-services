@@ -41,6 +41,8 @@ public class RemoveAbsolutePaths extends Checker implements CorpusFunction {
     String nameOfExbFolder;
 
     public RemoveAbsolutePaths() {
+        //fixing is possible
+        super(true);
     }
 
     

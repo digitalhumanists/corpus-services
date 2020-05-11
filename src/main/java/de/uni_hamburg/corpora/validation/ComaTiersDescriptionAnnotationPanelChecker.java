@@ -37,6 +37,8 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
 
     public ComaTiersDescriptionAnnotationPanelChecker() {
+        //no fixing available
+        super(false);
     }
 
     /**
@@ -166,14 +168,6 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
         }
 
         return stats; // return the report with warnings
-    }
-
-    /**
-     * This feature does not have fix functionality yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

@@ -38,6 +38,8 @@ public class GeneralTransformer extends Checker {
     boolean exs = false;
 
     public GeneralTransformer() {
+        //fixing is available
+        super(true);
     }
 
     @Override

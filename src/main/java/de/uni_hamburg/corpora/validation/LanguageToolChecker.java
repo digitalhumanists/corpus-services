@@ -60,6 +60,11 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
     JLanguageTool langTool;
 
     public LanguageToolChecker() {
+        
+    /**
+     * No fix is applicable for this feature.
+     */
+        super(false);
     }
 
     public Report check(File f) {
@@ -293,15 +298,6 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
         return stats;
     }
 
-    /**
-     * No fix is applicable for this feature.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
 
     /**
      * Default function which determines for what type of files (basic

@@ -35,6 +35,11 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
     Document doc = null;
 
     public RemoveEmptyEvents() {
+        
+    /**
+     * Fix is applicable for this feature.
+     */
+    super(true);
     }
 
     @Override

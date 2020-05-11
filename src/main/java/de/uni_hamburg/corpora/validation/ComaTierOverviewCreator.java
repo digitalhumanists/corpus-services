@@ -35,6 +35,8 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
     String comaLoc = "";
 
     public ComaTierOverviewCreator() {
+        //no fixing available
+        super(false);
     }
 
     /**
@@ -203,14 +205,6 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         stats.addCorrect(function, cd, "created tier overview at " + overviewurl);
 
         return stats; // return the report with warnings
-    }
-
-    /**
-     * This feature does not have fix functionality yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        return check(cd);
     }
 
     /**

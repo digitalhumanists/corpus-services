@@ -35,6 +35,8 @@ public class RemoveAutoSaveExb extends Checker implements CorpusFunction {
     Document doc = null;
 
     public RemoveAutoSaveExb() {
+        //fixing is possible
+        super(true);
     }
 
     @Override

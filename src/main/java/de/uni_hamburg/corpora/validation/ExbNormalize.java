@@ -36,6 +36,7 @@ public class ExbNormalize extends Checker implements CorpusFunction {
     Boolean fixWhiteSpaces = false;
 
     public ExbNormalize() {
+        super(true);
     }
 
     @Override

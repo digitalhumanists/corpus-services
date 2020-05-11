@@ -42,6 +42,8 @@ public class XSLTChecker extends Checker implements CorpusFunction {
     String FSMpath = "";
 
     public XSLTChecker() {
+        //fixing is possible
+        super(true);
     }
 
     @Override

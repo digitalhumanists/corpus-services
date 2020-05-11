@@ -62,7 +62,8 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     String path2ExternalFSM = "";
 
     public ExbSegmentationChecker() {
-        //super("ExbSegmenter");
+        //fixing is possible
+        super(true);
     }
 
     /**

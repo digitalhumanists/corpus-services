@@ -15,7 +15,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -36,6 +35,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
 
     public NgTierCheckerWithAnnotation() {
+        super(false);
     }
 
     /**
@@ -157,14 +157,6 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
         }
 
         return stats; // return the report with warnings
-    }
-
-    /**
-     * This feature does not have fix functionality yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

@@ -40,6 +40,7 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
 
     public ExbSchemaChecker() {
+        super(false);
     }
 
     /**
@@ -91,16 +92,6 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
         validator.setErrorHandler(eh);
         validator.validate(xmlStream);
         return eh.getErrors();
-    }
-    
-    /**
-    * No fix is applicable for this feature.
-    */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "No fix is applicable for this feature.");
-        return report;
     }
     
     /**

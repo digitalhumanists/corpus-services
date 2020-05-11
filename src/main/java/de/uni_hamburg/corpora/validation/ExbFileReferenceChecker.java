@@ -38,6 +38,8 @@ import org.w3c.dom.NodeList;
 public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
 
     public ExbFileReferenceChecker() {
+        //no fixing option available
+        super(false);
     }
 
     /**

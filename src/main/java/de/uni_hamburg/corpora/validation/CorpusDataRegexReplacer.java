@@ -44,6 +44,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
     XPath context;
 
     public CorpusDataRegexReplacer() {
+        super(true);
     }
 
     @Override
