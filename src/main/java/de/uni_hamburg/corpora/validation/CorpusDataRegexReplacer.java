@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -44,29 +45,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
     XPath context;
 
     public CorpusDataRegexReplacer() {
-    }
-
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        }
-        return stats;
+        super(true);
     }
 
     /**
@@ -74,91 +53,59 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
      * coma file contains containsRegEx ’and add that warning to the report
      * which it returns.
      */
-    private Report exceptionalCheck(CorpusData cd) // check whether there's any regEx instances on specified XPath
+    @Override
+    public Report function(CorpusData cd, Boolean fix) // check whether there's any regEx instances on specified XPath
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+
         Report stats = new Report();         // create a new report
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
         Pattern replacePattern = Pattern.compile(replace);
         context = XPath.newInstance(xpathContext);
         List allContextInstances = context.selectNodes(doc);
         String s;
+
         if (!allContextInstances.isEmpty()) {
             for (int i = 0; i < allContextInstances.size(); i++) {
                 Object o = allContextInstances.get(i);
                 if (o instanceof Element) {
                     Element e = (Element) o;
                     s = e.getText();
+                    if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
+                        containsRegEx = true;
+                        if (fix) {
+                            String snew = s.replaceAll(replace, replacement);    //replace all replace with replacement
+                            //TODO Attributes?
+                            e.setText(snew);
+                            stats.addFix(function, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                        } else {
+                            System.err.println("CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
+                            stats.addCritical(function, cd, "CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
+                        }
+                    }
                 } else if (o instanceof Attribute) {
                     Attribute a = (Attribute) o;
                     s = a.getValue();
-                }
-                else {
+                    if (fix) {
+                        System.err.println("Attributes cannot be replaced yet at " + escapeHtml4(xpathContext));
+                        stats.addCritical(function, cd, "Attributes cannot be replaced yet at " + escapeHtml4(xpathContext));
+                    }
+                } else {
                     stats.addWarning(function, cd, "Xpath " + escapeHtml4(xpathContext) + " does not lead to Element or Attribute");
-                    s ="";
-                }
-                if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
-                    containsRegEx = true;
-                    System.err.println("CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
-                    stats.addCritical(function, cd, "CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
+                    s = "";
                 }
 
             }
             if (!containsRegEx) {
                 stats.addCorrect(function, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
-            }
-        } else {
-            stats.addCorrect(function, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
-        }
-        return stats; // return the report with warnings
-    }
-
-    @Override
-    public Report fix(CorpusData cd) {
-        Report stats = new Report();         // create a new report
-        try {
-            Pattern replacePattern = Pattern.compile(replace);
-            doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
-            context = XPath.newInstance(xpathContext);
-            List allContextInstances = context.selectNodes(doc);
-            if (!allContextInstances.isEmpty()) {
-                for (int i = 0; i < allContextInstances.size(); i++) {
-                    Object o = allContextInstances.get(i);
-                    //TODO Attributes?
-                    Element e = (Element) o;
-                    String s = e.getText();
-                    if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
-                        containsRegEx = true;
-                        String snew = s.replaceAll(replace, replacement);    //replace all replace with replacement
-                        //TODO Attributes?
-                        e.setText(snew);
-                        stats.addFix(function, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
-                    }
-                }
-                if (containsRegEx) {
-                    CorpusIO cio = new CorpusIO();
-                    cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
-                    cio.write(cd, cd.getURL());
-                } else {
-                    stats.addCorrect(function, cd, "CorpusData file does not contain " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext));
-                }
+            } else if (fix) {
+                CorpusIO cio = new CorpusIO();
+                cd.updateUnformattedString(TypeConverter.JdomDocument2String(doc));
+                cio.write(cd, cd.getURL());
             } else {
                 stats.addCorrect(function, cd, "CorpusData file does not contain anything at " + escapeHtml4(xpathContext));
             }
-            
-         } catch (SAXException ex) {
-            stats.addException(ex, function, cd, "Unknown exception error");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (IOException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "XSL transformer error");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "Parser error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "XPath error");
         }
-        return stats;
+        return stats; // return the report with warnings
     }
 
     @Override
@@ -199,8 +146,9 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
         }
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -209,12 +157,17 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        if (coma) {
+            cd = c.getComaData();
+            stats = function(cd, fix);
 
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        } else {
+            for (BasicTranscriptionData btd : c.getBasicTranscriptionData()) {
+                stats.merge(function(btd, fix));
+            }
+        }
+        return stats;
     }
 }

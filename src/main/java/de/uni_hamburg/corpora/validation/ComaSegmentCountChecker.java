@@ -1,21 +1,26 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.SegmentedTranscriptionData;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import static de.uni_hamburg.corpora.utilities.TypeConverter.JdomDocument2W3cDocument;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.List;
+import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
+import org.jdom.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -30,31 +35,8 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
     String comaLoc = "";
 
     public ComaSegmentCountChecker() {
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Transformer Exception");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "XPath Exception");
-        }
-        return stats;
+        //fixing is available
+        super(true);
     }
 
     /**
@@ -62,14 +44,72 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
      * there are more than one segmentation algorithms used in the corpus.
      * Issues warnings and returns report which is composed of errors.
      */
-    private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws ClassNotFoundException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+        Report stats = new Report(); //create a new report
+        ComaData comad = (ComaData) cd;
+        org.jdom.Document comaDoc = comad.getJdom();
+        Document doc = JdomDocument2W3cDocument(comaDoc);
         NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
         ArrayList<String> algorithmNames = new ArrayList<>(); // array for holding algorithm names
-        Report stats = new Report(); //create a new report
+        CorpusIO cio = new CorpusIO();
+        SegmentedTranscriptionData exs;
+        if (fix) {
+            List<org.jdom.Element> toRemove = new ArrayList<org.jdom.Element>();
+            XPath context;
+            context = XPath.newInstance("//Transcription[Description/Key[@Name='segmented']/text()='true']");
+            URL url;
+            List allContextInstances = context.selectNodes(comaDoc);
+            if (!allContextInstances.isEmpty()) {
+                for (int i = 0; i < allContextInstances.size(); i++) {
+                    Object o = allContextInstances.get(i);
+                    if (o instanceof org.jdom.Element) {
+                        org.jdom.Element e = (org.jdom.Element) o;
+                        List<org.jdom.Element> descKeys;
+                        //in the coma file remove old stats first
+                        descKeys = e.getChild("Description")
+                                .getChildren();
+                        for (org.jdom.Element ke : (List<org.jdom.Element>) descKeys) {
+                            if (Pattern.matches("#(..).*", ke.getAttributeValue("Name"))) {
+                                toRemove.add(ke);
+                            }
+                        }
+                        for (org.jdom.Element re : toRemove) {
+                            descKeys.remove(re);
+                        }
+                        //now get the new segment counts and add them insted
+                        String s = e.getChildText("NSLink");
+                        //System.out.println("NSLink:" + s);
+                        url = new URL(cd.getParentURL() + s);
+                        exs = (SegmentedTranscriptionData) cio.readFileURL(url);
+                        List segmentCounts = exs.getSegmentCounts();
+                        for (Object segmentCount : segmentCounts) {
+                            if (segmentCount instanceof org.jdom.Element) {
+                                org.jdom.Element segmentCountEl = (org.jdom.Element) segmentCount;
+                                //Object key = segmentCountEl.getAttributeValue("attribute-name").substring(2);
+                                Object key = segmentCountEl.getAttributeValue("attribute-name");
+                                Object value = segmentCountEl.getValue();
+                                //System.out.println("Value:" + value);
+                                org.jdom.Element newKey = new org.jdom.Element("Key");
+                                newKey.setAttribute("Name", (String) key);
+                                newKey.setText(value.toString());
+                                e.getChild("Description").addContent(
+                                        newKey);
+                                report.addFix(function, cd, "Updated segment count " + key.toString() + ":" + value.toString() + "for transcription " + e.getAttributeValue("Name"));
+                            }
+                        }
+
+                    }
+                }
+            }
+            if (comaDoc != null) {
+                cd.updateUnformattedString(TypeConverter.JdomDocument2String(comaDoc));
+                cio.write(cd, cd.getURL());
+                report.addCorrect(function, cd, "Updated the segment counts!");
+            } else {
+                report.addCritical(function, cd, "Updating the segment counts was not possible!");
+            }
+        } //still check it now after they were added
         for (int i = 0; i < communications.getLength(); i++) { //iterate through communications
             Element communication = (Element) communications.item(i);
             NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication     
@@ -119,15 +159,7 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
         } else {
             stats.addWarning(function, cd, "No segment counts added yet. Use Coma > Maintenance > Update segment counts to add them. ");
         }
-        return stats; // return the report with warnings
-    }
-
-    /**
-     * This feature does not have fix functionality yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        return check(cd);
+        return stats;
     }
 
     /**
@@ -154,17 +186,15 @@ public class ComaSegmentCountChecker extends Checker implements CorpusFunction {
     public String getDescription() {
         String description = "This class checks whether there are more than one "
                 + "segmentation algorithms used in the coma file. If that is the case"
-                + ", it issues warnings.";
+                + ", it issues warnings. If it ihas the fix option, it updates the segment counts from the exbs. ";
         return description;
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws ClassNotFoundException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 }

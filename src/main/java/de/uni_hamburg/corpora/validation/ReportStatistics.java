@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -36,30 +37,12 @@ public class ReportStatistics extends Checker implements CorpusFunction {
     String corpusname = "";
 
     public ReportStatistics() {
+        //no fixing available
+        super(false);
     }
 
     @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (IOException ex) {
-            stats.addException(ex, function, cd, "Input Output Exception");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "Parser Exception");
-        } catch (SAXException ex) {
-            stats.addException(ex, function, cd, "XML Exception");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "XPath Exception");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "URI");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Transformer");
-        }
-        return stats;
-    }
-
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException {
         Report stats = new Report();
         String reportStatisticsPath = cd.getParentURL().getPath() + "curation/report-statistics.html";
@@ -159,11 +142,6 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {        
-        return check(cd);
-    }
-
     /**Default function which returns a two/three line description of what 
      * this class is about.
      */
@@ -175,12 +153,10 @@ public class ReportStatistics extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
+        Report stats = new Report();
+        CorpusData cdata = c.getComaData();
+        stats = function(cdata, fix);
+        return stats;
     }
 }

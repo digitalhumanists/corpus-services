@@ -8,6 +8,7 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,9 +54,11 @@ public class ExbMerger extends Checker implements CorpusFunction {
     //private int noOfAnnotations = 0;     // total no of annotations
     //private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
 
-    public ExbMerger(){
-        
+    public ExbMerger() {
+        //fixing option available
+        super(false);
     }
+
     /**
      * Default check function which calls the exceptionalCheck function so that
      * the primal functionality of the feature can be implemented, and
@@ -188,10 +191,8 @@ public class ExbMerger extends Checker implements CorpusFunction {
             if (!h.isEmpty()) {
                 tlItems.put(transcriptName, h);  // finally add the timeline items of the transcript
             }
-        } else {
-            if (!h.isEmpty()) {
-                tlItemsTwo.put(transcriptName, h);  // finally add the timeline items of the transcript
-            }
+        } else if (!h.isEmpty()) {
+            tlItemsTwo.put(transcriptName, h);  // finally add the timeline items of the transcript
         }
     }
 
@@ -255,10 +256,8 @@ public class ExbMerger extends Checker implements CorpusFunction {
             if (!speakerMap.isEmpty()) {
                 speakerTables.put(transcriptName, speakerMap);  // finally add the timeline items of the transcript
             }
-        } else {
-            if (!speakerMap.isEmpty()) {
-                speakerTablesTwo.put(transcriptName, speakerMap);  // finally add the timeline items of the transcript
-            }
+        } else if (!speakerMap.isEmpty()) {
+            speakerTablesTwo.put(transcriptName, speakerMap);  // finally add the timeline items of the transcript
         }
     }
 
@@ -356,7 +355,7 @@ public class ExbMerger extends Checker implements CorpusFunction {
             }
         }
     }
-    
+
     public String[] compareTwoExbs(String firstExb, String secondExb) {
         String firstDifference = new String(new char[firstExb.length()]).replace('\0', ' ');
         String secondDifference = new String(new char[secondExb.length()]).replace('\0', ' ');
@@ -454,14 +453,6 @@ public class ExbMerger extends Checker implements CorpusFunction {
     }
 
     /**
-     * Fix is not yet supported for this functionality.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -477,10 +468,6 @@ public class ExbMerger extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public Report function(CorpusData cd, Boolean fix) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
@@ -489,6 +476,11 @@ public class ExbMerger extends Checker implements CorpusFunction {
 
     @Override
     public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -7,6 +7,7 @@ import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,31 +46,9 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
 
     public IAAFunctionality() {
+        //no fixing available
+        super(false);
     }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) throws JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, annotLoc + ": Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, annotLoc + ": Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, annotLoc + ": Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, annotLoc + ": Unknown file reading error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, annotLoc + ": Unknown file reading error");
-        }
-        return stats;
-    }
-
 
     /**
      * Main functionality of the feature; check if there is any mismatch between
@@ -77,7 +56,8 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
      * the EXB file, calculate the percentage of overlapping annotations and
      * inter annotator agreement according to Krippendorff's alpha.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -206,14 +186,6 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     }
 
     /**
-     * Fix is not yet supported for this functionality.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -245,13 +217,12 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 
 }

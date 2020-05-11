@@ -57,7 +57,7 @@ public class ComaTranscriptionsNameCheckerTest {
         Collection<CorpusData> cdc;
         //what happens when we check coma files
         for (CorpusData cd : corp.getMetadata()) {
-            assertNotNull(instance.check(cd));
+            assertNotNull(instance.function(cd,false));
         }
     }
 

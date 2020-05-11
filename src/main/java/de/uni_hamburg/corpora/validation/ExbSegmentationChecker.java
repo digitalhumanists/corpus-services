@@ -62,69 +62,8 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
     String path2ExternalFSM = "";
 
     public ExbSegmentationChecker() {
-        //super("ExbSegmenter");
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = function(cd, false);
-        } catch (SAXException saxe) {
-            saxe.printStackTrace();
-        } catch (JexmaraldaException je) {
-            je.printStackTrace();
-        } catch (IOException ex) {
-            stats.addException(ex, function, cd, "Unknown read error");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "Unknown JDOM error");
-        } catch (FSMException ex) {
-            stats.addException(ex, function, cd, "Unknown FSM error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown Transformer error");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "Unknown Parser error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown URI error");
-        }
-        return stats;
-    }
-
-    /**
-     * Fix to create segmented exs from the exbs.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = function(cd, true);
-        } catch (SAXException saxe) {
-            saxe.printStackTrace();
-        } catch (JexmaraldaException je) {
-            je.printStackTrace();
-        } catch (IOException ex) {
-            stats.addException(ex, function, cd, "Unknown read error");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "Unknown JDOM error");
-        } catch (FSMException ex) {
-            stats.addException(ex, function, cd, "Unknown FSM error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown Transformer error");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "Unknown Parser error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown URI error");
-        }
-        return stats;
+        //fixing is possible
+        super(true);
     }
 
     @Override
@@ -319,93 +258,13 @@ public class ExbSegmentationChecker extends Checker implements CorpusFunction {
                 + "segmented exs from the exbs that don't contain errors.";
         return description;
     }
-
-    @Override
-    public Report check(Corpus c) {
-        Report stats = new Report();
-        for (CorpusData cdata : c.getBasicTranscriptionData()){
-            try {
-                stats.merge(check(cdata));
-            } catch (SAXException ex) {
-                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return stats;
-    }
     
-    public Report fix(Corpus c) {
+         @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException, FSMException {
         Report stats = new Report();
-        //exmaralda/src/org/exmaralda/coma/actions/SegmentTranscriptionAction.java
-        for (CorpusData cdata : c.getBasicTranscriptionData()){
-            try {
-                stats.merge(fix(cdata));
-            } catch (SAXException ex) {
-                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(ExbSegmentationChecker.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
         }
-        /*
-        for (File segTr : segmentedTranscriptions.keySet()) {
-			//File basTr = basicTr.elementAt(count);
-			if (!(existingSegs.contains(segTr))) {
-				Element trE = new Element("Transcription");
-				trE.setAttribute("Id", "T" + new GUID().makeID());
-				if (coma.prefs.get("prefs.nameTranscriptionsAfter",
-						Ui.getText("communication")).equals(
-						Ui.getText("communication"))) {
-					trE.addContent(new Element("Name")
-							.setText(basicTr2Communication.get(
-									segmentedTranscriptions.get(segTr))
-									.getAttributeValue("Name")));
-				} else {
-					trE.addContent(new Element("Name").setText(segTr.getName()));
-				}
-				trE.addContent(new Element("Filename").setText(segTr.getName()));
-				trE.addContent(new Element("NSLink").setText(coma
-						.getRelativePath(null, segTr)));
-
-				TranscriptionMetadata tm = new TranscriptionMetadata(segTr,
-						true);
-				Element dElement = new Element("Description");
-                                / *<Transcription Id="CIDIDA68F4AAD-0DAB-C778-2992-301A3B03DD10">
-                                    <Name>Griffith_01</Name>
-                                    <Filename>Griffith_01.exb</Filename>
-                                    <NSLink>Griffith_01.exb</NSLink>
-                                    <Description>
-                                        <Key Name="segmented">false</Key>
-                                    </Description>
-                                    <Availability>
-                                        <Available>false</Available>
-                                        <ObtainingInformation/>
-                                    </Availability>
-                                </Transcription>
-                                <Transcription Id="TID3710E022-BA7C-72B7-9707-382B67858D69">
-                                    <Name/>
-                                    <Filename>Griffith_01_s.exs</Filename>
-                                    <NSLink>Griffith_01_s.exs</NSLink>
-                                    <Description>
-                                        <Key Name="transcription-name"/>
-                                        <Key Name="project-name"/>
-                                        <Key Name="transcription-convention"/>
-                                        <Key Name="comment"/>
-                                    </Description>
-                                </Transcription>* /
-				for (String key : tm.getMetadata().keySet()) {
-                                    dElement.addContent(new Element("Key").setAttribute("Name", key).setText(tm.getMetadata().get(key)));
-				}
-                                // issue #66
-                                dElement.addContent(new Element("Key").setAttribute("Name", "segmented").setText(("true")));
-				trE.addContent(dElement);
-				basicTr2Communication.get(segmentedTranscriptions.get(segTr)).addContent(trE);
-			}
-			count++;
-
-		}
-
-        */
         return stats;
     }
 }

@@ -21,9 +21,12 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
@@ -35,10 +38,15 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
     Document doc = null;
 
     public RemoveEmptyEvents() {
+        
+    /**
+     * Fix is applicable for this feature.
+     */
+    super(true);
     }
 
     @Override
-    public Report check(CorpusData cd) {
+    public Report function(CorpusData cd, Boolean fix) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         try {
             XMLData xml = (XMLData) cd;
             List al = findAllEmptyEvents(xml);
@@ -46,22 +54,7 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
             if (al.isEmpty()) {
                 report.addCorrect(function, cd, "there are no empty events left");
             } else {
-                report.addCritical(function, cd, "empty events need to be removed");
-                exmaError.addError(function, cd.getURL().getFile(), "", "", false, "empty events need to be removed");
-            }
-        } catch (JDOMException ex) {
-            report.addException(ex, function, cd, "Jdom Exception");
-        }
-        return report;
-    }
-
-    @Override
-    public Report fix(CorpusData cd) {
-        try {
-            XMLData xml = (XMLData) cd;
-            List al = findAllEmptyEvents(xml);
-            if (!al.isEmpty()) {
-                try {
+                if(fix){
                     for (Object o : al) {
                         Element e = (Element) o;
                         System.out.println(e);
@@ -76,24 +69,14 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
                     CorpusIO cio = new CorpusIO();
                     cio.write(cd, cd.getURL());
                     report.addFix(function, cd, "removed empty event");
-                } catch (IOException ex) {
-                    report.addException(ex, function, cd, "Input/Output Exception");
-                } catch (TransformerException ex) {
-                    report.addException(ex, function, cd, "Input/Output Exception");
-                } catch (ParserConfigurationException ex) {
-                    report.addException(ex, function, cd, "Input/Output Exception");
-                } catch (SAXException ex) {
-                    report.addException(ex, function, cd, "Input/Output Exception");
-                } catch (XPathExpressionException ex) {
-                    report.addException(ex, function, cd, "Input/Output Exception");
-                }
-            } else {
-                report.addCorrect(function, cd, "there are no empty events left");
-            }
+                }else{              
+                report.addCritical(function, cd, "empty events need to be removed");
+                exmaError.addError(function, cd.getURL().getFile(), "", "", false, "empty events need to be removed");
+            }}
         } catch (JDOMException ex) {
             report.addException(ex, function, cd, "Jdom Exception");
         }
-                    return report;
+        return report;
     }
 
     @Override
@@ -131,13 +114,15 @@ public class RemoveEmptyEvents extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, JDOMException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        for (CorpusData sdata : c.getSegmentedTranscriptionData()) {
+            stats.merge(function(sdata, fix));
+        }
+        return stats;
     }
 
 }
