@@ -7,24 +7,23 @@
  * @author Tommi A Pirinen <tommi.antero.pirinen@uni-hamburg.de>
  * @author HZSK
  */
-
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
+import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
-import java.io.File;
-import java.util.Hashtable;
-import java.util.Collection;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.CommandLine;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,6 +33,7 @@ import org.w3c.dom.Text;
 
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
 
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.JLanguageTool;
@@ -42,146 +42,150 @@ import org.languagetool.language.GermanyGerman;
 /**
  * A grammar and spelling error checker for EXB tiers mainly.
  */
-public class LanguageToolChecker {
+public class LanguageToolChecker extends Checker implements CorpusFunction {
 
+    static String filename;
     BasicTranscription bt;
+    static BasicTranscriptionData btd;
     ValidatorSettings settings;
     List<String> conventions = new ArrayList<String>();
     List<String> problems = new ArrayList<String>();
-    String tierToCheck;
-    String language;
+    String tierToCheck = "fg";
+    String language = "de";
+    JLanguageTool langTool;
 
-    final String LANGUAGETOOL = "languagetool";
-
-    private void tryLoadBasicTranscription(String filename)
-        throws SAXException, JexmaraldaException {
-        if (bt == null) {
-            bt = new BasicTranscription(filename);
-        }
+    public LanguageToolChecker() {
+        
+    /**
+     * No fix is applicable for this feature.
+     */
+        super(false);
     }
 
-    public Report check(File f) {
+    /**
+     * Main feature of the class: Checks Exmaralda .exb file for segmentation
+     * problems.
+     */
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
         Report stats = new Report();
-        try {
-            stats = exceptionalCheck(f);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, "Unknown parser error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parser error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, "Unknown read error");
-        }
-        return stats;
-    }
-
-    public Report exceptionalCheck(File f)
-            throws SAXException, IOException, ParserConfigurationException {
-        // XXX: get languages and good tiers somehow
-        JLanguageTool langTool;
+        btd = new BasicTranscriptionData(cd.getURL());
         if (language.equals("de")) {
+            langTool = new JLanguageTool(new GermanyGerman());
+            System.out.println("Language set to German");
+        } else if (language.equals("en")) {
+            //needs to be English!
+            langTool = new JLanguageTool(new GermanyGerman());
+        } else if (language.equals("ru")) {
+            //needs to be Russian!
             langTool = new JLanguageTool(new GermanyGerman());
         } else {
             Report report = new Report();
-            report.addCritical(LANGUAGETOOL, "Missing languagetool for language " +
-                    language);
-            return report;
+            report.addCritical(function, cd, "Missing languagetool for language "
+                    + language);
+            return stats;
         }
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(f);
+        Document doc = TypeConverter.JdomDocument2W3cDocument(btd.getJdom());
         NodeList tiers = doc.getElementsByTagName("tier");
-        Report stats = new Report();
+        List<RuleMatch> matches = new ArrayList<RuleMatch>();
+        int count = 0;
         for (int k = 0; k < tiers.getLength(); k++) {
-            Element tier = (Element)tiers.item(k);
+            Element tier = (Element) tiers.item(k);
             if (!tier.getAttribute("category").equals(tierToCheck)) {
                 continue;
             }
             NodeList events = tier.getElementsByTagName("event");
             for (int i = 0; i < events.getLength(); i++) {
-                Element event = (Element)events.item(i);
+                Element event = (Element) events.item(i);
                 NodeList eventTexts = event.getChildNodes();
                 for (int j = 0; j < eventTexts.getLength(); j++) {
                     Node maybeText = eventTexts.item(j);
                     if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                        if (maybeText.getNodeType() == Node.ELEMENT_NODE &&
-                                maybeText.getNodeName().equals("ud-information")) {
+                        if (maybeText.getNodeType() == Node.ELEMENT_NODE
+                                && maybeText.getNodeName().equals("ud-information")) {
                             // XXX: ud-information is weird I'll just skip it...
                             continue;
                         }
-                        System.err.println("This is not a text node: " +
-                                maybeText);
+                        System.err.println("This is not a text node: "
+                                + maybeText);
                         continue;
                     }
                     Text eventText = (Text) maybeText;
                     String text = eventText.getWholeText();
-                    List<RuleMatch> matches = langTool.check(text);
+                    matches = langTool.check(text);
                     for (RuleMatch match : matches) {
-                        stats.addWarning(LANGUAGETOOL,
-                                "Potential error at characters " +
-                                match.getFromPos() + "-" + match.getToPos() + ": " +
-                                match.getMessage() + ": \"" +
-                                text.substring(match.getFromPos(),
-                                               match.getToPos()) + "\" ",
-                                "Suggested correction(s): " +
-                                match.getSuggestedReplacements());
+                        String message = "Potential error at characters "
+                                + match.getFromPos() + "-" + match.getToPos() + ": "
+                                + match.getMessage() + ": \""
+                                + text.substring(match.getFromPos(),
+                                        match.getToPos()) + "\" "
+                                + "Suggested correction(s): "
+                                + match.getSuggestedReplacements();
+                        stats.addWarning(function, cd, message
+                        );
+//                        System.out.println("Potential error at characters " + 
+//                                match.getFromPos() + "-" + match.getToPos() + ": " +
+//                                match.getMessage() + ": \"" +
+//                                text.substring(match.getFromPos(),
+//                                               match.getToPos()) + "\" " +
+//                                "Suggested correction(s): " +
+//                                match.getSuggestedReplacements());
+                        //add ExmaError tierID eventID
+                        exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false, message);
+                    }
+                    if (!matches.isEmpty()) {
+                        count++;
                     }
                 }
+
             }
+        }
+        if (count==0) {
+            stats.addCorrect(function, cd, "No spelling errors found.");
         }
         return stats;
     }
 
-    public Report doMain(String[] args) {
-        settings = new ValidatorSettings("LanguageToolChecker",
-                "Checks Exmaralda .exb file annotations for spelling and " +
-                "grammar errors", "Blah");
-        // XXX: the option version is quite useless unless for quick checks
-        List<Option> ltOptions = new ArrayList<Option>();
-        ltOptions.add(new Option("l", "language", true, "use language"));
-        ltOptions.add(new Option("t", "tier", true, "check tier"));
-        CommandLine cmd = settings.handleCommandLine(args, ltOptions);
-        if (cmd == null) {
-            System.exit(0);
+
+    /**
+     * Default function which determines for what type of files (basic
+     * transcription, segmented transcription, coma etc.) this feature can be
+     * used.
+     */
+    @Override
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, "unknown class not found error");
         }
-        if (cmd.hasOption("language")) {
-            language = cmd.getOptionValue("language");
-            if (!language.equals("de")) {
-                System.err.println("Language " + language + " is not supported"
-                        );
-                System.exit(1);
-            }
-        } else {
-            System.err.println("Language defaulted to German (de)");
-            language = "de";
-        }
-        if (cmd.hasOption("tier")) {
-            tierToCheck = cmd.getOptionValue("tier");
-        } else {
-            System.err.println("Use --tier= to select a tier");
-            System.exit(1);
-        }
-        if (settings.isVerbose()) {
-            System.out.println("Checking exb files with languagetool");
-        }
+        return IsUsableFor;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class takes a CorpusDataObject that is an Exb, "
+                + "checks if there are spell or grammar errors in German, English or Russian using LnaguageTool and"
+                + " returns the errors in the Report and in the ExmaErrors.";
+        return description;
+    }
+
+    public void setLanguage(String lang) {
+        language = lang;
+    }
+
+    public void setTierToCheck(String ttc) {
+        tierToCheck = ttc;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
         Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            if (settings.isVerbose()) {
-                System.out.println(" * " + f.getName());
-            }
-            stats = check(f);
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
         }
         return stats;
-    }
-
-    public static void main(String[] args) {
-        LanguageToolChecker checker = new LanguageToolChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
-        for (String arg :  args) {
-            if (arg.equals("-v") || arg.equals("--verbose")) {
-                System.out.println(stats.getFullReports());
-            }
-        }
     }
 }

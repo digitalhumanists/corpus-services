@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
@@ -41,11 +43,16 @@ public class HScoreHTML extends Visualizer {
     String corpusname = "";
 
     public HScoreHTML() {
-
+        super("HScoreHTML");
     }
 
     public HScoreHTML(String btAsString) {
-        createFromBasicTranscription(btAsString);
+        super("HScoreHTML");
+        try {
+            createFromBasicTranscription(btAsString);
+        } catch (TransformerException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -55,35 +62,30 @@ public class HScoreHTML extends Visualizer {
      * @param btAsString the EXB file represented in a String object
      * @return
      */
-    public String createFromBasicTranscription(String btAsString) {
+    public String createFromBasicTranscription(String btAsString) throws TransformerConfigurationException, TransformerException {
 
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(btAsString);
 
         String result = null;
 
-        try {
-            BasicTranscription bt = basicTranscription;
-            bt.normalize();
-            basicTranscriptionString = bt.toXML();
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
+        BasicTranscription bt = basicTranscription;
+        bt.normalize();
+        basicTranscriptionString = bt.toXML();
+        String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
 
-            // perform XSLT transformation
-            XSLTransformer xt = new XSLTransformer();
-            xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
-            xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
-            xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
-            String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
-            if (referencedRecording != null) {
-                System.out.println("not null " + referencedRecording);
-                xt.setParameter("RECORDING_PATH", referencedRecording);
-                xt.setParameter("RECORDING_TYPE", "wav");
-            }
-            result = xt.transform(basicTranscriptionString, xsl);
-
-        } catch (TransformerException ex) {
-            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        // perform XSLT transformation
+        XSLTransformer xt = new XSLTransformer();
+        xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
+        xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
+        xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
+        String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
+        if (referencedRecording != null) {
+            System.out.println("not null " + referencedRecording);
+            xt.setParameter("RECORDING_PATH", referencedRecording);
+            xt.setParameter("RECORDING_TYPE", "wav");
         }
+        result = xt.transform(basicTranscriptionString, xsl);
 
         setHTML(result);
 
@@ -176,6 +178,18 @@ public class HScoreHTML extends Visualizer {
             stats.addException(SERVICE_NAME, ioe, "input output exception");
         }
         return stats;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class creates an html visualization "
+                + "in the HScore format from an exb. ";
+        return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

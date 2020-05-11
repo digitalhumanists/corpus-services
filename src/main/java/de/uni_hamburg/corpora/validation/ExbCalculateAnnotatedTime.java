@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -8,15 +9,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -24,35 +22,26 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * The class that calculates annotated time for exb files.
+ * This class calculates annotated time for an exb file and computes the
+ * duration of each annotation in the exb.
  *
  */
-public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
+public class ExbCalculateAnnotatedTime extends Checker implements CorpusFunction {
 
-    String annotLoc = "";
     //HashMap<String, HashMap<String, String>> eventMap; // hash map for holding events of annotation tiers
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
 
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) throws JexmaraldaException {
+    public ExbCalculateAnnotatedTime() {
+        //has no fixing option
+        super(false);
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, annotLoc + ": Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, annotLoc + ": Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, annotLoc + ": Unknown file reading error");
-        } catch (TransformerException ex) {
-            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(CalculateAnnotatedTime.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            for (CorpusData cdata : c.getBasicTranscriptionData()) {
+                stats.merge(function(cdata, fix));
+            }
         return stats;
     }
 
@@ -61,7 +50,7 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
      * transcription files of the corpus one by one and computes the duration of
      * each annotation in the exb.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -151,20 +140,20 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
                     SS = SS.substring(0, 5);
                 }
                 tierH.put(tierDisplay, MM + ":" + SS); // add total duration of each tier into the hash map
-                stats.addNote("calculate-annotated-time", tierDisplay + "  " + MM + ":" + SS); // display it on the report
+                stats.addNote(function, cd, tierDisplay + "  " + MM + ":" + SS); // display it on the report
             }
         }
         // show the annotation time for each label in every tier
-        stats.addNote("calculate-annotated-time", "Labels per Tier");
+        stats.addNote(function, cd, "Labels per Tier");
         Set perTier = eventMap.keySet();
         for (Object per : perTier) {
             String tierName = (String) per;
-            stats.addNote("calculate-annotated-time", tierName);
+            stats.addNote(function, cd, tierName);
             HashMap map = new HashMap(eventMap.get(tierName));
             Set perMap = map.keySet();
             for (Object obj : perMap) {
                 String label = (String) obj;
-                stats.addNote("calculate-annotated-time", label + "    " + map.get(label));
+                stats.addNote(function, cd, label + "    " + map.get(label));
                 System.out.println(label + "    " + map.get(label));
             }
         }
@@ -195,27 +184,29 @@ public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
     }
 
     /**
-     * Fix is not supported for this functionality.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
      */
     @Override
-    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+    public Collection<Class<? extends CorpusData>> getIsUsableFor(){
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IAAFunctionality.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class calculates annotated time for an exb file and computes the duration of each annotation in the exb.";
+        return description;
     }
 
 }

@@ -22,11 +22,13 @@ public abstract class Publisher implements CorpusFunction {
 
     CorpusData cd;
     Report report;
-        Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
-            extends CorpusData>>();
+    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     ValidatorSettings settings;
+    final String function;
+    Boolean canfix = false;
 
-    public Publisher() {
+    public Publisher(String func) {
+        function = func;
     }
 
     //always take a coma file and the relative paths in there to generate a list of the files
@@ -49,16 +51,16 @@ public abstract class Publisher implements CorpusFunction {
         return report;
 
     }
-    
+
     //no fix boolean needed
-    public Report execute(CorpusData cd, boolean fix){
+    public Report execute(CorpusData cd, boolean fix) {
         report = new Report();
         report = publish(cd);
         return report;
     }
 
     //no fix boolean needed
-    public Report execute(Collection<CorpusData> cdc, boolean fix){
+    public Report execute(Collection<CorpusData> cdc, boolean fix) {
         report = new Report();
         publish(cdc);
         return report;
@@ -74,6 +76,7 @@ public abstract class Publisher implements CorpusFunction {
         }
         return report;
     }
+
     //TODO
     public Report doMain(String[] args) {
         settings = new ValidatorSettings("name",
@@ -113,10 +116,18 @@ public abstract class Publisher implements CorpusFunction {
 
     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
 
-    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
-        for (Class<? extends CorpusData> cl : cdc){
-        IsUsableFor.add(cl);
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
+        for (Class<? extends CorpusData> cl : cdc) {
+            IsUsableFor.add(cl);
         }
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public Boolean getCanFix() {
+        return canfix;
     }
 
 }

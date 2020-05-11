@@ -9,6 +9,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -36,43 +37,17 @@ import org.w3c.dom.NodeList;
  */
 public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
 
-    final String EXB_REFS = "exb-referenced-file";
-
-
-    CorpusData cd;
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        this.cd = cd;
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (IOException ioe) {
-            stats.addException(ioe, "Reading error");
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Unknown parsing error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, "Unknown URI parsing error");
-        }
-        return stats;
+    public ExbFileReferenceChecker() {
+        //no fixing option available
+        super(false);
     }
 
     /**
      * Main feature of the class: Checks Exmaralda .exb file for file
      * references, if a referenced file does not exist, issues a warning.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, URISyntaxException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -86,7 +61,7 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
             String url = reffile.getAttribute("url");
             if (!url.isEmpty()) {
                 if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                    stats.addCritical(EXB_REFS, cd, "Referenced-file " + url
+                    stats.addCritical(function, cd, "Referenced-file " + url
                             + " points to absolute local path, fix to relative path first");
                 }
                 boolean found = false;
@@ -102,28 +77,17 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
                 }
                 if (!found) {
                     reffilesMissing++;
-                    stats.addCritical(EXB_REFS, cd, "File in referenced-file NOT found: " + url);
-                    exmaError.addError(EXB_REFS, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
+                    stats.addCritical(function, cd, "File in referenced-file NOT found: " + url);
+                    exmaError.addError(function, cd.getURL().getFile(), "", "", false, "Error: File in referenced-file NOT found: " + url);
                 } else {
                     reffilesFound++;
-                    stats.addCorrect(EXB_REFS, cd, "File in referenced-file was found: " + url);
+                    stats.addCorrect(function, cd, "File in referenced-file was found: " + url);
                 }
             } else {
-            stats.addCorrect(EXB_REFS, cd, "No file was referenced in this transcription");
+            stats.addCorrect(function, cd, "No file was referenced in this transcription");
             }
         }
         return stats;
-    }
-
-    /**
-     * No fix is applicable for this feature.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        this.cd = cd;
-        report.addCritical(EXB_REFS,
-                "Automatic fix is not yet supported.");
-        return report;
     }
 
     /**
@@ -140,6 +104,26 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
             report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class is a validator for EXB-file's references;"
+                + " it checks Exmaralda .exb file for file references if a referenced "
+                + "file does not exist, issues a warning;";
+        return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 
 }

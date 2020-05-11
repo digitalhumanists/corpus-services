@@ -1,6 +1,7 @@
 package de.uni_hamburg.corpora.conversion;
 
 import com.opencsv.CSVReader;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -16,8 +17,6 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -41,24 +40,23 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     private Document coma;
     private String SpeakerOrCommunication;
     private Boolean IsSpeaker;
-    final String CSV_to_Coma = "add-csv-metadata-to-coma";
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath) {
-        //super(corpusPath);
-    }
-    
-    public AddCSVMetadataToComa() {
+        super("AddCSVMetadataToComa");
     }
 
+    public AddCSVMetadataToComa() {
+        super("AddCSVMetadataToComa");
+    }
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath, String csvPath, String SpeakerOrCommunication) {
-        //super(corpusPath);
+        super("AddCSVMetadataToComa");
         this.comaFile = corpusPath;
         this.csvFile = csvPath;
         this.SpeakerOrCommunication = SpeakerOrCommunication;
@@ -78,13 +76,13 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
         try {
-            stats = exceptionalCheck(cd);
+            stats = function(cd);
         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, ": Unknown parsing error");
+            stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
-            stats.addException(ioe, ": Unknown file reading error");
+            stats.addException(ioe, function, cd, "Unknown file reading error");
         } catch (JDOMException ex) {
-            Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
+             stats.addException(ex, function, cd, "Unknown JDOM error");
         }
         return stats;
     }
@@ -93,7 +91,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
      * The primary functionality of the class; it accepts the coma file and
      * writes the CSV data into it.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, JDOMException {
         Report stats = new Report(); //create a new report
         this.comaFile = cd.getURL().getPath(); // set the path of the coma file
@@ -101,13 +99,13 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         // put the elements in the report
         for (String[] row : allElements) {
             System.out.println(Arrays.toString(row));
-            stats.addNote(CSV_to_Coma, cd, Arrays.toString(row));
+            stats.addNote(function, cd, Arrays.toString(row));
         }
         System.out.println(Arrays.toString(allElements.get(0)));
-        stats.addNote(CSV_to_Coma, cd, Arrays.toString(allElements.get(0)));
+        stats.addNote(function, cd, Arrays.toString(allElements.get(0)));
         System.out.println(allElements.get(0)[0]);
-        stats.addNote(CSV_to_Coma, cd, allElements.get(0)[0]);
-        
+        stats.addNote(function, cd, allElements.get(0)[0]);
+
         coma = org.exmaralda.common.jdomutilities.IOUtilities.readDocumentFromLocalFile(comaFile);
         //add the key and value to speaker/description or communication/description
         for (int i = 1; i < allElements.size(); i++) {
@@ -116,7 +114,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                     //the place is the xpath where it should be inserted
                     String place = "//Speaker[Sigle/text()=\"" + allElements.get(i)[0] + "\"]/Description";
                     System.out.println(place);
-                    stats.addNote(CSV_to_Coma, cd, place);
+                    stats.addNote(function, cd, place);
                     XPath p = XPath.newInstance(place);
                     //System.out.println(p.selectSingleNode(coma));
                     Object o = p.selectSingleNode(coma);
@@ -127,7 +125,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                         desc.addContent(key);
                         key.setAttribute("Name", allElements.get(0)[a]);
                         System.out.println(desc.getAttributes());
-                        stats.addNote(CSV_to_Coma, cd, Arrays.toString(desc.getAttributes().toArray()));
+                        stats.addNote(function, cd, Arrays.toString(desc.getAttributes().toArray()));
                         key.setText(allElements.get(i)[a]);
                     }
                 }
@@ -135,10 +133,10 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                     //the place is the xpath where it should be inserted
                     String place = "//Communication[@Name=\"" + allElements.get(i)[0] + "\"]/Description";
                     System.out.println(place);
-                    stats.addNote(CSV_to_Coma, cd, place);
+                    stats.addNote(function, cd, place);
                     XPath p = XPath.newInstance(place);
                     System.out.println(p.selectSingleNode(coma));
-                    stats.addNote(CSV_to_Coma, cd, p.selectSingleNode(coma).toString());
+                    stats.addNote(function, cd, p.selectSingleNode(coma).toString());
                     Object o = p.selectSingleNode(coma);
                     if (o != null) {
                         Element desc = (Element) o;
@@ -147,7 +145,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                         desc.addContent(key);
                         key.setAttribute("Name", allElements.get(0)[a]);
                         System.out.println(desc.getAttributes());
-                        stats.addNote(CSV_to_Coma, cd, Arrays.toString(desc.getAttributes().toArray()));
+                        stats.addNote(function, cd, Arrays.toString(desc.getAttributes().toArray()));
                         key.setText(allElements.get(i)[a]);
                     }
                 }
@@ -157,7 +155,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(comaFile), "UTF8"));
         XMLOutputter serializer = new XMLOutputter();
         serializer.output(coma, fileWriter);
-        stats.addNote(CSV_to_Coma, cd, "The data in the csv file has been added into the coma.");
+        stats.addNote(function, cd, "The data in the csv file has been added into the coma.");
         return stats;
     }
 
@@ -250,33 +248,12 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public static void main(String[] args) {
-        try {
-            args = new String[3];
-            args[0] = "C:\\Users\\Ozzy\\Desktop\\Demo-Corpus\\EXMARaLDA_DemoKorpus.coma";
-            args[1] = "C:\\Users\\Ozzy\\Desktop\\Demo-Corpus\\exampleCSV.csv";
-            args[2] = "speaker";
-            if (args.length != 3) {
-                System.out.println("Usage: Coma-file CSV-file Boolean IsSpeaker");
-            }
-
-            AddCSVMetadataToComa metadatainputter = new AddCSVMetadataToComa(args[0], args[1], args[2]);
-            try {
-                metadatainputter.inputData();
-            } catch (JDOMException ex) {
-                Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.exit(0);
-        } catch (IOException ex) {
-            Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     // sets the CSV file path which is provided as input
     public void setCSVFilePath(String path) {
         this.csvFile = path;
     }
-    
+
     // set what sort of data the csv file contain which will eventually be added to the coma
     public void setSpeakerOrCommunication(String spOrCommInput) {
         if (spOrCommInput.equals("speaker")) {
@@ -303,9 +280,23 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddCSVMetadataToComa.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "this class can be used from the command line to insert data in a csv file "
+                + "  into an existing coma file there needs to be a header with information of the "
+                + "  information in the columns the first line has to consist of the sigle of the "
+                + "  speaker or name of the communication the metadata should be assigned to";
+        return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

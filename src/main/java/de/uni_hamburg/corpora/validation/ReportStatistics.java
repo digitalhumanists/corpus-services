@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -8,12 +9,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,34 +31,18 @@ import org.xml.sax.SAXException;
 public class ReportStatistics extends Checker implements CorpusFunction {
 
     private static final String HTML_REPORT = "report-output.html";
-    private final String SERVICE_NAME = "ReportStatistics";
     String REPORT_STATISTICS;
     Report stats;
     CorpusData cd;
     String corpusname = "";
 
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (IOException ex) {
-            stats.addException(SERVICE_NAME, ex, "Input Output Exception");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(SERVICE_NAME, ex, "Parser Exception");
-        } catch (SAXException ex) {
-            stats.addException(SERVICE_NAME, ex, "XML Exception");
-        } catch (XPathExpressionException ex) {
-            stats.addException(SERVICE_NAME, ex, "XPath Exception");
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(ReportStatistics.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TransformerException ex) {
-            Logger.getLogger(ReportStatistics.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return stats;
+    public ReportStatistics() {
+        //no fixing available
+        super(false);
     }
 
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException {
         Report stats = new Report();
         String reportStatisticsPath = cd.getParentURL().getPath() + "curation/report-statistics.html";
@@ -135,13 +119,13 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 htmlOut.print(reportStatistics);
                 htmlOut.close();
                 
-                stats.addNote(SERVICE_NAME, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
+                stats.addFix(function, cd, "Report Statistics file updated (see " + htmlReportPath + ").");
             } else {
-                stats.addMissing(SERVICE_NAME, cd, "Corpus Report file not found "
+                stats.addMissing(function, cd, "Corpus Report file not found "
                         + "at '" + htmlReportPath + "'. Report Statistics (graphic overview) not updated.");
             }
         } else {
-            stats.addMissing(SERVICE_NAME, cd, "Report Statistics file not found at "
+            stats.addMissing(function, cd, "Report Statistics file not found at "
                     + "'" + reportStatisticsPath + "'. Report Statistics (graphic overview) not updated.");
         }
         return stats;
@@ -158,9 +142,21 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
     @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {        
-        return check(cd);
+    public String getDescription() {
+        String description = "This class creates or updates the html statistics report"
+                + " from the report output file outputted by the corpus services.";
+        return description;
     }
 
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
+        Report stats = new Report();
+        CorpusData cdata = c.getComaData();
+        stats = function(cdata, fix);
+        return stats;
+    }
 }
