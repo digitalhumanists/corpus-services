@@ -5,7 +5,6 @@
  */
 package de.uni_hamburg.corpora.conversion;
 
-
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -14,8 +13,6 @@ import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
@@ -31,27 +28,29 @@ import org.xml.sax.SAXException;
  * How to also put another file as input for an check?
  *
  */
-public abstract class Converter implements CorpusFunction{
+public abstract class Converter implements CorpusFunction {
+
     /**
-     * 
-     * 
+     *
+     *
      */
-    
-     //I will keep the settings for now, so they can stay as they are for the Moment 
+    //I will keep the settings for now, so they can stay as they are for the Moment 
     //and we know where to refactor when we change them 
     ValidatorSettings settings;
     CorpusData cd;
     Report report;
-    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<?
-            extends CorpusData>>();
+    Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
+    final String function;
+    Boolean canfix = false;
 
-    public Converter() {
+    Converter(String func) {
+        function = func;
     }
 
     public Report execute(Corpus c) {
         return execute(c.getCorpusData());
     }
-      
+
     public Report execute(CorpusData cd) {
         return execute(cd, false);
     }
@@ -92,27 +91,27 @@ public abstract class Converter implements CorpusFunction{
         if (fix) {
             try {
                 return fix(cdc);
-            } catch (SAXException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JDOMException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JexmaraldaException je) {
+                report.addException(je, "Unknown parsing error");
+            } catch (JDOMException jdome) {
+                report.addException(jdome, "Unknown parsing error");
+            } catch (SAXException saxe) {
+                report.addException(saxe, "Unknown parsing error");
+            } catch (IOException ioe) {
+                report.addException(ioe, "File reading error");
             }
             return report;
         } else {
             try {
                 return check(cdc);
-            } catch (SAXException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JexmaraldaException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SAXException saxe) {
+                report.addException(saxe, "Unknown parsing error");
+            } catch (JexmaraldaException je) {
+                report.addException(je, "Unknown parsing error");
             } catch (IOException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+                report.addException(ex, "File reading error");
             } catch (JDOMException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+                report.addException(ex, "Unknown parsing error");
             }
             return report;
         }
@@ -120,13 +119,12 @@ public abstract class Converter implements CorpusFunction{
 
     //TODO
     public abstract Report check(CorpusData cd) throws SAXException, JexmaraldaException;
-    
 
     //TODO
     //needed for annotation panel check maybe
     //no iteration because files need to be treated differently
     public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
-        for (CorpusData cd: cdc){
+        for (CorpusData cd : cdc) {
             report.merge(check(cd));
         }
         return report;
@@ -141,8 +139,8 @@ public abstract class Converter implements CorpusFunction{
     //fixen gibt, dann muss Erklärung in die ErrorMeldung
     //also for stuff like Annotation Panel Check
     public Report fix(Collection<CorpusData> cdc) throws
-            SAXException, JDOMException, IOException, JexmaraldaException{
-        for (CorpusData cd: cdc){
+            SAXException, JDOMException, IOException, JexmaraldaException {
+        for (CorpusData cd : cdc) {
             report.merge(fix(cd));
         }
         return report;
@@ -187,11 +185,18 @@ public abstract class Converter implements CorpusFunction{
 
     @Override
     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
-    
-    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
-        for (Class cl : cdc){
-        IsUsableFor.add(cl);
+
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
+        for (Class cl : cdc) {
+            IsUsableFor.add(cl);
         }
     }
 
+    public String getFunction() {
+        return function;
+    }
+
+    public Boolean getCanFix() {
+        return canfix;
+    }
 }

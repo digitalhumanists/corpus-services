@@ -73,19 +73,19 @@ public class PrettyPrintDataTest {
             Collection<CorpusData> cdc;
             //what happens when we check coma files
             for (CorpusData cd : corp.getMetadata()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
                 //shouldn't be pretty printed yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
             }
             //what happens when we check exb files
             for (CorpusData cd : corp.getContentdata()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
                 //shouldn't be pretty printed yet
                 //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
             }
             //what happens when we check annotation files
             for (CorpusData cd : corp.getAnnotationspecification()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
                 //shouldn't be pretty printed yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
             }
@@ -108,10 +108,10 @@ public class PrettyPrintDataTest {
             Collection<CorpusData> cdc;
             //what happens when we check coma files
             for (CorpusData cd : corp.getMetadata()){
-                assertNotNull(instance.fix(cd));
+                assertNotNull(instance.function(cd,true));
                 //don't know if pretty printed or not yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
-                instance.fix(cd);
+                instance.function(cd,true);
                 //but now it should
                 assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
@@ -123,10 +123,10 @@ public class PrettyPrintDataTest {
             }
             //what happens when we check exb files
             for (CorpusData cd : corp.getContentdata()){
-                assertNotNull(instance.fix(cd));
+                assertNotNull(instance.function(cd,true));
                 //don't know if pretty printed or not yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
-                //instance.fix(cd);
+                //instance.function(cd,true);
                 //but now it should
                 //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times
@@ -138,10 +138,10 @@ public class PrettyPrintDataTest {
             }
             //what happens when we check annotation files
             for (CorpusData cd : corp.getAnnotationspecification()){
-                assertNotNull(instance.fix(cd));
+                assertNotNull(instance.function(cd,true));
                 //don't know if pretty printed or not yet
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
-                //instance.fix(cd);
+                //instance.function(cd,true);
                 //but now it should
                 //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
                 //should be the same when pretty printed multiple times

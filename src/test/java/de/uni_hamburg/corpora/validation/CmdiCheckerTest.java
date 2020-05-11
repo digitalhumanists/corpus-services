@@ -58,7 +58,7 @@ public void testCheck() throws Exception {
             Collection<CorpusData> cdc;
             //what happens when we check cmdi files
             for (CorpusData cd : corp.getCmdidata()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
             }
     }

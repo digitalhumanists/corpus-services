@@ -5,8 +5,8 @@
  */
 package de.uni_hamburg.corpora;
 
+import org.exmaralda.coma.root.Coma;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -29,6 +29,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 import org.apache.commons.io.FilenameUtils;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
@@ -37,7 +38,7 @@ import org.apache.commons.io.FilenameUtils;
 public class ComaData implements Metadata, CorpusData, XMLData {
 
     //TODO
-    //private Coma coma;
+    private Coma coma;
     //TODO change exceptions to adding ReportItems
     URL url;
     Document readcomaasjdom = new Document();
@@ -50,20 +51,21 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     public static String SEGMENTED_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='true']/NSLink";
     public static String BASIC_FILE_XPATH = "//Transcription[Description/Key[@Name='segmented']/text()='false']/NSLink";
     public static String ALL_FILE_XPATH = "//Transcription/NSLink";
+    public static String CORPUSNAME_XPATH = "//Description/Key[@Name='DC:title']";
 
-    public ArrayList<URL> referencedCorpusDataURLs;
+    String corpusname;
+
+    public ArrayList<URL> referencedCorpusDataURLs = new ArrayList<URL>();
 
     public ComaData() {
     }
 
-    public ComaData(URL url) {
+    public ComaData(URL url) throws SAXException, JexmaraldaException {
         try {
             this.url = url;
             SAXBuilder builder = new SAXBuilder();
             readcomaasjdom = builder.build(url);
-            File f = new File(url.toURI());
             originalstring = new String(Files.readAllBytes(Paths.get(url.toURI())), "UTF-8");
-            //loadFile(f);
             URI uri = url.toURI();
             URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
             CORPUS_BASEDIRECTORY = parentURI.toURL();
@@ -78,19 +80,12 @@ public class ComaData implements Metadata, CorpusData, XMLData {
         }
     }
 
-    //TODO
-//     public void loadFile(File f) throws SAXException, JexmaraldaException, MalformedURLException {
-//        coma = new BasicTranscription(f.getAbsolutePath());
-//        url = f.toURI().toURL();
-//    }
-    //TODO
-    /*  
-     public void updateReadcomaasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
-        String xmlString = bt.toXML();
+
+    /*public void updateReadcomaasjdom() throws SAXException, JexmaraldaException, MalformedURLException, JDOMException, IOException {
+        String xmlString = 
         SAXBuilder builder = new SAXBuilder();
-        readbtasjdom = builder.build(xmlString);
-    }
-     */
+        readcomaasjdom = builder.build(xmlString);
+    }*/
     @Override
     public URL getURL() {
         return url;
@@ -114,33 +109,39 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     }
 
     //TODO!
-    public Collection<URL> getReferencedCorpusDataURLs() {
+    @Override
+    public Collection<URL> getReferencedCorpusDataURLs() throws MalformedURLException, URISyntaxException {
+        for (URL rurul : getAllURLs()) {
+            if (!referencedCorpusDataURLs.contains(rurul)) {
+                referencedCorpusDataURLs.add(rurul);
+            }
+        }
+
         //now read the NSLinks and add the URLs from the files
         //we need to have different ArrayLists for exb, exs, audio, pdf
         //TODO! 
         return referencedCorpusDataURLs;
     }
 
-    public ArrayList<URL> getAllBasicTranscriptionURLs() throws MalformedURLException, URISyntaxException {
+    public Collection<URL> getAllBasicTranscriptionURLs() throws MalformedURLException, URISyntaxException {
+        URL resulturl;
+        ArrayList<URL> resulturls = new ArrayList<>();
         try {
-            URL resulturl;
-            ArrayList<URL> resulturls = new ArrayList<>();
             XPath xpath = XPath.newInstance(BASIC_FILE_XPATH);
             List transcriptionList = xpath.selectNodes(readcomaasjdom);
             for (int pos = 0; pos < transcriptionList.size(); pos++) {
                 Element nslink = (Element) (transcriptionList.get(pos));
                 //String fullTranscriptionName = CORPUS_BASEDIRECTORY.toURI().getPath() + nslink.getText();
-                resulturl = new URL (CORPUS_BASEDIRECTORY + nslink.getText()); 
+                resulturl = new URL(CORPUS_BASEDIRECTORY + nslink.getText());
                 //Paths.get(fullTranscriptionName).toUri().toURL();
                 resulturls.add(resulturl);
             }
-            return resulturls;
         } catch (JDOMException ex) {
             ex.printStackTrace();
         }
-        return null;
+        return resulturls;
     }
-    
+
     public ArrayList<String> getAllBasicTranscriptionFilenames() {
         try {
             ArrayList<String> result = new ArrayList<>();
@@ -160,6 +161,46 @@ public class ComaData implements Metadata, CorpusData, XMLData {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public Collection<URL> getAllSegmentedTranscriptionURLs() throws MalformedURLException, URISyntaxException {
+        URL resulturl;
+        ArrayList<URL> resulturls = new ArrayList<>();
+        try {
+            XPath xpath = XPath.newInstance(SEGMENTED_FILE_XPATH);
+            List transcriptionList = xpath.selectNodes(readcomaasjdom);
+            for (int pos = 0; pos < transcriptionList.size(); pos++) {
+                Element nslink = (Element) (transcriptionList.get(pos));
+                //String fullTranscriptionName = CORPUS_BASEDIRECTORY.toURI().getPath() + nslink.getText();
+                resulturl = new URL(CORPUS_BASEDIRECTORY + nslink.getText());
+                //Paths.get(fullTranscriptionName).toUri().toURL();
+                resulturls.add(resulturl);
+            }
+        } catch (JDOMException ex) {
+            ex.printStackTrace();
+        }
+        return resulturls;
+    }
+
+    public Collection<URL> getAllURLs() throws MalformedURLException, URISyntaxException {
+        URL resulturl;
+        ArrayList<URL> resulturls = new ArrayList<>();
+        try {
+            XPath xpath = XPath.newInstance(ALL_FILE_XPATH);
+            List transcriptionList = xpath.selectNodes(readcomaasjdom);
+            for (int pos = 0; pos < transcriptionList.size(); pos++) {
+                Element nslink = (Element) (transcriptionList.get(pos));
+                //String fullTranscriptionName = CORPUS_BASEDIRECTORY.toURI().getPath() + nslink.getText();
+                resulturl = new URL(CORPUS_BASEDIRECTORY + nslink.getText());
+                //Paths.get(fullTranscriptionName).toUri().toURL();
+                if (!resulturls.contains(resulturl)) {
+                    resulturls.add(resulturl);
+                }
+            }
+        } catch (JDOMException ex) {
+            ex.printStackTrace();
+        }
+        return resulturls;
     }
 
     public void updateUnformattedString(String newUnformattedString) {
@@ -220,5 +261,24 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     @Override
     public void setJdom(Document jdom) {
         readcomaasjdom = jdom;
+    }
+
+    public Coma getEXMARaLDAComa() {
+        return coma;
+    }
+
+    public void setOriginalString(String s) {
+        originalstring = s;
+    }
+
+    public String getCorpusName() throws JDOMException {
+        XPath xpath = XPath.newInstance(CORPUSNAME_XPATH);
+        Element name = (Element) xpath.selectSingleNode(readcomaasjdom);
+        corpusname = name.getText();
+        return corpusname;
+    }
+
+    public void setCorpusName(String s) {
+        corpusname = s;
     }
 }

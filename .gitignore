@@ -6,6 +6,7 @@ src/main/java/de/uni_hamburg/corpora/StupidCorpusMagicianTester.java
 !*.form
 !*.xsl
 !*.xml
+nb-configuration.xml
 !*.html
 !*.css
 nbactions.xml
@@ -15,3 +16,4 @@ target/
 !exmaralda
 !HZSK-CLARIN-Services
 doc/
+!*.png

@@ -8,8 +8,8 @@
         <xsl:text>
 </xsl:text>
     </xsl:variable>
-    <xsl:variable name="UTTERANCEENDSYMBOL" select="'[.!?&#x2026;:]'"/>
-    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="'.*[.!?&#x2026;:]&quot;*\s*&quot;*\s*'"/>
+    <xsl:param name="UTTERANCEENDSYMBOL" select="'[.!?&#x2026;:]'"/>
+    <xsl:variable name="UTTERANCEENDSYMBOLWHITESPACE" select="concat('.*', $UTTERANCEENDSYMBOL, '&quot;*\s*&quot;*\s*')"/>
     <xsl:key name="tierids" match="*[@id]" use="@id"/>
     <xsl:variable name="duplicateids">
         <xsl:for-each-group select="$ROOT//*:tier" group-by="@id">
@@ -157,7 +157,7 @@
             </xsl:if>
 
             <!-- Check for ellipsis in other tiers (https://lab.multilingua.uni-hamburg.de/redmine/issues/5755) -->
-            <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr'))) and matches(., '…')">
+            <xsl:if test="(not(../@category = ('ts', 'tx', 'fe', 'fg', 'fr', 'stl', 'st', 'ltr', 'ltg', 'lte'))) and matches(., '…')">
                 <xsl:value-of select="concat('XSLTChecker.content;WARNING;found ellipsis (''…'') in non-transcription/non-translation event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
 
@@ -178,13 +178,30 @@
                 <xsl:value-of select="concat('XSLTChecker.content;CRITICAL;word only contains ''((BRK))'' or ''((DMG))'', but the mb, mp, gr, ge, mc tiers are not empty (event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>-->
                         
-            <!-- Check if there is no utterance end symbol with a whitespace before (same event) -->         
+            <!-- Check if there is no utterance end symbol with a whitespace before (same event)      
             <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat(' ',$UTTERANCEENDSYMBOL))">
+                <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+            </xsl:if> -->    
+            
+            <!-- Check if there is a utterance end symbol with a whitespace before (same event) - We only need it for tx actually -->         
+            <xsl:if test="(../@category = ('tx')) and matches(., concat(' ',$UTTERANCEENDSYMBOL))">
                 <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;whitespace appearing in front of utterance end symbol  in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
             </xsl:if>
             
-            <!-- Check if there is no utterance end symbol with a whitespace before (preceding event) -->         
+            <!-- Check if there is no utterance end symbol with a whitespace before (preceding event)         
             <xsl:if test="(../@category = ('ts', 'tx')) and matches(., concat('^',$UTTERANCEENDSYMBOL))">
+                <xsl:choose>
+                    <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
+                        <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;whitespace appearing in front of utterance end symbol in preceding event ', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="concat('XSLTChecker.segmentation;WARNING;utterance end symbol appearing alone in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    </xsl:otherwise>
+                </xsl:choose>              
+            </xsl:if> --> 
+            
+             <!-- Check if there is no utterance end symbol with a whitespace before (preceding event) - also tx only -->         
+            <xsl:if test="(../@category = ('tx')) and matches(., concat('^',$UTTERANCEENDSYMBOL))">
                 <xsl:choose>
                     <xsl:when test="ends-with(preceding-sibling::*[1]/text(), ' ')">
                         <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;whitespace appearing in front of utterance end symbol in preceding event ', replace(replace(preceding-sibling::*[1]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
@@ -223,8 +240,8 @@
                          <!--<xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;utterance end symbol is in double brackets which is allowed ', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/> -->
                     </xsl:when> 
                     <!-- Test if it is a colon but should be a vowel length marker -->
-                    <xsl:when test="matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;]+.*')">
-                        <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;colon in tx tier should maybe be a vowel length marker &#x2D0; or needs a following whitespace', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
+                    <xsl:when test="matches(., '.*:[^\s&#x0022;&#x201D;&#x201C;\)]+.*')">
+                        <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;colon in tx tier should maybe be a vowel length marker &#x2D0; or needs a following whitespace ', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>
                     </xsl:when> 
                     <xsl:otherwise>
                         <xsl:value-of select="concat('XSLTChecker.segmentation;CRITICAL;utterance end symbol in tx tier is not appearing at end of matching ref tier event ', replace(replace(../../tier[@category='tx' and @speaker=$SPK]/event[@end=$END]/text(), ';', ':'), $NEWLINE, '') ,' in event (start: ', @start, ', end: ', @end, ', tier: ', ../@category, ');', ../@id, ';', @start, $NEWLINE)"/>

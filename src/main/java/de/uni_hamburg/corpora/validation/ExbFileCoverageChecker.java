@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -14,16 +15,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -37,11 +38,12 @@ import org.xml.sax.SAXException;
  */
 public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
 
-    final String EXB_FILECOVERAGE = "exb-filecoverage";
     static List<String> whitelist;
     static List<String> fileendingwhitelist;
 
     public ExbFileCoverageChecker() {
+        //no fixing available
+        super(false);
         // these are acceptable
         setWhitelist();
         
@@ -49,36 +51,11 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
     }
 
     /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, EXB_FILECOVERAGE, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, EXB_FILECOVERAGE, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, EXB_FILECOVERAGE, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, EXB_FILECOVERAGE, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            Logger.getLogger(ExbFileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XPathExpressionException ex) {
-            Logger.getLogger(ExbFileCoverageChecker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return stats;
-    }
-
-    /**
      * Main functionality of the feature: checks whether files are both in the
      * exb file and file system.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Report stats = new Report();
         // FIXME:
@@ -92,7 +69,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
             String url = reffile.getAttribute("url");
             if (!url.isEmpty()) {
                 if (url.startsWith("file:///C:") || url.startsWith("file:/C:")) {
-                    stats.addCritical(EXB_FILECOVERAGE, cd, "Referenced-file " + url
+                    stats.addCritical(function, cd, "Referenced-file " + url
                             + " points to absolute local path, fix to relative path first");
                 }
                 refsInExb.add(url);
@@ -106,27 +83,18 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         for (String absolutePath : files) {
             String relativePath = absolutePath.substring(absolutePath.indexOf(exbFolder.getAbsolutePath())+exbFolder.getAbsolutePath().length()+File.separator.length());
             if (refsInExb.contains(absolutePath)) {
-                stats.addCritical(EXB_FILECOVERAGE, cd, "Referenced-file " + absolutePath
+                stats.addCritical(function, cd, "Referenced-file " + absolutePath
                         + " points to absolute local path, fix to relative path first");
             } else if (refsInExb.contains(relativePath)) {
-                stats.addCorrect(EXB_FILECOVERAGE, cd, "File " + relativePath + " found in the exb as a reference.");
+                stats.addCorrect(function, cd, "File " + relativePath + " found in the exb as a reference.");
             } else {
-                stats.addCritical(EXB_FILECOVERAGE, cd, "File " + relativePath + " CANNOT be found in the exb as a reference!");
-                exmaError.addError(EXB_FILECOVERAGE, cd.getURL().getFile(), "", "", false, "File " + relativePath + " CANNOT be found in the exb as a reference!");
+                stats.addCritical(function, cd, "File " + relativePath + " CANNOT be found in the exb as a reference!");
+                exmaError.addError(function, cd.getURL().getFile(), "", "", false, "File " + relativePath + " CANNOT be found in the exb as a reference!");
             }
         }
         return stats;
     }
 
-    /**
-     * Fix to this issue is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_FILECOVERAGE, cd,
-                "No fix is supported yet");
-        return report;
-    }
 
     /**
      * Default function which determines for what type of files (basic
@@ -193,4 +161,22 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         return extension;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks whether files are both in the "
+                + "exb file and file system.";
+        return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+                Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
+    }
 }
