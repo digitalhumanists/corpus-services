@@ -36,6 +36,8 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
     boolean inel = false;
 
     public ComaOverviewGeneration() {
+        //no fixing available
+        super(false);
     }
 
     @Override
@@ -82,11 +84,6 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         
         return r;
         
-    }
-
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-       return check(cd);
     }
 
     @Override

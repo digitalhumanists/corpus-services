@@ -52,6 +52,11 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     final String NSLC = "nslc";
 
     public NgexmaraldaCorpusChecker() {
+
+        /**
+         * No fix is applicable for this feature.
+         */
+        super(false);
     }
 
     public Report check() {
@@ -422,7 +427,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                     } catch (JexmaraldaException je) {
                         stats.addException(je, "ERRORR: tier with ID " + tierID
                                 + " is lost...");
-                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "ERROR: tier with ID " + tierID
+                        exmaError.addError(NSLC, comadirname + relPath, tierID, "", false, "ERROR: tier with ID " + tierID
                                 + " is lost...");
                         continue;
                     }
@@ -437,17 +442,17 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(NSLC,
                                 "Unrecognised tier name: "
                                 + tierID);
-                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Unrecognised tier name: "
+                        exmaError.addError(NSLC, comadirname + relPath, tierID, "", false, "Unrecognised tier name: "
                                 + tierID);
 
-                    }   
+                    }
                     if (tierTypes.containsKey(category)) {
                         if (!tierTypes.get(category).equals(tierType)) {
                             stats.addCritical(NSLC,
                                     "Wrong tier type for: "
                                     + tierID, "Switch to annotation or "
                                     + " description tier");
-                            exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Wrong tier type for: "
+                            exmaError.addError(NSLC, comadirname + relPath, tierID, "", false, "Wrong tier type for: "
                                     + tierID);
 
                         } else {
@@ -459,7 +464,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                                 "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
-                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Not known if tier: "
+                        exmaError.addError(NSLC, comadirname + relPath, tierID, "", false, "Not known if tier: "
                                 + tierID + " should be annotation or "
                                 + "description");
 
@@ -468,7 +473,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(NSLC,
                                 "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
-                        exmaError.addError(NSLC, comadirname+relPath, tierID, "", false, "Tier ID should match category, "
+                        exmaError.addError(NSLC, comadirname + relPath, tierID, "", false, "Tier ID should match category, "
                                 + "but " + tierID + " is not " + category);
 
                     }
@@ -484,7 +489,7 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
                         stats.addCritical(
                                 "Missing required tier: "
                                 + entry.getKey() + ": " + entry.getValue());
-                        exmaError.addError(NSLC, comadirname+relPath, "", "", false, "Missing required tier: "
+                        exmaError.addError(NSLC, comadirname + relPath, "", "", false, "Missing required tier: "
                                 + entry.getKey() + ": " + entry.getValue());
                     }
                 }
@@ -682,16 +687,6 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
     }
 
     /**
-     * No fix is applicable for this feature.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(NSLC,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -707,8 +702,9 @@ public class NgexmaraldaCorpusChecker extends Checker implements CorpusFunction 
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {

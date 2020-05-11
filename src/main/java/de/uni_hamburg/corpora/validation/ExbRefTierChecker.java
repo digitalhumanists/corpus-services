@@ -31,6 +31,7 @@ public class ExbRefTierChecker extends Checker implements CorpusFunction {
     String tierLoc = "";
 
     public ExbRefTierChecker() {
+        super(true);
     }
 
     /**

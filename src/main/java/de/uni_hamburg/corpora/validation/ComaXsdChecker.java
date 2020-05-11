@@ -42,65 +42,7 @@ import org.xml.sax.SAXException;
 public class ComaXsdChecker extends Checker implements CorpusFunction {
 
     public ComaXsdChecker() {
-    }
-
-    /**
-     * Validate a coma file with XML schema from internet.
-     *
-     * @return true, if file is passable (valid enough for HZSK),
-     *         false otherwise.
-     */
-    public Report check(File f) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(f);
-        } catch(SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error.");
-        } catch(IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown reading error.");
-        }
-        return stats;
-    }
-
-
-    private Report exceptionalCheck(File f)
-            throws SAXException, IOException {
-        URL COMA_XSD = new URL("http://www.exmaralda.org/xml/comacorpus.xsd");
-        Source xmlStream = new StreamSource(f);
-        SchemaFactory schemaFactory =
-            SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(COMA_XSD);
-        Validator validator = schema.newValidator();
-        ComaErrorReportGenerator eh = new ComaErrorReportGenerator();
-        validator.setErrorHandler(eh);
-        validator.validate(xmlStream);
-        return eh.getErrors();
-    }
-
-    public Report doMain(String[] args) {
-        settings = new ValidatorSettings("ComaXSDChecker",
-                "Checks Exmaralda .coma file against XML Schema",
-                "If input is a directory, performs recursive check " +
-                "from that directory, otherwise checks input file");
-        settings.handleCommandLine(args, new ArrayList<Option>());
-        if (settings.isVerbose()) {
-            System.out.println("Checking COMA files against schema...");
-        }
-        Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            if (settings.isVerbose()) {
-                System.out.println(" * " + f.getName());
-            }
-            stats = check(f);
-        }
-        return stats;
-    }
-
-    public static void main(String[] args) {
-        ComaXsdChecker checker = new ComaXsdChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
+        super(false);
     }
     
     /**
@@ -147,16 +89,6 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
         validator.setErrorHandler(eh);
         validator.validate(xmlStream);
         return eh.getErrors();
-    }
-    
-    /**
-    * No fix is applicable for this feature.
-    */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function,
-                "No fix is applicable for this feature.");
-        return report;
     }
     
     /**

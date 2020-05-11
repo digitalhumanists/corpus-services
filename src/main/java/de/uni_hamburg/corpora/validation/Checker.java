@@ -10,7 +10,6 @@ import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.validation.ValidatorSettings;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public abstract class Checker implements CorpusFunction {
     Report report = new Report();
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     final String function;
-    boolean canfix;
+    Boolean canfix;
 
     Checker(boolean hasfixingoption) {
         function = this.getClass().getSimpleName();
@@ -94,6 +93,8 @@ public abstract class Checker implements CorpusFunction {
             report.addException(ex, function, cd, "File reading error");
         } catch (XPathExpressionException ex) {
             report.addException(ex, function, cd, "File reading error");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "File reading error");
         }
         return report;
     }
@@ -137,13 +138,13 @@ public abstract class Checker implements CorpusFunction {
     }
 
     //To implement in the class
-    public abstract Report check(CorpusData cd) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
+    public abstract Report check(CorpusData cd) throws ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
     //To implement in the class
     public abstract Report check(Corpus c) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
     //To implement in the class
-    public abstract Report function(CorpusData cd, Boolean fix) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
+    public abstract Report function(CorpusData cd, Boolean fix) throws ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
     //To implement in the class
     //If there is no possibility to fix it throw a warning that says that
@@ -173,4 +174,7 @@ public abstract class Checker implements CorpusFunction {
         return function;
     }
 
+    public Boolean getCanFix() {
+        return canfix;
+    }
 }

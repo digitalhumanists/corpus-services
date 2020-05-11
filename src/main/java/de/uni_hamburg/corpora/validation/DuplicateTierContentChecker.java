@@ -55,6 +55,8 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
     MessageDigest md = null;
 
     public DuplicateTierContentChecker() {
+        //no fixing option available
+        super(false);
     }
     
     

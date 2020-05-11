@@ -36,6 +36,8 @@ public class ReportStatistics extends Checker implements CorpusFunction {
     String corpusname = "";
 
     public ReportStatistics() {
+        //no fixing available
+        super(false);
     }
 
     @Override
@@ -157,11 +159,6 @@ public class ReportStatistics extends Checker implements CorpusFunction {
             stats.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
-    }
-
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {        
-        return check(cd);
     }
 
     /**Default function which returns a two/three line description of what 

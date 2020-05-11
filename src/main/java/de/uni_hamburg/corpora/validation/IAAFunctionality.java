@@ -45,6 +45,8 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
     private int noOfDifferentAnnotations = 0; // total number of different annotations between different two different versions 
 
     public IAAFunctionality() {
+        //no fixing available
+        super(false);
     }
 
     /**
@@ -203,14 +205,6 @@ public class IAAFunctionality extends Checker implements CorpusFunction {
                     + " according to Krippendorff's alpha is " + alpha);
         }
         return stats;
-    }
-
-    /**
-     * Fix is not yet supported for this functionality.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

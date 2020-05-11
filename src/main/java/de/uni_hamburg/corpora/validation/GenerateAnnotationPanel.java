@@ -44,6 +44,8 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     int iterateExbs = 0;
 
     public GenerateAnnotationPanel() {
+        //fixing not available
+        super(false);
     }
 
     /**
@@ -200,13 +202,6 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         return stats;
     }
 
-    /**
-     * No fix available.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Default function which determines for what type of files (basic

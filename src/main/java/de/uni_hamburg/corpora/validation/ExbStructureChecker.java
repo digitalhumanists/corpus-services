@@ -38,6 +38,8 @@ public class ExbStructureChecker extends Checker implements CorpusFunction {
     final String function = "exb-structure";
 
     public ExbStructureChecker() {
+        //fixing is possible
+        super(true);
     }
 
     /**

@@ -43,6 +43,8 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
     Document doc;
 
     public ExbEventLinebreaksChecker() {
+        //fixing option available
+        super(true);
     }
 
     /**

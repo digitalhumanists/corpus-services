@@ -45,7 +45,6 @@ import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
-import de.uni_hamburg.corpora.validation.ComaUpdateSegmentCounts;
 import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
 import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
 import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
@@ -303,7 +302,6 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmenter");
         allExistingCFs.add("ExbScriptMixChecker");
         allExistingCFs.add("DuplicateTierContentChecker");
-        allExistingCFs.add("ComaUpdateSegmentCounts");
         allExistingCFs.add("LanguageToolChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
@@ -754,10 +752,6 @@ public class CorpusMagician {
                         }
                     }
                     break;
-                case "comaupdatesegmentcounts":
-                    ComaUpdateSegmentCounts cusc = new ComaUpdateSegmentCounts();
-                    cf2strcorpusfunctions.add(cusc);
-                    break;
                 case "languagetoolchecker":
                     LanguageToolChecker ltc = new LanguageToolChecker();
                     if (cfProperties != null) {
@@ -1091,14 +1085,16 @@ public class CorpusMagician {
         //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
         String desc;
+        String hasfix;
         String usable;
         for (CorpusFunction cf : getAllExistingCFsAsCFs()) {
-            usable = "\nThe function can be used on:\n";
-           for (Class cl : cf.getIsUsableFor()){
-               usable += cl.getSimpleName() + " ";
-           }
             desc = cf.getFunction() + ":   " + cf.getDescription();
-            footerverbose += desc + usable + "\n\n";
+            usable = "\nThe function can be used on:\n";
+            for (Class cl : cf.getIsUsableFor()) {
+                usable += cl.getSimpleName() + " ";
+            }
+            hasfix = "\nThe function has a fixing option: " + cf.getCanFix().toString() + "\n";
+            footerverbose += desc + hasfix + usable + "\n\n";
             usable = "";
         }
         footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";

@@ -54,6 +54,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     final String KEYSETTLEMENTLL = "Settlement (LngLat)";
 
     public ComaKmlForLocations() {
+        //fix available
+        super(true);
     }
 
     /**

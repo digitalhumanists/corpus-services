@@ -44,6 +44,8 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
     String communicationname;
 
     public ComaNSLinksChecker() {
+        //no fixing available
+        super(false);
     }
 
     /**

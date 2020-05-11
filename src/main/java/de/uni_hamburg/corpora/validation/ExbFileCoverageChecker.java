@@ -40,6 +40,8 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
     static List<String> fileendingwhitelist;
 
     public ExbFileCoverageChecker() {
+        //no fixing available
+        super(false);
         // these are acceptable
         setWhitelist();
         
@@ -116,15 +118,6 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         return stats;
     }
 
-    /**
-     * Fix to this issue is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "No fix is supported yet");
-        return report;
-    }
 
     /**
      * Default function which determines for what type of files (basic

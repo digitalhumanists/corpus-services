@@ -37,6 +37,8 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     String tierLoc = "";
 
     public ExbAnnotationPanelCheck() {
+        //no fixing option available
+        super(false);
     }
 
     /**
@@ -118,13 +120,6 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
         return stats;
     }
 
-    /**
-     * Fixing the errors in tiers is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Default function which determines for what type of files (basic

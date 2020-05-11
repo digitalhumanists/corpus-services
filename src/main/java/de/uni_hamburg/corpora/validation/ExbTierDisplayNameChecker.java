@@ -15,7 +15,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -30,6 +29,8 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
     String tierLoc = "";
 
     public ExbTierDisplayNameChecker() {
+        //fixing not possible
+        super(false);
     }
 
     /**
@@ -138,13 +139,6 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
         return stats; // return all the warnings
     }
 
-    /**
-     * Fixing the errors in tiers is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Default function which determines for what type of files (basic

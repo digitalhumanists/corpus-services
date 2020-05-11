@@ -30,6 +30,8 @@ import org.xml.sax.SAXException;
 public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunction {
 
     public ComaTranscriptionsNameChecker() {
+        //can fix
+        super(true);
     }
 
     /**
@@ -159,8 +161,6 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
     }
 
     /**
-     * Fixing the conflicts in coma file with regards to this feature is not
-     * supported yet.
      */
     @Override
     public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
