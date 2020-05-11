@@ -21,7 +21,7 @@ Advanced: https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/G
 
 The usable functions can be found in the help output:
 
-`java -jar hzsk-corpus-services-0.2-jar-with-dependencies.jar -h`
+`java -jar hzsk-corpus-services-1.0-jar-with-dependencies.jar -h`
 
 # Compilation
 
