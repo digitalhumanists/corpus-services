@@ -8,6 +8,7 @@ package de.uni_hamburg.corpora.validation;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.util.Collection;
@@ -24,16 +25,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.jdom.Element;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  *
  * @author fsnv625
- * 
- * This class issues warnings if the exb file contains 
- * linebreaks or fixes linebreaks in the events and adds those 
- * warnings to the report which it returns.
- * 
+ *
+ * This class issues warnings if the exb file contains linebreaks or fixes
+ * linebreaks in the events and adds those warnings to the report which it
+ * returns.
+ *
  */
 public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction {
 
@@ -48,44 +48,19 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
     }
 
     /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (TransformerException ex) {
-             stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-             stats.addException(ex, function, cd, "Unknown parsing error");
-        }
-        return stats;
-    }
-
-    /**
      * One of the main functionalities of the feature; issues warnings if the
      * exb file contains linebreaks in events and add that warning to the report
      * which it returns.
      */
-    private Report exceptionalCheck(CorpusData cd) // check whether there's any illegal apostrophes '
+    @Override
+    public Report function(CorpusData cd, Boolean fix) // check whether there's any illegal apostrophes '
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
         Report stats = new Report();         // create a new report
         doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
         Pattern replacePattern = Pattern.compile("[\r\n]");
         context = XPath.newInstance(xpathContext);
         List allContextInstances = context.selectNodes(doc);
+        CorpusIO cio = new CorpusIO();
         String s = "";
         if (!allContextInstances.isEmpty()) {
             for (int i = 0; i < allContextInstances.size(); i++) {
@@ -94,10 +69,19 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                     Element e = (Element) o;
                     s = e.getText();
                     if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
-                    linebreak = true;
-                    System.err.println("Exb is containing line ending in an event: " + escapeHtml4(s));
-                    stats.addCritical(function, cd, "Exb is containing line ending in an event: " + escapeHtml4(s));
-                }
+                        linebreak = true;
+                        if (fix) {
+                            String snew = s.replaceAll("[\r\n]", "");    //replace all replace with replacement
+                            //TODO Attributes?
+                            e.setText(snew);
+                            cd.updateUnformattedString(doc.toString());
+                            cio.write(cd, cd.getURL());
+                            stats.addFix(function, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
+                        } else {
+                            System.err.println("Exb is containing line ending in an event: " + escapeHtml4(s));
+                            stats.addCritical(function, cd, "Exb is containing line ending in an event: " + escapeHtml4(s));
+                        }
+                    }
                 }
             }
             if (!linebreak) {
@@ -105,58 +89,6 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
             }
         } else {
             stats.addCorrect(function, cd, "CorpusData file does not contain any event");
-        }
-        return stats; // return the report with warnings
-    }
-
-    @Override
-    /**
-     * One of the main functionalities of the feature; fix linebreaks in events
-     * add them to the report which it returns in the end.
-     */
-    public Report fix(CorpusData cd) {
-        Report stats = new Report();         // create a new report
-        try {
-            doc = TypeConverter.String2JdomDocument(cd.toSaveableString()); // read the file as a doc
-            Pattern replacePattern = Pattern.compile("[\r\n]");
-            context = XPath.newInstance(xpathContext);
-            List allContextInstances = context.selectNodes(doc);
-            String s = "";
-            if (!allContextInstances.isEmpty()) {
-                for (int i = 0; i < allContextInstances.size(); i++) {
-                    Object o = allContextInstances.get(i);
-                    if (o instanceof Element) {
-                        Element e = (Element) o;
-                        s = e.getText();
-                        if (replacePattern.matcher(s).find()) {          // if file contains the RegEx then issue warning
-                            linebreak = true;
-                            String snew = s.replaceAll("[\r\n]", "");    //replace all replace with replacement
-                            //TODO Attributes?
-                            e.setText(snew);
-                            stats.addFix(function, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
-                        }
-                    }
-                    
-                }
-                if (!linebreak) {
-                    stats.addCorrect(function, cd, "CorpusData file does not contain line ending in an event");
-                }
-            } else {
-                stats.addCorrect(function, cd, "CorpusData file does not contain any event");
-            }
-            
-         } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (TransformerException ex) {
-             stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-             stats.addException(ex, function, cd, "Unknown parsing error");
         }
         return stats; // return the report with warnings
     }
@@ -177,8 +109,9 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -189,12 +122,12 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

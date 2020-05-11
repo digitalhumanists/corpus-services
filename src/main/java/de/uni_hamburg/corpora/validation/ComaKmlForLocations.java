@@ -59,53 +59,6 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     }
 
     /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        try {
-            stats = function(cd, false);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        }
-        return stats;
-    }
-    
-    /**
-     * Adds coordinates of the locations to the coma file using the kml file.
-     */
-    @Override
-    public Report fix(CorpusData cd) {
-        try {
-            stats = function(cd, true);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown transformer error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        }
-        return stats;
-    }
-
-    /**
      * Main functionality of the feature;
      */
     @Override
@@ -381,17 +334,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, TransformerConfigurationException, XPathExpressionException {
         cd = c.getComaData();
-        stats = check(cd);
+        stats = function(cd, fix);
         return stats;
     }
 
-    @Override
-    public Report fix(Corpus c) {
-        cd = c.getComaData();
-        stats = fix(cd);
-        return stats;
-    }
 
 }

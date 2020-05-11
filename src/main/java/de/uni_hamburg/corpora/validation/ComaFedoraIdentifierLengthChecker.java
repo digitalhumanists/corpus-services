@@ -37,21 +37,10 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
     /**
      * Check for existence of files in a coma file.
      *
-     * @return true, if all files were found, false otherwise
      */
     public ComaFedoraIdentifierLengthChecker() {
         //no fix available
         super(false);
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
-        return function(cd, false);
     }
 
     /**
@@ -156,10 +145,10 @@ public class ComaFedoraIdentifierLengthChecker extends Checker implements Corpus
     }
 
     @Override
-    public Report check(Corpus c) throws SAXException, JexmaraldaException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
+    public Report function(Corpus c, Boolean fix) throws SAXException, JexmaraldaException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
         Report stats = new Report();
         cd = c.getComaData();
-        stats = check(cd);
+        stats = function(cd, fix);
         return stats;
     }
 

@@ -14,10 +14,8 @@ import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -28,7 +26,6 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
@@ -46,37 +43,9 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
     }
     
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
-    * checks for exceptions.
-    */   
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch(JexmaraldaException je) {
-            stats.addException(je, function, cd, "Unknown parsing error");
-        } catch(JDOMException jdome) {
-            stats.addException(jdome, function, cd, "Unknown parsing error");
-        } catch(SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch(IOException ioe) {
-            stats.addException(ioe, function, cd, "Reading/writing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Reading/writing error");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "Reading/writing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Reading/writing error");
-        }
-        return stats;
-    }
-    
-    /**
     * Main functionality of the feature; validates a coma file with XML schema from internet.
     */
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, XPathExpressionException{
         System.out.println("Checking COMA file against schema...");
         URL COMA_XSD = new URL("http://www.exmaralda.org/xml/comacorpus.xsd");
@@ -116,13 +85,11 @@ public class ComaXsdChecker extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, XPathExpressionException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 
 }

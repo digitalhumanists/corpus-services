@@ -12,6 +12,7 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -65,15 +66,16 @@ public abstract class Checker implements CorpusFunction {
             if (fix) {
 
                 if (canfix) {
-                    report = fix(cd);
+                    report = function(cd, fix);
                 } else {
                     report.addCritical(function,
-                            "Automatic fix is not yet supported.");
+                            "Automatic fix is not available, doing check instead.");
+                    report = function(cd, false);
                 }
 
                 return report;
             } else {
-                report = check(cd);
+                report = function(cd, fix);
             }
         } catch (JexmaraldaException je) {
             report.addException(je, function, cd, "Unknown parsing error");
@@ -95,6 +97,8 @@ public abstract class Checker implements CorpusFunction {
             report.addException(ex, function, cd, "File reading error");
         } catch (ClassNotFoundException ex) {
             report.addException(ex, function, cd, "File reading error");
+        } catch (NoSuchAlgorithmException ex) {
+            report.addException(ex, function, cd, "File reading error");
         }
         return report;
     }
@@ -105,15 +109,14 @@ public abstract class Checker implements CorpusFunction {
             if (fix) {
 
                 if (canfix) {
-                    report = fix(c);
+                    report = function(c, fix);
                 } else {
                     report.addCritical(function,
                             "Automatic fix is not yet supported.");
                 }
-
                 return report;
             } else {
-                report = check(c);
+                report = function(c, fix);
             }
         } catch (JexmaraldaException je) {
             report.addException(je, function, cd, "Unknown parsing error");
@@ -133,34 +136,19 @@ public abstract class Checker implements CorpusFunction {
             report.addException(ex, function, cd, "File reading error");
         } catch (XPathExpressionException ex) {
             report.addException(ex, function, cd, "File reading error");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (NoSuchAlgorithmException ex) {
+            report.addException(ex, function, cd, "File reading error");
         }
         return report;
     }
 
     //To implement in the class
-    public abstract Report check(CorpusData cd) throws ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
+    public abstract Report function(CorpusData cd, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
     //To implement in the class
-    public abstract Report check(Corpus c) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
-
-    //To implement in the class
-    public abstract Report function(CorpusData cd, Boolean fix) throws ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
-
-    //To implement in the class
-    //If there is no possibility to fix it throw a warning that says that
-    public Report fix(CorpusData cd) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
-        report.addCritical(function,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
-
-    //To implement in the class
-    //If there is no possibility to fix it throw a warning that says that
-    public Report fix(Corpus c) throws FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
-        report.addCritical(function,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
+    public abstract Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
 

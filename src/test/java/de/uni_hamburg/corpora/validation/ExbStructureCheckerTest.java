@@ -52,7 +52,7 @@ public class ExbStructureCheckerTest {
         Collection<CorpusData> cdc;
         //what happens when we check exb files
         for (CorpusData cd : corp.getContentdata()) {
-            assertNotNull(instance.check(cd));
+            assertNotNull(instance.function(cd,false));
         }
     }
 

@@ -26,32 +26,21 @@ import org.xml.sax.SAXException;
  * duration of each annotation in the exb.
  *
  */
-public class CalculateAnnotatedTime extends Checker implements CorpusFunction {
+public class ExbCalculateAnnotatedTime extends Checker implements CorpusFunction {
 
     //HashMap<String, HashMap<String, String>> eventMap; // hash map for holding events of annotation tiers
     HashMap<String, HashMap<String, String>> tierMap; // all the annotation tiers of all the exb files of the corpus
 
-    public CalculateAnnotatedTime() {
+    public ExbCalculateAnnotatedTime() {
         //has no fixing option
         super(false);
     }
 
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) throws JexmaraldaException, SAXException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
-        Report stats = new Report();
-            stats = function(cd, false);
-        return stats;
-    }
-
     @Override
-    public Report check(Corpus c) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report();
             for (CorpusData cdata : c.getBasicTranscriptionData()) {
-                stats.merge(function(cdata, false));
+                stats.merge(function(cdata, fix));
             }
         return stats;
     }

@@ -39,15 +39,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.math.BigInteger;
 
-
 /**
  *
  * @author Timofey Arkhangelskiy <timofey.arkhangelskiy@uni-hamburg.de>
  */
 public class DuplicateTierContentChecker extends Checker implements CorpusFunction {
+
     static final int MIN_TIER_LENGTH = 10;   // tiers shorter than this will not be compared
     ArrayList<String> lsTiersToCheck = new ArrayList<>(
-      Arrays.asList("ts", "tx", "fe", "fg", "fr")); 
+            Arrays.asList("ts", "tx", "fe", "fg", "fr"));
     // This is the default list that can be overridden by calling setTierNames
     Pattern rxClean = Pattern.compile("[ \r\n\t.,:;?!()\\[\\]/\\-{}<>*%=\"]",
             Pattern.UNICODE_CHARACTER_CLASS);
@@ -58,59 +58,19 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
         //no fixing option available
         super(false);
     }
-    
-    
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) throws JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (NoSuchAlgorithmException ex) {
-            stats.addException(ex, function, cd, "MessageDigest could not be initialized for MD5.");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "unknown xml exception.");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "unknown xml exception.");
-        } catch (SAXException ex) {
-            stats.addException(ex, function, cd, "unknown xml exception.");
-        } catch (IOException ex) {
-            stats.addException(ex, function, cd, "unknown IO exception.");
-        } catch (JDOMException ex) {
-            stats.addException(ex, function, cd, "unknown xml exception.");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "unknown xml exception.");
-        } catch (ClassNotFoundException ex) {        
-              stats.addException(ex, function, cd, "unknown class not found exception.");
-        }
-        return stats;
-    }
 
-    
     public void setTierNames(String sTiers) {
         lsTiersToCheck = new ArrayList<>(Arrays.asList(sTiers.split(",")));
     }
 
-    /**
-     * Fixing the errors in tiers is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) {
-        report.addCritical(function, cd, "Fixing option is not available");
-        return report;
-    }
-    
     /**
      * Concatenate and normalize the text of one tier.
      */
     public String normalize_tier(Element tier) {
         String tierText = "";
         NodeList events = tier.getElementsByTagName("event");
-        for (int j = 0; j < events.getLength(); j++) {  
-            Element event = (Element)events.item(j);
+        for (int j = 0; j < events.getLength(); j++) {
+            Element event = (Element) events.item(j);
             String eventText = event.getTextContent();
             tierText += eventText.toLowerCase();
         }
@@ -134,22 +94,21 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
     }
 
     /**
-     * Read one transcription file. Return normalized values of
-     * relevant tiers as a Map.
+     * Read one transcription file. Return normalized values of relevant tiers
+     * as a Map.
      */
     public Map<String, String> process_exb(CorpusData cd) {
         Map<String, String> tierValues = new HashMap<>();
-        XMLData xml = (XMLData)cd; 
+        XMLData xml = (XMLData) cd;
         Document doc = TypeConverter.JdomDocument2W3cDocument(xml.getJdom());
-        
+
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript      
         ArrayList<Element> relevantTiers = new ArrayList();
         for (int i = 0; i < tiers.getLength(); i++) {
-            Element tier = (Element)tiers.item(i);
+            Element tier = (Element) tiers.item(i);
             String category = tier.getAttribute("category"); // get category so that we know is this is a relevant tier 
             if (lsTiersToCheck.contains(category)) {
-                if (tierValues.containsKey(category))
-                {
+                if (tierValues.containsKey(category)) {
                     tierValues.put(category, tierValues.get(category) + normalize_tier(tier));
                 } else {
                     tierValues.put(category, normalize_tier(tier));
@@ -160,22 +119,23 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
     }
 
     /**
-     * Main feature of the class: takes a coma file, reads the linked
-     * exbs and reports those that have (nearly) identical transcription/
-     * translation tiers to some other exbs.
+     * Main feature of the class: takes a coma file, reads the linked exbs and
+     * reports those that have (nearly) identical transcription/ translation
+     * tiers to some other exbs.
      */
-    public Report exceptionalCheck(CorpusData cd) throws NoSuchAlgorithmException, TransformerException, ParserConfigurationException, SAXException, IOException, JDOMException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws NoSuchAlgorithmException, TransformerException, ParserConfigurationException, SAXException, IOException, JDOMException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
         System.out.println("Duplicate check started.");
-        
+
         md = MessageDigest.getInstance("MD5");
-        
+
         Report stats = new Report();
         CorpusIO cio = new CorpusIO();
         Map<String, HashMap<String, String>> tierValues = new HashMap<>();
         for (String tierName : lsTiersToCheck) {
             tierValues.put(tierName, new HashMap<String, String>());
         }
-        
+
         org.jdom.Document comaDoc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         XPath context;
         context = XPath.newInstance("//Transcription[Description/Key[@Name='segmented']/text()='false']");
@@ -191,23 +151,22 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
                 CorpusData exb = cio.readFileURL(url);
                 Map<String, String> curTierValues = process_exb(exb);
                 for (Map.Entry<String, String> entry : curTierValues.entrySet()) {
-                    if (!tierValues.containsKey(entry.getKey()) 
+                    if (!tierValues.containsKey(entry.getKey())
                             || entry.getValue().length() <= 0) {
                         continue;
                     }
                     if (tierValues.get(entry.getKey()).containsKey(entry.getValue())) {
-                        stats.addCritical(function, exb, "The file is a duplicate of " 
-                                + tierValues.get(entry.getKey()).get(entry.getValue()) 
+                        stats.addCritical(function, exb, "The file is a duplicate of "
+                                + tierValues.get(entry.getKey()).get(entry.getValue())
                                 + " (tier " + entry.getKey() + ").");
-                    }
-                    else {
+                    } else {
                         tierValues.get(entry.getKey()).put(entry.getValue(), exb.getFilename());
                         // Remember that this text for this tier was seen in this file
                     }
                 }
             }
         }
-            
+
         return stats;
     }
 
@@ -240,13 +199,11 @@ public class DuplicateTierContentChecker extends Checker implements CorpusFuncti
     }
 
     @Override
-    public Report check(Corpus c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Report function(CorpusData cd, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, TransformerException, ParserConfigurationException, SAXException, IOException, JDOMException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 
 }

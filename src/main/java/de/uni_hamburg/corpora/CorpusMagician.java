@@ -17,10 +17,10 @@ import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
 import de.uni_hamburg.corpora.validation.ExbFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
 import de.uni_hamburg.corpora.validation.ExbRefTierChecker;
-import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
+import de.uni_hamburg.corpora.validation.ExbCalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
 import de.uni_hamburg.corpora.validation.ComaFileCoverageChecker;
-import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.ComaFilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
 import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
@@ -427,7 +427,7 @@ public class CorpusMagician {
                     cf2strcorpusfunctions.add(ngex);
                     break;
                 case "filenamechecker":
-                    FilenameChecker fnc = new FilenameChecker();
+                    ComaFilenameChecker fnc = new ComaFilenameChecker();
                     cf2strcorpusfunctions.add(fnc);
                     break;
                 case "cmdichecker":
@@ -677,7 +677,7 @@ public class CorpusMagician {
                     cf2strcorpusfunctions.add(esegr);
                     break;
                 case "calculateannotatedtime":
-                    CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
+                    ExbCalculateAnnotatedTime cat = new ExbCalculateAnnotatedTime();
                     cf2strcorpusfunctions.add(cat);
                     break;
                 case "addcsvmetadatatocoma":
