@@ -227,7 +227,7 @@ public class CorpusMagician {
             if (cdata instanceof ComaData) {
                 //if it is we set the boolean
                 isCorpus = true;
-                System.out.println("It's a corpus" + isCorpus);
+                System.out.println("It's a corpus");
                 //TODO
                 //only read the filetypes from clcds!
                 corpus = new Corpus((ComaData) cdata, clcds);
@@ -453,18 +453,6 @@ public class CorpusMagician {
                 case "ngtiercheckerwithannotation":
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
                     cf2strcorpusfunctions.add(ngtcwa);
-                    break;
-                //not needed anymore because of mode parameter
-                case "xsltcheckerinel":
-                    XSLTChecker xci = new XSLTChecker();
-                    xci.setXSLresource("/xsl/inel-checks.xsl");
-                    if (cfProperties != null) {
-                        if (cfProperties.containsKey(fsm)) {
-                            xci.setFSMpath(cfProperties.getProperty(fsm));
-                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
-                        }
-                    }
-                    cf2strcorpusfunctions.add(xci);
                     break;
                 case "exb2inelisotei":
                     EXB2INELISOTEI eiit = new EXB2INELISOTEI();
@@ -843,7 +831,6 @@ public class CorpusMagician {
         //if the corpus files are an instance
         //of the class cl, run the function
         for (CorpusData cd : c.getCorpusData()) {
-            System.out.println("Processing file:" + cd.getFilename());
             if (usableTypes.contains(cd.getClass())) {
                 Report newReport = runCorpusFunction(cd, cf, fix);
                 report.merge(newReport);

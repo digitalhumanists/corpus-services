@@ -121,23 +121,30 @@ public class CorpusIO {
     //read a single file as a corpus data object from an url
     //only read it if it is needed
     public CorpusData readFileURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws SAXException, JexmaraldaException, ClassNotFoundException{
+        System.out.println("started reading documents...");
         if (url.getPath().endsWith("exb") && clcds.contains(bt.getClass())) {
             BasicTranscriptionData btd = new BasicTranscriptionData(url);
+            System.out.println(btd.getFilename() +" read");
             return btd;
         } else if (url.getPath().toLowerCase().endsWith("coma") && clcds.contains(coma.getClass())) {
             ComaData cm = new ComaData(url);
+            System.out.println(cm.getFilename() +" read");
             return cm;
         } else if (url.getPath().toLowerCase().endsWith("xml") && ((url.getPath().toLowerCase().contains("Annotation"))) && clcds.contains(asp.getClass())) {
             AnnotationSpecification as = new AnnotationSpecification(url);
+            System.out.println(as.getFilename() +" read");
             return as;
         } else if ((url.getPath().toLowerCase().endsWith("xml") && url.getPath().toLowerCase().contains("cmdi")) && clcds.contains(cmdidata.getClass()) || url.getPath().toLowerCase().endsWith("cmdi") && clcds.contains(cmdidata.getClass())) {
             CmdiData cmdi = new CmdiData(url);
+            System.out.println(cmdi.getFilename() +" read");
             return cmdi;
         } else if (url.getPath().toLowerCase().endsWith("xml") && clcds.contains(usdata.getClass())) {
             UnspecifiedXMLData usd = new UnspecifiedXMLData(url);
+            System.out.println(usd.getFilename() +" read");
             return usd;
         } else if (url.getPath().toLowerCase().endsWith("exs") && clcds.contains(segdata.getClass())) {
             SegmentedTranscriptionData seg = new SegmentedTranscriptionData(url);
+            System.out.println(seg.getFilename() +" read");
             return seg;
         } else {
             System.out.println(url + " will not be read");
