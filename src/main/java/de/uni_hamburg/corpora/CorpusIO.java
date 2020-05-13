@@ -121,7 +121,6 @@ public class CorpusIO {
     //read a single file as a corpus data object from an url
     //only read it if it is needed
     public CorpusData readFileURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws SAXException, JexmaraldaException, ClassNotFoundException{
-        System.out.println("started reading documents...");
         if (url.getPath().endsWith("exb") && clcds.contains(bt.getClass())) {
             BasicTranscriptionData btd = new BasicTranscriptionData(url);
             System.out.println(btd.getFilename() +" read");
