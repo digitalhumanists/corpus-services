@@ -47,8 +47,8 @@ public class ComaApostropheChecker extends Checker implements CorpusFunction {
                 cio.write(cd, cd.getURL());    // write back to coma file with allowed apostrophes ´
                 stats.addFix(function, cd, "Corrected the apostrophes"); // fix report
             } else {
-                System.err.println("Coma file is containing apostrophe(s) ’");
-                stats.addWarning(function, cd, "Coma file is containing apostrophe(s) ’");
+                System.out.println("Coma file is containing apostrophe(s) ’");
+                stats.addCritical(function, cd, "Coma file is containing apostrophe(s) ’");
             }
         } else {
             stats.addCorrect(function, cd, "Coma file does not contain apostrophes");

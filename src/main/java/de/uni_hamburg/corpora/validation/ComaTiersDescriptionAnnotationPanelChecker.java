@@ -54,7 +54,7 @@ public class ComaTiersDescriptionAnnotationPanelChecker extends Checker implemen
                 Collection<String> annotTypes = entry.getValue();
                 for (String annotType : annotTypes) {   // iterate through annotations in the coma file
                     if (!annotations.contains(annotType)) { // check if annotations not present in annotation spec file
-                        System.err.println("Coma file is containing annotation (" + annotType
+                        System.out.println("Coma file is containing annotation (" + annotType
                                 + ") for " + name + " not specified by annotation spec file!");
                         stats.addWarning(function, cd, "annotation error: annotation in annotation panel ("
                                 + annotType + ") in communication " + name + " not specified!");

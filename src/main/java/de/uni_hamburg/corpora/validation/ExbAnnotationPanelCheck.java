@@ -78,7 +78,7 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
                             }
                             // check if the content is contained in the possible tags
                             if (!(allTagStrings.contains(content))) {
-                                System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing annotation with incompatible tag ("
+                                System.out.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing annotation with incompatible tag ("
                                         + content + ") in its tier " + tier.getID() + " for the event " + event.getStart() + " not specified by annotation spec file!");
                                 stats.addWarning("exb-annotation-panel-check", "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1)
                                         + " is containing annotation with incompatible tag (" + content

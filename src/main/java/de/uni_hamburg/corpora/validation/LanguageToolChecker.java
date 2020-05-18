@@ -107,7 +107,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
                             // XXX: ud-information is weird I'll just skip it...
                             continue;
                         }
-                        System.err.println("This is not a text node: "
+                        System.out.println("This is not a text node: "
                                 + maybeText);
                         continue;
                     }

@@ -92,7 +92,7 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                         System.out.println("Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                         stats.addCorrect(function, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                     } else {
-                     System.err.println("Speaker abbreviation and display name for tier do not match"
+                     System.out.println("Speaker abbreviation and display name for tier do not match"
                                     + "for speaker " + speakerName + ", tier: displayname " + displayName + " and id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
                             stats.addCritical(function, cd, "Tier mismatch "

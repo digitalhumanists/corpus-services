@@ -78,7 +78,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                             e.setText(snew);
                             stats.addFix(function, cd, "Replaced " + escapeHtml4(replace) + " with " + escapeHtml4(replacement) + " at " + escapeHtml4(xpathContext) + " here: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                         } else {
-                            System.err.println("CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
+                            System.out.println("CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
                             stats.addCritical(function, cd, "CorpusData file is containing " + escapeHtml4(replace) + " at " + escapeHtml4(xpathContext) + ": " + escapeHtml4(s));
                         }
                     }
@@ -86,7 +86,7 @@ public class CorpusDataRegexReplacer extends Checker implements CorpusFunction {
                     Attribute a = (Attribute) o;
                     s = a.getValue();
                     if (fix) {
-                        System.err.println("Attributes cannot be replaced yet at " + escapeHtml4(xpathContext));
+                        System.out.println("Attributes cannot be replaced yet at " + escapeHtml4(xpathContext));
                         stats.addCritical(function, cd, "Attributes cannot be replaced yet at " + escapeHtml4(xpathContext));
                     }
                 } else {
