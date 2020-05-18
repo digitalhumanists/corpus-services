@@ -262,8 +262,7 @@ public class CorpusMagician {
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("ExbStructureChecker");
-        allExistingCFs.add("FileCoverageChecker");
-        //allExistingCFs.add("FileCoverageCheckerInel");
+        allExistingCFs.add("ComaFileCoverageChecker");
         allExistingCFs.add("NormalizeEXB");
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
@@ -383,8 +382,18 @@ public class CorpusMagician {
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
                     cf2strcorpusfunctions.add(eapc);
                     break;
-                case "filecoveragechecker":
+                case "comafilecoveragechecker":
                     ComaFileCoverageChecker fcc = new ComaFileCoverageChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                            fcc.addFileEndingWhiteListString("flextext");
+                            fcc.addWhiteListString("report-output.html");
+                            fcc.addWhiteListString("Segmentation_Errors.xml");
+                            fcc.addWhiteListString("Structure_Errors.xml");
+                            System.out.println("Mode set to inel");
+                        }
+                    }
                     cf2strcorpusfunctions.add(fcc);
                     break;
                 case "prettyprintdata":
@@ -510,14 +519,6 @@ public class CorpusMagician {
                 case "iaafunctionality":
                     IAAFunctionality iaa = new IAAFunctionality();
                     cf2strcorpusfunctions.add(iaa);
-                    break;
-                case "filecoveragecheckerinel":
-                    ComaFileCoverageChecker fcci = new ComaFileCoverageChecker();
-                    fcci.addFileEndingWhiteListString("flextext");
-                    fcci.addWhiteListString("report-output.html");
-                    fcci.addWhiteListString("Segmentation_Errors.xml");
-                    fcci.addWhiteListString("Structure_Errors.xml");
-                    cf2strcorpusfunctions.add(fcci);
                     break;
                 case "comakmlforlocations":
                     ComaKmlForLocations ckml = new ComaKmlForLocations();
@@ -795,9 +796,9 @@ public class CorpusMagician {
 
         return report;
     }
-
     //run multiple functions on a corpus, that means all the files in the corpus
     //the function can run on
+
     public Report runCorpusFunctions(Corpus c, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
