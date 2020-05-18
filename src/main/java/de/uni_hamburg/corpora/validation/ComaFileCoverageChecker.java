@@ -125,7 +125,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                                 String relPath = stripPrefix(a.getCanonicalPath(),
                                         prefix);
                                 if (relPath.equals(a.getCanonicalPath())) {
-                                    System.err.println("Cannot figure out relative path"
+                                    System.out.println("Cannot figure out relative path"
+                                            + " for: " + a.getCanonicalPath());
+                                    stats.addCritical(function, cd, "Cannot figure out relative path"
                                             + " for: " + a.getCanonicalPath());
                                 } else {
                                     allFilesPaths.add(relPath);
@@ -156,7 +158,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                                 String relPath = stripPrefix(b.getCanonicalPath(),
                                         prefix);
                                 if (relPath.equals(b.getCanonicalPath())) {
-                                    System.err.println("Cannot figure out relative path"
+                                    System.out.println("Cannot figure out relative path"
+                                            + " for: " + b.getCanonicalPath());
+                                     stats.addCritical(function, cd, "Cannot figure out relative path"
                                             + " for: " + b.getCanonicalPath());
                                 } else {
                                     allFilesPaths.add(relPath);
@@ -187,7 +191,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                                 String relPath = stripPrefix(c.getCanonicalPath(),
                                         prefix);
                                 if (relPath.equals(c.getCanonicalPath())) {
-                                    System.err.println("Cannot figure out relative path"
+                                    System.out.println("Cannot figure out relative path"
+                                            + " for: " + c.getCanonicalPath());
+                                     stats.addCritical(function, cd, "Cannot figure out relative path"
                                             + " for: " + c.getCanonicalPath());
                                 } else {
                                     allFilesPaths.add(relPath);
@@ -207,7 +213,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     for (int j = 0; j < nstexts.getLength(); j++) {
                         Node maybeText = nstexts.item(j);
                         if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                            System.err.print("This is not a text node: "
+                            System.out.println("This is not a text node: "
                                     + maybeText);
                             continue;
                         }
@@ -228,7 +234,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     for (int j = 0; j < reltexts.getLength(); j++) {
                         Node maybeText = reltexts.item(j);
                         if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                            System.err.print("This is not a text node: "
+                            System.out.println("This is not a text node: "
                                     + maybeText);
                             continue;
                         }

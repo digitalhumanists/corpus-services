@@ -77,7 +77,7 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
             for (int j = 0; j < nstexts.getLength(); j++) {
                 Node maybeText = nstexts.item(j);
                 if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                    System.err.print("This is not a text node: "
+                    System.out.println("This is not a text node: "
                             + maybeText);
                     continue;
                 }
@@ -139,7 +139,7 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
                     communicationname = "Could not figure out Communication name";
                 }
                 if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                    System.err.print("This is not a text node: "
+                    System.out.println("This is not a text node: "
                             + maybeText);
                     continue;
                 }

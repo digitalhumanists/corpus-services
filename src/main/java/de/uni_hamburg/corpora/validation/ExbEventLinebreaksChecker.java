@@ -78,7 +78,7 @@ public class ExbEventLinebreaksChecker extends Checker implements CorpusFunction
                             cio.write(cd, cd.getURL());
                             stats.addFix(function, cd, "Removed line ending in an event: " + escapeHtml4(s) + " with " + escapeHtml4(snew));
                         } else {
-                            System.err.println("Exb is containing line ending in an event: " + escapeHtml4(s));
+                            System.out.println("Exb is containing line ending in an event: " + escapeHtml4(s));
                             stats.addCritical(function, cd, "Exb is containing line ending in an event: " + escapeHtml4(s));
                         }
                     }

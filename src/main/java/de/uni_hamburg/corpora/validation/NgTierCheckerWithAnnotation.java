@@ -134,7 +134,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
             Collection<String> annotTypes = entry.getValue();
             for (String annotType : annotTypes) {   // iterate through annotations in the coma file
                 if (!annotations.contains(annotType)) { // check if annotations not present in annotation spec file
-                    System.err.println("Coma file is containing annotation (" + annotType
+                    System.out.println("Coma file is containing annotation (" + annotType
                             + ") for " + name + " not specified by annotation spec file!");
                     stats.addWarning("tier-checker-with-annotation", "annotation error: annotation ("
                             + annotType + ") for " + name + " not specified in the annotation spec file!");

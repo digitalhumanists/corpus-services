@@ -133,7 +133,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     String tag = event.getTextContent();
                     // check and fix irregularities (e.g. if there is a space at the end) in the tags
                     if (tag.endsWith(" ")) {
-                        System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        System.out.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         stats.addWarning(function, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
@@ -157,7 +157,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     String tag = event.getTextContent();
                     // check and fix irregularities (e.g. if there is a space at the end) in the tags
                     if (tag.endsWith(" ")) {
-                        System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        System.out.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         stats.addWarning(function, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");

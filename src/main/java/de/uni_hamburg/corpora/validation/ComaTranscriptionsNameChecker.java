@@ -120,7 +120,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                     if (!basicTranscriptName.isEmpty() && !segmentedTranscriptName.isEmpty()) {
                         if (!basicTranscriptName.equals(segmentedTranscriptName)) { // check for mismatch between names
                             // issue a warning if necessary
-                            System.err.println("Basic transcription name and segmented transcription name do not match "
+                            System.out.println("Basic transcription name and segmented transcription name do not match "
                                     + "for communication " + communicationName + ", id: " + communicationID + ".");
                             stats.addCritical(function, cd, "Transcript name mismatch exb: " + basicTranscriptName + " exs: " + segmentedTranscriptName
                                     + " for communication " + communicationName + ".");
@@ -132,7 +132,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                     if (!basicFileName.isEmpty() && !segmentedFileName.isEmpty()) {
                         // check for mismatch between file names, issue a warning if necessary
                         if (!basicFileName.substring(0, basicFileName.lastIndexOf(".")).equals(segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_")))) {
-                            System.err.println("Basic file name and segmented file name do not match "
+                            System.out.println("Basic file name and segmented file name do not match "
                                     + "for communication " + communicationName + ", id: " + communicationID + ".");
                             stats.addCritical(function, cd, "Basic file name mismatch exb: " + basicFileName.substring(0, basicFileName.lastIndexOf(".")) + " exs: " + segmentedFileName.substring(0, segmentedFileName.lastIndexOf("_"))
                                     + " for communication " + communicationName + ".");
@@ -144,7 +144,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                     if (!basicNSLink.isEmpty() && !segmentedNSLink.isEmpty()) {
                         // check for mismatch between nslinks, issue a warning if necessary
                         if (!basicNSLink.substring(0, basicNSLink.lastIndexOf(".")).equals(segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_")))) {
-                            System.err.println("Basic NSLink and segmented NSLink do not match "
+                            System.out.println("Basic NSLink and segmented NSLink do not match "
                                     + "for communication " + communicationName + ", id: " + communicationID + ".");
                             stats.addCritical(function, cd, "NSLink filename mismatch exb: " + basicNSLink.substring(0, basicNSLink.lastIndexOf(".")) + " exs: " + segmentedNSLink.substring(0, segmentedNSLink.lastIndexOf("_"))
                                     + " for communication " + communicationName + ".");
@@ -155,7 +155,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
                     }
                 }
             } else {
-                System.err.println("No transcriptions found "
+                System.out.println("No transcriptions found "
                         + "for communication " + communicationName + ", id: " + communicationID + ".");
                 stats.addCorrect(function, cd, "No transcript found to be compared "
                         + "for communication " + communicationName + ".");
