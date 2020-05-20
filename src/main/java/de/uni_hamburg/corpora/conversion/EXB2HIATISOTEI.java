@@ -6,10 +6,12 @@
 package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -32,6 +34,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
+import org.jdom.transform.XSLTransformException;
 import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
@@ -56,7 +59,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
 
-    final String function = "hiat-iso-tei";
 
     //locations of the used xsls
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
@@ -81,8 +83,10 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     XSLTransformer transformer2;
     XSLTransformer transformer3;
 
+    Report report;
     CorpusIO cio = new CorpusIO();
 
+    CorpusIO cio = new CorpusIO();
     //debugging
     String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
     String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
@@ -96,12 +100,38 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     URL cdURL;
 
+    public EXB2HIATISOTEI() {
+        super("EXB2HIATISOTEI");
+    }
+
     /*
-    * this method takes a CorpusData object, converts it into HIAT ISO TEI and saves it
+    * this method takes a CorpusData object, converts it into HIAT ISO TEI and saves it 
     * next to the CorpusData object
     * and gives back a report how it worked
      */
-    public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
+
+    /**
+     *
+     * @param cd
+     * @return
+     * @throws SAXException
+     * @throws FSMException
+     * @throws XSLTransformException
+     * @throws JDOMException
+     * @throws IOException
+     * @throws Exception
+     */
+
+    public Report function(CorpusData cd) throws SAXException,
+            FSMException,
+            XSLTransformException,
+            JDOMException,
+            IOException,
+            Exception {
+        return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
+    }
+
+ public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
         cdURL = cd.getURL();
         //check if the CD file is Coma or Exb
 
@@ -450,7 +480,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     }
                 }
             }
-        }
+        }      
         return finalDocument;
     }
 
@@ -514,6 +544,8 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                 }
                 // this is where the magic happens
                 Element mergedElement = merge(sc, sc2);
+
+                // now take care of the corresponding annotations
                 int s = ((Integer) (timelineItems.get(start)));
                 int e = ((Integer) (timelineItems.get(end)));
                 //We would also like to keep the FlatSegmentation as an annotation to display it correctly
@@ -814,21 +846,34 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     }
 
     @Override
-    public Report check(CorpusData cd) {
-        //convert the file
-        //save the converted file
-        //TODO
-        //doesn't really make sense to have check only here
-        report = fix(cd);
+    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
+        try {
+            //convert the file
+            //save the converted file
+            //TODO
+            //doesn't really make sense to have check only here
+            report = fix(cd);
+        } catch (JDOMException ex) {
+            report.addException(ex, function, cd, "unknown exception error");
+        } catch (IOException ex) {
+            report.addException(ex, function, cd, "unknown exception error");
+        }
         return report;
     }
 
     @Override
-    public Report fix(CorpusData cd) {
+    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
         //convert the file
         //save the converted file next to corpus data file (url)
         report = new Report();
-        report = convertCD2MORPHEMEHIATISOTEI(cd);
+        try {
+            report = convertCD2MORPHEMEHIATISOTEI(cd);
+        } catch (XSLTransformException ex) {
+            report.addException(ex, function, cd, "unknown XSLT error");
+        } catch (Exception ex) {
+            report.addException(ex, function, cd, "unknown exception error");
+        }
+        report.addCorrect(function, "ISO TEI conversion of file " + cd.getURL().getFile() + " was successful");
         return report;
     }
 
@@ -843,12 +888,15 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
-    }
+    } 
 
     @Override
     public String getDescription() {
         String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
         return description;
     }
-
+    
+    public void setLanguage(String lang) {
+        language = lang;
+    }
 }

@@ -59,12 +59,12 @@ public class GenerateAnnotationPanelTest {
             Collection<CorpusData> cdc;
             //what happens when we check exb files
             for (CorpusData cd : corp.getContentdata()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
                 //assertTrue(instance.CorpusDataIsAlreadyPretty(cd));
             }
             //what happens when we check coma files
             for (CorpusData cd : corp.getMetadata()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
                 //assertFalse(instance.CorpusDataIsAlreadyPretty(cd));
             }
     }

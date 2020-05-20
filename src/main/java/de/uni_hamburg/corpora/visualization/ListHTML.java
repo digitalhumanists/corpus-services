@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
@@ -62,10 +63,11 @@ public class ListHTML extends Visualizer {
     String segmentationAlgorithm = "GENERIC";
 
     public ListHTML() {
-
+        super("ListHTML");
     }
 
     public ListHTML(String btAsString, String segmAlgorithm) {
+        super("ListHTML");
         createFromBasicTranscription(btAsString, segmAlgorithm);
     }
 
@@ -348,5 +350,10 @@ public class ListHTML extends Visualizer {
         String description = "This class creates an html visualization "
                 + "in the List format from an exb. ";
         return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

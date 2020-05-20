@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -26,9 +27,9 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
- * 
- * This class creates a sort- and filterable html overview in table form 
- * of the content of the coma file to make error checking and harmonizing easier.
+ *
+ * This class creates a sort- and filterable html overview in table form of the
+ * content of the coma file to make error checking and harmonizing easier.
  */
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
@@ -36,14 +37,15 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
     String xslpath = "/xsl/Output_metadata_summary.xsl";
     
     public ComaOverviewGeneration() {
-        super("coma-overview");
+        //no fixing available
+        super(false);
     }
 
     @Override
-    public Report check(CorpusData cd){
+    public Report function(CorpusData cd, Boolean fix) {
         Report r = new Report();
         String xsl;
-        try{
+        try {
 
             // get the XSLT stylesheet as String
             xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslpath));
@@ -62,7 +64,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             cio.write(result, overviewurl);
             //everything worked
             r.addCorrect(function, cd, "created html overview at " + overviewurl);
-            
+           
 
         } catch (TransformerConfigurationException ex) {
             r.addException(ex, function, cd, "Transformer configuration error");
@@ -79,30 +81,27 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         } catch (XPathExpressionException ex) {
             r.addException(ex, function, cd, "Unknown XPath error");
         }
-        
+
         return r;
-        
+
     }
 
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-       return check(cd);
-    }
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-        Class cl1;   
+        Class cl1;
         try {
             cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");
-             IsUsableFor.add(cl1);
+            IsUsableFor.add(cl1);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "Usable class not found.");
         }
-            return IsUsableFor;
+        return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -110,9 +109,17 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
                 + " of the content of the coma file to make error checking and harmonizing easier. ";
         return description;
     }
-    
-     public void setInel() {
-            inel = true;
+
+    public void setInel() {
+        inel = true;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 
 }

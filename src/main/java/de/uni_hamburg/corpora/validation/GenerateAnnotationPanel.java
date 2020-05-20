@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -8,6 +9,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +45,8 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     int iterateExbs = 0;
 
     public GenerateAnnotationPanel() {
-        super("GenerateAnnotationPanel");
+        //fixing not available
+        super(false);
     }
 
     /**
@@ -105,44 +108,17 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
     }
 
     /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            if (cd.getURL().getFile().endsWith(".exb")) {
-                stats = exceptionalCheck(cd);          // add annotations to the map
-            } else {
-                stats = generateAnnotation(cd);        // call the necessary method to create the annotation panel
-            }
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerConfigurationException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown XPath error");
-        }
-        return stats;
-    }
-
-    /**
      * Main feature of the class: Adds annotation tags from exb files to a list.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException, XPathExpressionException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
-        Report stats = new Report();
+        Report stats = new Report(); 
+        //TODO!!
+        if (cd.getURL().getFile().endsWith(".exb")) {      
         NodeList tiers = doc.getElementsByTagName("tier"); // get all tiers of the transcript
         for (int i = 0; i < tiers.getLength(); i++) { // loop for dealing with each tier
             Element tier = (Element) tiers.item(i);
@@ -157,7 +133,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     String tag = event.getTextContent();
                     // check and fix irregularities (e.g. if there is a space at the end) in the tags
                     if (tag.endsWith(" ")) {
-                        System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        System.out.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         stats.addWarning(function, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
@@ -181,7 +157,7 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                     String tag = event.getTextContent();
                     // check and fix irregularities (e.g. if there is a space at the end) in the tags
                     if (tag.endsWith(" ")) {
-                        System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
+                        System.out.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
                         stats.addWarning(function, cd, "Exb file is containing a tag ("
                                 + tag + ") in its tier " + tier.getAttribute("display-name") + " with an extra space in the end!");
@@ -197,16 +173,12 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
                 annotationsInExbs.put(category, tags);     // add annotations to the map
             }
         }
+        }else {
+                stats = generateAnnotation(cd);        // call the necessary method to create the annotation panel
+            }
         return stats;
     }
 
-    /**
-     * No fix available.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Default function which determines for what type of files (basic
@@ -234,6 +206,18 @@ public class GenerateAnnotationPanel extends Checker implements CorpusFunction {
         String description = "This class generates an annotation specification panel"
                 + " from the basic transcription files (exb).";
         return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        for (CorpusData adata : c.getAnnotationspecification()) {
+            stats.merge(function(adata, fix));
+        }
+        return stats;
     }
 
 

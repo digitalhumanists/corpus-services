@@ -44,7 +44,7 @@ public class CalculateAnnotatedTimeTest {
     }
 
     /**
-     * Test of check method, of class CalculateAnnotatedTime.
+     * Test of check method, of class ExbCalculateAnnotatedTime.
      */
     @Test
     public void testCheck() throws Exception {
@@ -52,25 +52,25 @@ public class CalculateAnnotatedTimeTest {
         String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        CalculateAnnotatedTime instance = new CalculateAnnotatedTime();
+        ExbCalculateAnnotatedTime instance = new ExbCalculateAnnotatedTime();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         //what happens when we check exb files
         for (CorpusData cd : corp.getContentdata()) {
             if(cd.getFilename().endsWith(".exb"))
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd, false));
         }
     }       
 
 
 
     /**
-     * Test of getIsUsableFor method, of class CalculateAnnotatedTime.
+     * Test of getIsUsableFor method, of class ExbCalculateAnnotatedTime.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        CalculateAnnotatedTime instance = new CalculateAnnotatedTime();
+        ExbCalculateAnnotatedTime instance = new ExbCalculateAnnotatedTime();
         //Collection<Class> expResult = null;
         //Collection<Class> result = instance.getIsUsableFor();
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();

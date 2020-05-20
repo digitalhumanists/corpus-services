@@ -2,6 +2,7 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.ComaData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -21,47 +22,20 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.Tier;
-import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
- * This class creates a sort- and filterable html overview in table form
- * of all tiers existing in the exbs linked in the coma file to make error "
- * checking and harmonizing easier.
+ * This class creates a sort- and filterable html overview in table form of all
+ * tiers existing in the exbs linked in the coma file to make error " checking
+ * and harmonizing easier.
  */
 public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
 
     String comaLoc = "";
 
     public ComaTierOverviewCreator() {
-        super("ComaTierOverviewCreator");
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Transformer Exception");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "XPath Exception");
-        } catch (JexmaraldaException ex) {
-            stats.addException(ex, function, cd, "Exmaralda Exception");
-        }
-        return stats;
+        //no fixing available
+        super(false);
     }
 
     /**
@@ -69,12 +43,12 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
      * there are more than one segmentation algorithms used in the corpus.
      * Issues warnings and returns report which is composed of errors.
      */
-    private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException {
+    public Report function(CorpusData cd, Boolean fix)
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
         Report stats = new Report();
         ComaData ccd = (ComaData) cd;
         CorpusIO cio = new CorpusIO();
-        ArrayList<URL> resulturls;
+        Collection<URL> resulturls;
         ArrayList<Tier> tiers = new ArrayList<>();
         ArrayList<BasicTranscriptionData> btds = new ArrayList<>();
         String htmltemplate = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/tier_overview_datatable_template.html"));
@@ -156,28 +130,28 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                 for (String s : hash_Set) {
                     //TO DO
                     String[] catType = s.split("type: ");
-                    String category = catType[0].substring(0, catType[0].length()-2);
-                    String type = catType[1].substring(0, catType[1].length()-1);
+                    String category = catType[0].substring(0, catType[0].length() - 2);
+                    String type = catType[1].substring(0, catType[1].length() - 1);
                     String[] ids = btd.getEXMARaLDAbt().getBody().getTiersOfType(type);
                     int noOfEvents = 0;
                     boolean existence = false;
-                    if(ids.length>0){
-                        for(String id : ids){
-                            if(category.equals(btd.getEXMARaLDAbt().getBody().getTierWithID(id).getCategory())){
+                    if (ids.length > 0) {
+                        for (String id : ids) {
+                            if (category.equals(btd.getEXMARaLDAbt().getBody().getTierWithID(id).getCategory())) {
                                 noOfEvents += btd.getEXMARaLDAbt().getBody().getTierWithID(id).getNumberOfEvents();
                                 existence = true;
                             }
                         }
-                        if(existence){
-                            if(noOfEvents>0){
+                        if (existence) {
+                            if (noOfEvents > 0) {
                                 content = content + "<td class=\"compact\">" + noOfEvents + "</td>";
-                            }else{
+                            } else {
                                 content = content + "<td class=\"compact\">0</td>";
                             }
-                        } else{
+                        } else {
                             content = content + "<td class=\"compact\"></td>";
                         }
-                    }else{
+                    } else {
                         content = content + "<td class=\"compact\"></td>";
                     }
                 }
@@ -204,14 +178,6 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
     }
 
     /**
-     * This feature does not have fix functionality yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        return check(cd);
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -227,8 +193,9 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         return IsUsableFor;
     }
 
-    /**Default function which returns a two/three line description of what
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -237,4 +204,13 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
                 + "checking and harmonizing easier. ";
         return description;
     }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException, JexmaraldaException, ClassNotFoundException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
+    }
+
 }

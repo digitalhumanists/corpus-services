@@ -14,14 +14,12 @@ import java.util.Collection;
 public interface CorpusFunction {
 
 public Report execute(CorpusData cd);
-
+ 
 public Report execute(Corpus c);
-
-public Report execute(Collection<CorpusData> cdc);
 
 public Report execute(CorpusData cd, boolean fix);
 
-public Report execute(Collection<CorpusData> cdc, boolean fix);
+public Report execute(Corpus c, boolean fix);
 
 public Collection<Class<? extends CorpusData>> getIsUsableFor();
 
@@ -29,4 +27,7 @@ public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc);
 
 public String getDescription();
 
+public String getFunction();
+
+public Boolean getCanFix();
 }

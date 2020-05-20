@@ -5,6 +5,8 @@
  */
 package de.uni_hamburg.corpora;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -14,5 +16,5 @@ import java.util.Collection;
  */
 interface Metadata extends CorpusData{
     
-    public Collection<URL> getReferencedCorpusDataURLs(); 
+    public Collection<URL> getReferencedCorpusDataURLs() throws MalformedURLException, URISyntaxException; 
 }

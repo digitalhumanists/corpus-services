@@ -1,6 +1,7 @@
 package de.uni_hamburg.corpora.conversion;
 
 import com.opencsv.CSVReader;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
@@ -39,23 +40,23 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     private Document coma;
     private String SpeakerOrCommunication;
     private Boolean IsSpeaker;
-    final String function = "add-csv-metadata-to-coma";
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath) {
-        //super(corpusPath);
+        super("AddCSVMetadataToComa");
     }
 
     public AddCSVMetadataToComa() {
+        super("AddCSVMetadataToComa");
     }
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath, String csvPath, String SpeakerOrCommunication) {
-        //super(corpusPath);
+        super("AddCSVMetadataToComa");
         this.comaFile = corpusPath;
         this.csvFile = csvPath;
         this.SpeakerOrCommunication = SpeakerOrCommunication;
@@ -75,7 +76,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
         Report stats = new Report();
         try {
-            stats = exceptionalCheck(cd);
+            stats = function(cd);
         } catch (ParserConfigurationException pce) {
             stats.addException(pce, function, cd, "Unknown parsing error");
         } catch (IOException ioe) {
@@ -90,7 +91,7 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
      * The primary functionality of the class; it accepts the coma file and
      * writes the CSV data into it.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, JDOMException {
         Report stats = new Report(); //create a new report
         this.comaFile = cd.getURL().getPath(); // set the path of the coma file
@@ -291,6 +292,11 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
                 + "  information in the columns the first line has to consist of the sigle of the "
                 + "  speaker or name of the communication the metadata should be assigned to";
         return description;
+    }
+
+    @Override
+    public Report execute(Corpus c, boolean fix) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

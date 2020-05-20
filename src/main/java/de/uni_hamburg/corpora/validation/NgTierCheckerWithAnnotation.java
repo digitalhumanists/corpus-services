@@ -1,11 +1,13 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,14 +15,15 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
 
 /**
  * The class that checks out if all annotations for Nganasan Corpus are from
@@ -35,7 +38,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
     int counter = 0; // counter for controlling whether we are on coma or annotation spec file
 
     public NgTierCheckerWithAnnotation() {
-        super("ng-tier-checker-with-annotaiton");
+        super(false);
     }
 
     /**
@@ -131,7 +134,7 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
             Collection<String> annotTypes = entry.getValue();
             for (String annotType : annotTypes) {   // iterate through annotations in the coma file
                 if (!annotations.contains(annotType)) { // check if annotations not present in annotation spec file
-                    System.err.println("Coma file is containing annotation (" + annotType
+                    System.out.println("Coma file is containing annotation (" + annotType
                             + ") for " + name + " not specified by annotation spec file!");
                     stats.addWarning("tier-checker-with-annotation", "annotation error: annotation ("
                             + annotType + ") for " + name + " not specified in the annotation spec file!");
@@ -157,14 +160,6 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
         }
 
         return stats; // return the report with warnings
-    }
-
-    /**
-     * This feature does not have fix functionality yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -196,4 +191,15 @@ public class NgTierCheckerWithAnnotation extends Checker implements CorpusFuncti
                 + " specification file.";
         return description;
     }
+
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

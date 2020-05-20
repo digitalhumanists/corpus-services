@@ -9,6 +9,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -37,41 +38,16 @@ import org.w3c.dom.NodeList;
 public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
 
     public ExbFileReferenceChecker() {
-        super("exb-referenced-file");
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        this.cd = cd;
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Reading error");
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown URI parsing error");
-        }
-        return stats;
+        //no fixing option available
+        super(false);
     }
 
     /**
      * Main feature of the class: Checks Exmaralda .exb file for file
      * references, if a referenced file does not exist, issues a warning.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, URISyntaxException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -115,17 +91,6 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
     }
 
     /**
-     * No fix is applicable for this feature.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        this.cd = cd;
-        report.addCritical(function, cd,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -150,6 +115,15 @@ public class ExbFileReferenceChecker extends Checker implements CorpusFunction {
                 + " it checks Exmaralda .exb file for file references if a referenced "
                 + "file does not exist, issues a warning;";
         return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 
 }

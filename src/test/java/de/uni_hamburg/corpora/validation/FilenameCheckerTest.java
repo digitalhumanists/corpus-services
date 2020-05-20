@@ -45,7 +45,7 @@ public class FilenameCheckerTest {
     }
 
     /**
-     * Test of check method, of class FilenameChecker.
+     * Test of check method, of class ComaFilenameChecker.
      */
     @Test
     public void testCheck() throws Exception {
@@ -53,28 +53,28 @@ public class FilenameCheckerTest {
         String corpusFolder = "src/test/java/de/uni_hamburg/corpora/resources/example";
         URL corpusURL = Paths.get(corpusFolder).toUri().toURL();
         Corpus corp = new Corpus(corpusURL);
-        FilenameChecker instance = new FilenameChecker();
+        ComaFilenameChecker instance = new ComaFilenameChecker();
         instance.report = new Report();
         Collection<CorpusData> cdc;
         
         //what happens when we check exb files
         for (CorpusData cd : corp.getContentdata()) {
-            assertNotNull(instance.check(cd));
+            assertNotNull(instance.function(cd,false));
         }
         //what happens when we check coma files
         for (CorpusData cd : corp.getMetadata()) {
-            assertNotNull(instance.check(cd));
+            assertNotNull(instance.function(cd,false));
         }
 
     }
 
     /**
-     * Test of getIsUsableFor method, of class FilenameChecker.
+     * Test of getIsUsableFor method, of class ComaFilenameChecker.
      */
     @Test
     public void testGetIsUsableFor() {
         System.out.println("getIsUsableFor");
-        FilenameChecker instance = new FilenameChecker();
+        ComaFilenameChecker instance = new ComaFilenameChecker();
         //Collection<Class> expResult = null;
         Collection<Class<? extends CorpusData>> result = instance.getIsUsableFor();
         //no null object here

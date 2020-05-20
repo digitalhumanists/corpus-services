@@ -1,11 +1,13 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
@@ -29,30 +31,8 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
     String tierLoc = "";
 
     public ExbTierDisplayNameChecker() {
-        super("tier-displayname-checker");
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        }
-        return stats;
+        //fixing not possible
+        super(false);
     }
 
     /**
@@ -61,7 +41,8 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
      * warnings with respect to mismatches in tiers and add those warnings to
      * the report. At last, it returns the report with all the warnings.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -111,7 +92,7 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                         System.out.println("Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                         stats.addCorrect(function, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                     } else {
-                     System.err.println("Speaker abbreviation and display name for tier do not match"
+                     System.out.println("Speaker abbreviation and display name for tier do not match"
                                     + "for speaker " + speakerName + ", tier: displayname " + displayName + " and id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
                             stats.addCritical(function, cd, "Tier mismatch "
@@ -138,13 +119,6 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
         return stats; // return all the warnings
     }
 
-    /**
-     * Fixing the errors in tiers is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Default function which determines for what type of files (basic
@@ -173,6 +147,15 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                 + " is a mismatch between category, speaker abbreviation and display"
                 + " name for each tier.";
         return description;
+    }
+
+     @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
     
 }

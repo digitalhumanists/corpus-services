@@ -4,7 +4,7 @@
 
     <groupId>de.uni_hamburg.corpora</groupId>
     <artifactId>hzsk-corpus-services</artifactId>
-    <version>0.2</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>hzsk-corpus-services</name>
@@ -77,6 +77,9 @@
             <resource>
                 <directory>src/main/java/de/uni_hamburg/corpora/conversion/resources</directory>
             </resource>
+            <resource>
+                <directory>src/main/java/de/uni_hamburg/corpora/swing/resources</directory>
+			</resource>
             <resource>
                 <directory>src/test/java/de/uni_hamburg/corpora/utilities/resources</directory>
             </resource>

@@ -25,6 +25,7 @@ public abstract class Publisher implements CorpusFunction {
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
     ValidatorSettings settings;
     final String function;
+    Boolean canfix = false;
 
     public Publisher(String func) {
         function = func;
@@ -119,6 +120,14 @@ public abstract class Publisher implements CorpusFunction {
         for (Class<? extends CorpusData> cl : cdc) {
             IsUsableFor.add(cl);
         }
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public Boolean getCanFix() {
+        return canfix;
     }
 
 }
