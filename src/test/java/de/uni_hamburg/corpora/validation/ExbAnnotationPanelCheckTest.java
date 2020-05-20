@@ -58,11 +58,11 @@ public void testCheck() throws Exception {
             Collection<CorpusData> cdc;
             //what happens when we check annotation files
             for (CorpusData cd : corp.getAnnotationspecification()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
             }
             //what happens when we check exb files
             for (CorpusData cd : corp.getContentdata()){
-                assertNotNull(instance.check(cd));
+                assertNotNull(instance.function(cd,false));
             }
     }
 

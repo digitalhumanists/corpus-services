@@ -8,6 +8,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -25,8 +26,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.cli.Option;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -54,7 +53,8 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
     final List<String> directorywhitelist;
 
     public ComaFileCoverageChecker() {
-        super("coma-filecoverage");
+        //no fixing available
+        super(false);
         // these are acceptable
         whitelist = new ArrayList<String>();
         whitelist.add(".git");
@@ -66,254 +66,16 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         directorywhitelist.add("curation");
         directorywhitelist.add("resources");
         directorywhitelist.add("metadata");
-    }
-
-    /**
-     * Check for existence of files in a coma file.
-     *
-     * @return true, if all files were found, false otherwise
-     */
-    public Report oldCheck(String s) {
-        Report stats = new Report();
-        try {
-            stats = oldExceptionalCheck(s);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        }
-        return stats;
-    }
-
-    private String stripPrefix(String path, String prefix) {
-        return path.replaceFirst("^" + prefix.replace("\\", "\\\\")
-                + File.separator.replace("\\", "\\\\"), "");
-
-    }
-
-    private Report oldExceptionalCheck(String data)
-            throws SAXException, IOException, ParserConfigurationException {
-        Set<String> allFilesPaths = new HashSet<String>();
-        Report stats = new Report();
-        if (settings.getDataDirectory() != null) {
-            Stack<File> dirs = new Stack<File>();
-            dirs.add(settings.getDataDirectory());
-            String prefix = settings.getDataDirectory().getCanonicalPath();
-            while (!dirs.empty()) {
-                File files[] = dirs.pop().listFiles();
-                for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
-                        continue;
-                    } else if (f.isDirectory()) {
-                        dirs.add(f);
-                    } else if (f.getName().endsWith(".coma")) {
-                        comacounter++;
-                        if (comacounter > 1) {
-                            stats.addCritical(function, cd, "There is more than one coma file in your corpus " + f.getName());
-                        }
-                        System.out.println(comacounter);
-                        continue;
-                    } else {
-                        String relPath = stripPrefix(f.getCanonicalPath(),
-                                prefix);
-                        if (relPath.equals(f.getCanonicalPath())) {
-                            System.err.println("Cannot figure out relative path"
-                                    + " for: " + f.getCanonicalPath());
-                        } else {
-                            allFilesPaths.add(relPath);
-                        }
-                    }
-                }
-            }
-        }
-        if (settings.getBaseDirectory() != null) {
-            Stack<File> dirs = new Stack<File>();
-            dirs.add(settings.getBaseDirectory());
-            String prefix = settings.getBaseDirectory().getCanonicalPath();
-            while (!dirs.empty()) {
-                File files[] = dirs.pop().listFiles();
-                for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
-                        continue;
-                    } else if (f.isDirectory()) {
-                        dirs.add(f);
-                    } else if (f.getName().endsWith(".coma")) {
-                        comacounter++;
-                        if (comacounter > 1) {
-                            stats.addCritical(function, cd, "There is more than one coma file in your corpus " + f.getName());
-                        }
-                        System.out.println(comacounter);
-                        continue;
-                    } else {
-                        String relPath = stripPrefix(f.getCanonicalPath(),
-                                prefix);
-                        if (relPath.equals(f.getCanonicalPath())) {
-                            System.err.println("Cannot figure out relative path"
-                                    + " for: " + f.getCanonicalPath());
-                        } else {
-                            allFilesPaths.add(relPath);
-                        }
-                    }
-                }
-            }
-        }
-        if (allFilesPaths.size() == 0) {
-            Stack<File> dirs = new Stack<File>();
-            dirs.add(referenceFile);
-            String prefix = referencePath;
-            while (!dirs.empty()) {
-                File files[] = dirs.pop().listFiles();
-                for (File f : files) {
-                    if (whitelist.contains(f.getName()) || fileendingwhitelist.contains(getFileExtension(f)) || directorywhitelist.contains(f.getParentFile().getName()) || directorywhitelist.contains(f.getParentFile().getParentFile().getName())) {
-                        continue;
-                    } else if (f.isDirectory()) {
-                        dirs.add(f);
-                    } else if (f.getName().endsWith(".coma")) {
-                        comacounter++;
-                        if (comacounter > 1) {
-                            stats.addCritical(function, cd, "There is more than one coma file in your corpus " + f.getName());
-                        }
-                        System.out.println(comacounter);
-                        continue;
-                    } else {
-                        String relPath = stripPrefix(f.getCanonicalPath(),
-                                prefix);
-                        if (relPath.equals(f.getCanonicalPath())) {
-                            System.err.println("Cannot figure out relative path"
-                                    + " for: " + f.getCanonicalPath());
-                        } else {
-                            allFilesPaths.add(relPath);
-                        }
-                    }
-                }
-            }
-        }
-        Set<String> NSLinksPaths = new HashSet<String>();
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(TypeConverter.String2InputStream(data));
-        NodeList nslinks = doc.getElementsByTagName("NSLink");
-        for (int i = 0; i < nslinks.getLength(); i++) {
-            Element nslink = (Element) nslinks.item(i);
-            NodeList nstexts = nslink.getChildNodes();
-            for (int j = 0; j < nstexts.getLength(); j++) {
-                Node maybeText = nstexts.item(j);
-                if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                    System.err.print("This is not a text node: "
-                            + maybeText);
-                    continue;
-                }
-                Text nstext = (Text) nstexts.item(j);
-                String nspath = nstext.getWholeText();
-                // added this line so it compares Coma NSLinks in the correct format of the OS
-                // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn#t be the case anyway
-                nspath = nspath.replace('/', File.separatorChar);
-                System.out.println(nspath);
-                NSLinksPaths.add(nspath);
-            }
-        }
-        Set<String> RelPaths = new HashSet<String>();
-        NodeList relpathnodes = doc.getElementsByTagName("relPath");
-        for (int i = 0; i < relpathnodes.getLength(); i++) {
-            Element relpathnode = (Element) relpathnodes.item(i);
-            NodeList reltexts = relpathnode.getChildNodes();
-            for (int j = 0; j < reltexts.getLength(); j++) {
-                Node maybeText = reltexts.item(j);
-                if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                    System.err.print("This is not a text node: "
-                            + maybeText);
-                    continue;
-                }
-                Text reltext = (Text) reltexts.item(j);
-                String relpath = reltext.getWholeText();
-                // added this line so it compares Coma NSLinks in the correct format of the OS
-                // it still doesn't work if there are absoulte paths in the NSlinks, but that shouldn't be the case anyway
-                relpath = relpath.replace('/', File.separatorChar);
-                System.out.println(relpath);
-                RelPaths.add(relpath);
-            }
-        }
-        Set<String> comaPaths = new HashSet<String>(NSLinksPaths);
-        comaPaths.addAll(RelPaths);
-        for (String s : allFilesPaths) {
-            if (comaPaths.contains(s)) {
-                stats.addCorrect(function, cd, "File is both in coma and filesystem" + s);
-            } else {
-                stats.addCritical(function, cd, "File on filesystem is not explained in coma" + s);
-            }
-        }
-        return stats;
-    }
-
-    public Report doMain(String[] args) {
-        settings = new ValidatorSettings("FileCoverageChecker",
-                "Checks Exmaralda .coma file against directory, to find "
-                + "undocumented files",
-                "If input is a directory, performs recursive check "
-                + "from that directory, otherwise checks input file");
-        settings.handleCommandLine(args, new ArrayList<Option>());
-        if (settings.isVerbose()) {
-            System.out.println("Checking coma file against directory...");
-        }
-        Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            if (settings.isVerbose()) {
-                System.out.println(" * " + f.getName());
-            }
-            try {
-                comaLoc = f.getName();
-                String s = TypeConverter.InputStream2String(new FileInputStream(f));
-                referencePath = "./";
-                if (f.getParentFile() != null) {
-                    referenceFile = f.getParentFile();
-                    referencePath = f.getParentFile().getCanonicalPath();
-                }
-                stats = oldCheck(s);
-            } catch (FileNotFoundException fnfe) {
-                fnfe.printStackTrace();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-        return stats;
-    }
-
-    public static void main(String[] args) {
-        ComaFileCoverageChecker checker = new ComaFileCoverageChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
-    }
-
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown file reading error");
-        } catch (URISyntaxException ex) {
-            stats.addException(ex, function, cd, "Unknown file reading error");
-        }
-        return stats;
+        //they are not needed before publication
+        directorywhitelist.add("corpus-utilities");
+        directorywhitelist.add("corpus-materials");
     }
 
     /**
      * Main functionality of the feature: checks whether files are both in coma
      * file and file system.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
         Report stats = new Report();
         // FIXME:
@@ -363,7 +125,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                                 String relPath = stripPrefix(a.getCanonicalPath(),
                                         prefix);
                                 if (relPath.equals(a.getCanonicalPath())) {
-                                    System.err.println("Cannot figure out relative path"
+                                    System.out.println("Cannot figure out relative path"
+                                            + " for: " + a.getCanonicalPath());
+                                    stats.addCritical(function, cd, "Cannot figure out relative path"
                                             + " for: " + a.getCanonicalPath());
                                 } else {
                                     allFilesPaths.add(relPath);
@@ -394,7 +158,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                                 String relPath = stripPrefix(b.getCanonicalPath(),
                                         prefix);
                                 if (relPath.equals(b.getCanonicalPath())) {
-                                    System.err.println("Cannot figure out relative path"
+                                    System.out.println("Cannot figure out relative path"
+                                            + " for: " + b.getCanonicalPath());
+                                     stats.addCritical(function, cd, "Cannot figure out relative path"
                                             + " for: " + b.getCanonicalPath());
                                 } else {
                                     allFilesPaths.add(relPath);
@@ -425,7 +191,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                                 String relPath = stripPrefix(c.getCanonicalPath(),
                                         prefix);
                                 if (relPath.equals(c.getCanonicalPath())) {
-                                    System.err.println("Cannot figure out relative path"
+                                    System.out.println("Cannot figure out relative path"
+                                            + " for: " + c.getCanonicalPath());
+                                     stats.addCritical(function, cd, "Cannot figure out relative path"
                                             + " for: " + c.getCanonicalPath());
                                 } else {
                                     allFilesPaths.add(relPath);
@@ -445,7 +213,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     for (int j = 0; j < nstexts.getLength(); j++) {
                         Node maybeText = nstexts.item(j);
                         if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                            System.err.print("This is not a text node: "
+                            System.out.println("This is not a text node: "
                                     + maybeText);
                             continue;
                         }
@@ -466,7 +234,7 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                     for (int j = 0; j < reltexts.getLength(); j++) {
                         Node maybeText = reltexts.item(j);
                         if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                            System.err.print("This is not a text node: "
+                            System.out.println("This is not a text node: "
                                     + maybeText);
                             continue;
                         }
@@ -497,14 +265,10 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         return stats;
     }
 
-    /**
-     * Fix to this issue is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "File names which do not comply with conventions cannot be fixed automatically");
-        return report;
+    private String stripPrefix(String path, String prefix) {
+        return path.replaceFirst("^" + prefix.replace("\\", "\\\\")
+                + File.separator.replace("\\", "\\\\"), "");
+
     }
 
     /**
@@ -521,10 +285,6 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
             report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
-    }
-
-    public Report check(String data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void addWhiteListString(String s) {
@@ -547,8 +307,9 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         return extension;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -557,5 +318,14 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
                 + "file does not exist, issues a warning;";
         return description;
     }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
+    }
+
 
 }

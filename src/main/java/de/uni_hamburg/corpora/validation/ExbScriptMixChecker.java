@@ -8,12 +8,14 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.XMLData;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,59 +54,15 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     Map<String, Pattern> dictScripts = new HashMap<>();
     
     public ExbScriptMixChecker() {
-        super("ScriptMixChecker");
+        //no fixing option available
+        super(false);
         dictScripts.put("Cyrillic", rxCyr);
         dictScripts.put("Latin", rxLat);
         dictScripts.put("Greek", rxGreek);
         dictScripts.put("Armenian", rxArmenian);
         dictScripts.put("Georgian", rxGeorgian);
     }
-    
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, function, cd, "Unknown parsing error");          
-        } catch (SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, function, cd, "Unknown parsing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Unknown parsing error");
-        }
-        return stats;
-    }
 
-    /**
-     * Main functionality of the feature; checks text tiers in exb files
-     * (their names are listed in lsTiersToCheck) and looks for words
-     * that contain a mixture of characters in different scripts.
-     */
-    private Report exceptionalCheck(CorpusData cd)
-            throws SAXException, IOException, ParserConfigurationException,
-                   TransformerException, XPathExpressionException {
-        // test for mixed scripts without fixing errors
-        Report stats = testScriptMix(cd, false);
-        return stats; // return all the warnings
-    }
-
-    /**
-     * Method for correcting the mistakes (not implemented now).
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        Report report = new Report();
-        report.addCritical(function, cd, "Fixing option is not available");
-        return report;
-    }
 
     /**
      * Default function which determines for what type of files (basic
@@ -123,7 +81,8 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     }
     
     
-    private Report testScriptMix(CorpusData cd, Boolean fix) throws IOException, SAXException {
+    @Override
+    public Report function(CorpusData cd, Boolean fix) throws IOException, SAXException {
         //so this is easier this way :)
         Document doc = null;
         XMLData xml = (XMLData)cd; 
@@ -200,5 +159,14 @@ public class ExbScriptMixChecker extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         return "A functions that checks for mixed scripts (e.g. Cyrillic/Latin) in the transcription tiers of EXMARaLDA basic transcriptions and issues warnings if they are found";
+    }
+
+     @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 }

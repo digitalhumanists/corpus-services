@@ -9,12 +9,14 @@
 
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -39,7 +41,7 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
 
     public ExbSchemaChecker() {
-        super("exb-dtd");
+        super(false);
     }
 
     /**
@@ -47,37 +49,10 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
      */
     
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
-    * checks for exceptions.
-    */   
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch(JexmaraldaException je) {
-            stats.addException(je, function, cd, "Unknown parsing error");
-        } catch(JDOMException jdome) {
-            stats.addException(jdome, function, cd, "Unknown parsing error");
-        } catch(SAXException saxe) {
-            stats.addException(saxe, function, cd, "Unknown parsing error");
-        } catch(IOException ioe) {
-            stats.addException(ioe, function, cd, "Reading/writing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, function, cd, "Reading/writing error");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, function, cd, "Reading/writing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, function, cd, "Reading/writing error");
-        }
-        return stats;
-    }
-    
-    /**
     * Main functionality of the feature; validates an exb file with a DTD file.
     */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, XPathExpressionException{
         System.out.println("Checking the exb file against DTD...");
         String exbSchemaPath = new File("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\schemas\\exb_schema.xsd").getAbsolutePath();
@@ -91,16 +66,6 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
         validator.setErrorHandler(eh);
         validator.validate(xmlStream);
         return eh.getErrors();
-    }
-    
-    /**
-    * No fix is applicable for this feature.
-    */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(function, cd,
-                "No fix is applicable for this feature.");
-        return report;
     }
     
     /**
@@ -125,6 +90,15 @@ public class ExbSchemaChecker extends Checker implements CorpusFunction {
     public String getDescription() {
         String description = "This class validates a exb file with its DTD file. ";
         return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
 }
 
