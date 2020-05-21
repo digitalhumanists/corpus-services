@@ -12,7 +12,6 @@ import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -84,15 +83,15 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     XSLTransformer transformer2;
     XSLTransformer transformer3;
 
-    Report report;
+    Report report = new Report();
     CorpusIO cio = new CorpusIO();
 
     //debugging
-    String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
-    String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
-    String intermediate3 = "file:///home/anne/Schreibtisch/TEI/intermediate3.xml";
-    String intermediate4 = "file:///home/anne/Schreibtisch/TEI/intermediate4.xml";
-    String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
+    //String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
+    //String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
+    //String intermediate3 = "file:///home/anne/Schreibtisch/TEI/intermediate3.xml";
+    //String intermediate4 = "file:///home/anne/Schreibtisch/TEI/intermediate4.xml";
+    //String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
 
     static Boolean INEL = false;
     static Boolean TOKEN = false;
@@ -100,8 +99,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     URL cdURL;
 
-    public EXB2HIATISOTEI() {
-    }
 
     /*
     * this method takes a CorpusData object, converts it into HIAT ISO TEI and saves it 
@@ -238,9 +235,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException, FSMException, JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
         if (INEL) {
-            return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
-        } else if (TOKEN) {
-            return convertEXB2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
+            return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);        
         } else {
             return convertEXB2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         }
@@ -337,7 +332,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             //now we get a document of the first transformation, the iso tei skeleton
             teiDocument = TypeConverter.String2JdomDocument(result);
             System.out.println("STEP 1 completed.");
-            cio.write(teiDocument, new URL(intermediate1));
+            //cio.write(teiDocument, new URL(intermediate1));
 
             /*
         * this method will take the segmented transcription and, for each speaker
@@ -361,7 +356,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             textNode.addContent(uElements);
             if (teiDocument != null) {
                 System.out.println("STEP 2 completed.");
-                cio.write(teiDocument, new URL(intermediate2));
+                //cio.write(teiDocument, new URL(intermediate2));
                 Document transformedDocument = null;
                 if (INEL) {
                     xslt.setParameter("mode", "inel");
@@ -373,7 +368,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     //fix for issue #89
                     textNode = (Element) (xp.selectSingleNode(transformedDocument));
                     System.out.println("STEP 3 completed.");
-                    cio.write(transformedDocument, new URL(intermediate3));
+                    //cio.write(transformedDocument, new URL(intermediate3));
                     // now take care of the events from tiers of type 'd'
                     XPath xp2 = XPath.newInstance("//segmentation[@name='Event']/ats");
                     List events = xp2.selectNodes(segmentedTranscription);
@@ -433,7 +428,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     }
                     //generate element ids
                     generateWordIDs(transformedDocument);
-                    cio.write(transformedDocument, new URL(intermediate4));
+                    //cio.write(transformedDocument, new URL(intermediate4));
                     if (transformedDocument != null) {
                         //Here the annotations are taken care of
                         //this is important for the INEL morpheme segmentations
@@ -443,7 +438,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         if (result3 != null) {
                             finalDocument = IOUtilities.readDocumentFromString(result3);
                             if (finalDocument != null) {
-                                cio.write(finalDocument, new URL(intermediate5));
+                                //cio.write(finalDocument, new URL(intermediate5));
                             }
                         }
                     }
