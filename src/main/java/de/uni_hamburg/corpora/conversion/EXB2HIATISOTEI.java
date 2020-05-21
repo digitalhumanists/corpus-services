@@ -6,6 +6,7 @@
 package de.uni_hamburg.corpora.conversion;
 
 import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
@@ -86,7 +87,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     Report report;
     CorpusIO cio = new CorpusIO();
 
-    CorpusIO cio = new CorpusIO();
     //debugging
     String intermediate1 = "file:///home/anne/Schreibtisch/TEI/intermediate1.xml";
     String intermediate2 = "file:///home/anne/Schreibtisch/TEI/intermediate2.xml";
@@ -101,7 +101,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     URL cdURL;
 
     public EXB2HIATISOTEI() {
-        super("EXB2HIATISOTEI");
     }
 
     /*
@@ -128,32 +127,22 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             JDOMException,
             IOException,
             Exception {
-        return convertCD2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
+       //it cannot be a coma file alone
+       return convertEXB2MORPHEMEHIATISOTEI(cd);
+    }
+    
+        public Report function(Corpus c) throws SAXException,
+            FSMException,
+            XSLTransformException,
+            JDOMException,
+            IOException,
+            Exception {
+            COMA = true;
+            ComaData comad = c.getComaData();
+        return convertCOMA2MORPHEMEHIATISOTEI(comad);
     }
 
- public Report convertCD2MORPHEMEHIATISOTEI(CorpusData cd) {
-        cdURL = cd.getURL();
-        //check if the CD file is Coma or Exb
-
-        cdURL = cd.getURL();
-        //check if the CD file is Coma or Exb
-        Class cl;
-        try {
-            cl = Class.forName("de.uni_hamburg.corpora.ComaData");
-            if (cl.isInstance(cd)) {
-                COMA = true;
-                report = convertCOMA2MORPHEMEHIATISOTEI(cd);
-            } else {
-                convertEXB2MORPHEMEHIATISOTEI(cd);
-            }
-        } catch (ClassNotFoundException ex) {
-            report.addException(ex, function, cd, "ClassNotFound Exception");
-
-        }
-        return report;
-    }
-
-    public Report convertCOMA2MORPHEMEHIATISOTEI(CorpusData cd) {
+    public Report convertCOMA2MORPHEMEHIATISOTEI(CorpusData cd) throws ClassNotFoundException {
         try {
             /*
             Following Code is based on Code from Thomas
@@ -247,7 +236,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         return report;
     }
 
-    public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd) {
+    public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException, FSMException, JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
         if (INEL) {
             return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
         } else if (TOKEN) {
@@ -264,8 +253,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     * and gives back a report if it worked
      */
     public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd,
-            boolean includeFullText, String XPath2Morphemes) {
-        try {
+            boolean includeFullText, String XPath2Morphemes) throws SAXException, FSMException, JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
             Document stdoc = cd2SegmentedTranscription(cd);
             //TODO paramter in the future for deep & flat segmentation name
             //MAGIC - now the real work happens
@@ -289,25 +277,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                 report.addCritical(function, cd, "ISO TEI conversion of file was not possible because of unknown error");
             }
 
-        } catch (SAXException ex) {
-            report.addException(ex, function, cd, "Unknown exception error");
-        } catch (FSMException ex) {
-            report.addException(ex, function, cd, "Unknown finite state machine error");
-        } catch (MalformedURLException ex) {
-            report.addException(ex, function, cd, "Unknown file URL reading error");
-        } catch (JDOMException ex) {
-            report.addException(ex, function, cd, "Unknown file reading error");
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "Unknown file reading error");
-        } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "XSL transformer error");
-        } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "Parser error");
-        } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "XPath error");
-        } catch (URISyntaxException ex) {
-            report.addException(ex, function, cd, "ComaPath URI error");
-        }
         return report;
     }
     
@@ -352,11 +321,11 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         String transform_stylesheet = cio.readInternalResourceAsString(SC_TO_TEI_U_STYLESHEET_ISO);
 
         String sort_and_clean_stylesheet = cio.readInternalResourceAsString(SORT_AND_CLEAN_STYLESHEET_ISO);
-        
+
         String time_2_token_stylesheet = cio.readInternalResourceAsString(TIME2TOKEN_SPAN_REFERENCES);
         String remove_time_stylesheet = cio.readInternalResourceAsString(REMOVE_TIME);
         String spans_2_attributes_stylesheet = cio.readInternalResourceAsString(SPANS2_ATTRIBUTES);
-       
+
         Document teiDocument = null;
 
         XSLTransformer xslt = new XSLTransformer();
@@ -846,38 +815,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     }
 
     @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        try {
-            //convert the file
-            //save the converted file
-            //TODO
-            //doesn't really make sense to have check only here
-            report = fix(cd);
-        } catch (JDOMException ex) {
-            report.addException(ex, function, cd, "unknown exception error");
-        } catch (IOException ex) {
-            report.addException(ex, function, cd, "unknown exception error");
-        }
-        return report;
-    }
-
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        //convert the file
-        //save the converted file next to corpus data file (url)
-        report = new Report();
-        try {
-            report = convertCD2MORPHEMEHIATISOTEI(cd);
-        } catch (XSLTransformException ex) {
-            report.addException(ex, function, cd, "unknown XSLT error");
-        } catch (Exception ex) {
-            report.addException(ex, function, cd, "unknown exception error");
-        }
-        report.addCorrect(function, "ISO TEI conversion of file " + cd.getURL().getFile() + " was successful");
-        return report;
-    }
-
-    @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
@@ -895,8 +832,5 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         String description = "This class takes an exb as input and converts it into ISO standard TEI format. ";
         return description;
     }
-    
-    public void setLanguage(String lang) {
-        language = lang;
-    }
+
 }

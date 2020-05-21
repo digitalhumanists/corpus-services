@@ -14,10 +14,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -45,18 +50,15 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath) {
-        super("AddCSVMetadataToComa");
     }
 
     public AddCSVMetadataToComa() {
-        super("AddCSVMetadataToComa");
     }
 
     /**
      * creates a new instance of AddCSVMetadataToComa
      */
     public AddCSVMetadataToComa(String corpusPath, String csvPath, String SpeakerOrCommunication) {
-        super("AddCSVMetadataToComa");
         this.comaFile = corpusPath;
         this.csvFile = csvPath;
         this.SpeakerOrCommunication = SpeakerOrCommunication;
@@ -264,11 +266,6 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
         }
     }
 
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
@@ -295,8 +292,9 @@ public class AddCSVMetadataToComa extends Converter implements CorpusFunction {
     }
 
     @Override
-    public Report execute(Corpus c, boolean fix) {
+    public Report function(Corpus c) throws Exception, NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 
 }
