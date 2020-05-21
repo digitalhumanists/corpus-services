@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -63,11 +64,9 @@ public class ListHTML extends Visualizer {
     String segmentationAlgorithm = "GENERIC";
 
     public ListHTML() {
-        super("ListHTML");
     }
 
     public ListHTML(String btAsString, String segmAlgorithm) {
-        super("ListHTML");
         createFromBasicTranscription(btAsString, segmAlgorithm);
     }
 
@@ -265,7 +264,7 @@ public class ListHTML extends Visualizer {
     }
 
     @Override
-    public Report visualize(CorpusData ccd) {
+    public Report function(CorpusData ccd) {
         try {
             cd = ccd;
             stats = new Report();
@@ -284,6 +283,16 @@ public class ListHTML extends Visualizer {
         return stats;
     }
 
+    @Override
+    public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
+
+        Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
+        for (BasicTranscriptionData bt : btc) {
+            stats.merge(function(bt));
+        }
+        return stats;
+    }
+    
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
@@ -352,8 +361,4 @@ public class ListHTML extends Visualizer {
         return description;
     }
 
-    @Override
-    public Report execute(Corpus c, boolean fix) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
