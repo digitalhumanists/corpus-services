@@ -268,6 +268,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException, FSMException, JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
         if (INEL) {
+            TOKEN = true;
             return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);        
         } else {
             return convertEXB2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
