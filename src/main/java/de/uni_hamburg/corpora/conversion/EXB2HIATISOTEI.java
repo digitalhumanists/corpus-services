@@ -121,30 +121,31 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
      */
 
     public Report function(CorpusData cd) throws SAXException,
-            FSMException,
-            XSLTransformException,
-            JDOMException,
-            IOException,
-            Exception {
-       //it cannot be a coma file alone       
-       return convertEXB2MORPHEMEHIATISOTEI(cd);
+        FSMException,
+        XSLTransformException,
+        JDOMException,
+        IOException,
+        Exception {
+        //it cannot be a coma file alone
+               
+        return convertEXB2MORPHEMEHIATISOTEI(cd);
     }
     
-        public Report function(Corpus c) throws SAXException,
-            FSMException,
-            XSLTransformException,
-            JDOMException,
-            IOException,
-            Exception {
-            COMA = true;
-            ComaData comad = c.getComaData();
+    public Report function(Corpus c) throws SAXException,
+        FSMException,
+        XSLTransformException,
+        JDOMException,
+        IOException,
+        Exception {
+        COMA = true;
+        ComaData comad = c.getComaData();
+       
         return convertCOMA2MORPHEMEHIATISOTEI(comad);
     }
 
     public Report convertCOMA2MORPHEMEHIATISOTEI(CorpusData cd) throws ClassNotFoundException {
         try {
             
-            System.out.println("STEP Coma.");
             /*
             Following Code is based on Code from Thomas
             https://gitlab.rrz.uni-hamburg.de/Bae2551/ids-sample/blob/master/src/java/scripts/ConvertHAMATAC.java
@@ -152,14 +153,24 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             // read COMA doc
             Namespace teiNamespace = Namespace.getNamespace("", "http://www.tei-c.org/ns/1.0");
             Document comaDoc = FileIO.readDocumentFromLocalFile(cd.getURL().getPath());
+            
+            //shallow copy of Corpus element from Coma
+            Element CorpusElement = (Element)XPath.selectSingleNode(comaDoc, "/Corpus");
+            CorpusElement = (Element)CorpusElement.clone();
+            
             // select communication elements in COMA xml
             List<Element> communicationsList = XPath.selectNodes(comaDoc, "//Communication");
+            
+                        
             // iterate through communications
             for (Element communicationElement : communicationsList) {
                 // select basic transcriptions
                 List<Element> transcriptionsList = XPath.selectNodes(communicationElement, "descendant::Transcription[ends-with(Filename,'.exb')]");
                 // iterate through basic transcriptions
+                                
+                    
                 for (Element transcriptionElement : transcriptionsList) {
+                                        
                     String transcriptID = transcriptionElement.getAttributeValue("Id");
                     String nsLink = transcriptionElement.getChildText("NSLink");
                     //choose exb fullPath
@@ -172,18 +183,25 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         nameOfDeepSegmentation,
                         nameOfFlategmentation,
                         false, cd);
+                    Element finalRoot = finalDoc.getRootElement();
+                    
                     //now add the coma id information
                     // <idno type="AGD-ID">FOLK_E_00011_SE_01_T_04_DF_01</idno>
+                    
+                    /*******************************************************************************
+                    /*** Where in the TEI XML should this be attached? Current position is wrong ***
+                    /***
                     Element transcriptIdnoElement = new Element("idno", teiNamespace);
                     transcriptIdnoElement.setAttribute("type", "HZSK-ID");
                     transcriptIdnoElement.setText(transcriptID);
-                    finalDoc.getRootElement().addContent(0, transcriptIdnoElement);
+                    finalRoot.addContent(0, transcriptIdnoElement);
+                    ********************************************************************************/
                     
-                    
+                    //add IDs from Coma to tei:person elements
                     XPath xp1 = XPath.newInstance("//tei:person");
                     xp1.addNamespace(teiNamespace);
-                    List<Element> personL = xp1.selectNodes(finalDoc);
-                    for (Element personE : personL) {
+                    List<Element> personL = xp1.selectNodes(finalRoot);
+                    for (Element personE : personL) {                        
                         // <person xml:id="SPK0" n="Sh" sex="2">
                         String personSigle = personE.getAttributeValue("n");
                         String xp2 = "//Speaker[Sigle='" + personSigle + "']";
@@ -192,40 +210,53 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         Element speakerIdnoElement = new Element("idno", teiNamespace);
                         speakerIdnoElement.setAttribute("type", "HZSK-ID");
                         speakerIdnoElement.setText(speakerID);
-                        personE.addContent(0, speakerIdnoElement);                        
+                        personE.addContent(speakerIdnoElement);       
+                        
                     }
+                    
                     
                     // filling xenoData element with Coma metadata
                     XPath xenoDataXP = XPath.newInstance("//tei:xenoData");
                     xenoDataXP.addNamespace(teiNamespace);
-                    List<Element> xenoDataList = xenoDataXP.selectNodes(finalDoc);
+                    List<Element> xenoDataList = xenoDataXP.selectNodes(finalRoot);
                     for (Element xenoDataElement : xenoDataList) {
                         
+                        Element CorpusDataElement = new Element("CorpusData");
+                        
                         //fill xenoData with corresponding Communication element (in CorpusData element)
-                        Namespace comaNamespace = Namespace.getNamespace("", "http://www.exmaralda.org/xml");
-                        Element CorpusDataElement = new Element("CorpusData", comaNamespace);
-                        xenoDataElement.addContent(communicationElement);
-                                                
+                        Element communicationClone = (Element)communicationElement.clone();
+                        CorpusDataElement.addContent(communicationClone);
+                        
                         //fill xenoData with corresponding Speaker elements (in CorpusData element)
                         for (Element personE : personL) {
                             String personSigle = personE.getAttributeValue("n");
                             String xp2 = "//Speaker[Sigle='" + personSigle + "']";
                             Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
-                            xenoDataElement.addContent(speakerE);
+                            Element speakerClone = (Element)speakerE.clone();
+                            CorpusDataElement.addContent(speakerClone);
                         }
                         
                         //fill xenoData with Description element from Coma
                         String DescriptionXP = "/Corpus/Description";
                         Element DescriptionElement = (Element) XPath.selectSingleNode(comaDoc, DescriptionXP);
-                        xenoDataElement.addContent(DescriptionElement);
+                        Element DescriptionClone = (Element)DescriptionElement.clone();
                         
-                        
+                        //set/add the elements
+                        CorpusElement.setContent(CorpusDataElement);
+                        CorpusElement.addContent(DescriptionClone);
+                        xenoDataElement.setContent(CorpusElement);
                     }
                     
                     if (finalDoc != null) {
+                        
+                        //setting the manipulated XML
+                        //finalDoc.setContent(finalRoot);
+                        
                         System.out.println("Merged");
+                        
                         //so is the language of the doc
                         setDocLanguage(finalDoc, language);
+                        
                         //now the completed document is saved
                         //TODO save next to the old cd
                         String filename = cdc.getURL().getFile();
