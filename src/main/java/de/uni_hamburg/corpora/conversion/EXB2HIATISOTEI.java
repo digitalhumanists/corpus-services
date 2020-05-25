@@ -39,6 +39,8 @@ import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 import java.util.*;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -124,7 +126,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             JDOMException,
             IOException,
             Exception {
-       //it cannot be a coma file alone
+       //it cannot be a coma file alone       
        return convertEXB2MORPHEMEHIATISOTEI(cd);
     }
     
@@ -141,12 +143,14 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     public Report convertCOMA2MORPHEMEHIATISOTEI(CorpusData cd) throws ClassNotFoundException {
         try {
+            
+            System.out.println("STEP Coma.");
             /*
             Following Code is based on Code from Thomas
             https://gitlab.rrz.uni-hamburg.de/Bae2551/ids-sample/blob/master/src/java/scripts/ConvertHAMATAC.java
             */
             // read COMA doc
-            Namespace teiNamespace = Namespace.getNamespace("tei", "http://www.tei-c.org/ns/1.0");
+            Namespace teiNamespace = Namespace.getNamespace("", "http://www.tei-c.org/ns/1.0");
             Document comaDoc = FileIO.readDocumentFromLocalFile(cd.getURL().getPath());
             // select communication elements in COMA xml
             List<Element> communicationsList = XPath.selectNodes(comaDoc, "//Communication");
@@ -165,15 +169,16 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     CorpusData cdc = cio.readFileURL(exburl);
                     Document stdoc = cd2SegmentedTranscription(cdc);
                     Document finalDoc  = SegmentedTranscriptionToTEITranscription(stdoc,
-                    nameOfDeepSegmentation,
-                    nameOfFlategmentation,
-                    false, cd);
+                        nameOfDeepSegmentation,
+                        nameOfFlategmentation,
+                        false, cd);
                     //now add the coma id information
                     // <idno type="AGD-ID">FOLK_E_00011_SE_01_T_04_DF_01</idno>
                     Element transcriptIdnoElement = new Element("idno", teiNamespace);
                     transcriptIdnoElement.setAttribute("type", "HZSK-ID");
                     transcriptIdnoElement.setText(transcriptID);
                     finalDoc.getRootElement().addContent(0, transcriptIdnoElement);
+                    
                     
                     XPath xp1 = XPath.newInstance("//tei:person");
                     xp1.addNamespace(teiNamespace);
@@ -187,27 +192,55 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         Element speakerIdnoElement = new Element("idno", teiNamespace);
                         speakerIdnoElement.setAttribute("type", "HZSK-ID");
                         speakerIdnoElement.setText(speakerID);
-                        personE.addContent(0, speakerIdnoElement);
+                        personE.addContent(0, speakerIdnoElement);                        
+                    }
+                    
+                    // filling xenoData element with Coma metadata
+                    XPath xenoDataXP = XPath.newInstance("//tei:xenoData");
+                    xenoDataXP.addNamespace(teiNamespace);
+                    List<Element> xenoDataList = xenoDataXP.selectNodes(finalDoc);
+                    for (Element xenoDataElement : xenoDataList) {
+                        
+                        //fill xenoData with corresponding Communication element (in CorpusData element)
+                        Namespace comaNamespace = Namespace.getNamespace("", "http://www.exmaralda.org/xml");
+                        Element CorpusDataElement = new Element("CorpusData", comaNamespace);
+                        xenoDataElement.addContent(communicationElement);
+                                                
+                        //fill xenoData with corresponding Speaker elements (in CorpusData element)
+                        for (Element personE : personL) {
+                            String personSigle = personE.getAttributeValue("n");
+                            String xp2 = "//Speaker[Sigle='" + personSigle + "']";
+                            Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
+                            xenoDataElement.addContent(speakerE);
+                        }
+                        
+                        //fill xenoData with Description element from Coma
+                        String DescriptionXP = "/Corpus/Description";
+                        Element DescriptionElement = (Element) XPath.selectSingleNode(comaDoc, DescriptionXP);
+                        xenoDataElement.addContent(DescriptionElement);
+                        
                         
                     }
+                    
                     if (finalDoc != null) {
-                System.out.println("Merged");
-                //so is the language of the doc
-                setDocLanguage(finalDoc, language);
-                //now the completed document is saved
-                //TODO save next to the old cd
-                String filename = cdc.getURL().getFile();
-                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
-                System.out.println(url.toString());
-                cio.write(finalDoc, url);
-                System.out.println("document written.");
-                report.addCorrect(function, cdc, "ISO TEI conversion of file was successful");
-            } else {
-                report.addCritical(function, cdc, "ISO TEI conversion of file was not possible because of unknown error");
-            }
+                        System.out.println("Merged");
+                        //so is the language of the doc
+                        setDocLanguage(finalDoc, language);
+                        //now the completed document is saved
+                        //TODO save next to the old cd
+                        String filename = cdc.getURL().getFile();
+                        URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
+                        System.out.println(url.toString());
+                        cio.write(finalDoc, url);
+                        System.out.println("document written.");
+                        report.addCorrect(function, cdc, "ISO TEI conversion of file was successful");
+                    } else {
+                        report.addCritical(function, cdc, "ISO TEI conversion of file was not possible because of unknown error");
+                    }
                     
                 }
             }
+            
             
         } catch (SAXException ex) {
             report.addException(ex, function, cd, "Unknown exception error");

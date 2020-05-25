@@ -164,6 +164,7 @@
                         <label><xsl:comment>Fill me in</xsl:comment></label>
 					</transcriptionDesc>
 				</encodingDesc>
+                                <xenoData></xenoData>
 				<revisionDesc>
 					<!-- ... -->                    
 					<xsl:element name="change">
