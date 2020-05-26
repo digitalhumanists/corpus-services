@@ -25,13 +25,11 @@
     </xsl:param>
     <xsl:param name="tokenizer-regex" select="'\s*[;,]+\s*'" as="xs:string"/>
     
-    <xsl:param name="write-to-file" select="true()" as="xs:boolean"/>
-    
-    
+    <xsl:param name="write-to-file" select="true()" as="xs:boolean"/>        
+    <xsl:param name="file-name" select="tokenize(base-uri(.), '/')[last()]" as="xs:string"/>
     
     
     <!-- ### Global variables ### -->
-    <xsl:variable name="file-name" select="tokenize(base-uri(.), '/')[last()]" as="xs:string"/>
     <xsl:variable name="NEWLINE" as="xs:string"><xsl:text>
 </xsl:text></xsl:variable>
 

@@ -185,16 +185,16 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                         Document stdoc = cd2SegmentedTranscription(cdc);
                         
                         //now use the method to get the iso tei version from the exb file
-                        Document finalDoc = SegmentedTranscriptionToTEITranscription(
+                        Document teiDoc = SegmentedTranscriptionToTEITranscription(
                                 stdoc,
                                 nameOfDeepSegmentation,
                                 nameOfFlategmentation,
                                 false, 
                                 cd); 
 
-                        if (finalDoc != null) {
+                        if (teiDoc != null) {
 
-                            Element finalRoot = finalDoc.getRootElement();
+                            Element finalRoot = teiDoc.getRootElement();
 
                             //shallow copy of Corpus element from Coma
                             Element CorpusElement = (Element)ComaCorpusElem.clone();
@@ -267,13 +267,17 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                             System.out.println("Merged");
 
                             //so is the language of the doc
-                            setDocLanguage(finalDoc, language);
+                            setDocLanguage(teiDoc, language);
 
                             
+                            String filename = cdc.getURL().getFile();
+
                             //apply XSL to TEI for getting Elastic JSON
                             XSLTransformer xt = new XSLTransformer();
-                            String result = xt.transform(TypeConverter.JdomDocument2String(finalDoc), ISOTEI2ESJSON_STYLESHEET);
-                            
+                            xt.setParameter("file-name", filename.substring(filename.lastIndexOf("/"), filename.lastIndexOf(".")));
+                            xt.setParameter("write-to-file", false);
+                            String result = xt.transform(TypeConverter.JdomDocument2String(teiDoc), cio.readInternalResourceAsString(ISOTEI2ESJSON_STYLESHEET));
+
                             JSONresult += result;
                             
                             //now the completed document is saved
@@ -361,11 +365,15 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                 //so is the language of the doc
                 setDocLanguage(teiDoc, language);
                 
+                
+                String filename = cd.getURL().getFile();
+                
                 //apply XSL to TEI for getting Elastic JSON
                 XSLTransformer xt = new XSLTransformer();
-                String JSONresult = xt.transform(TypeConverter.JdomDocument2String(teiDoc), ISOTEI2ESJSON_STYLESHEET);
+                xt.setParameter("file-name", filename.substring(filename.lastIndexOf("/"), filename.lastIndexOf(".")));
+                xt.setParameter("write-to-file", false);
+                String JSONresult = xt.transform(TypeConverter.JdomDocument2String(teiDoc), cio.readInternalResourceAsString(ISOTEI2ESJSON_STYLESHEET));
 
-                String filename = cd.getURL().getFile();
                 URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + ".esbulk");
                 System.out.println(url.toString());
                 cio.write(JSONresult, url);
