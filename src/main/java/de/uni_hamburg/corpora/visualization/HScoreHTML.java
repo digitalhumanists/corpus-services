@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -26,6 +27,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
@@ -43,11 +45,9 @@ public class HScoreHTML extends Visualizer {
     String corpusname = "";
 
     public HScoreHTML() {
-        super("HScoreHTML");
     }
 
     public HScoreHTML(String btAsString) {
-        super("HScoreHTML");
         try {
             createFromBasicTranscription(btAsString);
         } catch (TransformerException ex) {
@@ -118,7 +118,7 @@ public class HScoreHTML extends Visualizer {
     }
 
     @Override
-    public Report visualize(CorpusData cod) {
+    public Report function(CorpusData cod) {
         try {
             cd = cod;
             stats = new Report();
@@ -139,6 +139,16 @@ public class HScoreHTML extends Visualizer {
             stats.addException(SERVICE_NAME, ex, "XML Exception");
         } catch (XPathExpressionException ex) {
             stats.addException(SERVICE_NAME, ex, "XPath Exception");
+        }
+        return stats;
+    }
+    
+    @Override
+    public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
+
+        Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
+        for (BasicTranscriptionData bt : btc) {
+            stats.merge(function(bt));
         }
         return stats;
     }
@@ -176,6 +186,10 @@ public class HScoreHTML extends Visualizer {
             stats.addException(SERVICE_NAME, uee, "encoding exception");
         } catch (IOException ioe) {
             stats.addException(SERVICE_NAME, ioe, "input output exception");
+        } catch (JDOMException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stats;
     }
@@ -185,11 +199,6 @@ public class HScoreHTML extends Visualizer {
         String description = "This class creates an html visualization "
                 + "in the HScore format from an exb. ";
         return description;
-    }
-
-    @Override
-    public Report execute(Corpus c, boolean fix) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

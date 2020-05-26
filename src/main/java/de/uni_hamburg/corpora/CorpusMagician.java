@@ -4,7 +4,6 @@ import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
-import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
@@ -359,7 +358,7 @@ public class CorpusMagician {
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
                             cog.setInel();
                             System.out.println("Mode set to inel");
                         }
@@ -412,7 +411,7 @@ public class CorpusMagician {
                     XSLTChecker xc = new XSLTChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
                             xc.setXSLresource("/xsl/inel-checks.xsl");
                             System.out.println("Mode set to inel");
                         }
@@ -464,29 +463,49 @@ public class CorpusMagician {
                     cf2strcorpusfunctions.add(ngtcwa);
                     break;
                 case "exb2inelisotei":
-                    EXB2INELISOTEI eiit = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiit = new EXB2HIATISOTEI();
+                    eiit.setInel();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
                         if (cfProperties.containsKey(lang)) {
                             eiit.setLanguage(cfProperties.getProperty(lang));
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
                         }
+                        if (cfProperties.containsKey(fsm)) {
+                            eiit.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
                     }
                     cf2strcorpusfunctions.add(eiit);
                     break;
                 //Maybe get rid of those special cases too!
                 case "exb2inelisoteisel":
-                    EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitsel = new EXB2HIATISOTEI();
+                    eiitsel.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                        eiitsel.setFSM(cfProperties.getProperty(fsm));
+                        System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
                     eiitsel.setLanguage("sel");
                     cf2strcorpusfunctions.add(eiitsel);
                     break;
                 case "exb2inelisoteidlg":
-                    EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitdlg = new EXB2HIATISOTEI();
+                    eiitdlg.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                        eiitdlg.setFSM(cfProperties.getProperty(fsm));
+                        System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
                     eiitdlg.setLanguage("dlg");
                     cf2strcorpusfunctions.add(eiitdlg);
                     break;
                 case "exb2inelisoteixas":
-                    EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitxas = new EXB2HIATISOTEI();
+                    eiitxas.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                        eiitxas.setFSM(cfProperties.getProperty(fsm));
+                        System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
                     eiitxas.setLanguage("xas");
                     cf2strcorpusfunctions.add(eiitxas);
                     break;
@@ -497,6 +516,19 @@ public class CorpusMagician {
                         if (cfProperties.containsKey(lang)) {
                             ehit.setLanguage(cfProperties.getProperty(lang));
                             System.out.println("Language set to " + cfProperties.getProperty(lang));
+                        }
+                        if (cfProperties.containsKey(mode)) {
+                            if (cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
+                                ehit.setInel();
+                                System.out.println("Mode set to inel");
+                            } else if (cfProperties.getProperty(mode).toLowerCase().equals("token")) {
+                                ehit.setToken();
+                                System.out.println("Mode set to token");
+                            }
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            ehit.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
                     }
                     cf2strcorpusfunctions.add(ehit);
@@ -827,17 +859,7 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        Collection<Class<? extends CorpusData>> usableTypes = cf.getIsUsableFor();
-
-        //if the corpus files are an instance
-        //of the class cl, run the function
-        for (CorpusData cd : c.getCorpusData()) {
-            if (usableTypes.contains(cd.getClass())) {
-                Report newReport = runCorpusFunction(cd, cf, fix);
-                report.merge(newReport);
-            }
-
-        }
+        cf.execute(c, fix);
         return report;
     }
 

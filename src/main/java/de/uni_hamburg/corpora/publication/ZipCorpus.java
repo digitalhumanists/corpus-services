@@ -18,13 +18,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import org.exmaralda.partitureditor.fsm.FSMException;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.jdom.JDOMException;
-import org.xml.sax.SAXException;
 
 /**
  * This class zips all the needed files of the corpus into a zip folder
@@ -48,7 +41,6 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     CorpusData comadata;
 
     public ZipCorpus() {
-        super("ZipCorpus");
         fileList = new ArrayList<String>();
     }
 
@@ -59,8 +51,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         appZip.generateFileList(new File(SOURCE_FOLDER));
         appZip.zipIt(OUTPUT_ZIP_FILE, AUDIO);
     }
-    */
-
+     */
     /**
      * Zip it
      *
@@ -68,13 +59,13 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      */
     public Report zipIt(CorpusData comadata, String zipFile, Boolean AUDIO) {
         //get name of folder
-        if (zipFile.equals("")){
-        String SOURCE_FOLDER_NAME = comadata.getFilenameWithoutFileEnding();
-        if (AUDIO) {
-            zipFile = SOURCE_FOLDER + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
-        } else {
-            zipFile = SOURCE_FOLDER + "resources" + File.separator + SOURCE_FOLDER_NAME + "NoAudio.zip";
-        }
+        if (zipFile.equals("")) {
+            String SOURCE_FOLDER_NAME = comadata.getFilenameWithoutFileEnding();
+            if (AUDIO) {
+                zipFile = SOURCE_FOLDER + "resources" + File.separator + SOURCE_FOLDER_NAME + "WithAudio.zip";
+            } else {
+                zipFile = SOURCE_FOLDER + "resources" + File.separator + SOURCE_FOLDER_NAME + "NoAudio.zip";
+            }
         }
         byte[] buffer = new byte[1024];
 
@@ -110,7 +101,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         } catch (IOException ex) {
             stats.addException(ex, function, comadata, "Unknown IO exception");
         }
-    return stats;
+        return stats;
     }
 
     /**
@@ -127,12 +118,10 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                     fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
                     stats.addCorrect(function, comadata, node.getAbsoluteFile().toString() + " added to filelist");
                 }
-            } else {
-                if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf")) {
-                    System.out.println(node.getName());
-                    fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
-                    stats.addCorrect(function, comadata, node.getAbsoluteFile().toString() + " added to filelist");
-                }
+            } else if (node.getName().endsWith(".exb") || node.getName().endsWith(".exs") || node.getName().endsWith(".coma") || node.getName().endsWith(".pdf")) {
+                System.out.println(node.getName());
+                fileList.add(generateZipEntry(node.getAbsoluteFile().toString()));
+                stats.addCorrect(function, comadata, node.getAbsoluteFile().toString() + " added to filelist");
             }
         }
         if (node.isDirectory()) {
@@ -142,7 +131,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 generateFileList(new File(node, filename));
             }
         }
-    return stats;
+        return stats;
     }
 
     /**
@@ -157,7 +146,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     }
 
     @Override
-    public Report publish(CorpusData cd) {
+    public Report function(CorpusData cd) {
         comadata = cd;
         SOURCE_FOLDER = cd.getParentURL().getPath();
         stats = generateFileList(new File(SOURCE_FOLDER));
@@ -166,8 +155,17 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     }
 
     @Override
+    public Report function(Corpus c) {
+        comadata = c.getComaData();
+        SOURCE_FOLDER = cd.getParentURL().getPath();
+        stats = generateFileList(new File(SOURCE_FOLDER));
+        stats.merge(zipIt(cd, OUTPUT_ZIP_FILE, AUDIO));
+        return stats;
+    }
+
+    @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-         try {
+        try {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
@@ -175,7 +173,6 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         }
         return IsUsableFor;
     }
-
 
     public void setSourceFolder(String s) {
         SOURCE_FOLDER = s;
@@ -201,11 +198,6 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
                 + "corpus file in the resources folder. It only takes exb, exs, coma, pdf and optionally mp3, "
                 + "and the folder structure. ";
         return description;
-    }
-
-    @Override
-    public Report execute(Corpus c, boolean fix) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

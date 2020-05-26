@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
@@ -33,7 +34,8 @@ import org.xml.sax.SAXException;
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
     boolean inel = false;
-
+    String xslpath = "/xsl/Output_metadata_summary.xsl";
+    
     public ComaOverviewGeneration() {
         //no fixing available
         super(false);
@@ -45,15 +47,14 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         String xsl;
         try {
 
-            // get the XSLT stylesheet
-            if (inel) {
-                xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary_INEL.xsl"));
-            } else {
-                xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
-            }
+            // get the XSLT stylesheet as String
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslpath));
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
-
+            //set an parameter for INEL
+            if(inel){  
+                xt.setParameter("mode", "inel");
+            }
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
             //get location to save new result
@@ -63,6 +64,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
             cio.write(result, overviewurl);
             //everything worked
             r.addCorrect(function, cd, "created html overview at " + overviewurl);
+           
 
         } catch (TransformerConfigurationException ex) {
             r.addException(ex, function, cd, "Transformer configuration error");
@@ -83,6 +85,7 @@ public class ComaOverviewGeneration extends Checker implements CorpusFunction {
         return r;
 
     }
+
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {

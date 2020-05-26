@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -35,7 +36,6 @@ public class CorpusHTML extends Visualizer {
     CorpusData cod;
 
     public CorpusHTML() {
-        super("CorpusHTML");
     }
 
     public String createFromComa(String coma) {
@@ -63,7 +63,7 @@ public class CorpusHTML extends Visualizer {
     }
 
     @Override
-    public Report visualize(CorpusData cd) {
+    public Report function(CorpusData cd) {
         try {
             cod = cd;
             String result = createFromComa(cd.toSaveableString());
@@ -82,6 +82,16 @@ public class CorpusHTML extends Visualizer {
             stats.addException(SERVICE_NAME, ex, "XML Exception");
         } catch (XPathExpressionException ex) {
             stats.addException(SERVICE_NAME, ex, "XPath Exception");
+        }
+        return stats;
+    }
+    
+    @Override
+    public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
+
+        Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
+        for (BasicTranscriptionData bt : btc) {
+            stats.merge(function(bt));
         }
         return stats;
     }
@@ -115,11 +125,6 @@ public class CorpusHTML extends Visualizer {
                 + "needed for the ingest into the repository. ";
         return description;
 
-    }
-
-    @Override
-    public Report execute(Corpus c, boolean fix) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
