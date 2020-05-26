@@ -39,6 +39,7 @@ import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.conversion.EXB2ESJSON;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
@@ -260,6 +261,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
+        allExistingCFs.add("EXB2ESJSON");
         allExistingCFs.add("ExbStructureChecker");
         allExistingCFs.add("ComaFileCoverageChecker");
         allExistingCFs.add("NormalizeEXB");
@@ -532,6 +534,22 @@ public class CorpusMagician {
                         }
                     }
                     cf2strcorpusfunctions.add(ehit);
+                    break;
+                case "exb2esjson":
+                    EXB2ESJSON eesj = new EXB2ESJSON();
+                    eesj.setInel();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(lang)) {
+                            eesj.setLanguage(cfProperties.getProperty(lang));
+                            System.out.println("Language set to " + cfProperties.getProperty(lang));
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            eesj.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(eesj);
                     break;
                 case "normalizeexb":
                     ExbNormalize ne = new ExbNormalize();
