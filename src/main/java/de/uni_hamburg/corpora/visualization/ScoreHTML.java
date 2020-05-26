@@ -230,7 +230,6 @@ public class ScoreHTML extends Visualizer {
     @Override
     public Report function(CorpusData cod) throws JDOMException, TransformerException, MalformedURLException, TransformerConfigurationException, IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         cd = cod;
-        stats = new Report();
         String result = createFromBasicTranscription(cd.toSaveableString());
         targeturl = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_score.html");
         CorpusIO cio = new CorpusIO();
@@ -241,7 +240,6 @@ public class ScoreHTML extends Visualizer {
 
     @Override
     public Report function(Corpus co) throws JDOMException, TransformerException, TransformerConfigurationException, IOException, MalformedURLException, ParserConfigurationException, SAXException, XPathExpressionException {
-
         Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
         for (BasicTranscriptionData bt : btc) {
             stats.merge(function(bt));

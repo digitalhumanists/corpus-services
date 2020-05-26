@@ -41,7 +41,7 @@
     </xsl:variable>
 
     <!-- the path to the folder with resources -->
-    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'//corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
+    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
 
     <xsl:variable name="DATASTREAM_VIDEO" as="xs:string?" select="$RECORDING_PATH"/>
 
