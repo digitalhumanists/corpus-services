@@ -859,7 +859,17 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        cf.execute(c, fix);
+        Collection<Class<? extends CorpusData>> usableTypes = cf.getIsUsableFor();
+
+        //if the corpus files are an instance
+        //of the class cl, run the function
+        for (CorpusData cd : c.getCorpusData()) {
+            if (usableTypes.contains(cd.getClass())) {
+                Report newReport = runCorpusFunction(cd, cf, fix);
+                report.merge(newReport);
+            }
+
+        }
         return report;
     }
 
