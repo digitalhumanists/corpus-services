@@ -274,7 +274,7 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
 
                             //apply XSL to TEI for getting Elastic JSON
                             XSLTransformer xt = new XSLTransformer();
-                            xt.setParameter("file-name", filename.substring(filename.lastIndexOf("/"), filename.lastIndexOf(".")));
+                            xt.setParameter("file-name", filename.substring(filename.lastIndexOf("/") + 1, filename.lastIndexOf(".")));
                             xt.setParameter("write-to-file", false);
                             String result = xt.transform(TypeConverter.JdomDocument2String(teiDoc), cio.readInternalResourceAsString(ISOTEI2ESJSON_STYLESHEET));
 
@@ -288,9 +288,9 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
 //                            cio.write(finalDoc, url);
 //                            System.out.println("document written.");
 
-                            report.addCorrect(function, cdc, "Elastic JSON export of file was successful");
+                            report.addCorrect(function, cdc, "Elastic JSON conversion of file was successful");
                         } else {
-                            report.addCritical(function, cdc, "Elastic JSON export of file was not possible because of unknown error");
+                            report.addCritical(function, cdc, "Elastic JSON conversion of file was not possible because of unknown error");
                         }
                     
                     } catch (MalformedURLException ex) {
@@ -370,7 +370,7 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                 
                 //apply XSL to TEI for getting Elastic JSON
                 XSLTransformer xt = new XSLTransformer();
-                xt.setParameter("file-name", filename.substring(filename.lastIndexOf("/"), filename.lastIndexOf(".")));
+                xt.setParameter("file-name", filename.substring(filename.lastIndexOf("/") + 1, filename.lastIndexOf(".")));
                 xt.setParameter("write-to-file", false);
                 String JSONresult = xt.transform(TypeConverter.JdomDocument2String(teiDoc), cio.readInternalResourceAsString(ISOTEI2ESJSON_STYLESHEET));
 
@@ -380,9 +380,9 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                 System.out.println("Elastic bulk document written.");  
             
                 
-                report.addCorrect(function, cd, "ISO TEI conversion of file was successful");
+                report.addCorrect(function, cd, "Elastic JSON conversion of file was successful");
             } else {
-                report.addCritical(function, cd, "ISO TEI conversion of file was not possible because of unknown error");
+                report.addCritical(function, cd, "Elastic JSON conversion of file was not possible because of unknown error");
             }
 
         return report;
