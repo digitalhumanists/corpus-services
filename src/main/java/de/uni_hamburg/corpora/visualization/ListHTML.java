@@ -56,7 +56,7 @@ public class ListHTML extends Visualizer {
     //static String INEL_FSM = "/de/uni_hamburg/corpora/utilities/segmentation/INEL_Segmentation_FSM.xml";
     //static String INEL_FSM = "/org/exmaralda/partitureditor/fsm/xml/HIAT_UtteranceWord.xml";
 
-    Report stats;
+    Report stats = new Report();
     URL targeturl;
     CorpusData cd;
     String corpusname = "";
@@ -267,7 +267,6 @@ public class ListHTML extends Visualizer {
     public Report function(CorpusData ccd) {
         try {
             cd = ccd;
-            stats = new Report();
             String result = createFromBasicTranscription(cd.toUnformattedString(), segmentationAlgorithm);
             targeturl = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_list.html");
             CorpusIO cio = new CorpusIO();
@@ -285,7 +284,6 @@ public class ListHTML extends Visualizer {
 
     @Override
     public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
-
         Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
         for (BasicTranscriptionData bt : btc) {
             stats.merge(function(bt));
