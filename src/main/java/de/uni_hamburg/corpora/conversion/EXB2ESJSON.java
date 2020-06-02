@@ -219,13 +219,14 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                                 // <person xml:id="SPK0" n="Sh" sex="2">
                                 String personSigle = personE.getAttributeValue("n");
                                 String xp2 = "//Speaker[Sigle='" + personSigle + "']";
-                                Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
-                                String speakerID = speakerE.getAttributeValue("Id");
-                                Element speakerIdnoElement = new Element("idno", teiNamespace);
-                                speakerIdnoElement.setAttribute("type", "HZSK-ID");
-                                speakerIdnoElement.setText(speakerID);
-                                personE.addContent(speakerIdnoElement);       
-
+                                Element speakerE = (Element) XPath.selectSingleNode(ComaCorpusElem, xp2);
+                                if(speakerE != null){
+                                    String speakerID = speakerE.getAttributeValue("Id");
+                                    Element speakerIdnoElement = new Element("idno", teiNamespace);
+                                    speakerIdnoElement.setAttribute("type", "HZSK-ID");
+                                    speakerIdnoElement.setText(speakerID);
+                                    personE.addContent(speakerIdnoElement); 
+                                }                                 
                             }
 
 
@@ -245,9 +246,11 @@ public class EXB2ESJSON extends Converter implements CorpusFunction {
                                 for (Element personE : personL) {
                                     String personSigle = personE.getAttributeValue("n");
                                     String xp2 = "//Speaker[Sigle='" + personSigle + "']";
-                                    Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
-                                    Element speakerClone = (Element)speakerE.clone();
-                                    CorpusDataElement.addContent(speakerClone);
+                                    Element speakerE = (Element) XPath.selectSingleNode(ComaCorpusElem, xp2);
+                                    if(speakerE != null){
+                                        Element speakerClone = (Element)speakerE.clone();
+                                        CorpusDataElement.addContent(speakerClone);
+                                    }                                    
                                 }
 
                                 //fill xenoData with Description element from Coma

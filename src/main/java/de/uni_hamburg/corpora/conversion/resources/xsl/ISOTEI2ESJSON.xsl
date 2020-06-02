@@ -21,7 +21,9 @@
         <!-- tokenizable corpus description keys -->
         <xsl:sequence select="'hzsk:keywords', 'olac:data-inputter', 'olac:developer', 'olac:researcher'"/>
         <!-- not listing communication description keys (all set to tokenizable below) -->
-        <!-- not listing speaker description keys (all set to tokenizable below) -->
+        <!-- tokenizable speaker description keys -->
+        <xsl:sequence select="()"/>
+        
     </xsl:param>
     <xsl:param name="tokenizer-regex" select="'\s*[;,]+\s*'" as="xs:string"/>
     
@@ -32,7 +34,7 @@
     <!-- ### Global variables ### -->
     <xsl:variable name="NEWLINE" as="xs:string"><xsl:text>
 </xsl:text></xsl:variable>
-
+    
     <xsl:variable name="coma-metadata" select="//*:xenoData/*:Corpus"/>
     
     <!-- fetching the corpus-wide metadata for re-use -->
@@ -55,16 +57,16 @@
             <communication id="{@Id}" name="{@Name}">
                 <xsl:value-of select="concat('&quot;Communication | Name&quot;: &quot;', @Name, '&quot;, ')"/>
                 <xsl:for-each select="*:Description/*:Key">
-                    <xsl:value-of select="concat('&quot;Communication | ', @Name, '&quot;: ', string:valuefy(., $tokenizer-regex, true()), ', ')"/>                    
+                    <xsl:value-of select="concat('&quot;Communication | ', @Name, '&quot;: ', string:valuefy(., $tokenizer-regex, (@Name = $tokenizable-fields)), ', ')"/>                    
                 </xsl:for-each>
                 <xsl:for-each select="*:Setting, *:Language, *:Location">
                     <xsl:variable name="element-type" select="local-name()" as="xs:string"/>
                     <xsl:variable name="category-type" select="@Type" as="xs:string?"/>
                     <xsl:if test="$element-type = 'Language'">
-                        <xsl:value-of select="concat('&quot;Communication | ', $element-type, concat(' | ', $category-type)[exists($category-type)], ' | LanguageCode&quot;: &quot;', *:LanguageCode, '&quot;, ')"/>
+                        <xsl:value-of select="concat('&quot;Communication | ', $element-type, concat(' | ', string:map-categories($category-type))[exists($category-type)], ' | LanguageCode&quot;: &quot;', *:LanguageCode, '&quot;, ')"/>
                     </xsl:if>
                     <xsl:for-each select="*:Description/*:Key">
-                        <xsl:value-of select="concat('&quot;Communication | ', $element-type, concat(' | ', $category-type)[exists($category-type)], ' | ', @Name, '&quot;: ', string:valuefy(., $tokenizer-regex, true()), ', ')"/>
+                        <xsl:value-of select="concat('&quot;Communication | ', $element-type, concat(' | ', string:map-categories($category-type))[exists($category-type)], ' | ', @Name, '&quot;: ', string:valuefy(., $tokenizer-regex, true()), ', ')"/>
                     </xsl:for-each>
                 </xsl:for-each>                
             </communication>            
@@ -85,10 +87,10 @@
                     <xsl:variable name="element-type" select="local-name()" as="xs:string"/>
                     <xsl:variable name="category-type" select="@Type" as="xs:string?"/>
                     <xsl:if test="$element-type = 'Language'">
-                        <xsl:value-of select="concat('&quot;Speaker | ', $element-type, concat(' | ', $category-type)[exists($category-type)], ' | LanguageCode&quot;: &quot;', *:LanguageCode, '&quot;, ')"/>
+                        <xsl:value-of select="concat('&quot;Speaker | ', $element-type, concat(' | ', string:map-categories($category-type))[exists($category-type)], ' | LanguageCode&quot;: &quot;', *:LanguageCode, '&quot;, ')"/>
                     </xsl:if>
                     <xsl:for-each select="*:Description/*:Key">
-                        <xsl:value-of select="concat('&quot;Speaker | ', $element-type, concat(' | ', $category-type)[exists($category-type)], ' | ', @Name, '&quot;: ', string:valuefy(., $tokenizer-regex, true()), ', ')"/>
+                        <xsl:value-of select="concat('&quot;Speaker | ', $element-type, concat(' | ', string:map-categories($category-type))[exists($category-type)], ' | ', @Name, '&quot;: ', string:valuefy(., $tokenizer-regex, true()), ', ')"/>
                     </xsl:for-each>
                 </xsl:for-each>
             </speaker>
@@ -125,7 +127,8 @@
                 <xsl:value-of select="concat('&quot;file&quot; : &quot;', $file-name, '&quot;, ')"/>
                 
                 <!-- speaker metadata fields -->
-                <xsl:value-of select="key('speaker-json-by-sigle', key('person-abbr-by-id', $speaker-sigle, $doc), $json-coma-speaker-metadata)"/>
+                <!-- sometimes there are duplicate entries for speakers, so here only [1] is taken -->
+                <xsl:value-of select="key('speaker-json-by-sigle', key('person-abbr-by-id', $speaker-sigle, $doc), $json-coma-speaker-metadata)[1]"/>
                 
                 <!-- communication metadata fields -->
                 <xsl:value-of select="$json-coma-communication-metadata/*:communication[1]"/>
@@ -246,5 +249,13 @@
         <xsl:value-of select="$result"/>
     </xsl:function>
 
+
+    <xsl:function name="string:map-categories" as="xs:string">
+        <xsl:param name="category" as="xs:string"/>
+        <xsl:value-of select="string:multi-replace($category, 
+            ('Basic biogr. data',     '^Second language$'), 
+            ('Basic biographic data', '1 Second Language')
+            )"/>
+    </xsl:function>
     
 </xsl:stylesheet>
