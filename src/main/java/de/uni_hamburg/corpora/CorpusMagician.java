@@ -40,6 +40,7 @@ import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
+import de.uni_hamburg.corpora.validation.ComaChartsGeneration;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
@@ -253,6 +254,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ComaChartsGeneration");
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
@@ -364,6 +366,16 @@ public class CorpusMagician {
                         }
                     }
                     cf2strcorpusfunctions.add(cog);
+                    break;
+                case "comachartsgeneration":
+                    ComaChartsGeneration coc = new ComaChartsGeneration();if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
+                            coc.setInel();
+                            System.out.println("Mode set to inel");
+                        }
+                    }
+                    cf2strcorpusfunctions.add(coc);
                     break;
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
