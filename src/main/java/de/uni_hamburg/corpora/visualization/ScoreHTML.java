@@ -58,7 +58,6 @@ public class ScoreHTML extends Visualizer {
     private static final String STYLESHEET_PATH = "/xsl/Score2HTML.xsl";
     private final String SERVICE_NAME = "ScoreHTML";
     private Integer width = 900;
-    Report stats = new Report();
     URL targeturl;
     CorpusData cd;
     String corpusname = "";
@@ -79,7 +78,6 @@ public class ScoreHTML extends Visualizer {
      * @return
      */
     public String createFromBasicTranscription(String btAsString) throws JDOMException, TransformerConfigurationException, TransformerException, IOException {
-
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(btAsString);
 
@@ -176,8 +174,7 @@ public class ScoreHTML extends Visualizer {
         result = xt.transform(xml, xsl);
 
         // insert JavaScript for highlighting
-        // replace JS/CSS placeholders from XSLT output
-        try {
+        // replace JS/CSS placeholders from XSLT output  
             Pattern regex = Pattern.compile("(<hzsk\\-pi:include( xmlns:hzsk\\-pi=\"https://corpora\\.uni\\-hamburg\\.de/hzsk/xmlns/processing\\-instruction\")?>([^<]+)</hzsk\\-pi:include>)", Pattern.DOTALL);
             Matcher m = regex.matcher(result);
             StringBuffer sb = new StringBuffer();
@@ -187,11 +184,6 @@ public class ScoreHTML extends Visualizer {
             }
             m.appendTail(sb);
             result = sb.toString();
-        } catch (Exception e) {
-            setHTML("Custom Exception for inserting JS/CSS into result: " + e.getLocalizedMessage() + "\n" + result);
-            stats.addException(e, SERVICE_NAME, cd, "Custom Exception for inserting JS/CSS into result");
-        }
-
         String js = TypeConverter.InputStream2String(getClass().getResourceAsStream(JS_HIGHLIGHTING_PATH));
         result = result.replace("<!--jsholder-->", js);
 
@@ -229,6 +221,7 @@ public class ScoreHTML extends Visualizer {
 
     @Override
     public Report function(CorpusData cod) throws JDOMException, TransformerException, MalformedURLException, TransformerConfigurationException, IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        Report stats = new Report();
         cd = cod;
         String result = createFromBasicTranscription(cd.toSaveableString());
         targeturl = new URL(cd.getParentURL() + cd.getFilenameWithoutFileEnding() + "_score.html");
@@ -240,6 +233,7 @@ public class ScoreHTML extends Visualizer {
 
     @Override
     public Report function(Corpus co) throws JDOMException, TransformerException, TransformerConfigurationException, IOException, MalformedURLException, ParserConfigurationException, SAXException, XPathExpressionException {
+        Report stats = new Report();
         Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
         for (BasicTranscriptionData bt : btc) {
             stats.merge(function(bt));
@@ -249,6 +243,7 @@ public class ScoreHTML extends Visualizer {
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+         Report stats = new Report();
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
@@ -259,6 +254,7 @@ public class ScoreHTML extends Visualizer {
     }
 
     public Report doMain(String[] args) {
+        Report stats = new Report();
         try {
             if (args.length == 0) {
                 System.out.println("Usage: " + ScoreHTML.class.getName()
