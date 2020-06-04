@@ -243,12 +243,11 @@ public class ScoreHTML extends Visualizer {
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-         Report stats = new Report();
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, "Usable class not found.");
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }

@@ -44,7 +44,6 @@ public class ComaAddTiersFromExbsCorrector extends Checker implements CorpusFunc
     String tierNameFormat = "Tier %2$s (%1$s):";
     String tierTextFormat = "%s";
     String comaLoc = "";
-    Report stats = new Report();
 
     public ComaAddTiersFromExbsCorrector() {
         //can fix

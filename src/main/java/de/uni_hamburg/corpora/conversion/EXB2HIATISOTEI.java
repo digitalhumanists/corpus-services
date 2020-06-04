@@ -59,7 +59,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     //copied partly from exmaralda\src\org\exmaralda\partitureditor\jexmaralda\convert\TEIConverter.java
     String language = "en";
 
-
     //locations of the used xsls
     static String TEI_SKELETON_STYLESHEET_ISO = "/xsl/EXMARaLDA2ISOTEI_Skeleton.xsl";
     static String SC_TO_TEI_U_STYLESHEET_ISO = "/xsl/SegmentChain2ISOTEIUtterance.xsl";
@@ -83,7 +82,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     XSLTransformer transformer2;
     XSLTransformer transformer3;
 
-    Report report = new Report();
     CorpusIO cio = new CorpusIO();
 
     //debugging
@@ -92,7 +90,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     //String intermediate3 = "file:///home/anne/Schreibtisch/TEI/intermediate3.xml";
     //String intermediate4 = "file:///home/anne/Schreibtisch/TEI/intermediate4.xml";
     //String intermediate5 = "file:///home/anne/Schreibtisch/TEI/intermediate5.xml";
-
     static Boolean INEL = false;
     static Boolean TOKEN = false;
     Boolean COMA = false;
@@ -105,7 +102,6 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     * next to the CorpusData object
     * and gives back a report how it worked
      */
-
     /**
      *
      * @param cd
@@ -117,34 +113,34 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
      * @throws IOException
      * @throws Exception
      */
-
     public Report function(CorpusData cd) throws SAXException,
             FSMException,
             XSLTransformException,
             JDOMException,
             IOException,
             Exception {
-       //it cannot be a coma file alone
-       return convertEXB2MORPHEMEHIATISOTEI(cd);
+        //it cannot be a coma file alone
+        return convertEXB2MORPHEMEHIATISOTEI(cd);
     }
-    
-        public Report function(Corpus c) throws SAXException,
+
+    public Report function(Corpus c) throws SAXException,
             FSMException,
             XSLTransformException,
             JDOMException,
             IOException,
             Exception {
-            COMA = true;
-            ComaData comad = c.getComaData();
+        COMA = true;
+        ComaData comad = c.getComaData();
         return convertCOMA2MORPHEMEHIATISOTEI(comad);
     }
 
     public Report convertCOMA2MORPHEMEHIATISOTEI(CorpusData cd) throws ClassNotFoundException {
+        Report stats = new Report();
         try {
             /*
             Following Code is based on Code from Thomas
             https://gitlab.rrz.uni-hamburg.de/Bae2551/ids-sample/blob/master/src/java/scripts/ConvertHAMATAC.java
-            */
+             */
             // read COMA doc
             Namespace teiNamespace = Namespace.getNamespace("tei", "http://www.tei-c.org/ns/1.0");
             Document comaDoc = FileIO.readDocumentFromLocalFile(cd.getURL().getPath());
@@ -164,17 +160,17 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     //now use the method to get the iso tei version from the exb file
                     CorpusData cdc = cio.readFileURL(exburl);
                     Document stdoc = cd2SegmentedTranscription(cdc);
-                    Document finalDoc  = SegmentedTranscriptionToTEITranscription(stdoc,
-                    nameOfDeepSegmentation,
-                    nameOfFlategmentation,
-                    false, cd);
+                    Document finalDoc = SegmentedTranscriptionToTEITranscription(stdoc,
+                            nameOfDeepSegmentation,
+                            nameOfFlategmentation,
+                            false, cd);
                     //now add the coma id information
                     // <idno type="AGD-ID">FOLK_E_00011_SE_01_T_04_DF_01</idno>
                     Element transcriptIdnoElement = new Element("idno", teiNamespace);
                     transcriptIdnoElement.setAttribute("type", "HZSK-ID");
                     transcriptIdnoElement.setText(transcriptID);
                     finalDoc.getRootElement().addContent(0, transcriptIdnoElement);
-                    
+
                     XPath xp1 = XPath.newInstance("//tei:person");
                     xp1.addNamespace(teiNamespace);
                     List<Element> personL = xp1.selectNodes(finalDoc);
@@ -188,55 +184,55 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                         speakerIdnoElement.setAttribute("type", "HZSK-ID");
                         speakerIdnoElement.setText(speakerID);
                         personE.addContent(0, speakerIdnoElement);
-                        
+
                     }
                     if (finalDoc != null) {
-                System.out.println("Merged");
-                //so is the language of the doc
-                setDocLanguage(finalDoc, language);
-                //now the completed document is saved
-                //TODO save next to the old cd
-                String filename = cdc.getURL().getFile();
-                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
-                System.out.println(url.toString());
-                cio.write(finalDoc, url);
-                System.out.println("document written.");
-                report.addCorrect(function, cdc, "ISO TEI conversion of file was successful");
-            } else {
-                report.addCritical(function, cdc, "ISO TEI conversion of file was not possible because of unknown error");
-            }
-                    
+                        System.out.println("Merged");
+                        //so is the language of the doc
+                        setDocLanguage(finalDoc, language);
+                        //now the completed document is saved
+                        //TODO save next to the old cd
+                        String filename = cdc.getURL().getFile();
+                        URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
+                        System.out.println(url.toString());
+                        cio.write(finalDoc, url);
+                        System.out.println("document written.");
+                        stats.addCorrect(function, cdc, "ISO TEI conversion of file was successful");
+                    } else {
+                        stats.addCritical(function, cdc, "ISO TEI conversion of file was not possible because of unknown error");
+                    }
+
                 }
             }
-            
+
         } catch (SAXException ex) {
-            report.addException(ex, function, cd, "Unknown exception error");
+            stats.addException(ex, function, cd, "Unknown exception error");
         } catch (FSMException ex) {
-            report.addException(ex, function, cd, "Unknown finite state machine error");
+            stats.addException(ex, function, cd, "Unknown finite state machine error");
         } catch (MalformedURLException ex) {
-            report.addException(ex, function, cd, "Unknown file URL reading error");
+            stats.addException(ex, function, cd, "Unknown file URL reading error");
         } catch (JDOMException ex) {
-            report.addException(ex, function, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (IOException ex) {
-            report.addException(ex, function, cd, "Unknown file reading error");
+            stats.addException(ex, function, cd, "Unknown file reading error");
         } catch (TransformerException ex) {
-            report.addException(ex, function, cd, "XSL transformer error");
+            stats.addException(ex, function, cd, "XSL transformer error");
         } catch (ParserConfigurationException ex) {
-            report.addException(ex, function, cd, "Parser error");
+            stats.addException(ex, function, cd, "Parser error");
         } catch (XPathExpressionException ex) {
-            report.addException(ex, function, cd, "XPath error");
+            stats.addException(ex, function, cd, "XPath error");
         } catch (URISyntaxException ex) {
-            report.addException(ex, function, cd, "ComaPath URI error");
+            stats.addException(ex, function, cd, "ComaPath URI error");
         } catch (JexmaraldaException ex) {
-             report.addException(ex, function, cd, "Jexmeaalda error");
+            stats.addException(ex, function, cd, "Jexmeaalda error");
         }
-        return report;
+        return stats;
     }
 
     public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd) throws SAXException, FSMException, JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
         if (INEL) {
             TOKEN = true;
-            return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);        
+            return convertEXB2MORPHEMEHIATISOTEI(cd, true, XPath2Morphemes);
         } else {
             return convertEXB2MORPHEMEHIATISOTEI(cd, false, XPath2Morphemes);
         }
@@ -250,60 +246,61 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
      */
     public Report convertEXB2MORPHEMEHIATISOTEI(CorpusData cd,
             boolean includeFullText, String XPath2Morphemes) throws SAXException, FSMException, JDOMException, IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, XPathExpressionException, URISyntaxException {
-            Document stdoc = cd2SegmentedTranscription(cd);
-            //TODO paramter in the future for deep & flat segmentation name
-            //MAGIC - now the real work happens
-            Document teiDoc = SegmentedTranscriptionToTEITranscription(stdoc,
-                    nameOfDeepSegmentation,
-                    nameOfFlategmentation,
-                    includeFullText, cd);
-            if (teiDoc != null) {
-                System.out.println("Merged");
-                //so is the language of the doc
-                setDocLanguage(teiDoc, language);
-                //now the completed document is saved
-                //TODO save next to the old cd
-                String filename = cd.getURL().getFile();
-                URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
-                System.out.println(url.toString());
-                cio.write(teiDoc, url);
-                System.out.println("document written.");
-                report.addCorrect(function, cd, "ISO TEI conversion of file was successful");
-            } else {
-                report.addCritical(function, cd, "ISO TEI conversion of file was not possible because of unknown error");
-            }
+        Report stats = new Report();
+        Document stdoc = cd2SegmentedTranscription(cd);
+        //TODO paramter in the future for deep & flat segmentation name
+        //MAGIC - now the real work happens
+        Document teiDoc = SegmentedTranscriptionToTEITranscription(stdoc,
+                nameOfDeepSegmentation,
+                nameOfFlategmentation,
+                includeFullText, cd);
+        if (teiDoc != null) {
+            System.out.println("Merged");
+            //so is the language of the doc
+            setDocLanguage(teiDoc, language);
+            //now the completed document is saved
+            //TODO save next to the old cd
+            String filename = cd.getURL().getFile();
+            URL url = new URL("file://" + filename.substring(0, filename.lastIndexOf(".")) + "_tei.xml");
+            System.out.println(url.toString());
+            cio.write(teiDoc, url);
+            System.out.println("document written.");
+            stats.addCorrect(function, cd, "ISO TEI conversion of file was successful");
+        } else {
+            stats.addCritical(function, cd, "ISO TEI conversion of file was not possible because of unknown error");
+        }
 
-        return report;
+        return stats;
     }
-    
-    public Document cd2SegmentedTranscription(CorpusData cd) throws SAXException, FSMException{
-                    //we create a BasicTranscription form the CorpusData
-            BasicTranscriptionData btd = (BasicTranscriptionData) cd;
-            BasicTranscription bt = btd.getEXMARaLDAbt();
-            //normalize the exb (!)
-            bt.normalize();
-            System.out.println((cd.getURL()).getFile());
-            System.out.println("started writing document...");
-            //HIAT Segmentation
-            HIATSegmentation segmentation = new HIATSegmentation();
-            /*
+
+    public Document cd2SegmentedTranscription(CorpusData cd) throws SAXException, FSMException {
+        //we create a BasicTranscription form the CorpusData
+        BasicTranscriptionData btd = (BasicTranscriptionData) cd;
+        BasicTranscription bt = btd.getEXMARaLDAbt();
+        //normalize the exb (!)
+        bt.normalize();
+        System.out.println((cd.getURL()).getFile());
+        System.out.println("started writing document...");
+        //HIAT Segmentation
+        HIATSegmentation segmentation = new HIATSegmentation();
+        /*
                 //reading the internal FSM and writing it to TEMP folder because Exmaralda Segmentation only takes an external path
                 InputStream is = getClass().getResourceAsStream(FSM);
                 String fsmstring = TypeConverter.InputStream2String(is);
                 URL url = Paths.get(System.getProperty("java.io.tmpdir") + "/" + "fsmstring.xml").toUri().toURL();
                 cio.write(fsmstring, url);
                 segmentation = new HIATSegmentation(url.getFile());
-             */
-            //default HIAT segmentation
-            if (!FSM.equals("")) {
-                segmentation.pathToExternalFSM = FSM;
-            }
-            //create a segmented exs
-            SegmentedTranscription st = segmentation.BasicToSegmented(bt);
-            System.out.println("Segmented transcription created");
-            //Document from segmented transcription string
-            Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
-            return stdoc;
+         */
+        //default HIAT segmentation
+        if (!FSM.equals("")) {
+            segmentation.pathToExternalFSM = FSM;
+        }
+        //create a segmented exs
+        SegmentedTranscription st = segmentation.BasicToSegmented(bt);
+        System.out.println("Segmented transcription created");
+        //Document from segmented transcription string
+        Document stdoc = TypeConverter.String2JdomDocument(st.toXML());
+        return stdoc;
     }
 
     public Document SegmentedTranscriptionToTEITranscription(Document segmentedTranscription,
@@ -445,7 +442,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
                     }
                 }
             }
-        }      
+        }
         return finalDocument;
     }
 
@@ -800,8 +797,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     public void setInel() {
         INEL = true;
     }
-    
-    
+
     public void setToken() {
         TOKEN = true;
     }
@@ -821,7 +817,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
             report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
-    } 
+    }
 
     @Override
     public String getDescription() {

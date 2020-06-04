@@ -32,7 +32,6 @@ public class ReportStatistics extends Checker implements CorpusFunction {
 
     private static final String HTML_REPORT = "report-output.html";
     String REPORT_STATISTICS;
-    Report stats;
     CorpusData cd;
     String corpusname = "";
 
@@ -137,7 +136,7 @@ public class ReportStatistics extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, "Usable class not found.");
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
