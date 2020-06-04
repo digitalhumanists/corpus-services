@@ -33,6 +33,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.exmaralda.partitureditor.jexmaralda.segment.HIATSegmentation;
@@ -56,7 +58,6 @@ public class ListHTML extends Visualizer {
     //static String INEL_FSM = "/de/uni_hamburg/corpora/utilities/segmentation/INEL_Segmentation_FSM.xml";
     //static String INEL_FSM = "/org/exmaralda/partitureditor/fsm/xml/HIAT_UtteranceWord.xml";
 
-    Report stats = new Report();
     URL targeturl;
     CorpusData cd;
     String corpusname = "";
@@ -67,7 +68,12 @@ public class ListHTML extends Visualizer {
     }
 
     public ListHTML(String btAsString, String segmAlgorithm) {
-        createFromBasicTranscription(btAsString, segmAlgorithm);
+        Report stats = new Report();
+        try {
+            createFromBasicTranscription(btAsString, segmAlgorithm);
+        } catch (Exception ex) {
+            stats.addException(SERVICE_NAME, ex, "Exception");
+        }
     }
 
     /**
@@ -76,79 +82,59 @@ public class ListHTML extends Visualizer {
      * @param btAsString the EXB file represented in a String object
      * @return
      */
-    private String createFromBasicTranscription(String btAsString, String segmAlgorithm) {
+    private String createFromBasicTranscription(String btAsString, String segmAlgorithm) throws Exception {
 
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(basicTranscriptionString);
         segmentationAlgorithm = segmAlgorithm;
 
         String result = null;
-
-        try {
-
-            // create an utterance list as XML basis for transformation
-            createUtteranceList();
-            if (getUtteranceList() != null) {
-                // get the XSLT stylesheet
-                String xsl = "";
-                if (segmAlgorithm.equals("HIAT")) {
-                    xsl = TypeConverter.InputStream2String(
-                            getClass().getResourceAsStream(STYLESHEET_PATH));
-                } else if (segmAlgorithm.equals("GAT")) {
-                    xsl = TypeConverter.InputStream2String(
-                            getClass().getResourceAsStream(GAT_STYLESHEET_PATH));
-                } else if (segmAlgorithm.equals("GENERIC")) {
-                    xsl = TypeConverter.InputStream2String(
-                            getClass().getResourceAsStream(GENERIC_STYLESHEET_PATH));
-                } else {
-                    xsl = TypeConverter.InputStream2String(
-                            getClass().getResourceAsStream(GENERIC_STYLESHEET_PATH));
-                }
-
-                // create XSLTransformer and set the parameters
-                XSLTransformer xt = new XSLTransformer();
-                xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
-                xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME + " (" + segmAlgorithm + ")");
-                xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
-                xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
-                //xt.setParameter("CORPUS_NAME", cd.getFilenameWithoutFileEnding());
-                if (!corpusname.equals("")) {
-                    xt.setParameter("CORPUS_NAME", corpusname);
-                }
-                // perform XSLT transformation
-                result = xt.transform(getUtteranceList(), xsl);
-                if (result != null) {
-
-                    // replace JS/CSS placeholders from XSLT output
-                    try {
-                        Pattern regex = Pattern.compile("(<hzsk\\-pi:include( xmlns:hzsk\\-pi=\"https://corpora\\.uni\\-hamburg\\.de/hzsk/xmlns/processing\\-instruction\")?>([^<]+)</hzsk\\-pi:include>)", Pattern.DOTALL);
-                        Matcher m = regex.matcher(result);
-                        StringBuffer sb = new StringBuffer();
-                        while (m.find()) {
-                            String insertion = TypeConverter.InputStream2String(getClass().getResourceAsStream(m.group(3)));
-                            m.appendReplacement(sb, m.group(0).replaceFirst(Pattern.quote(m.group(1)), insertion));
-                        }
-                        m.appendTail(sb);
-                        result = sb.toString();
-                    } catch (Exception e) {
-                        setHTML("Custom Exception for inserting JS/CSS into result: " + e.getLocalizedMessage() + "\n" + result);
-                        stats.addException(SERVICE_NAME, e, "JS/CSS exception");
-                    }
-                } else {
-                    stats.addCritical(SERVICE_NAME, cd, "Visualization of file was not possible! (empty result)");
-                }
+        // create an utterance list as XML basis for transformation
+        createUtteranceList();
+        if (getUtteranceList() != null) {
+            // get the XSLT stylesheet
+            String xsl = "";
+            if (segmAlgorithm.equals("HIAT")) {
+                xsl = TypeConverter.InputStream2String(
+                        getClass().getResourceAsStream(STYLESHEET_PATH));
+            } else if (segmAlgorithm.equals("GAT")) {
+                xsl = TypeConverter.InputStream2String(
+                        getClass().getResourceAsStream(GAT_STYLESHEET_PATH));
+            } else if (segmAlgorithm.equals("GENERIC")) {
+                xsl = TypeConverter.InputStream2String(
+                        getClass().getResourceAsStream(GENERIC_STYLESHEET_PATH));
             } else {
-                stats.addCritical(SERVICE_NAME, cd, "Visualization of file was not possible! (empty utterance list)");
+                xsl = TypeConverter.InputStream2String(
+                        getClass().getResourceAsStream(GENERIC_STYLESHEET_PATH));
             }
-        } catch (TransformerConfigurationException ex) {
-            stats.addException(SERVICE_NAME, ex, "Transformer exception");
-        } catch (TransformerException ex) {
-            stats.addException(SERVICE_NAME, ex, "Transformer exception");
-        } catch (Exception ex) {
-            stats.addException(SERVICE_NAME, ex, "Transformer exception");
-        }
 
-        setHTML(result);
+            // create XSLTransformer and set the parameters
+            XSLTransformer xt = new XSLTransformer();
+            xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
+            xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME + " (" + segmAlgorithm + ")");
+            xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
+            xt.setParameter("TRANSCRIPTION_NAME", cd.getFilenameWithoutFileEnding());
+            //xt.setParameter("CORPUS_NAME", cd.getFilenameWithoutFileEnding());
+            if (!corpusname.equals("")) {
+                xt.setParameter("CORPUS_NAME", corpusname);
+            }
+            // perform XSLT transformation
+            result = xt.transform(getUtteranceList(), xsl);
+            if (result != null) {
+
+                // replace JS/CSS placeholders from XSLT output
+                Pattern regex = Pattern.compile("(<hzsk\\-pi:include( xmlns:hzsk\\-pi=\"https://corpora\\.uni\\-hamburg\\.de/hzsk/xmlns/processing\\-instruction\")?>([^<]+)</hzsk\\-pi:include>)", Pattern.DOTALL);
+                Matcher m = regex.matcher(result);
+                StringBuffer sb = new StringBuffer();
+                while (m.find()) {
+                    String insertion = TypeConverter.InputStream2String(getClass().getResourceAsStream(m.group(3)));
+                    m.appendReplacement(sb, m.group(0).replaceFirst(Pattern.quote(m.group(1)), insertion));
+                }
+                m.appendTail(sb);
+                result = sb.toString();
+                setHTML(result);
+            }
+        }
         //System.out.println(result);
         return result;
     }
@@ -164,71 +150,61 @@ public class ListHTML extends Visualizer {
 
         String list = null;
 
-        try {
-
-            switch (segmentationAlgorithm) {
-                case "HIAT": {
-                    HIATSegmentation hS = new HIATSegmentation();
-                    if (!path2ExternalFSM.equals("")) {
-                        hS.pathToExternalFSM = path2ExternalFSM;
-                    }
-                    ListTranscription lt = hS.BasicToUtteranceList(basicTranscription);
-                    final Document listXML = FileIO.readDocumentFromString(lt.toXML());
-                    list = IOUtilities.documentToString(listXML);
-                    break;
+        switch (segmentationAlgorithm) {
+            case "HIAT": {
+                HIATSegmentation hS = new HIATSegmentation();
+                if (!path2ExternalFSM.equals("")) {
+                    hS.pathToExternalFSM = path2ExternalFSM;
                 }
-                case "CHAT": {
-                    CHATSegmentation cS = new CHATSegmentation();
-                    if (!path2ExternalFSM.equals("")) {
-                        cS.pathToExternalFSM = path2ExternalFSM;
-                    }
-                    ListTranscription lt = cS.BasicToUtteranceList(basicTranscription);
-                    final Document listXML = FileIO.readDocumentFromString(lt.toXML());
-                    list = IOUtilities.documentToString(listXML);
-                    break;
-                }
-                case "GAT": {
-                    GATSegmentation gS = new GATSegmentation();
-                    if (!path2ExternalFSM.equals("")) {
-                        gS.pathToExternalFSM = path2ExternalFSM;
-                    }
-                    ListTranscription lt = gS.BasicToIntonationUnitList(basicTranscription);
-                    final Document listXML = FileIO.readDocumentFromString(lt.toXML());
-                    list = IOUtilities.documentToString(listXML);
-                    break;
-                }
-                case "IPA": {
-                    IPASegmentation ipaS = new IPASegmentation();
-                    if (!path2ExternalFSM.equals("")) {
-                        ipaS.pathToExternalFSM = path2ExternalFSM;
-                    }
-                    SegmentedTranscription st = ipaS.BasicToSegmented(basicTranscription);
-                    ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
-                    final Document listXML = FileIO.readDocumentFromString(lt.toXML());
-                    list = IOUtilities.documentToString(listXML);
-                    break;
-                }
-                case "Generic": {
-                    GenericSegmentation genS = new GenericSegmentation();
-                    if (!path2ExternalFSM.equals("")) {
-                        genS.pathToExternalFSM = path2ExternalFSM;
-                    }
-                    SegmentedTranscription st = genS.BasicToSegmented(basicTranscription);
-                    ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
-                    final Document listXML = FileIO.readDocumentFromString(lt.toXML());
-                    list = IOUtilities.documentToString(listXML);
-                    break;
-                }
-                default:
-                    throw new Exception("createUtteranceList - unsupported parameter segmAlgorithm='" + segmentationAlgorithm + "'");
+                ListTranscription lt = hS.BasicToUtteranceList(basicTranscription);
+                final Document listXML = FileIO.readDocumentFromString(lt.toXML());
+                list = IOUtilities.documentToString(listXML);
+                break;
             }
-
-        } catch (SAXException ex) {
-            stats.addException(SERVICE_NAME, ex, "Transformer exception");
-        } catch (FSMException ex) {
-            stats.addException(SERVICE_NAME, ex, "Transformer exception");
-        } catch (Exception ex) {
-            stats.addException(SERVICE_NAME, ex, "Exception");
+            case "CHAT": {
+                CHATSegmentation cS = new CHATSegmentation();
+                if (!path2ExternalFSM.equals("")) {
+                    cS.pathToExternalFSM = path2ExternalFSM;
+                }
+                ListTranscription lt = cS.BasicToUtteranceList(basicTranscription);
+                final Document listXML = FileIO.readDocumentFromString(lt.toXML());
+                list = IOUtilities.documentToString(listXML);
+                break;
+            }
+            case "GAT": {
+                GATSegmentation gS = new GATSegmentation();
+                if (!path2ExternalFSM.equals("")) {
+                    gS.pathToExternalFSM = path2ExternalFSM;
+                }
+                ListTranscription lt = gS.BasicToIntonationUnitList(basicTranscription);
+                final Document listXML = FileIO.readDocumentFromString(lt.toXML());
+                list = IOUtilities.documentToString(listXML);
+                break;
+            }
+            case "IPA": {
+                IPASegmentation ipaS = new IPASegmentation();
+                if (!path2ExternalFSM.equals("")) {
+                    ipaS.pathToExternalFSM = path2ExternalFSM;
+                }
+                SegmentedTranscription st = ipaS.BasicToSegmented(basicTranscription);
+                ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
+                final Document listXML = FileIO.readDocumentFromString(lt.toXML());
+                list = IOUtilities.documentToString(listXML);
+                break;
+            }
+            case "Generic": {
+                GenericSegmentation genS = new GenericSegmentation();
+                if (!path2ExternalFSM.equals("")) {
+                    genS.pathToExternalFSM = path2ExternalFSM;
+                }
+                SegmentedTranscription st = genS.BasicToSegmented(basicTranscription);
+                ListTranscription lt = st.toListTranscription(new SegmentedToListInfo(st, SegmentedToListInfo.TURN_SEGMENTATION));
+                final Document listXML = FileIO.readDocumentFromString(lt.toXML());
+                list = IOUtilities.documentToString(listXML);
+                break;
+            }
+            default:
+                throw new Exception("createUtteranceList - unsupported parameter segmAlgorithm='" + segmentationAlgorithm + "'");
         }
 
         setUtteranceList(list);
@@ -265,6 +241,7 @@ public class ListHTML extends Visualizer {
 
     @Override
     public Report function(CorpusData ccd) {
+        Report stats = new Report();
         try {
             cd = ccd;
             String result = createFromBasicTranscription(cd.toUnformattedString(), segmentationAlgorithm);
@@ -278,26 +255,29 @@ public class ListHTML extends Visualizer {
             }
         } catch (IOException ex) {
             stats.addException(SERVICE_NAME, ex, "IO Exception");
+        } catch (Exception ex) {
+            stats.addException(SERVICE_NAME, ex, "Exception");
         }
         return stats;
     }
 
     @Override
     public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
+        Report stats = new Report();
         Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
         for (BasicTranscriptionData bt : btc) {
             stats.merge(function(bt));
         }
         return stats;
     }
-    
+
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, "Usable class not found.");
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }

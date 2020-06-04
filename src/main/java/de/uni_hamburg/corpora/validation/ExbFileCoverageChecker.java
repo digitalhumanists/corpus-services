@@ -46,7 +46,6 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         super(false);
         // these are acceptable
         setWhitelist();
-        
 
     }
 
@@ -76,12 +75,12 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
             }
         }
         URL referencePath = cd.getParentURL();
-        
+
         File exbFolder = new File(referencePath.toURI());
         ArrayList<String> files = new ArrayList<String>();
         search(exbFolder, files);
         for (String absolutePath : files) {
-            String relativePath = absolutePath.substring(absolutePath.indexOf(exbFolder.getAbsolutePath())+exbFolder.getAbsolutePath().length()+File.separator.length());
+            String relativePath = absolutePath.substring(absolutePath.indexOf(exbFolder.getAbsolutePath()) + exbFolder.getAbsolutePath().length() + File.separator.length());
             if (refsInExb.contains(absolutePath)) {
                 stats.addCritical(function, cd, "Referenced-file " + absolutePath
                         + " points to absolute local path, fix to relative path first");
@@ -94,7 +93,6 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         }
         return stats;
     }
-
 
     /**
      * Default function which determines for what type of files (basic
@@ -121,7 +119,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         fileendingwhitelist = new ArrayList<String>();
         fileendingwhitelist.add("exb");
         fileendingwhitelist.add("exs");
-        fileendingwhitelist.add("doc"); 
+        fileendingwhitelist.add("doc");
         fileendingwhitelist.add("docx");
         fileendingwhitelist.add("odt");
         fileendingwhitelist.add("pdf");
@@ -132,8 +130,8 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         fileendingwhitelist.add("html");
         fileendingwhitelist.add("flextext");
     }
-    
-     /**
+
+    /**
      * Search function for getting all the files under the same folder with the
      * basic transcription file and sub-folders.
      */
@@ -142,7 +140,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
             if (f.isDirectory()) {
                 search(f, result);
             }
-            if (f.isFile() && !fileendingwhitelist.contains(getFileExtension(f)) 
+            if (f.isFile() && !fileendingwhitelist.contains(getFileExtension(f))
                     && !whitelist.contains(f.getAbsolutePath())) {
                 result.add(f.getAbsolutePath());
             }
@@ -161,8 +159,9 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
         return extension;
     }
 
-    /**Default function which returns a two/three line description of what 
-     * this class is about.
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
      */
     @Override
     public String getDescription() {
@@ -173,7 +172,7 @@ public class ExbFileCoverageChecker extends Checker implements CorpusFunction {
 
     @Override
     public Report function(Corpus c, Boolean fix) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
-                Report stats = new Report();
+        Report stats = new Report();
         for (CorpusData cdata : c.getBasicTranscriptionData()) {
             stats.merge(function(cdata, fix));
         }

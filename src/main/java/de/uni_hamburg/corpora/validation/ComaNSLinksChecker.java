@@ -41,7 +41,6 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
     String referencePath = "./";
     String comaLoc = "";
     String communicationname;
-    Report stats = new Report(); //create a new report
 
     public ComaNSLinksChecker() {
         //no fixing available
@@ -50,6 +49,7 @@ public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
     @Override
     public Report function(Corpus c, Boolean fix) throws SAXException, JDOMException, IOException, JexmaraldaException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
         cd = c.getComaData();
         stats = function(cd, fix);
         return stats;

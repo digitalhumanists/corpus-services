@@ -39,7 +39,6 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     HashMap<String, String> domicile; // hash map for storing the residences of speakers 
     HashMap<String, String> commLocation; // hash map for holding locations where the communications took place
     HashMap<String, String> lngLat; // hash map for holding coordinates of locations
-    Report stats = new Report(); //create a new report
 
     final String KEYBIRTHPLACE = "1a Place of birth";
     final String KEYBIRTHPLACELL = "1c Place of birth (LngLat)";
@@ -64,10 +63,11 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     @Override
     public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerConfigurationException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
         try {
 
             if (kmlFile != null) {
-                getCoordinates();
+                stats = getCoordinates();
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
                 Document doc = db.parse(TypeConverter.String2InputStream(cd.toSaveableString())); // get the file as a document
@@ -236,8 +236,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                 if (fix) {
                     CorpusIO cio = new CorpusIO();
                     cd.updateUnformattedString(TypeConverter.W3cDocument2String(doc));
-                    cio.write(cd, cd.getURL());                    
-                } 
+                    cio.write(cd, cd.getURL());
+                }
             } else {
                 stats.addCritical(function, "No KML file path supplied");
             }
@@ -263,7 +263,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
     }
 
     // the method for getting coordinates of locations in the kml file
-    public void getCoordinates() throws ParserConfigurationException, SAXException, IOException, JDOMException, URISyntaxException {
+    public Report getCoordinates() throws ParserConfigurationException, SAXException, IOException, JDOMException, URISyntaxException {
+        Report stats = new Report();
         Document doc = null;
         CorpusIO cio = new CorpusIO();
         if (kmlFile != null) {
@@ -302,8 +303,8 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
         } else {
             stats.addCritical(function, "No KML file path supplied");
         }
+        return stats;
     }
-
 
     /**
      * Default function which determines for what type of files (basic
@@ -316,7 +317,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, " usable class not found");
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
@@ -335,10 +336,10 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
 
     @Override
     public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, TransformerConfigurationException, XPathExpressionException {
+        Report stats = new Report();
         cd = c.getComaData();
         stats = function(cd, fix);
         return stats;
     }
-
 
 }
