@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import org.xml.sax.SAXParseException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 /**
@@ -521,6 +522,7 @@ public class ReportItem {
         //add custom CSS
         report += "<style>"+
                 "body{padding:15px;}"+
+                "#timestamp{margin-bottom:30px;}"+
                 ".critical{ background:#ffdddd; } "+
                 ".other{ background:#ffd39e; } "+
                 ".warning{ background:#fafcc2; } "+
@@ -530,6 +532,11 @@ public class ReportItem {
                 ".char_Georgian{ background:#9c026d; } "+
                 "</style>\n";
         report += "   </head>\n   <body>\n";
+        
+        //add timestamp
+        report += "   <div id='timestamp'>Generated: ";        
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        report += timestamp + "</div>\n";
         
         report += "<table>\n  <thead><tr>" +
             "<th>Type</th>"+
