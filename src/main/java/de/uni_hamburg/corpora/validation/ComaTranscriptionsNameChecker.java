@@ -77,7 +77,7 @@ public class ComaTranscriptionsNameChecker extends Checker implements CorpusFunc
 
                         } else {
                             String message = "No transcription found  for communication " + communicationName + ", id: " + communicationID + ".";
-                            System.err.println(message);
+                            System.out.println(message);
                             stats.addCorrect(function, cd, message);
                         }
 
