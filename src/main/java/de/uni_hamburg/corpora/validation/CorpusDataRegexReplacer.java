@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;

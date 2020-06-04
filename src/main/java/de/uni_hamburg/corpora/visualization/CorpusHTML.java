@@ -31,7 +31,6 @@ public class CorpusHTML extends Visualizer {
     // resources loaded from directory supplied in pom.xml
     static final String STYLESHEET_PATH = "/xsl/Coma2HTML.xsl";
     private static final String SERVICE_NAME = "ComaHTML";
-    Report stats = new Report();
     URL targeturl;
     CorpusData cod;
 
@@ -39,7 +38,8 @@ public class CorpusHTML extends Visualizer {
     }
 
     public String createFromComa(String coma) {
-
+        //TODO this report is never used anywhere
+        Report stats = new Report();
         String result = null;
 
         try {
@@ -64,6 +64,7 @@ public class CorpusHTML extends Visualizer {
 
     @Override
     public Report function(CorpusData cd) {
+        Report stats = new Report();
         try {
             cod = cd;
             String result = createFromComa(cd.toSaveableString());
@@ -85,10 +86,10 @@ public class CorpusHTML extends Visualizer {
         }
         return stats;
     }
-    
+
     @Override
     public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
-
+        Report stats = new Report();
         Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
         for (BasicTranscriptionData bt : btc) {
             stats.merge(function(bt));
