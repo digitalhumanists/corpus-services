@@ -37,7 +37,6 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     //get path of zip file corpus/resources/corpus.zip
     String OUTPUT_ZIP_FILE = "";
     Boolean AUDIO = false;
-    Report stats = new Report();
     CorpusData comadata;
 
     public ZipCorpus() {
@@ -58,6 +57,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      * @param zipFile output ZIP file location
      */
     public Report zipIt(CorpusData comadata, String zipFile, Boolean AUDIO) {
+        Report stats = new Report();
         //get name of folder
         if (zipFile.equals("")) {
             String SOURCE_FOLDER_NAME = comadata.getFilenameWithoutFileEnding();
@@ -110,6 +110,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
      * @param node file or directory
      */
     public Report generateFileList(File node) {
+        Report stats = new Report();
         //add file only
         if (node.isFile()) {
             if (AUDIO) {
@@ -147,6 +148,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
     @Override
     public Report function(CorpusData cd) {
+        Report stats = new Report();
         comadata = cd;
         SOURCE_FOLDER = cd.getParentURL().getPath();
         stats = generateFileList(new File(SOURCE_FOLDER));
@@ -156,6 +158,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
 
     @Override
     public Report function(Corpus c) {
+        Report stats = new Report();
         comadata = c.getComaData();
         SOURCE_FOLDER = cd.getParentURL().getPath();
         stats = generateFileList(new File(SOURCE_FOLDER));
@@ -169,7 +172,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, "Usable class not found.");
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
@@ -188,7 +191,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             AUDIO = false;
         } else {
-            stats.addCritical(function, cd, "Parameter coma not recognized: " + s);
+            report.addCritical(function, cd, "Parameter coma not recognized: " + s);
         }
     }
 

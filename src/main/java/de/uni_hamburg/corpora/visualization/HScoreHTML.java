@@ -39,7 +39,6 @@ public class HScoreHTML extends Visualizer {
     // resources loaded from directory supplied in pom.xml
     private static final String STYLESHEET_PATH = "/xsl/EXB2hScoreHTML.xsl";
     private final String SERVICE_NAME = "HScoreHTML";
-    Report stats;
     URL targeturl;
     CorpusData cd;
     String corpusname = "";
@@ -119,6 +118,7 @@ public class HScoreHTML extends Visualizer {
 
     @Override
     public Report function(CorpusData cod) {
+        Report stats = new Report();
         try {
             cd = cod;
             stats = new Report();
@@ -145,7 +145,7 @@ public class HScoreHTML extends Visualizer {
     
     @Override
     public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
-
+        Report stats = new Report();
         Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
         for (BasicTranscriptionData bt : btc) {
             stats.merge(function(bt));
@@ -159,7 +159,7 @@ public class HScoreHTML extends Visualizer {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, "Usable class not found.");
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
@@ -183,15 +183,15 @@ public class HScoreHTML extends Visualizer {
                 }
             }
         } catch (UnsupportedEncodingException uee) {
-            stats.addException(SERVICE_NAME, uee, "encoding exception");
+            report.addException(SERVICE_NAME, uee, "encoding exception");
         } catch (IOException ioe) {
-            stats.addException(SERVICE_NAME, ioe, "input output exception");
+            report.addException(SERVICE_NAME, ioe, "input output exception");
         } catch (JDOMException ex) {
             Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TransformerException ex) {
             Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return stats;
+        return report;
     }
 
     @Override
