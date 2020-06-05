@@ -85,7 +85,7 @@
                 </xsl:for-each>
                 <xsl:for-each select="*:Language, *:Location">
                     <xsl:variable name="element-type" select="local-name()" as="xs:string"/>
-                    <xsl:variable name="category-type" select="@Type" as="xs:string?"/>
+                    <xsl:variable name="category-type" select="(@Type, position())[1]" as="xs:string?"/>
                     <xsl:if test="$element-type = 'Language'">
                         <xsl:value-of select="concat('&quot;Speaker | ', $element-type, concat(' | ', string:map-categories($category-type))[exists($category-type)], ' | LanguageCode&quot;: &quot;', *:LanguageCode, '&quot;, ')"/>
                     </xsl:if>
