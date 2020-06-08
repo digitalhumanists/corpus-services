@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 public class ComaCommunicationCleaner extends Checker implements CorpusFunction {
 
     String mode = "";
-    String musterElementsPattern = "_(Muster|MUSTER)_";
+    String musterElementsPattern = "^_+(Muster|MUSTER)_+";
 
     public ComaCommunicationCleaner() {
         //can fix
@@ -68,8 +68,8 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
                 
                 NodeList corpusData = doc.getElementsByTagName("CorpusData"); 
                 NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
-                for (int i = 0; i < communications.getLength(); i++) { //iterate through communications
-                    Element communication = (Element) communications.item(i);
+                for (int j = 0; j < communications.getLength(); j++) { //iterate through communications
+                    Element communication = (Element) communications.item(j);
                     String communicationName = communication.getAttribute("Name"); // get communication name to use it in the warning
 
                     NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication
@@ -92,8 +92,8 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
                     } else{
                         //remove speaker IDs from ArrayList
                         NodeList persons = communication.getElementsByTagName("Person"); 
-                        for (int j = 0; j < persons.getLength(); j++) {
-                            String personID = persons.item(j).getNodeValue(); 
+                        for (int k = 0; k < persons.getLength(); k++) {
+                            String personID = persons.item(k).getNodeValue(); 
                             if(speakerIDsToRemove.contains(personID)){
                                 speakerIDsToRemove.remove(personID);
                             }
@@ -104,18 +104,26 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
                 
                 
                 //also remove Muster Speaker elements and remove Speaker elements which were exclusively linked in "empty" Communications
-                for (int j = 0; j < speakers.getLength(); j++) {
-                    Element speaker = (Element) speakers.item(j);
+                for (int l = 0; l < speakers.getLength(); l++) {
+                    Element speaker = (Element) speakers.item(l);
 
                     // test if it was only used in "empty" Communication 
                     String speakerID = speaker.getAttribute("Id");       
-                    String speakerSigle = speaker.getElementsByTagName("Sigle").item(0).getNodeValue();                            
-                    if(speakerIDsToRemove.contains(speakerID) || speakerSigle.matches("_(Muster|MUSTER)_")){
+                    String speakerSigle = speaker.getElementsByTagName("Sigle").item(0).getTextContent();
+                    if(speakerIDsToRemove.contains(speakerID) || speakerSigle.matches(musterElementsPattern)){
                         speaker.getParentNode().removeChild(speaker);
                         if(fix){
-                            stats.addFix(function, cd, "Removed Speaker "+speakerSigle+" because it was a 'Muster' speaker."); // fix report
+                            if(speakerSigle.matches(musterElementsPattern)){
+                                stats.addFix(function, cd, "Removed Speaker "+speakerSigle+" because it was a 'Muster' speaker."); // fix report
+                            } else{
+                                stats.addFix(function, cd, "Removed Speaker "+speakerSigle+" because it was only linked in 'empty' Communication."); // fix report
+                            }
                         } else{
-                            stats.addWarning(function, cd, "Speaker "+speakerSigle+" is a 'Muster' speaker.");
+                            if(speakerSigle.matches(musterElementsPattern)){
+                                stats.addWarning(function, cd, "Speaker "+speakerSigle+" is a 'Muster' speaker.");
+                            } else{
+                                stats.addWarning(function, cd, "Speaker "+speakerSigle+" is only linked in 'empty' Communication."); // fix report
+                            }
                         }
                     }
                 }
@@ -157,7 +165,7 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
     }
 
     public void setMode(String newMode){
-        mode = newMode;
+        mode = newMode; 
     }
     
     public void setMusterPattern(String pattern){
