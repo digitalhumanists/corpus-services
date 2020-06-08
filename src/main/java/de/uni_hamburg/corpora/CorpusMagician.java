@@ -126,6 +126,7 @@ public class CorpusMagician {
     static String corpusname = "corpusname";
     static String kml = "kml";
     static String mode = "mode";
+    static String musterPattern = "_(Muster|MUSTER)_";
     static URL reportlocation;
     static URL inputurl;
     static boolean isCorpus = false;
@@ -373,9 +374,13 @@ public class CorpusMagician {
                 case "comacommunicationcleaner":
                     ComaCommunicationCleaner ccc = new ComaCommunicationCleaner();
                     if (cfProperties.containsKey(mode)) {
-                            ccc.setMode(cfProperties.getProperty(mode));
-                            System.out.println("Mode set to " + cfProperties.getProperty(mode));
-                        }
+                        ccc.setMode(cfProperties.getProperty(mode));
+                        System.out.println("Mode set to " + cfProperties.getProperty(mode));
+                    }
+                    if (cfProperties.containsKey(musterPattern)) {
+                        ccc.setMusterPattern(cfProperties.getProperty(musterPattern));
+                        System.out.println("MusterPattern set to " + cfProperties.getProperty(musterPattern));
+                    }
                     cf2strcorpusfunctions.add(ccc);
                     break;
                 case "comachartsgeneration":

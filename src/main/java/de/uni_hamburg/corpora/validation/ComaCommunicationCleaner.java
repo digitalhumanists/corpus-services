@@ -10,6 +10,7 @@ import de.uni_hamburg.corpora.XMLData;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -26,6 +27,7 @@ import org.xml.sax.SAXException;
 public class ComaCommunicationCleaner extends Checker implements CorpusFunction {
 
     String mode = "";
+    String musterElementsPattern = "_(Muster|MUSTER)_";
 
     public ComaCommunicationCleaner() {
         //can fix
@@ -52,6 +54,18 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
                 ccd = (ComaData) cd;
                 doc = TypeConverter.JdomDocument2W3cDocument(ccd.getJdom()); // get the file as a document      
                 
+                //store IDs of all speakers for later
+                ArrayList<String> speakerIDsToRemove = new ArrayList<String>();
+                NodeList speakers = doc.getElementsByTagName("Speaker"); 
+                for (int i = 0; i < speakers.getLength(); i++) { //iterate through speakers
+                    Element speaker = (Element) speakers.item(i);
+                    String speakerID = speaker.getAttribute("Id");
+                    if(!speakerIDsToRemove.contains(speakerID)){
+                        speakerIDsToRemove.add(speakerID);
+                    }
+                }
+                 
+                
                 NodeList corpusData = doc.getElementsByTagName("CorpusData"); 
                 NodeList communications = doc.getElementsByTagName("Communication"); // divide by Communication tags
                 for (int i = 0; i < communications.getLength(); i++) { //iterate through communications
@@ -60,22 +74,51 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
 
                     NodeList transcriptions = communication.getElementsByTagName("Transcription"); // get transcriptions of current communication
                     // if there are no Transcription elements, then remove this Communication
-                    if(transcriptions.getLength() == 0){
+                    if(transcriptions.getLength() == 0 || communicationName.matches(musterElementsPattern)){
                         communication.getParentNode().removeChild(communication);
                         if(fix){
-                            stats.addFix(function, cd, "Removed Communication "+communicationName+" because there were no Transcription elements."); // fix report
+                            if(communicationName.matches(musterElementsPattern)){
+                                stats.addFix(function, cd, "Removed Communication "+communicationName+" because it was a 'Muster' Communication."); // fix report
+                            } else{
+                                stats.addFix(function, cd, "Removed Communication "+communicationName+" because there were no Transcription elements."); // fix report
+                            }
                         } else{
-                            stats.addWarning(function, cd, "Communication "+communicationName+" has no Transcription elements."); // fix report
+                            if(communicationName.matches(musterElementsPattern)){
+                                stats.addFix(function, cd, "Communication "+communicationName+" is a 'Muster' Communication."); // fix report
+                            } else{
+                                stats.addWarning(function, cd, "Communication "+communicationName+" has no Transcription elements."); // fix report
+                            }
+                        }
+                    } else{
+                        //remove speaker IDs from ArrayList
+                        NodeList persons = communication.getElementsByTagName("Person"); 
+                        for (int j = 0; j < persons.getLength(); j++) {
+                            String personID = persons.item(j).getNodeValue(); 
+                            if(speakerIDsToRemove.contains(personID)){
+                                speakerIDsToRemove.remove(personID);
+                            }
+                            
+                        }
+                    }                    
+                }
+                
+                
+                //also remove Muster Speaker elements and remove Speaker elements which were exclusively linked in "empty" Communications
+                for (int j = 0; j < speakers.getLength(); j++) {
+                    Element speaker = (Element) speakers.item(j);
+
+                    // test if it was only used in "empty" Communication 
+                    String speakerID = speaker.getAttribute("Id");       
+                    String speakerSigle = speaker.getElementsByTagName("Sigle").item(0).getNodeValue();                            
+                    if(speakerIDsToRemove.contains(speakerID) || speakerSigle.matches("_(Muster|MUSTER)_")){
+                        speaker.getParentNode().removeChild(speaker);
+                        if(fix){
+                            stats.addFix(function, cd, "Removed Speaker "+speakerSigle+" because it was a 'Muster' speaker."); // fix report
+                        } else{
+                            stats.addWarning(function, cd, "Speaker "+speakerSigle+" is a 'Muster' speaker.");
                         }
                     }
-                    
-                    //also remove Communications which are "Muster"
-                    //_MUSTER_
-                    
-                    //also remove Muster Speaker elements and Speaker elements which were exclusively linked in "empty" Communications
-                    
                 }
-
                 break;
             default:
                 stats.addCritical(function, cd, "The value '"+mode+"' of the parameter 'mode' is not supported.");
@@ -115,6 +158,10 @@ public class ComaCommunicationCleaner extends Checker implements CorpusFunction 
 
     public void setMode(String newMode){
         mode = newMode;
+    }
+    
+    public void setMusterPattern(String pattern){
+        musterElementsPattern = pattern;
     }
     
     /**
