@@ -41,6 +41,7 @@ import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.validation.ComaChartsGeneration;
+import de.uni_hamburg.corpora.validation.ComaCommunicationCleaner;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
@@ -254,6 +255,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ComaCommunicationCleaner");
         allExistingCFs.add("ComaChartsGeneration");
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("ComaSegmentCountChecker");
@@ -366,6 +368,15 @@ public class CorpusMagician {
                         }
                     }
                     cf2strcorpusfunctions.add(cog);
+                    break;
+                    
+                case "comacommunicationcleaner":
+                    ComaCommunicationCleaner ccc = new ComaCommunicationCleaner();
+                    if (cfProperties.containsKey(mode)) {
+                            ccc.setMode(cfProperties.getProperty(mode));
+                            System.out.println("Mode set to " + cfProperties.getProperty(mode));
+                        }
+                    cf2strcorpusfunctions.add(ccc);
                     break;
                 case "comachartsgeneration":
                     ComaChartsGeneration coc = new ComaChartsGeneration();if (cfProperties != null) {
