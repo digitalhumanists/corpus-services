@@ -811,8 +811,9 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
-            Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
-            IsUsableFor.add(cl3);
+            //Coma will only be used if a corpus is supplied
+            //Class cl3 = Class.forName("de.uni_hamburg.corpora.ComaData");
+            //IsUsableFor.add(cl3);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "unknown class not found error");
         }
