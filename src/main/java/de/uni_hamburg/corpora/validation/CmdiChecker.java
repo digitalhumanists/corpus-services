@@ -22,7 +22,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import static de.uni_hamburg.corpora.utilities.TypeConverter.JdomDocument2W3cDocument;
-import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 
 /**
  * A class that can load cmdi data and check for potential problems with HZSK
@@ -31,7 +30,6 @@ import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 public class CmdiChecker extends Checker implements CorpusFunction {
 
     ValidatorSettings settings;
-    String cmdiLoc = "";
 
     public CmdiChecker() {
         //no fix available
@@ -61,45 +59,41 @@ public class CmdiChecker extends Checker implements CorpusFunction {
             Element restype = (Element) restypes.item(0);
             if (restype.getTextContent().equals("LandingPage")) {
                 hasLandingPage = true;
-                stats.addCorrect(function, cmdiLoc + ": "
-                        + "Good resource type LandingPage");
+                stats.addCorrect(function, cd, "Good resource type LandingPage");
             } else if (restype.getTextContent().equals("Resource")) {
-                stats.addCorrect(function, cmdiLoc + ": " +
+                stats.addCorrect(function,  cd, 
                     "Good resource type Resource");
             } else if (restype.getTextContent().equals("SearchPage")) {
-                stats.addCorrect(function, cmdiLoc + ": " +
+                stats.addCorrect(function,  cd, 
                     "Good resource type SearchPage");
             } else if (restype.getTextContent().equals("SearchService")) {
-                stats.addCorrect(function, cmdiLoc + ": " +
+                stats.addCorrect(function,  cd, 
                     "Good resource type SearchService");
             } else if (restype.getTextContent().equals("Metadata")) {
-                stats.addCorrect(function, cmdiLoc + ": " +
+                stats.addCorrect(function,  cd, 
                     "Good resource type Metadata");
             } else {
-                stats.addWarning(function, cmdiLoc + ": "
-                        + "Unrecognised resource type "
+                stats.addWarning(function,  cd, 
+                        "Unrecognised resource type "
                         + restype.getTextContent());
             }
             NodeList resrefs = rpe.getElementsByTagName("ResourceRef");
             Element resref = (Element) resrefs.item(0);
             String url = resref.getTextContent();
             if (!isUrlHandleOrHzsk(url)) {
-                stats.addCritical(function, cmdiLoc + ": "
-                        + "Invalid URL for reesource proxy:"
-                        + url,
+                stats.addCritical(function, cd, 
+                        "Invalid URL for reesource proxy:"
+                        + url +
                         "URLs should start with http://hdl.handle.net... or "
                         + "https://corpora.uni-hamburg.de/repository/...");
             } else {
-                stats.addCorrect(function, cmdiLoc + ": "
-                        + "Good resource proxy URL " + url);
+                stats.addCorrect(function,  cd, "Good resource proxy URL " + url);
             }
         }
         if (!hasLandingPage) {
-            stats.addCritical(function, cmdiLoc + ": "
-                    + "Missing landing page");
+            stats.addCritical(function,  cd,  "Missing landing page");
         } else {
-            stats.addCorrect(function, cmdiLoc + ": "
-                    + "Good landing page found");
+            stats.addCorrect(function,  cd,  "Good landing page found");
         }
         NodeList gis = doc.getElementsByTagName("GeneralInfo");
         for (int i = 0; i < gis.getLength(); i++) {
@@ -121,52 +115,44 @@ public class CmdiChecker extends Checker implements CorpusFunction {
                 Element e = (Element) n;
                 if (e.getTagName().equals("PID")) {
                     if (!isUrlHandleOrHzsk(e.getTextContent())) {
-                        stats.addCritical(function, cmdiLoc + ": "
-                                + "Invalid URL for PID:"
-                                + e.getTextContent(),
+                        stats.addCritical(function,  cd, "Invalid URL for PID:"
+                                + e.getTextContent() +
                                 "URLs should start with "
                                 + "http://hdl.handle.net... or "
                                 + "https://corpora.uni-hamburg.de/repository/...");
                     } else {
-                        stats.addCorrect(function, cmdiLoc + ": "
-                                + "Good PID URL: "
+                        stats.addCorrect(function, cd, "Good PID URL: "
                                 + e.getTextContent());
                     }
                     pidFound = true;
                 } else if (e.getTagName().equals("Description")) {
-                    if (e.getAttribute("xml:lang").equals("en")) {
+                    if (e.getAttribute("xml:lang").equals("en") || e.getAttribute("xml:lang").equals("eng")) {
                         englishDesc = true;
-                        stats.addCorrect(function, cmdiLoc + ": "
-                                + "English Description present");
+                        stats.addCorrect(function, cd, "English Description present");
                     }
                 } else if (e.getTagName().equals("Title")) {
-                    if (e.getAttribute("xml:lang").equals("en")) {
+                    if (e.getAttribute("xml:lang").equals("en") || e.getAttribute("xml:lang").equals("eng")) {
                         englishTitle = true;
-                        stats.addCorrect(function, cmdiLoc + ": "
-                                + "English title present");
+                        stats.addCorrect(function,  cd,  "English title present");
                     }
                 } else if (e.getTagName().equals("LegalOwner")) {
                     legalOwner = true;
-                    stats.addCorrect(function, cmdiLoc + ": "
-                            + "LegalOwner present");
+                    stats.addCorrect(function,  cd,  "LegalOwner present");
                 } else {
                     System.out.println("DEBUG: GeneralInfo/" + e.getTagName());
                     // pass
                 }
             }
             if (!englishTitle) {
-                stats.addWarning(function, cmdiLoc + ": "
-                        + "English title missing from General Info "
+                stats.addWarning(function, cd,  "English title missing from General Info "
                         + "(needed by FCS for example)");
             }
             if (!englishDesc) {
-                stats.addWarning(function, cmdiLoc + ": "
-                        + "English Description missing from General Info "
+                stats.addWarning(function, cd,  "English Description missing from General Info "
                         + "(needed by FCS for example)");
             }
             if (!pidFound) {
-                stats.addCritical(function, cmdiLoc + ": "
-                        + "PID missing");
+                stats.addCritical(function,  cd,  "PID missing");
             }
         }
         NodeList cis = doc.getElementsByTagName("CorpusInfo");
@@ -176,12 +162,12 @@ public class CmdiChecker extends Checker implements CorpusFunction {
                 continue;
             }
             Element ci = (Element) cis.item(i);
-            checkCorpusInfo(ci, stats);
+            checkCorpusInfo(ci, stats, cd);
         }
         return stats;
     }
 
-    private void checkCorpusInfo(Element ci, Report stats) {
+    private void checkCorpusInfo(Element ci, Report stats, CorpusData cd) {
         NodeList childs = ci.getChildNodes();
         boolean corpusType = false;
         boolean genre = false;
@@ -200,13 +186,13 @@ public class CmdiChecker extends Checker implements CorpusFunction {
                     corpusType = true;
                 }
             } else if (e.getTagName().equals("SubjectLanguages")) {
-                checkSubjectLanguages(e, stats);
+                checkSubjectLanguages(e, stats, cd);
             } else if (e.getTagName().equals("Coverage")) {
                 NodeList tcs = e.getElementsByTagName("TimeCoverage");
                 if (tcs.getLength() != 0) {
                     timeCoverage = true;
                 }
-                checkCoverage(e, stats);
+                checkCoverage(e, stats, cd);
             } else if (e.getTagName().equals("Content")) {
                 NodeList genres = e.getElementsByTagName("Genre");
                 if (genres.getLength() != 0) {
@@ -222,33 +208,26 @@ public class CmdiChecker extends Checker implements CorpusFunction {
             }
         }
         if (!corpusType) {
-            stats.addCritical(function, cmdiLoc + ": "
-                    + "Corpus type is needed for repo web pages");
+            stats.addCritical(function,  cd,  "Corpus type is needed for repo web pages");
         } else {
-            stats.addCorrect(function, cmdiLoc + ": "
-                    + "Corpus type included");
+            stats.addCorrect(function,  cd,  "Corpus type included");
         }
         if (!genre) {
-            stats.addCritical(function, cmdiLoc + ": "
-                    + "Genre is needed for repo web pages");
+            stats.addCritical(function,  cd,  "Genre is needed for repo web pages");
         } else {
-            stats.addCorrect(function, cmdiLoc + ": "
-                    + "Genre included");
+            stats.addCorrect(function,  cd,  "Genre included");
         }
         if (!modality) {
-            stats.addCritical(function, cmdiLoc + ": "
-                    + "Modality is needed for repo web pages");
+            stats.addCritical(function, cd,  "Modality is needed for repo web pages");
         } else {
-            stats.addCorrect(function, cmdiLoc + ": "
-                    + "modality included");
+            stats.addCorrect(function,  cd,  "modality included");
         }
         if (!timeCoverage) {
-            stats.addWarning(function, cmdiLoc + ": "
-                    + "time coverage is missing (recommended for VLO)");
+            stats.addWarning(function,  cd,  "time coverage is missing (recommended for VLO)");
         }
     }
 
-    private void checkCoverage(Element coverage, Report stats) {
+    private void checkCoverage(Element coverage, Report stats, CorpusData cd) {
         NodeList timeCoverages = coverage.getElementsByTagName("TimeCoverage");
         for (int i = 0; i < timeCoverages.getLength(); i++) {
             Node n = timeCoverages.item(i);
@@ -258,17 +237,15 @@ public class CmdiChecker extends Checker implements CorpusFunction {
             Element e = (Element) n;
             String tc = e.getTextContent();
             if (tc.matches("[0-9]+/[0-9]+")) {
-                stats.addCorrect(function, cmdiLoc + ": "
-                        + "Good time coverage");
+                stats.addCorrect(function,  cd,  "Good time coverage");
             } else {
-                stats.addCritical(function, cmdiLoc + ": "
-                        + "TimeCoverage should be YYYY/YYYY for VLO");
+                stats.addCritical(function,  cd,  "TimeCoverage should be YYYY/YYYY for VLO");
             }
         }
 
     }
 
-    private void checkSubjectLanguages(Element sls, Report stats) {
+    private void checkSubjectLanguages(Element sls, Report stats, CorpusData cd) {
         NodeList langs = sls.getElementsByTagName("Language");
         for (int i = 0; i < langs.getLength(); i++) {
             Node n = langs.item(i);
@@ -285,12 +262,10 @@ public class CmdiChecker extends Checker implements CorpusFunction {
                 }
             }
             if (!engFound) {
-                stats.addCritical(function, cmdiLoc + ": "
-                        + "Each subject language must have @xml:lang eng "
+                stats.addCritical(function,  cd,  "Each subject language must have @xml:lang eng "
                         + "filled in");
             } else {
-                stats.addCorrect(function, cmdiLoc + ": "
-                        + "Goog language data");
+                stats.addCorrect(function,  cd,  "Goog language data");
             }
         }
     }
