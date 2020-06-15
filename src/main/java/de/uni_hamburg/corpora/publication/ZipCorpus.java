@@ -150,7 +150,9 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     public Report function(CorpusData cd) {
         Report stats = new Report();
         comadata = cd;
-        SOURCE_FOLDER = cd.getParentURL().getPath();
+        if (SOURCE_FOLDER.equals("")){
+            SOURCE_FOLDER = cd.getParentURL().getPath();
+        }
         stats = generateFileList(new File(SOURCE_FOLDER));
         stats.merge(zipIt(cd, OUTPUT_ZIP_FILE, AUDIO));
         return stats;
@@ -186,12 +188,13 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     }
 
     public void setWithAudio(String s) {
+        report = new Report();
         if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("wahr") || s.equalsIgnoreCase("ja")) {
             AUDIO = true;
         } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("falsch") || s.equalsIgnoreCase("nein")) {
             AUDIO = false;
         } else {
-            report.addCritical(function, cd, "Parameter coma not recognized: " + s);
+            report.addCritical(function, cd, "Parameter audio not recognized: " + s);
         }
     }
 
