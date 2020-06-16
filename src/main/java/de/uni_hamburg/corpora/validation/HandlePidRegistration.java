@@ -1,0 +1,309 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.uni_hamburg.corpora.validation;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import de.uni_hamburg.corpora.CmdiData;
+import de.uni_hamburg.corpora.Corpus;
+import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
+import de.uni_hamburg.corpora.Report;
+import de.uni_hamburg.corpora.CorpusIO;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import de.uni_hamburg.corpora.utilities.TypeConverter;
+import static de.uni_hamburg.corpora.utilities.TypeConverter.JdomDocument2W3cDocument;
+import java.io.UnsupportedEncodingException;
+import javax.xml.xpath.XPathExpressionException;
+
+/**
+ * This class registers Handle PIDs for URLs from specific places in CMDI files,
+ * and replaces the original URLs with the Handle URLs
+ *
+ * @author daniel.jettka@uni-hamburg.de
+ */
+public class HandlePidRegistration extends Checker implements CorpusFunction {
+    
+    ValidatorSettings settings;
+    String cmdiLoc = "";
+    
+    String EpicApiUser = "";
+    String EpicApiPass = "";
+    String HandlePrefix = "11022"; // this is the HZSK prefix
+    String HandleEndpoint = "http://pid.gwdg.de/handles/";
+    String HandleUrlBase = "http://hdl.handle.net/";
+    
+    // names of XML elements in which URLs are found for which Handles shall be retrieved/registered
+    String[] ElementNames = {"MdSelfLink", "ResourceRef", "IsPartOf", "PID"};
+    
+    
+    
+    public HandlePidRegistration() {
+        //fix available
+        super(true);
+    }
+
+    
+    public Report function(CorpusData cd, Boolean fix)
+            throws SAXException, IOException, ParserConfigurationException {
+        
+        Report stats = new Report();
+        
+        // this one is not available as check
+        if(!fix){
+            stats.addNote(function, cd, "This CorpusFunction is only available as fix.");
+            return stats;
+        }
+        
+        
+        CmdiData cmdi = (CmdiData) cd;
+        Document doc = JdomDocument2W3cDocument(cmdi.getJdom());
+        
+        //optional, but recommended
+        //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+        doc.getDocumentElement().normalize();
+
+        Element root = doc.getDocumentElement();
+
+        for (int x = 0; x < ElementNames.length; x++) {
+            NodeList nodes = root.getElementsByTagName(ElementNames[x]);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node ResourceRefText = nodes.item(i).getFirstChild();
+                if (ResourceRefText == null) {
+                    continue;
+                }
+                String oldURL = ResourceRefText.getTextContent();
+                
+                // test if the URL is already a Handle
+                if(oldURL.matches("hdl.handle.net")){
+                    stats.addNote(function, cd, "URL is already a Handle PID: " + oldURL);
+                } else{
+                    Object arr[] = (Object[]) getOrCreatePID(oldURL);
+                    String newURL = (String)arr[0];
+                    newURL = newURL.replaceAll("[\\s\\n]+$", "");
+                    if((Boolean)arr[1] == true){
+                        stats.addNote(function, cd, "Registered new Handle PID for " + oldURL + ":\n" + newURL);
+                    } else{
+                        stats.addNote(function, cd, "Retrieved existing Handle PID for " + oldURL + ":\n" + newURL);
+                    }
+                    ResourceRefText.setNodeValue(newURL);
+                }
+                
+            }
+        }
+                
+            
+        String newCmdiXmlInStringOneLine = TypeConverter.W3cDocument2String(doc);
+
+        //make sure XML prolog is on own line (needed for jOAI provider)
+        //insert comment about automatic processing into file (between last processing instruction and directly following comment)
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+        String newCmdiXmlInString = newCmdiXmlInStringOneLine.replaceAll("\\?>\\s*<!\\-\\-", "?>\n<!--Handle PIDs generated by HandlePIDs.java on "+df.format(today)+"-->\n<!--");
+
+                
+        try {
+            CorpusIO cio = new CorpusIO();
+            cd.updateUnformattedString(newCmdiXmlInString);
+            cio.write(cd, cd.getURL());
+            stats.addFix(function, cd, "Written: "+cd.getURL());
+        } catch (UnsupportedEncodingException ex) {
+            stats.addCritical(function, cd, "UnsupportedEncodingException: " + ex);
+        } catch (XPathExpressionException ex) {
+            stats.addCritical(function, cd, "XPathExpressionException: " + ex);
+        } catch (TransformerException ex) {
+            stats.addCritical(function, cd, "TransformerException: " + ex);
+        }
+                
+        return stats;
+        
+        
+    }
+
+    
+    
+    
+    public Object getOrCreatePID(String oldURL)
+            throws ParserConfigurationException, SAXException, IOException{
+        
+        Object[] arr = new Object[2];
+
+        String newURL = oldURL;
+        String partIdentifier = "";
+        System.out.println("trying " + oldURL);
+        if(oldURL.matches("^.+/[A-Z0-9]{2,6}$") && !oldURL.endsWith("/CMDI")){
+            int endIndex = oldURL.lastIndexOf("/");
+            if(endIndex != -1){
+                partIdentifier = "@"+oldURL.substring(endIndex + 1);
+                oldURL = oldURL.substring(0, endIndex);
+            }
+        }
+        System.out.println("GET " + oldURL);
+
+        /* get existing pid for this url */
+        String existingHandle = getPID(oldURL);
+
+        /* there is a handle pid registered for this url already*/
+        if(existingHandle != null && !existingHandle.equals("")){
+            newURL = HandleUrlBase + HandlePrefix + "/" + existingHandle + partIdentifier;
+            arr[0] = newURL;
+            arr[1] = false;
+        }
+        /* for this url a new pid has to be registered */
+        else{
+            String newHandle = registerPID(oldURL);
+            newURL = HandleUrlBase + HandlePrefix + "/" + newHandle + partIdentifier;
+            arr[0] = newURL;
+            arr[1] = true;
+        }
+
+        return arr;
+    }
+
+    public String getPID(String handleURL)
+            throws IOException{
+
+        //http://pid.gwdg.de/handles/11022?URL=http://www.corpora.uni-hamburg.de/repository
+        
+        String authString = EpicApiUser + ":" + EpicApiPass;
+        String authStringEnc = Base64.encode(authString.getBytes("UTF-8"));
+
+        URL url = new URL(HandleEndpoint + HandlePrefix + "?URL=" + handleURL);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
+        urlConnection.setRequestProperty("Accept", "text/plain");
+        try {
+            int rc = urlConnection.getResponseCode();
+            InputStream is = urlConnection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+
+            int numCharsRead;
+            char[] charArray = new char[1024];
+            StringBuffer sb = new StringBuffer();
+            while ((numCharsRead = isr.read(charArray)) > 0) {
+                    sb.append(charArray, 0, numCharsRead);
+            }
+
+        return sb.toString();
+        } catch(FileNotFoundException fnfe) {
+            System.out.println("FileNotFound? " + fnfe.toString());
+            return null;
+        }
+    }
+
+    public String registerPID(String handleURL)
+            throws ParserConfigurationException, SAXException, IOException{
+
+        // "Accept:application/json" -H "Content-Type:application/json" -X POST --data '[{"type":"URL","parsed_data":"http://www.example.com/cmdi"}]' "http://pid.gwdg.de/handles/11022/"
+
+        //http://pid.gwdg.de/handles/11022?URL=http://www.corpora.uni-hamburg.de/repository
+        
+        String authString = EpicApiUser + ":" + EpicApiPass;
+        String authStringEnc = Base64.encode(authString.getBytes("UTF-8"));
+
+        URL object=new URL(HandleEndpoint + HandlePrefix + "/");
+        HttpURLConnection con = (HttpURLConnection) object.openConnection();
+        con.setRequestProperty("Authorization", "Basic " + authStringEnc);
+        con.setDoOutput(true);
+        con.setDoInput(true);
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/xml");
+        con.setRequestMethod("POST");
+
+        OutputStreamWriter wr= new OutputStreamWriter(con.getOutputStream());
+        wr.write("[{\"type\":\"URL\",\"parsed_data\":\""+handleURL+"\"}]");
+        wr.flush();
+
+        //display what returns the POST request
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        br.close();
+
+        String responseInString = ""+sb.toString();
+        System.out.println(responseInString);
+        Document responseAsXml = TypeConverter.String2W3cDocument(responseInString);
+        Element root = responseAsXml.getDocumentElement();
+        NodeList nList = root.getElementsByTagName("dd");
+        String handlePID = nList.item(0).getFirstChild().getTextContent();
+
+        return handlePID;
+    }
+    
+    public void setUser(String user){
+        EpicApiUser = user;
+    }
+       
+    public void setPass(String pass){
+        EpicApiPass = pass;
+    }
+    
+    public void setHandlePrefix(String prefix){
+        HandlePrefix = prefix;
+    }
+    
+
+    /**
+     * Default function which determines for what type of files (basic
+     * transcription, segmented transcription, coma etc.) this feature can be
+     * used.
+     */
+    @Override
+    public Collection<Class<? extends CorpusData>> getIsUsableFor() {
+        try {
+            Class cl = Class.forName("de.uni_hamburg.corpora.CmdiData");
+            IsUsableFor.add(cl);
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, " usable class not found");
+        }
+        return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class loads cmdi data and check for potential "
+                + "problems with HZSK repository depositing.";
+        return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException {
+        Report stats = new Report();
+        for(CmdiData cmdid : c.getCmdidata()){
+            stats.merge(function(cmdid, false));
+        }
+        return stats;
+    }
+
+
+}
