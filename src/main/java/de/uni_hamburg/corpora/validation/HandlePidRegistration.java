@@ -122,6 +122,7 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
                     /* there is a handle pid registered for this url already*/
                     if(existingHandle != null && !existingHandle.equals("")){
                         newURL = HandleUrlBase + HandlePrefix + "/" + existingHandle + partIdentifier;
+                        newURL = newURL.replaceAll("[\\s\\n]+", "");
                         stats.addNote(function, cd, "Retrieved existing Handle PID for " + oldURL + ":\n" + newURL);                        
                         System.out.println("Retrieved existing Handle PID for " + oldURL + ":\n" + newURL);
                     }
@@ -129,6 +130,7 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
                     else{
                         String newHandle = registerPID(oldURL);
                         newURL = HandleUrlBase + HandlePrefix + "/" + newHandle + partIdentifier;
+                        newURL = newURL.replaceAll("[\\s\\n]+", "");
                         stats.addNote(function, cd, "Registered new Handle PID for " + oldURL + ":\n" + newURL);                      
                         System.out.println("Registered new Handle PID for " + oldURL + ":\n" + newURL);
                     }
