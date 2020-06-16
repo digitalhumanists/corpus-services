@@ -51,9 +51,9 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
     ValidatorSettings settings;
     String cmdiLoc = "";
     
-    String EpicApiUser = "";
-    String EpicApiPass = "";
-    String HandlePrefix = "11022"; // this is the HZSK prefix
+    String EpicApiUser = ""; //e.g. 1008-01 for HZSK
+    String EpicApiPass = ""; //e.g. K******* for HZSK
+    String HandlePrefix = "11022"; // the default is the HZSK/CLARIN prefix 11022
     String HandleEndpoint = "http://pid.gwdg.de/handles/";
     String HandleUrlBase = "http://hdl.handle.net/";
     
@@ -75,7 +75,8 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
         
         // this one is not available as check
         if(!fix){
-            stats.addNote(function, cd, "This CorpusFunction is only available as fix.");
+            stats.addWarning(function, cd, "This CorpusFunction is only available as fix.");
+            System.out.println(function + " is only available as fix.");
             return stats;
         }
         
@@ -92,27 +93,48 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
         for (int x = 0; x < ElementNames.length; x++) {
             NodeList nodes = root.getElementsByTagName(ElementNames[x]);
             for (int i = 0; i < nodes.getLength(); i++) {
-                Node ResourceRefText = nodes.item(i).getFirstChild();
-                if (ResourceRefText == null) {
+                Node node = nodes.item(i).getFirstChild();
+                if (node == null) {
                     continue;
                 }
-                String oldURL = ResourceRefText.getTextContent();
+                String oldURL = node.getTextContent();
                 
                 // test if the URL is already a Handle
-                if(oldURL.matches("hdl.handle.net")){
-                    stats.addNote(function, cd, "URL is already a Handle PID: " + oldURL);
-                } else{
-                    Object arr[] = (Object[]) getOrCreatePID(oldURL);
-                    String newURL = (String)arr[0];
-                    newURL = newURL.replaceAll("[\\s\\n]+$", "");
-                    if((Boolean)arr[1] == true){
-                        stats.addNote(function, cd, "Registered new Handle PID for " + oldURL + ":\n" + newURL);
-                    } else{
-                        stats.addNote(function, cd, "Retrieved existing Handle PID for " + oldURL + ":\n" + newURL);
+                if(oldURL.matches("^\\s*(https?://)?hdl\\.handle\\.net/.*$")){
+                    stats.addWarning(function, cd, "URL is already a Handle PID: " + oldURL);
+                } 
+                // if URL is not already a Handle
+                else{
+
+                    String newURL = oldURL;
+                    String partIdentifier = "";
+                    if(oldURL.matches("^.+/[A-Z0-9]{2,6}$") && !oldURL.endsWith("/CMDI")){
+                        int endIndex = oldURL.lastIndexOf("/");
+                        if(endIndex != -1){
+                            partIdentifier = "@"+oldURL.substring(endIndex + 1);
+                            oldURL = oldURL.substring(0, endIndex);
+                        }
                     }
-                    ResourceRefText.setNodeValue(newURL);
-                }
-                
+
+                    /* get existing PID for this url */
+                    String existingHandle = getPID(oldURL);
+
+                    /* there is a handle pid registered for this url already*/
+                    if(existingHandle != null && !existingHandle.equals("")){
+                        newURL = HandleUrlBase + HandlePrefix + "/" + existingHandle + partIdentifier;
+                        stats.addNote(function, cd, "Retrieved existing Handle PID for " + oldURL + ":\n" + newURL);                        
+                        System.out.println("Retrieved existing Handle PID for " + oldURL + ":\n" + newURL);
+                    }
+                    /* for this url a new pid has to be registered */
+                    else{
+                        String newHandle = registerPID(oldURL);
+                        newURL = HandleUrlBase + HandlePrefix + "/" + newHandle + partIdentifier;
+                        stats.addNote(function, cd, "Registered new Handle PID for " + oldURL + ":\n" + newURL);                      
+                        System.out.println("Registered new Handle PID for " + oldURL + ":\n" + newURL);
+                    }
+                    
+                    node.setNodeValue(newURL);
+                }                
             }
         }
                 
@@ -130,7 +152,7 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
             CorpusIO cio = new CorpusIO();
             cd.updateUnformattedString(newCmdiXmlInString);
             cio.write(cd, cd.getURL());
-            stats.addFix(function, cd, "Written: "+cd.getURL());
+            stats.addFix(function, cd, "Handle PIDs were retrieved and file was updated.");
         } catch (UnsupportedEncodingException ex) {
             stats.addCritical(function, cd, "UnsupportedEncodingException: " + ex);
         } catch (XPathExpressionException ex) {
@@ -140,50 +162,9 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
         }
                 
         return stats;
-        
-        
     }
 
     
-    
-    
-    public Object getOrCreatePID(String oldURL)
-            throws ParserConfigurationException, SAXException, IOException{
-        
-        Object[] arr = new Object[2];
-
-        String newURL = oldURL;
-        String partIdentifier = "";
-        System.out.println("trying " + oldURL);
-        if(oldURL.matches("^.+/[A-Z0-9]{2,6}$") && !oldURL.endsWith("/CMDI")){
-            int endIndex = oldURL.lastIndexOf("/");
-            if(endIndex != -1){
-                partIdentifier = "@"+oldURL.substring(endIndex + 1);
-                oldURL = oldURL.substring(0, endIndex);
-            }
-        }
-        System.out.println("GET " + oldURL);
-
-        /* get existing pid for this url */
-        String existingHandle = getPID(oldURL);
-
-        /* there is a handle pid registered for this url already*/
-        if(existingHandle != null && !existingHandle.equals("")){
-            newURL = HandleUrlBase + HandlePrefix + "/" + existingHandle + partIdentifier;
-            arr[0] = newURL;
-            arr[1] = false;
-        }
-        /* for this url a new pid has to be registered */
-        else{
-            String newHandle = registerPID(oldURL);
-            newURL = HandleUrlBase + HandlePrefix + "/" + newHandle + partIdentifier;
-            arr[0] = newURL;
-            arr[1] = true;
-        }
-
-        return arr;
-    }
-
     public String getPID(String handleURL)
             throws IOException{
 
@@ -253,6 +234,7 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
         Element root = responseAsXml.getDocumentElement();
         NodeList nList = root.getElementsByTagName("dd");
         String handlePID = nList.item(0).getFirstChild().getTextContent();
+        handlePID = handlePID.replaceAll("[\\s\\n]+", "");
 
         return handlePID;
     }
@@ -291,8 +273,8 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
      */
     @Override
     public String getDescription() {
-        String description = "This class loads cmdi data and check for potential "
-                + "problems with HZSK repository depositing.";
+        String description = "This class loads CMDI data and retrieves already existing or newly registered "
+                + "Handle PIDs for URLs from specific XML elements.";
         return description;
     }
 
