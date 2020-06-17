@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.uni_hamburg.corpora.validation;
+package de.uni_hamburg.corpora.publication;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import de.uni_hamburg.corpora.CmdiData;
@@ -13,7 +13,6 @@ import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusIO;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
@@ -46,9 +43,8 @@ import javax.xml.xpath.XPathExpressionException;
  *
  * @author daniel.jettka@uni-hamburg.de
  */
-public class HandlePidRegistration extends Checker implements CorpusFunction {
+public class HandlePidRegistration extends Publisher implements CorpusFunction {
     
-    ValidatorSettings settings;
     String cmdiLoc = "";
     
     String EpicApiUser = ""; //e.g. 1008-01 for HZSK
@@ -63,23 +59,14 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
     
     
     public HandlePidRegistration() {
-        //fix available
-        super(true);
+        super();
     }
 
-    
-    public Report function(CorpusData cd, Boolean fix)
+    @Override
+    public Report function(CorpusData cd)
             throws SAXException, IOException, ParserConfigurationException {
         
-        Report stats = new Report();
-        
-        // this one is not available as check
-        if(!fix){
-            stats.addWarning(function, cd, "This CorpusFunction is only available as fix.");
-            System.out.println(function + " is only available as fix.");
-            return stats;
-        }
-        
+        Report stats = new Report();     
         
         CmdiData cmdi = (CmdiData) cd;
         Document doc = JdomDocument2W3cDocument(cmdi.getJdom());
@@ -281,13 +268,12 @@ public class HandlePidRegistration extends Checker implements CorpusFunction {
     }
 
     @Override
-    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException {
+    public Report function(Corpus c) throws SAXException, IOException, ParserConfigurationException {
         Report stats = new Report();
         for(CmdiData cmdid : c.getCmdidata()){
-            stats.merge(function(cmdid, false));
+            stats.merge(function(cmdid));
         }
         return stats;
     }
-
 
 }
