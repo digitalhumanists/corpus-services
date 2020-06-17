@@ -35,9 +35,6 @@ import org.xml.sax.SAXException;
  */
 public abstract class Checker implements CorpusFunction {
 
-    //I will keep the settings for now, so they can stay as they are for the Moment
-    //and we know where to refactor when we change them
-    //They are only allowed to be used in the main method, not the other CorpusFunction methods
     CorpusData cd;
     Report report = new Report();
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
