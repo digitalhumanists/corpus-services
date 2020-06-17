@@ -18,3 +18,4 @@ target/
 doc/
 !*.png
 !*.xsd
+!/src/main/java/de/uni_hamburg/corpora/visualization/resources/vikus-viewer/**
