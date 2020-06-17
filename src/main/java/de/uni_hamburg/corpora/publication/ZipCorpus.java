@@ -40,6 +40,7 @@ public class ZipCorpus extends Publisher implements CorpusFunction {
     CorpusData comadata;
 
     public ZipCorpus() {
+        super();
         fileList = new ArrayList<String>();
     }
 
