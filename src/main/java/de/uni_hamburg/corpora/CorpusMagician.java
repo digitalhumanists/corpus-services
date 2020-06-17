@@ -39,6 +39,7 @@ import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.publication.HandlePidRegistrationPublication;
 import de.uni_hamburg.corpora.validation.HandlePidRegistration;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.validation.ComaChartsGeneration;
@@ -258,6 +259,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaChartsGeneration");
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("HandlePidRegistration");
+         allExistingCFs.add("HandlePidRegistrationPublication");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
         allExistingCFs.add("ExbFileCoverageChecker");
@@ -644,6 +646,26 @@ public class CorpusMagician {
                         }
                     }
                     cf2strcorpusfunctions.add(hpr);
+                    break;
+                case "handlepidregistrationpublication":
+                    HandlePidRegistrationPublication hppr = new HandlePidRegistrationPublication();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("user")) {
+                            hppr.setUser(cfProperties.getProperty("user"));
+                            System.out.println("User set to " + cfProperties.getProperty("user"));
+                        }
+                        if (cfProperties.containsKey("pass")) {
+                            hppr.setPass(cfProperties.getProperty("pass"));
+                            System.out.println("Password set to " + cfProperties.getProperty("pass").replaceAll(".", "*"));
+                            //System.out.println("Password set to " + cfProperties.getProperty("pass"));
+                        }
+                        if (cfProperties.containsKey("prefix")) {
+                            hppr.setHandlePrefix(cfProperties.getProperty("prefix"));
+                            System.out.println("Prefix set to " + cfProperties.getProperty("prefix"));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(hppr);
                     break;
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
