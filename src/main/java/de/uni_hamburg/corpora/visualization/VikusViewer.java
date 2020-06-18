@@ -26,10 +26,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import de.uni_hamburg.corpora.ComaData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +72,7 @@ public class VikusViewer extends Visualizer {
         //"sketch,drawing",1890,Ket,Russia,Tomsk Oblast,sel,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/transcript:selkup-0.1_AR_1965_RestlessNight_transl/datastream/EXB/AR_1965_RestlessNight_transl.exb,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/file:selkup-0.1_KFN_1965_BearHunting1_nar/datastream/PDF/KFN_1965_BearHunting1_nar.pdf,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:selkup-0.1_DN_196X_Bread_nar/datastream/MP3/DN_196X_Bread_nar.mp3,flk,Male Torso,KAI_1965_OldWitch_flk
         Report stats = new Report();
         CSVReader reader;
+        CorpusIO cio = new CorpusIO();
         reader = new CSVReader(new FileReader(getClass().getResource(DATA_PATH).getPath()), ',');
         List<String[]> data = reader.readAll();
         for (String[] row : data) {
@@ -87,10 +90,10 @@ public class VikusViewer extends Visualizer {
             Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='1 Genre']");
             Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Region']");
             String keywords = "\"";
-            for (String s : description.getText().split(" ")){
+            for (String s : description.getText().split(" ")) {
                 keywords += s + ",";
             }
-            keywords +=  year.getText() + "," + genre.getText() + "," + region.getText()+ "\"";
+            keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "\"";
             comrow[0] = keywords;
             //year - Description Date of Recording
             System.out.println(year.getText());
@@ -115,20 +118,20 @@ public class VikusViewer extends Visualizer {
             System.out.println(transcription.getText());
             comrow[6] = transcription.getText();
             //pdf url
-            Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File/relPath']");
-             if (pdf!=null){
-            System.out.println(pdf.getText());
-            comrow[7] = pdf.getText();
-            }else{
-                 comrow[7] = "no pdf";
+            Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
+            if (pdf != null) {
+                System.out.println(pdf.getText());
+                comrow[7] = pdf.getText();
+            } else {
+                comrow[7] = "no pdf";
             }
             //audio url
             Element audio = (Element) XPath.selectSingleNode(communication, "descendant::Recording/Media/NSLink");
-            if (audio!=null){
-            System.out.println(audio.getText());
-            comrow[8] = audio.getText();
-            }else{
-                 comrow[8] = "no audio";
+            if (audio != null) {
+                System.out.println(audio.getText());
+                comrow[8] = audio.getText();
+            } else {
+                comrow[8] = "no audio";
             }
             //genre
             System.out.println(genre.getText());
@@ -142,12 +145,16 @@ public class VikusViewer extends Visualizer {
             comrow[11] = id.getValue();
             data.add(comrow);
         }
+        String newdata = "";
         for (String[] row : data) {
-            System.out.println(Arrays.toString(row));
+            newdata += String.join(",", row) + "\n";
             //first row = keys
             //other rows = values
         }
-        //System.out.println(Arrays.toString(allElements.get(0)));
+        //now save the string array as csv
+        URL configJSONlocation = new URL(vikusviewerurl + "/data.csv");
+        cio.write(newdata, configJSONlocation);
+        stats.addCorrect(function, cd, "vikus-viewer config successfully created at " + configJSONlocation.toString());
         return stats;
     }
 
