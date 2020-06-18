@@ -25,8 +25,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.opencsv.CSVReader;
+import de.uni_hamburg.corpora.ComaData;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
 
 /**
  *
@@ -39,7 +48,6 @@ public class VikusViewer extends Visualizer {
     private static final String INFO_PATH = "/vikus-viewer/info.md";
     private static final String TIMELINE_PATH = "/vikus-viewer/timeline.csv";
     String corpusname = "Corpus";
-    String vikusviewerfolder = "";
     URL vikusviewerurl;
 
     @Override
@@ -57,8 +65,89 @@ public class VikusViewer extends Visualizer {
         return stats;
     }
 
-    public Report createDataCSV(CorpusData cd) {
+    public Report createDataCSV(CorpusData cd) throws FileNotFoundException, IOException, JDOMException {
+        //keywords,year,_dialect,_country,_region,_language,_transcription,_pdf,_audio,_genre,_description,id
+        //"sketch,drawing",1890,Ket,Russia,Tomsk Oblast,sel,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/transcript:selkup-0.1_AR_1965_RestlessNight_transl/datastream/EXB/AR_1965_RestlessNight_transl.exb,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/file:selkup-0.1_KFN_1965_BearHunting1_nar/datastream/PDF/KFN_1965_BearHunting1_nar.pdf,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:selkup-0.1_DN_196X_Bread_nar/datastream/MP3/DN_196X_Bread_nar.mp3,flk,Male Torso,KAI_1965_OldWitch_flk
         Report stats = new Report();
+        CSVReader reader;
+        reader = new CSVReader(new FileReader(getClass().getResource(DATA_PATH).getPath()), ',');
+        List<String[]> data = reader.readAll();
+        for (String[] row : data) {
+            System.out.println(Arrays.toString(row));
+            //first row = keys
+            //other rows = values
+        }
+        //create Row ForCommunications
+        ComaData coma = (ComaData) cd;
+        for (Element communication : coma.getCommunications()) {
+            String[] comrow = new String[12];
+            //first the keyword - year, genre, Title splitted by spaces
+            Element year = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='2b Date of recording']");
+            Element description = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='0a Title']");
+            Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='1 Genre']");
+            Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Region']");
+            String keywords = "\"";
+            for (String s : description.getText().split(" ")){
+                keywords += s + ",";
+            }
+            keywords +=  year.getText() + "," + genre.getText() + "," + region.getText()+ "\"";
+            comrow[0] = keywords;
+            //year - Description Date of Recording
+            System.out.println(year.getText());
+            comrow[1] = year.getText();
+            //dialect
+            Element dialect = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='3b Dialect']");
+            System.out.println(dialect.getText());
+            comrow[2] = dialect.getText();
+            //country
+            Element country = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Country']");
+            System.out.println(country.getText());
+            comrow[3] = country.getText();
+            //region
+            System.out.println(region.getText());
+            comrow[4] = region.getText();
+            //language
+            Element language = (Element) XPath.selectSingleNode(communication, "descendant::Language/LanguageCode");
+            System.out.println(language.getText());
+            comrow[5] = language.getText();
+            //transcription url
+            Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
+            System.out.println(transcription.getText());
+            comrow[6] = transcription.getText();
+            //pdf url
+            Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File/relPath']");
+             if (pdf!=null){
+            System.out.println(pdf.getText());
+            comrow[7] = pdf.getText();
+            }else{
+                 comrow[7] = "no pdf";
+            }
+            //audio url
+            Element audio = (Element) XPath.selectSingleNode(communication, "descendant::Recording/Media/NSLink");
+            if (audio!=null){
+            System.out.println(audio.getText());
+            comrow[8] = audio.getText();
+            }else{
+                 comrow[8] = "no audio";
+            }
+            //genre
+            System.out.println(genre.getText());
+            comrow[9] = genre.getText();
+            //description
+            System.out.println(description.getText());
+            comrow[10] = description.getText();
+            //id
+            Attribute id = (Attribute) XPath.selectSingleNode(communication, "@Name");
+            System.out.println(id.getValue());
+            comrow[11] = id.getValue();
+            data.add(comrow);
+        }
+        for (String[] row : data) {
+            System.out.println(Arrays.toString(row));
+            //first row = keys
+            //other rows = values
+        }
+        //System.out.println(Arrays.toString(allElements.get(0)));
         return stats;
     }
 
@@ -87,7 +176,10 @@ public class VikusViewer extends Visualizer {
 
     @Override
     public Report function(Corpus c) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd);
+        return stats;
     }
 
     @Override
