@@ -51,6 +51,7 @@ import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
 import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
+import de.uni_hamburg.corpora.visualization.VikusViewer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -303,6 +304,7 @@ public class CorpusMagician {
         allExistingCFs.add("ExbScriptMixChecker");
         allExistingCFs.add("DuplicateTierContentChecker");
         allExistingCFs.add("LanguageToolChecker");
+        allExistingCFs.add("VikusViewer");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -799,6 +801,16 @@ public class CorpusMagician {
                         }
                     }
                     cf2strcorpusfunctions.add(ltc);
+                    break;
+                    case "vikusviewer":
+                    VikusViewer vv = new VikusViewer();
+                     if (cfProperties != null) {
+                        if (cfProperties.containsKey(corpusname)) {
+                            vv.setCorpusName(cfProperties.getProperty(corpusname));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(vv);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
