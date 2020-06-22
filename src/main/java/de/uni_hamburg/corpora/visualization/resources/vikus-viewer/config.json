@@ -80,6 +80,12 @@
         "type": "text"
       },
       {
+        "name": "Author or Speaker",
+        "source": "_speaker",
+        "display": "column",
+        "type": "text"
+      },
+      {
         "name": "Transcription",
         "source": "_transcription",
         "display": "column",

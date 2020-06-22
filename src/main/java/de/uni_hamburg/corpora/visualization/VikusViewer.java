@@ -68,7 +68,7 @@ public class VikusViewer extends Visualizer {
     }
 
     public Report createDataCSV(CorpusData cd) throws FileNotFoundException, IOException, JDOMException {
-        //keywords,year,_dialect,_country,_region,_language,_transcription,_pdf,_audio,_genre,_description,id
+        //id,keywords,year,_dialect,_country,_region,_language,_speaker,_transcription,_pdf,_audio,_genre,_description
         //"sketch,drawing",1890,Ket,Russia,Tomsk Oblast,sel,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/transcript:selkup-0.1_AR_1965_RestlessNight_transl/datastream/EXB/AR_1965_RestlessNight_transl.exb,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/file:selkup-0.1_KFN_1965_BearHunting1_nar/datastream/PDF/KFN_1965_BearHunting1_nar.pdf,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:selkup-0.1_DN_196X_Bread_nar/datastream/MP3/DN_196X_Bread_nar.mp3,flk,Male Torso,KAI_1965_OldWitch_flk
         Report stats = new Report();
         CSVReader reader;
@@ -83,67 +83,71 @@ public class VikusViewer extends Visualizer {
         //create Row ForCommunications
         ComaData coma = (ComaData) cd;
         for (Element communication : coma.getCommunications()) {
-            String[] comrow = new String[12];
-            //first the keyword - year, genre, Title splitted by spaces
+            String[] comrow = new String[13];
+            //id
+            Attribute id = (Attribute) XPath.selectSingleNode(communication, "@Name");
+            comrow[0] = id.getValue();
+            data.add(comrow);
+            //keyword - year, genre, Title splitted by spaces
             Element year = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='2b Date of recording']");
             Element description = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='0a Title']");
             Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='1 Genre']");
             Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Region']");
+            Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='4 Speakers']");
             String keywords = "\"";
             for (String s : description.getText().split(" ")) {
                 keywords += s + ",";
             }
-            keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "\"";
-            comrow[0] = keywords;
+            keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "," + speaker.getText() + "\"";
+            comrow[1] = keywords;
             //year - Description Date of Recording
             System.out.println(year.getText());
-            comrow[1] = year.getText();
+            comrow[2] = year.getText();
             //dialect
             Element dialect = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='3b Dialect']");
             System.out.println(dialect.getText());
-            comrow[2] = dialect.getText();
+            comrow[3] = dialect.getText();
             //country
             Element country = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Country']");
             System.out.println(country.getText());
-            comrow[3] = country.getText();
+            comrow[4] = country.getText();
             //region
             System.out.println(region.getText());
-            comrow[4] = region.getText();
+            comrow[5] = region.getText();
             //language
             Element language = (Element) XPath.selectSingleNode(communication, "descendant::Language/LanguageCode");
             System.out.println(language.getText());
-            comrow[5] = language.getText();
+            comrow[6] = language.getText();
+            //speaker
+            System.out.println(speaker.getText());
+            comrow[7] = speaker.getText();
             //transcription url
             Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
             System.out.println(transcription.getText());
-            comrow[6] = transcription.getText();
+            comrow[8] = transcription.getText();
             //pdf url
             Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
             if (pdf != null) {
                 System.out.println(pdf.getText());
-                comrow[7] = pdf.getText();
+                comrow[9] = pdf.getText();
             } else {
-                comrow[7] = "no pdf";
+                comrow[9] = "no pdf";
             }
             //audio url
             Element audio = (Element) XPath.selectSingleNode(communication, "descendant::Recording/Media/NSLink");
             if (audio != null) {
                 System.out.println(audio.getText());
-                comrow[8] = audio.getText();
+                comrow[10] = audio.getText();
             } else {
-                comrow[8] = "no audio";
+                comrow[10] = "no audio";
             }
             //genre
             System.out.println(genre.getText());
-            comrow[9] = genre.getText();
+            comrow[11] = genre.getText();
             //description
             System.out.println(description.getText());
-            comrow[10] = description.getText();
-            //id
-            Attribute id = (Attribute) XPath.selectSingleNode(communication, "@Name");
-            System.out.println(id.getValue());
-            comrow[11] = id.getValue();
-            data.add(comrow);
+            comrow[12] = description.getText();
+
         }
         String newdata = "";
         for (String[] row : data) {
