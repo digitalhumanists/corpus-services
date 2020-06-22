@@ -126,7 +126,7 @@ public class VikusViewer extends Visualizer {
             comrow[6] = language.getText();
             //speaker
             System.out.println(speaker.getText());
-            comrow[7] = speaker.getText();
+            comrow[7] = "\"" + speaker.getText() + "\"";
             //transcription url
             //needs to look like https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_DN_196X_Bread_nar/EXB/DN_196X_Bread_nar.exb 
             String transcrurl = transrepourl + id.getValue() + "/EXB/" + id.getValue() + ".exb";

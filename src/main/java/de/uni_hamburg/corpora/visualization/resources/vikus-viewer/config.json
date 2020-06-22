@@ -4,22 +4,22 @@
     "quality": 1
  },
   "loader": {
-    "info": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/info.md",
-    "timeline": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/timeline.csv",
-    "items": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/data.csv",
-    "tsne": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/tsne.csv",
+    "info": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/info.md",
+    "timeline": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/timeline.csv",
+    "items": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/data.csv",
+    "tsne": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/tsne.csv",
     "textures": {
       "medium": {
         "size": 256,
-        "url": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/sprites/web_web_full.json"
+        "url": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/sprites/web_web_full.json"
       },
       "detail": {
         "size": 1024,
-        "url": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/1024/"
+        "url": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/1024/"
       },
       "big": {
         "size": 4096,
-        "url": "http://inel.corpora.uni-hamburg.de/vikus_viewer/data/4096/"
+        "url": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/4096/"
       }
     }
   },
