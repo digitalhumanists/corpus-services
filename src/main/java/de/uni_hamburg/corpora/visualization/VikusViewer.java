@@ -82,6 +82,12 @@ public class VikusViewer extends Visualizer {
         }
         //create Row ForCommunications
         ComaData coma = (ComaData) cd;
+        //TODO of course
+        String smallcorpusname = "selkup";
+        String version = "1.0";
+        String transrepourl = "https://corpora.uni-hamburg.de/repository/transcript:" + smallcorpusname + "-" + version + "_";
+        String filerepourl = "https://corpora.uni-hamburg.de/repository/file:" + smallcorpusname + "-" + version + "_";
+        String recrepourl = "https://corpora.uni-hamburg.de/repository/recording:" + smallcorpusname + "-" + version + "_";
         for (Element communication : coma.getCommunications()) {
             String[] comrow = new String[13];
             //id
@@ -122,22 +128,29 @@ public class VikusViewer extends Visualizer {
             System.out.println(speaker.getText());
             comrow[7] = speaker.getText();
             //transcription url
-            Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
-            System.out.println(transcription.getText());
-            comrow[8] = transcription.getText();
+            //needs to look like https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_DN_196X_Bread_nar/EXB/DN_196X_Bread_nar.exb 
+            String transcrurl = transrepourl + id.getValue() + "/EXB/" + id.getValue() + ".exb";
+            //Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
+            //System.out.println(transcription.getText());
+            //comrow[8] = transcription.getText();
+            comrow[8] = transcrurl;
             //pdf url
             Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
             if (pdf != null) {
-                System.out.println(pdf.getText());
-                comrow[9] = pdf.getText();
+                String pdfrurl = filerepourl + id.getValue() + "/PDF/" + id.getValue() + ".pdf";
+                //System.out.println(pdf.getText());
+                //comrow[9] = pdf.getText();
+                comrow[9] = pdfrurl;
             } else {
                 comrow[9] = "no pdf";
             }
             //audio url
             Element audio = (Element) XPath.selectSingleNode(communication, "descendant::Recording/Media/NSLink");
             if (audio != null) {
-                System.out.println(audio.getText());
-                comrow[10] = audio.getText();
+                String audiourl = recrepourl + id.getValue() + "/MP3/" + id.getValue() + ".mp3";
+                //System.out.println(audio.getText());
+                //comrow[10] = audio.getText();
+                comrow[10] = audiourl;
             } else {
                 comrow[10] = "no audio";
             }
