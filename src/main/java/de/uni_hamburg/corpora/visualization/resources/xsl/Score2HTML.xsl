@@ -13,7 +13,12 @@
 
     <xsl:param name="TRANSCRIPTION_ID" as="xs:string?" required="no"/>
     <xsl:param name="COMMUNICATION_ID" as="xs:string?" required="no"/>
-    <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
+    <xsl:param name="RECORDING_PATH"
+        select="
+            (for $type in ($SUPPORTED_VIDEO_TYPES, $SUPPORTED_AUDIO_TYPES)
+            return
+                //referenced-file/@url[ends-with(lower-case(.), $type)])[1]"
+        as="xs:string?" required="no"/>
     <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '\.')[last()]" as="xs:string?" required="no"/>
     <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
     <xsl:param name="WEBSERVICE_NAME" select="'ScoreHTML'" as="xs:string?" required="no"/>
@@ -25,6 +30,10 @@
         <!-- The displayed name of the corpus -->
     <!-- occurs, for example in the navigation bar -->
     <xsl:param name="CORPUS_NAME" select="//project-name" as="xs:string?" required="no"/>
+    <xsl:variable name="SUPPORTED_VIDEO_TYPES" select="('webm', 'mpeg', 'mpg')" as="xs:string+"/>
+    <!-- sorted by favourited format -->
+    <xsl:variable name="SUPPORTED_AUDIO_TYPES" select="('mp3', 'ogg', 'wav')" as="xs:string+"/>
+    <!-- sorted by favourited format -->
 
     <!-- ********************* -->
     <!-- Variables Declaration -->
@@ -54,10 +63,10 @@
     <xsl:variable name="PROJECT_URL" as="xs:string" select="'http://www.exmaralda.org/'"/>
 
     <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = ('webm', 'mpeg', 'mpg')"/>
+    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_VIDEO_TYPES"/>
 
-    <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = ('wav', 'ogg', 'mp3')"/>
+    <!-- whether or not the transcription contains audio -->
+    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_AUDIO_TYPES"/>
 
     <!-- Titles of tiers by category -->
     <xsl:variable name="TIER_TITLES">

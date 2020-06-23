@@ -44,7 +44,12 @@
             <xsl:for-each select="*:Transcription[not(*:Name = $COM_NAME)]">
                 <xsl:value-of select="concat('XSLTChecker.names;CRITICAL;The transcription name ''', *:Name, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
             </xsl:for-each>
-
+            
+            <!-- Check pdf file name against communication name -->
+            <xsl:for-each select="*:File[mimetype/text()='application/pdf'][not(matches(*:filename, concat('^', $COM_NAME, '\.pdf$')))]">
+                <xsl:value-of select="concat('XSLTChecker.names;CRITICAL;The pdf file name ''', *:filename, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
+            </xsl:for-each>
+            
             <!-- Check transcription file name against communication name -->
             <xsl:for-each select="*:Transcription[not(matches(*:Filename, concat('^', $COM_NAME, '(\.exb|_s\.exs)$')))]">
                 <xsl:value-of select="concat('XSLTChecker.names;CRITICAL;The transcription file name ''', *:Filename, ''' differs from communication name ''', $COM_NAME, ''';;', $NEWLINE)"/>
