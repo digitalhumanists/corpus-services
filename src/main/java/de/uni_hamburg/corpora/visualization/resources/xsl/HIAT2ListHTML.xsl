@@ -60,7 +60,7 @@
     <!-- whether or not the transcription contains video -->
     <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_VIDEO_TYPES"/>
 
-    <!-- whether or not the transcription contains video -->
+    <!-- whether or not the transcription contains audio -->
     <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_AUDIO_TYPES"/>
 
     <!-- ******************************************************************************************************************************************** -->
