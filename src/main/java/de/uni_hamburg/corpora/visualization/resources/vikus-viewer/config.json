@@ -86,22 +86,34 @@
         "type": "text"
       },
       {
-        "name": "Transcription",
+        "name": "Score View of Transcription",
+        "source": "_scorehtml",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "List View of Transcription",
+        "source": "_listhtml",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "EXMARaLDA Transcription",
         "source": "_transcription",
         "display": "column",
-        "type": "link"
+        "type": "overlay"
       },
       {
         "name": "Audio",
         "source": "_audio",
         "display": "column",
-        "type": "link"
+        "type": "overlay"
       },
       {
         "name": "Full PDF",
         "source": "_pdf",
         "display": "column",
-        "type": "link"
+        "type": "overlay"
       },
       {
         "name": "Genre",
