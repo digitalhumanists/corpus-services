@@ -826,12 +826,6 @@ public class CorpusMagician {
                     break;
                     case "vikusviewer":
                     VikusViewer vv = new VikusViewer();
-                     if (cfProperties != null) {
-                        if (cfProperties.containsKey(corpusname)) {
-                            vv.setCorpusName(cfProperties.getProperty(corpusname));
-                            System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
-                        }
-                    }
                     cf2strcorpusfunctions.add(vv);
                     break;
                 default:
