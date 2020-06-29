@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.jdom.Attribute;
@@ -48,11 +49,13 @@ public class VikusViewer extends Visualizer {
     private static final String INFO_PATH = "/vikus-viewer/info.md";
     private static final String TIMELINE_PATH = "/vikus-viewer/timeline.csv";
     String corpusname = "Corpus";
+    ArrayList<String> keywordblacklist = new ArrayList<>();
     URL vikusviewerurl;
 
     @Override
     public Report function(CorpusData cd) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
         Report stats = new Report();
+        keywordBlacklist();
         vikusviewerurl = new URL(cd.getParentURL() + "resources/vikus-viewer");
         File vikusviewerfolder = new File((vikusviewerurl).getFile());
         if (!vikusviewerfolder.exists()) {
@@ -65,8 +68,15 @@ public class VikusViewer extends Visualizer {
         return stats;
     }
 
+    public void keywordBlacklist() {
+        keywordblacklist.add("and");
+        keywordblacklist.add("a");
+        keywordblacklist.add("the");
+        keywordblacklist.add("I");
+    }
+
     public Report createDataCSV(CorpusData cd) throws FileNotFoundException, IOException, JDOMException {
-        //id,keywords,year,_dialect,_country,_region,_language,_speaker,_transcription,_pdf,_audio,_genre,_description
+        //id,keywords,year,_dialect,_country,_region,_language,_speaker,_transcription,_scorehtml,_listhtml,_pdf,_audio,_genre,_description
         //"sketch,drawing",1890,Ket,Russia,Tomsk Oblast,sel,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/transcript:selkup-0.1_AR_1965_RestlessNight_transl/datastream/EXB/AR_1965_RestlessNight_transl.exb,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/file:selkup-0.1_KFN_1965_BearHunting1_nar/datastream/PDF/KFN_1965_BearHunting1_nar.pdf,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:selkup-0.1_DN_196X_Bread_nar/datastream/MP3/DN_196X_Bread_nar.mp3,flk,Male Torso,KAI_1965_OldWitch_flk
         Report stats = new Report();
         CSVReader reader;
@@ -87,7 +97,7 @@ public class VikusViewer extends Visualizer {
         String filerepourl = "https://corpora.uni-hamburg.de/repository/file:" + smallcorpusname + "-" + version + "_";
         String recrepourl = "https://corpora.uni-hamburg.de/repository/recording:" + smallcorpusname + "-" + version + "_";
         for (Element communication : coma.getCommunications()) {
-            String[] comrow = new String[13];
+            String[] comrow = new String[15];
             //id
             Attribute id = (Attribute) XPath.selectSingleNode(communication, "@Name");
             comrow[0] = id.getValue();
@@ -100,7 +110,9 @@ public class VikusViewer extends Visualizer {
             Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='4 Speakers']");
             String keywords = "\"";
             for (String s : description.getText().split(" ")) {
-                keywords += s + ",";
+                if (!keywordblacklist.contains(s)) {
+                    keywords += s + ",";
+                }
             }
             keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "," + speaker.getText() + "\"";
             comrow[1] = keywords;
@@ -132,15 +144,25 @@ public class VikusViewer extends Visualizer {
             //System.out.println(transcription.getText());
             //comrow[8] = transcription.getText();
             comrow[8] = transcrurl;
+            //scorehtml url
+            //needs to look like 
+            //https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_AGS_1964_SnakeInMouth_flk/SCORE/AGS_1964_SnakeInMouth_flk-score.html 
+            String scoreurl = transrepourl + id.getValue() + "/SCORE/" + id.getValue() + "-score.html";
+            comrow[9] = scoreurl;
+            //listhtml url
+            //needs to look like 
+            //https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_AGS_1964_SnakeInMouth_flk/LIST/AGS_1964_SnakeInMouth_flk-list.html
+            String listurl = transrepourl + id.getValue() + "/LIST/" + id.getValue() + "-list.html";
+            comrow[10] = listurl;
             //pdf url
             Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
             if (pdf != null) {
                 String pdfrurl = filerepourl + id.getValue() + "/PDF/" + id.getValue() + ".pdf";
                 //System.out.println(pdf.getText());
                 //comrow[9] = pdf.getText();
-                comrow[9] = pdfrurl;
+                comrow[11] = pdfrurl;
             } else {
-                comrow[9] = "no pdf";
+                comrow[11] = "no pdf";
             }
             //audio url
             Element audio = (Element) XPath.selectSingleNode(communication, "descendant::Recording/Media/NSLink");
@@ -148,16 +170,16 @@ public class VikusViewer extends Visualizer {
                 String audiourl = recrepourl + id.getValue() + "/MP3/" + id.getValue() + ".mp3";
                 //System.out.println(audio.getText());
                 //comrow[10] = audio.getText();
-                comrow[10] = audiourl;
+                comrow[12] = audiourl;
             } else {
-                comrow[10] = "no audio";
+                comrow[12] = "no audio";
             }
             //genre
             System.out.println(genre.getText());
-            comrow[11] = genre.getText();
+            comrow[13] = genre.getText();
             //description
             System.out.println(description.getText());
-            comrow[12] = description.getText();
+            comrow[14] = description.getText();
 
         }
         String newdata = "";
@@ -194,15 +216,29 @@ public class VikusViewer extends Visualizer {
     public Report createInfoMD(CorpusData cd) throws JDOMException, IOException {
         Report stats = new Report();
         CorpusIO cio = new CorpusIO();
+        ComaData coma = (ComaData) cd;
         String info = cio.readInternalResourceAsString(INFO_PATH);
+        Element comadescription = coma.getCorpusDescription();
         //maybe later: [${CORPUSNAME}](${HANDLEPID})
         //Replace Placeholders in info.md:
-        //${CORPUSNAME} -       <Key Name="DC:title">INEL Selkup Corpus</Key>    and   <Key Name="hzsk:corpusVersion">1.0</Key>
-        String corpusname;
-        //${DESCRIPTION}   <Key Name="DC:description">
-        String description;
-        //${LICENCE}      <Key Name="DC:rights">CC BY-NC-SA 4.0</Key>
-        String licence;
+        //_CORPUSNAME_ -       <Key Name="DC:title">INEL Selkup Corpus</Key>    and   <Key Name="hzsk:corpusVersion">1.0</Key>
+        Element title = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:title']");
+        Element version = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='hzsk:corpusVersion']");
+        String corpusnameandversion = title.getText() + " " + version.getText();
+        System.out.println(corpusnameandversion);
+        info = info.replaceAll("_CORPUSNAME_", corpusnameandversion);
+        //_DESCRIPTION_  <Key Name="DC:description">
+        Element descriptioncoma = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:description']");
+        String description = descriptioncoma.getText();
+        info = info.replaceAll("_DESCRIPTION_", description);
+        //_LICENCE_      <Key Name="DC:rights">CC BY-NC-SA 4.0</Key>
+        Element licencecoma = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:rights']");
+        String licence = licencecoma.getText();
+        info = info.replaceAll("_LICENCE_", licence);
+        //now save the string array as csv
+        URL infoMDlocation = new URL(vikusviewerurl + "/info.md");
+        cio.write(info, infoMDlocation);
+        stats.addCorrect(function, cd, "vikus-viewer info.md successfully created at " + infoMDlocation.toString());
         return stats;
     }
 

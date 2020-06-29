@@ -284,6 +284,9 @@ public class ComaData implements Metadata, CorpusData, XMLData {
     
     public List<Element> getCommunications() throws JDOMException{
       return XPath.selectNodes(readcomaasjdom, "//Communication");
-
+    }
+    
+    public Element getCorpusDescription() throws JDOMException{
+      return (Element) XPath.selectSingleNode(readcomaasjdom, "/Corpus/Description");
     }
 }

@@ -1,11 +1,13 @@
-# ${CORPUSNAME}
+# _CORPUSNAME_
+
+This is a Vikus Viewer Visualization of the manuscripts and audio files of this corpus.
 
 The corpus has been created within the long-term [INEL project](https://inel.corpora.uni-hamburg.de/) - "Grammatical Descriptions, Corpora and Language Technology for Indigenous Northern Eurasian Languages", 2016–2033.
 
-${DESCRIPTION}
+_DESCRIPTION_
 
 Please note the license of the corpus:
-${LICENCE}
+_LICENCE_
 
 ![tags](img/infobar_tags.svg)
 
