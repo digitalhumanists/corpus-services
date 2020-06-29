@@ -48,13 +48,19 @@ public class VikusViewer extends Visualizer {
     private static final String DATA_PATH = "/vikus-viewer/data.csv";
     private static final String INFO_PATH = "/vikus-viewer/info.md";
     private static final String TIMELINE_PATH = "/vikus-viewer/timeline.csv";
-    String corpusname = "Corpus";
+    String corpusname;
     ArrayList<String> keywordblacklist = new ArrayList<>();
     URL vikusviewerurl;
+    String licence;
+    String version;
+    String corpusPrefix;
+    String title;
+    String description;
 
     @Override
     public Report function(CorpusData cd) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
         Report stats = new Report();
+        ComaData coma = (ComaData) cd;
         keywordBlacklist();
         vikusviewerurl = new URL(cd.getParentURL() + "resources/vikus-viewer");
         File vikusviewerfolder = new File((vikusviewerurl).getFile());
@@ -62,6 +68,18 @@ public class VikusViewer extends Visualizer {
             //the curation folder it not there and needs to be created
             vikusviewerfolder.mkdirs();
         }
+
+        Element comadescription = coma.getCorpusDescription();
+        Element descriptioncoma = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:description']");
+        description = descriptioncoma.getText();
+        Element elcorpusPrefix = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='hzsk:corpusPrefix']");
+        corpusPrefix = elcorpusPrefix.getText();
+        Element eltitle = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:title']");
+        title = eltitle.getText();
+        Element elversion = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='hzsk:corpusVersion']");
+        version = elversion.getText();
+        Element ellicence = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:rights']");
+        licence = ellicence.getText();
         stats.merge(createDataCSV(cd));
         stats.merge(createConfigJSON(cd));
         stats.merge(createInfoMD(cd));
@@ -90,12 +108,9 @@ public class VikusViewer extends Visualizer {
         }
         //create Row ForCommunications
         ComaData coma = (ComaData) cd;
-        //TODO of course
-        String smallcorpusname = "selkup";
-        String version = "1.0";
-        String transrepourl = "https://corpora.uni-hamburg.de/repository/transcript:" + smallcorpusname + "-" + version + "_";
-        String filerepourl = "https://corpora.uni-hamburg.de/repository/file:" + smallcorpusname + "-" + version + "_";
-        String recrepourl = "https://corpora.uni-hamburg.de/repository/recording:" + smallcorpusname + "-" + version + "_";
+        String transrepourl = "https://corpora.uni-hamburg.de/repository/transcript:" + corpusPrefix + "-" + version + "_";
+        String filerepourl = "https://corpora.uni-hamburg.de/repository/file:" + corpusPrefix + "-" + version + "_";
+        String recrepourl = "https://corpora.uni-hamburg.de/repository/recording:" + corpusPrefix + "-" + version + "_";
         for (Element communication : coma.getCommunications()) {
             String[] comrow = new String[15];
             //id
@@ -103,13 +118,18 @@ public class VikusViewer extends Visualizer {
             comrow[0] = id.getValue();
             data.add(comrow);
             //keyword - year, genre, Title splitted by spaces
-            Element year = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='2b Date of recording']");
-            Element description = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='0a Title']");
-            Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='1 Genre']");
-            Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Region']");
-            Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='4 Speakers']");
+            Element year = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Date of recording')]");
+            System.out.println(year.getText());
+            Element descriptiondesc = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Title')]");
+            System.out.println(descriptiondesc.getText());
+            Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Genre')]");
+            System.out.println(genre.getText());
+            Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Region')]");
+            System.out.println(region.getText());
+            Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Speakers')]");
+            System.out.println(speaker.getText());
             String keywords = "\"";
-            for (String s : description.getText().split(" ")) {
+            for (String s : descriptiondesc.getText().split(" ")) {
                 if (!keywordblacklist.contains(s)) {
                     keywords += s + ",";
                 }
@@ -117,25 +137,22 @@ public class VikusViewer extends Visualizer {
             keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "," + speaker.getText() + "\"";
             comrow[1] = keywords;
             //year - Description Date of Recording
-            System.out.println(year.getText());
             comrow[2] = year.getText();
             //dialect
-            Element dialect = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[@Name='3b Dialect']");
+            Element dialect = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Dialect')]");
             System.out.println(dialect.getText());
             comrow[3] = dialect.getText();
             //country
-            Element country = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[@Name='Country']");
+            Element country = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Country')]");
             System.out.println(country.getText());
             comrow[4] = country.getText();
             //region
-            System.out.println(region.getText());
             comrow[5] = region.getText();
             //language
             Element language = (Element) XPath.selectSingleNode(communication, "descendant::Language/LanguageCode");
             System.out.println(language.getText());
             comrow[6] = language.getText();
             //speaker
-            System.out.println(speaker.getText());
             comrow[7] = "\"" + speaker.getText() + "\"";
             //transcription url
             //needs to look like https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_DN_196X_Bread_nar/EXB/DN_196X_Bread_nar.exb 
@@ -171,6 +188,8 @@ public class VikusViewer extends Visualizer {
                 //System.out.println(audio.getText());
                 //comrow[10] = audio.getText();
                 comrow[12] = audiourl;
+                //TODO
+                //now save the audio image in the folder with the correct name
             } else {
                 comrow[12] = "no audio";
             }
@@ -178,8 +197,8 @@ public class VikusViewer extends Visualizer {
             System.out.println(genre.getText());
             comrow[13] = genre.getText();
             //description
-            System.out.println(description.getText());
-            comrow[14] = description.getText();
+            System.out.println(descriptiondesc.getText());
+            comrow[14] = descriptiondesc.getText();
 
         }
         String newdata = "";
@@ -218,22 +237,11 @@ public class VikusViewer extends Visualizer {
         CorpusIO cio = new CorpusIO();
         ComaData coma = (ComaData) cd;
         String info = cio.readInternalResourceAsString(INFO_PATH);
-        Element comadescription = coma.getCorpusDescription();
-        //maybe later: [${CORPUSNAME}](${HANDLEPID})
-        //Replace Placeholders in info.md:
-        //_CORPUSNAME_ -       <Key Name="DC:title">INEL Selkup Corpus</Key>    and   <Key Name="hzsk:corpusVersion">1.0</Key>
-        Element title = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:title']");
-        Element version = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='hzsk:corpusVersion']");
-        String corpusnameandversion = title.getText() + " " + version.getText();
-        System.out.println(corpusnameandversion);
+        String corpusnameandversion = title + " " + version;
         info = info.replaceAll("_CORPUSNAME_", corpusnameandversion);
         //_DESCRIPTION_  <Key Name="DC:description">
-        Element descriptioncoma = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:description']");
-        String description = descriptioncoma.getText();
         info = info.replaceAll("_DESCRIPTION_", description);
         //_LICENCE_      <Key Name="DC:rights">CC BY-NC-SA 4.0</Key>
-        Element licencecoma = (Element) XPath.selectSingleNode(comadescription, "descendant::Key[@Name='DC:rights']");
-        String licence = licencecoma.getText();
         info = info.replaceAll("_LICENCE_", licence);
         //now save the string array as csv
         URL infoMDlocation = new URL(vikusviewerurl + "/info.md");
@@ -259,10 +267,6 @@ public class VikusViewer extends Visualizer {
             report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
-    }
-
-    public void setCorpusName(String s) {
-        corpusname = s;
     }
 
     @Override
