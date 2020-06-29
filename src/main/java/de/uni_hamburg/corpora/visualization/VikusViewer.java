@@ -26,12 +26,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import de.uni_hamburg.corpora.ComaData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -193,8 +191,18 @@ public class VikusViewer extends Visualizer {
         return stats;
     }
 
-    public Report createInfoMD(CorpusData cd) {
+    public Report createInfoMD(CorpusData cd) throws JDOMException, IOException {
         Report stats = new Report();
+        CorpusIO cio = new CorpusIO();
+        String info = cio.readInternalResourceAsString(INFO_PATH);
+        //maybe later: [${CORPUSNAME}](${HANDLEPID})
+        //Replace Placeholders in info.md:
+        //${CORPUSNAME} -       <Key Name="DC:title">INEL Selkup Corpus</Key>    and   <Key Name="hzsk:corpusVersion">1.0</Key>
+        String corpusname;
+        //${DESCRIPTION}   <Key Name="DC:description">
+        String description;
+        //${LICENCE}      <Key Name="DC:rights">CC BY-NC-SA 4.0</Key>
+        String licence;
         return stats;
     }
 

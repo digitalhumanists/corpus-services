@@ -1,8 +1,11 @@
-# INEL Dolgan
+# ${CORPUSNAME}
 
-The INEL Dolgan corpus has been created within the long-term [INEL project](https://inel.corpora.uni-hamburg.de/) - "Grammatical Descriptions, Corpora and Language Technology for Indigenous Northern Eurasian Languages", 2016–2033. The corpus makes possible typologically aware corpus-based grammatical research on the Dolgan language and expands the documentation of the lesser described indigenous languages of Northern Eurasia.
+The corpus has been created within the long-term [INEL project](https://inel.corpora.uni-hamburg.de/) - "Grammatical Descriptions, Corpora and Language Technology for Indigenous Northern Eurasian Languages", 2016–2033.
 
-Dolgan is an endangered Siberian (North-Eastern) Turkic language, which is spoken on the Taymyr peninsula and in adjacent areas in Northern Siberia. The number of speakers is approx. 1,000. Whereas in many settlements, including Dudinka, Dolgan is rarely spoken in everyday's life, there are three remote villages (Syndassko, Popigay and Novorybnoe) where Dolgan is until now very present and frequently spoken. 
+${DESCRIPTION}
+
+Please note the license of the corpus:
+${LICENCE}
 
 ![tags](img/infobar_tags.svg)
 
