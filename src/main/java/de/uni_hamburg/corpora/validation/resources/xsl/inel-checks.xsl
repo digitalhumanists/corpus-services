@@ -86,7 +86,11 @@
             <xsl:value-of select="concat('XSLTChecker.content;WARNING;Element ''', @Name, ''' in Communication ''', $COM_NAME, ''' contains multiple whitespaces;;', $NEWLINE)"/>
         </xsl:for-each>
         
-        
+         <!-- check for Newlines in text content of non-mixed content elements -->
+        <xsl:for-each select="*:Description/*:Key[empty(*) and matches(text(), '^.*\n.*$')]">
+            <xsl:value-of select="concat('XSLTChecker.content;CRITICAL;Element ''', @Name, ''' in Communication ''', $COM_NAME, ''' contains a newline character;;', $NEWLINE)"/>
+        </xsl:for-each>
+           
         </xsl:for-each>
 
 
