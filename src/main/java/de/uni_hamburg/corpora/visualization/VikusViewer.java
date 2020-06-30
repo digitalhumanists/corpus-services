@@ -32,7 +32,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import static java.util.Collections.sort;
 import java.util.List;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -56,6 +57,7 @@ public class VikusViewer extends Visualizer {
     String corpusPrefix;
     String title;
     String description;
+    ArrayList<String> allDistinctYears = new ArrayList<>();
 
     @Override
     public Report function(CorpusData cd) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException {
@@ -83,6 +85,7 @@ public class VikusViewer extends Visualizer {
         stats.merge(createDataCSV(cd));
         stats.merge(createConfigJSON(cd));
         stats.merge(createInfoMD(cd));
+        stats.merge(createTimelineCSV(cd));
         return stats;
     }
 
@@ -101,11 +104,6 @@ public class VikusViewer extends Visualizer {
         CorpusIO cio = new CorpusIO();
         reader = new CSVReader(new FileReader(getClass().getResource(DATA_PATH).getPath()), ',');
         List<String[]> data = reader.readAll();
-        for (String[] row : data) {
-            System.out.println(Arrays.toString(row));
-            //first row = keys
-            //other rows = values
-        }
         //create Row ForCommunications
         ComaData coma = (ComaData) cd;
         String transrepourl = "https://corpora.uni-hamburg.de/repository/transcript:" + corpusPrefix + "-" + version + "_";
@@ -116,10 +114,12 @@ public class VikusViewer extends Visualizer {
             //id
             Attribute id = (Attribute) XPath.selectSingleNode(communication, "@Name");
             comrow[0] = id.getValue();
-            data.add(comrow);
             //keyword - year, genre, Title splitted by spaces
             Element year = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Date of recording')]");
             System.out.println(year.getText());
+            if (!allDistinctYears.contains(year.getText())) {
+                allDistinctYears.add(year.getText());
+            }
             Element descriptiondesc = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Title')]");
             System.out.println(descriptiondesc.getText());
             Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Genre')]");
@@ -199,7 +199,7 @@ public class VikusViewer extends Visualizer {
             //description
             System.out.println(descriptiondesc.getText());
             comrow[14] = descriptiondesc.getText();
-
+            data.add(comrow);
         }
         String newdata = "";
         for (String[] row : data) {
@@ -235,7 +235,6 @@ public class VikusViewer extends Visualizer {
     public Report createInfoMD(CorpusData cd) throws JDOMException, IOException {
         Report stats = new Report();
         CorpusIO cio = new CorpusIO();
-        ComaData coma = (ComaData) cd;
         String info = cio.readInternalResourceAsString(INFO_PATH);
         String corpusnameandversion = title + " " + version;
         info = info.replaceAll("_CORPUSNAME_", corpusnameandversion);
@@ -247,6 +246,37 @@ public class VikusViewer extends Visualizer {
         URL infoMDlocation = new URL(vikusviewerurl + "/info.md");
         cio.write(info, infoMDlocation);
         stats.addCorrect(function, cd, "vikus-viewer info.md successfully created at " + infoMDlocation.toString());
+        return stats;
+    }
+
+    public Report createTimelineCSV(CorpusData cd) throws FileNotFoundException, IOException, JDOMException {
+        //year,titel,text,extra,link,kategorie
+        //1864,Early work,"Vincent begins drawing his surroundings early, at the age of 11 here.","The family van Gogh lives in the small town Zundert in the South of the Netherlands. Vincent later visits a middle school in Tilburg, where he lives far from his family. Despite his good grades, he leaves school in 1868, aged 15. From now on, he works for the international art firm Goupil & Cie.",,
+        Report stats = new Report();
+        CSVReader reader;
+        CorpusIO cio = new CorpusIO();
+        reader = new CSVReader(new FileReader(getClass().getResource(TIMELINE_PATH).getPath()), ',');
+        Collections.sort(allDistinctYears);
+        List<String[]> time = reader.readAll();
+        for (String year : allDistinctYears) {
+            System.out.println(year);
+            String[] timerow = new String[6];
+            timerow[0] = year;
+            timerow[1] = "";
+            timerow[2] = "";
+            timerow[3] = "";
+            timerow[4] = "";
+            timerow[5] = "";
+            time.add(timerow);
+        }
+        String newtime = "";
+        for (String[] row : time) {
+            newtime += String.join(",", row) + "\n";
+        }
+        //now save the string array as csv
+        URL timelineCSVlocation = new URL(vikusviewerurl + "/timeline.csv");
+        cio.write(newtime, timelineCSVlocation);
+        stats.addCorrect(function, cd, "vikus-viewer config successfully created at " + timelineCSVlocation.toString());
         return stats;
     }
 
