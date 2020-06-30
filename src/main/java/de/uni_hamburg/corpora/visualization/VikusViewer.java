@@ -33,7 +33,6 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import static java.util.Collections.sort;
 import java.util.List;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -171,6 +170,8 @@ public class VikusViewer extends Visualizer {
             //https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_AGS_1964_SnakeInMouth_flk/LIST/AGS_1964_SnakeInMouth_flk-list.html
             String listurl = transrepourl + id.getValue() + "/LIST/" + id.getValue() + "-list.html";
             comrow[10] = listurl;
+            //TODO
+            //check for cases with no audio and no pdf or both!
             //pdf url
             Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
             if (pdf != null) {
@@ -178,6 +179,8 @@ public class VikusViewer extends Visualizer {
                 //System.out.println(pdf.getText());
                 //comrow[9] = pdf.getText();
                 comrow[11] = pdfrurl;
+                //TODO
+                //now we need an image jpeg of the first page?
             } else {
                 comrow[11] = "no pdf";
             }
@@ -259,7 +262,6 @@ public class VikusViewer extends Visualizer {
         Collections.sort(allDistinctYears);
         List<String[]> time = reader.readAll();
         for (String year : allDistinctYears) {
-            System.out.println(year);
             String[] timerow = new String[6];
             timerow[0] = year;
             timerow[1] = "";
