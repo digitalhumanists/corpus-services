@@ -48,7 +48,7 @@ public class VikusViewer extends Visualizer {
     private static final String DATA_PATH = "/vikus-viewer/data.csv";
     private static final String INFO_PATH = "/vikus-viewer/info.md";
     private static final String TIMELINE_PATH = "/vikus-viewer/timeline.csv";
-    String corpusname;
+    private static final String AUDIO_IMAGE_PATH = "/vikus-viewer/sound.jpg";
     ArrayList<String> keywordblacklist = new ArrayList<>();
     URL vikusviewerurl;
     String licence;
@@ -92,7 +92,7 @@ public class VikusViewer extends Visualizer {
         keywordblacklist.add("and");
         keywordblacklist.add("a");
         keywordblacklist.add("the");
-        keywordblacklist.add("I");
+        keywordblacklist.add("i");
     }
 
     public Report createDataCSV(CorpusData cd) throws FileNotFoundException, IOException, JDOMException {
@@ -129,7 +129,7 @@ public class VikusViewer extends Visualizer {
             System.out.println(speaker.getText());
             String keywords = "\"";
             for (String s : descriptiondesc.getText().split(" ")) {
-                if (!keywordblacklist.contains(s)) {
+                if (!keywordblacklist.contains(s.toLowerCase())) {
                     keywords += s + ",";
                 }
             }
@@ -170,31 +170,34 @@ public class VikusViewer extends Visualizer {
             //https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_AGS_1964_SnakeInMouth_flk/LIST/AGS_1964_SnakeInMouth_flk-list.html
             String listurl = transrepourl + id.getValue() + "/LIST/" + id.getValue() + "-list.html";
             comrow[10] = listurl;
-            //TODO
-            //check for cases with no audio and no pdf or both!
             //pdf url
             Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
-            if (pdf != null) {
-                String pdfrurl = filerepourl + id.getValue() + "/PDF/" + id.getValue() + ".pdf";
-                //System.out.println(pdf.getText());
-                //comrow[9] = pdf.getText();
-                comrow[11] = pdfrurl;
-                //TODO
-                //now we need an image jpeg of the first page?
-            } else {
-                comrow[11] = "no pdf";
-            }
             //audio url
             Element audio = (Element) XPath.selectSingleNode(communication, "descendant::Recording/Media/NSLink");
-            if (audio != null) {
-                String audiourl = recrepourl + id.getValue() + "/MP3/" + id.getValue() + ".mp3";
-                //System.out.println(audio.getText());
-                //comrow[10] = audio.getText();
-                comrow[12] = audiourl;
-                //TODO
-                //now save the audio image in the folder with the correct name
-            } else {
+            //check for cases with no audio and no pdf or both!
+            String pdfrurl = filerepourl + id.getValue() + "/PDF/" + id.getValue() + ".pdf";
+            String audiourl = recrepourl + id.getValue() + "/MP3/" + id.getValue() + ".mp3";
+            Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
+            URL imageLocation = new URL(cd.getParentURL() + transcription.getText().replaceFirst("[.][^.]+$", "") + ".jpg");
+            if (pdf == null && audio == null) {
+                comrow[11] = "np pdf";
                 comrow[12] = "no audio";
+                stats.addCritical(function, cd, "No audio or pdf linked in the coma file!");
+            } else if (pdf != null && audio != null) {
+                comrow[11] = pdfrurl;
+                comrow[12] = "no audio";
+                stats.addCritical(function, cd, "Audio AND pdf linked in the coma file!");
+            } else if (pdf != null) {
+                comrow[11] = pdfrurl;
+                comrow[12] = "no audio";
+                //TODO
+                //now we need an image jpeg of the first page
+                 //cio.copyInternalBinaryFile(PDF_IMAGE_PATH, imageLocation); 
+            } else {
+                comrow[11] = "no pdf";
+                comrow[12] = audiourl;
+                //now save the audio image in the folder with the correct name
+                 cio.copyInternalBinaryFile(AUDIO_IMAGE_PATH, imageLocation);                
             }
             //genre
             System.out.println(genre.getText());
@@ -224,7 +227,7 @@ public class VikusViewer extends Visualizer {
         JsonElement jelement = new JsonParser().parse(config);
         JsonObject jobject = jelement.getAsJsonObject();
         jobject = jobject.getAsJsonObject("project");
-        jobject.addProperty("name", corpusname);
+        jobject.addProperty("name", title + " " + version);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String prettyJsonString = gson.toJson(jelement);
         //System.out.println(prettyJsonString);
