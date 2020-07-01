@@ -120,7 +120,7 @@ public class VikusViewer extends Visualizer {
                 allDistinctYears.add(year.getText());
             }
             Element descriptiondesc = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Title')]");
-            System.out.println(descriptiondesc.getText());
+
             Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Genre')]");
             System.out.println(genre.getText());
             Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Region')]");
@@ -128,9 +128,13 @@ public class VikusViewer extends Visualizer {
             Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Speakers')]");
             System.out.println(speaker.getText());
             String keywords = "\"";
-            for (String s : descriptiondesc.getText().split(" ")) {
-                if (!keywordblacklist.contains(s.toLowerCase())) {
-                    keywords += s + ",";
+            if (descriptiondesc != null) {
+                System.out.println(descriptiondesc.getText());
+
+                for (String s : descriptiondesc.getText().split(" ")) {
+                    if (!keywordblacklist.contains(s.toLowerCase())) {
+                        keywords += s + ",";
+                    }
                 }
             }
             keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "," + speaker.getText() + "\"";
@@ -192,19 +196,20 @@ public class VikusViewer extends Visualizer {
                 comrow[12] = "no audio";
                 //TODO
                 //now we need an image jpeg of the first page
-                 //cio.copyInternalBinaryFile(PDF_IMAGE_PATH, imageLocation); 
+                //cio.copyInternalBinaryFile(PDF_IMAGE_PATH, imageLocation); 
             } else {
                 comrow[11] = "no pdf";
                 comrow[12] = audiourl;
                 //now save the audio image in the folder with the correct name
-                 cio.copyInternalBinaryFile(AUDIO_IMAGE_PATH, imageLocation);                
+                cio.copyInternalBinaryFile(AUDIO_IMAGE_PATH, imageLocation);
             }
             //genre
             System.out.println(genre.getText());
             comrow[13] = genre.getText();
             //description
-            System.out.println(descriptiondesc.getText());
-            comrow[14] = descriptiondesc.getText();
+            if (descriptiondesc != null) {
+                comrow[14] = descriptiondesc.getText();
+            }
             data.add(comrow);
         }
         String newdata = "";
