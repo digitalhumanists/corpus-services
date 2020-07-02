@@ -186,11 +186,12 @@ public class VikusViewer extends Visualizer {
             if (pdf == null && audio == null) {
                 comrow[11] = "np pdf";
                 comrow[12] = "no audio";
-                stats.addCritical(function, cd, "No audio or pdf linked in the coma file!");
+                stats.addCritical(function, cd, id.getValue() + ": No audio or pdf linked in the coma file!");
             } else if (pdf != null && audio != null) {
+                //we have both - add both links but don't add an audio image
                 comrow[11] = pdfrurl;
-                comrow[12] = "no audio";
-                stats.addCritical(function, cd, "Audio AND pdf linked in the coma file!");
+                comrow[12] = audiourl;
+                stats.addCritical(function, cd, id.getValue() + ": Audio AND pdf linked in the coma file!");
             } else if (pdf != null) {
                 comrow[11] = pdfrurl;
                 comrow[12] = "no audio";
