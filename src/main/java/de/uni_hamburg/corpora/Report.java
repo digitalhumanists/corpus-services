@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
+import org.jdom.JDOMException;
 
 /**
  * Statistics report is a container class to facilitate building reports for
@@ -491,11 +491,11 @@ public class Report {
     /**
      * Generate summaries for all buckets.
      */
-    public String getFixJson(String corpusname) {
+    public String getFixJson(Corpus corpus) throws JDOMException {
         String rv = "";
         for (Map.Entry<String, Collection<ReportItem>> kfj
                 : statistics.entrySet()) {
-            rv += getFixLine(kfj.getKey(), corpusname);
+            rv += getFixLine(kfj.getKey(), corpus);
         }
         rv = rv + "\n";
         return rv;
@@ -505,13 +505,19 @@ public class Report {
      * Generate summaries for all buckets.
      */
     public String getFixJson() {
-        return getFixJson("");
+        String rv = "";
+        for (Map.Entry<String, Collection<ReportItem>> kfj
+                : statistics.entrySet()) {
+            rv += getFixLine(kfj.getKey());
+        }
+        rv = rv + "\n";
+        return rv;
     }
 
     /**
      * Generate a one-line text-only message summarising the named bucket.
      */
-    public String getFixLine(String statId, String corpusname) {
+    public String getFixLine(String statId, Corpus corpus) throws JDOMException {
         Collection<ReportItem> stats = statistics.get(statId);
         int fix = 0;
         int good = 0;
@@ -542,11 +548,64 @@ public class Report {
         String time = simpleTimeFormat.format(new Date());
         String dateTime = date + "T" + time;
         //System.out.println(dateTime);
-        if (!corpusname.equals("")) {
-            line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"corpus\": \"" + corpusname + "\", \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
-        } else {
-            line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        String corpusname = corpus.getCorpusName();
+        //now we also need 
+        /*
+                number of words whole corpus
+                number of sentences whole corpus
+                number of transcriptions
+                number of speakers whole corpus
+                number of communications whole corpus
+         */
+        String corpuswords = corpus.getCorpusWords();
+        String corpussents = corpus.getCorpusSentenceNumber();
+        String corpustrans = corpus.getCorpusTranscriptionNumber();
+        String corpusspeaks = corpus.getCorpusSpeakerNumber();
+        String corpuscomms = corpus.getCorpusCommunicationNumber();
+        //"corpus-words":1234,"corpus-sentences":2345,"corpus-transcriptions":12,"corpus-speakers":34,"corpus-transcriptions":12
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"corpus\": \""
+                + corpusname + "\", \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \""
+                + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": "
+                + fix + ", \"corpus-words\": " + corpuswords + ", \"corpus-sentences\": " + corpussents + ", \"corpus-transcriptions\": " + corpustrans
+                + ", \"corpus-speaker\": " + corpusspeaks + ", \"corpus-communications\": " + corpuscomms + " }}\n";
+        return line;
+    }
+
+    /**
+     * Generate a one-line text-only message summarising the named bucket.
+     */
+    public String getFixLine(String statId) {
+        Collection<ReportItem> stats = statistics.get(statId);
+        int fix = 0;
+        int good = 0;
+        int severe = 0;
+        int badish = 0;
+        int unk = 0;
+        String line = "";
+        for (ReportItem s : stats) {
+            if (s.isFix()) {
+                fix += 1;
+            } else if (s.isSevere()) {
+                severe += 1;
+            } else if (s.isBad()) {
+                badish += 1;
+            } else if (s.isGood()) {
+                good += 1;
+            } else {
+                unk += 1;
+            }
         }
+        //"2020-02-17T11:41:00Z"
+        //now add the T that is needed for Kibana between date and time
+        String patternDate = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(patternDate);
+        String date = simpleDateFormat.format(new Date());
+        String patternTime = "hh:mm:ssZ";
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(patternTime);
+        String time = simpleTimeFormat.format(new Date());
+        String dateTime = date + "T" + time;
+        //System.out.println(dateTime);
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
         return line;
     }
 
