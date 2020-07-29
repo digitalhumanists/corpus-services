@@ -19,9 +19,7 @@
                     } );           
                 </script>
             </head>
-            <body> </body>
-        </html>
-
+            <body> 
         <xsl:call-template name="GET_STATISTICAL_INFO_ON_WHOLE_CORPUS"/>
         <xsl:if test="$mode = 'inel'">
             <xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>
@@ -59,7 +57,10 @@
         <xsl:call-template name="GET_KEYS_LANG">
             <xsl:with-param name="PARENT">Speaker</xsl:with-param>
         </xsl:call-template>
+      </body>
+        </html>  
     </xsl:template>
+
 
 
     <xsl:template name="GET_STATISTICAL_INFO_ON_WHOLE_CORPUS">
