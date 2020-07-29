@@ -9,9 +9,9 @@
             <head>
                 <xsl:call-template name="GENERATE_STYLES"/>
                 <link rel="stylesheet" type="text/css"
-                    href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"/>
+                    href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"/>
                 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.2.1.min.js"/>
-                <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"/>
+                <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"/>
                 <script type="text/javascript" class="init">
                     
                     $(document).ready(function() {
