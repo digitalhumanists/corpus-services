@@ -70,8 +70,10 @@
                     <th class="info">Number of Sentences Whole Corpus</th>
                     <th class="info">Number of Words Whole Corpus</th>
                     <th class="info">Duration of Audio (hh:mm:ss) Whole Corpus</th>
+                    <th class="info">Number of Communi-cations Whole Corpus</th>
                     <th class="info">Number Exb Whole Corpus</th>
                     <th class="info">Number Exs Whole Corpus</th>
+                    <th class="info">Number of Speakers Whole Corpus</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,12 +102,22 @@
                     </td>
                     <td class="info">
                         <xsl:value-of
+                            select="count(//Communication)"
+                        />
+                    </td>
+                    <td class="info">
+                        <xsl:value-of
                             select="count(//Transcription/Description/Key[@Name = 'segmented' and text() = 'false'])"
                         />
                     </td>
                     <td class="info">
                         <xsl:value-of
                             select="count(//Transcription/Description/Key[@Name = 'segmented' and text() = 'true'])"
+                        />
+                    </td>
+                    <td class="info">
+                        <xsl:value-of
+                            select="count(//Speaker)"
                         />
                     </td>
                 </tr>
