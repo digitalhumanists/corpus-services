@@ -997,7 +997,7 @@ public class CorpusMagician {
         return chosencorpusfunctions;
     }
 
-    public static void createReports() throws IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, XPathExpressionException {
+    public static void createReports() throws IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, XPathExpressionException, JDOMException {
         System.out.println(report.getFullReports());
         String reportOutput;
         if (reportlocation.getFile().endsWith("html")) {
@@ -1042,7 +1042,7 @@ public class CorpusMagician {
         if (isfixesjson) {
             String fixJson = "";
             if (isCorpus) {
-                fixJson = report.getFixJson(corpus.getCorpusName());
+                fixJson = report.getFixJson(corpus);
             } else {
                 fixJson = report.getFixJson();
             }

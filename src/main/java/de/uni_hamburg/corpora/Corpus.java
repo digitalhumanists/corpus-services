@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
+import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 
 /**
@@ -93,7 +94,7 @@ public class Corpus {
         //we don't need to check it because we know it
         cdc.add(coma);
     }
-    
+
     public Corpus(Collection<CorpusData> cdc) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException {
         for (CorpusData cd : cdc) {
             if (cd instanceof ContentData) {
@@ -213,5 +214,41 @@ public class Corpus {
 
     public void setCorpusName(String s) {
         corpusname = s;
+    }
+
+    //TODO make this more sustainable, it is very INEL specific
+    String getCorpusSentenceNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("sum(//Transcription/Description/Key[@Name = '# HIAT:u'])");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusTranscriptionNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("count(//Transcription/Description/Key[@Name = 'segmented' and text() = 'false'])");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusSpeakerNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("count(//Speaker)");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusCommunicationNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("count(//Communication)");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusWords() throws JDOMException {
+        XPath xpath = XPath.newInstance("sum(//Transcription/Description/Key[@Name = '# HIAT:w'])");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
     }
 }
