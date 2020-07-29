@@ -60,6 +60,8 @@ public class ComaFileCoverageChecker extends Checker implements CorpusFunction {
         whitelist.add(".git");
         whitelist.add(".gitignore");
         whitelist.add("README");
+        whitelist.add("README.md");
+        whitelist.add(".gitattributes");
         whitelist.add("Thumbs.db");
         fileendingwhitelist = new ArrayList<String>();
         directorywhitelist = new ArrayList<String>();
