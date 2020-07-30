@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.TreeSet;
@@ -165,8 +166,13 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         } else {
             stats.addWarning(function, cd, "No linked exbs found in the coma file. ");
         }
-
-        String result = htmltemplate + overviewTable + communicationsTable;
+        String htmlend = "   </body>\n</html>";
+        //add timestamp
+        String timestamp = "";       
+        timestamp += "   <div id='timestamp'>Generated: ";        
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        timestamp += time + "</div>\n";
+        String result = htmltemplate + timestamp + overviewTable + communicationsTable + htmlend;
         //String result = htmltemplate + overviewTable;
 
         URL overviewurl = new URL(cd.getParentURL(), "curation/tier_overview.html");
