@@ -19,7 +19,8 @@
                     } );           
                 </script>
             </head>
-            <body> 
+        <body> 
+        <div id='timestamp'>Generated: <xsl:value-of select="format-dateTime(current-dateTime(),'[Y0001]-[M01]-[D01] [H01]:[m01]:[f]')"/></div>
         <xsl:call-template name="GET_STATISTICAL_INFO_ON_WHOLE_CORPUS"/>
         <xsl:if test="$mode = 'inel'">
             <xsl:call-template name="GET_INEL_SHORT_OVERVIEW"/>
