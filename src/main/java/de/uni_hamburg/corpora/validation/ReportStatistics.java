@@ -50,6 +50,14 @@ public class ReportStatistics extends Checker implements CorpusFunction {
         if (htmlReportFile.isFile()) {
             FileInputStream fis = new FileInputStream(htmlReportPath);
             String html = IOUtils.toString(fis);
+            //Just operate on the substring we really want
+            //To do: We do not want the total sum added here!
+            Pattern singleStatistics = Pattern.compile("(?<!Total): [0-9\\\\.]{1,3} %: [0-9\\\\.]+ OK, [0-9\\\\.]+ bad, [0-9\\\\.]+ warnings and [0-9\\\\.]+ unknown. = [0-9\\\\.]+ items.");
+            Matcher statistics = singleStatistics.matcher(html);
+            String htmlmatch = "";
+            while (statistics.find()) {
+                    htmlmatch += statistics.group();
+                }
             File reportStatFile = new File(reportStatisticsPath);
             if (reportStatFile.isFile()) {
                 String reportStatistics = IOUtils.toString(new FileInputStream(reportStatisticsPath));
@@ -57,10 +65,10 @@ public class ReportStatistics extends Checker implements CorpusFunction {
                 Pattern bad = Pattern.compile("[0-9\\.]+ bad"); // get critical errors
                 Pattern warnings = Pattern.compile("[0-9\\.]+ warnings"); // get warnings
                 Pattern unknown = Pattern.compile("[0-9\\.]+ unknown"); // get unknown messages
-                Matcher mOk = ok.matcher(html);
-                Matcher mBad = bad.matcher(html);
-                Matcher mWarnings = warnings.matcher(html);
-                Matcher mUnknown = unknown.matcher(html);
+                Matcher mOk = ok.matcher(htmlmatch);
+                Matcher mBad = bad.matcher(htmlmatch);
+                Matcher mWarnings = warnings.matcher(htmlmatch);
+                Matcher mUnknown = unknown.matcher(htmlmatch);
                 int nOK = 0;
                 while (mOk.find()) {
                     String sOk = mOk.group();
