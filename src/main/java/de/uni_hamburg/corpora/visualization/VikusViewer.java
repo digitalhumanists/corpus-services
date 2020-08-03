@@ -93,10 +93,21 @@ public class VikusViewer extends Visualizer {
         keywordblacklist.add("a");
         keywordblacklist.add("the");
         keywordblacklist.add("i");
+        keywordblacklist.add("in");
+        keywordblacklist.add("are");
+        keywordblacklist.add("is");
+        keywordblacklist.add("how");
+        keywordblacklist.add("an");
+        keywordblacklist.add("on");
+        keywordblacklist.add("of");
+        keywordblacklist.add("my");
+        keywordblacklist.add("with");
+        keywordblacklist.add("at");
+        keywordblacklist.add("...");
     }
 
     public Report createDataCSV(CorpusData cd) throws FileNotFoundException, IOException, JDOMException {
-        //id,keywords,year,_dialect,_country,_region,_language,_speaker,_transcription,_scorehtml,_listhtml,_pdf,_audio,_genre,_description
+        //id,keywords,year,_dialect,_country,_region,_settlement,_language,_speaker,_transcription,_scorehtml,_listhtml,_pdf,_audio,_genre,_description
         //"sketch,drawing",1890,Ket,Russia,Tomsk Oblast,sel,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/transcript:selkup-0.1_AR_1965_RestlessNight_transl/datastream/EXB/AR_1965_RestlessNight_transl.exb,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/file:selkup-0.1_KFN_1965_BearHunting1_nar/datastream/PDF/KFN_1965_BearHunting1_nar.pdf,https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:selkup-0.1_DN_196X_Bread_nar/datastream/MP3/DN_196X_Bread_nar.mp3,flk,Male Torso,KAI_1965_OldWitch_flk
         Report stats = new Report();
         CSVReader reader;
@@ -109,7 +120,7 @@ public class VikusViewer extends Visualizer {
         String filerepourl = "https://corpora.uni-hamburg.de/repository/file:" + corpusPrefix + "-" + version + "_";
         String recrepourl = "https://corpora.uni-hamburg.de/repository/recording:" + corpusPrefix + "-" + version + "_";
         for (Element communication : coma.getCommunications()) {
-            String[] comrow = new String[15];
+            String[] comrow = new String[16];
             //id
             Attribute id = (Attribute) XPath.selectSingleNode(communication, "@Name");
             comrow[0] = id.getValue();
@@ -123,8 +134,8 @@ public class VikusViewer extends Visualizer {
 
             Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Genre')]");
             System.out.println(genre.getText());
-            Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Region')]");
-            System.out.println(region.getText());
+            Element settlement = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Settlement')]");
+            System.out.println(settlement.getText());
             Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Speakers')]");
             System.out.println(speaker.getText());
             String keywords = "\"";
@@ -137,7 +148,7 @@ public class VikusViewer extends Visualizer {
                     }
                 }
             }
-            keywords += year.getText() + "," + genre.getText() + "," + region.getText() + "," + speaker.getText() + "\"";
+            keywords += year.getText() + "," + genre.getText() + "," + settlement.getText() + "," + speaker.getText() + "\"";
             comrow[1] = keywords;
             //year - Description Date of Recording
             comrow[2] = year.getText();
@@ -150,30 +161,34 @@ public class VikusViewer extends Visualizer {
             System.out.println(country.getText());
             comrow[4] = country.getText();
             //region
+            Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Region')]");
+            System.out.println(region.getText());
             comrow[5] = region.getText();
+            //settlement
+            comrow[6] = settlement.getText();
             //language
             Element language = (Element) XPath.selectSingleNode(communication, "descendant::Language/LanguageCode");
             System.out.println(language.getText());
-            comrow[6] = language.getText();
+            comrow[7] = language.getText();
             //speaker
-            comrow[7] = "\"" + speaker.getText() + "\"";
+            comrow[8] = "\"" + speaker.getText() + "\"";
             //transcription url
             //needs to look like https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_DN_196X_Bread_nar/EXB/DN_196X_Bread_nar.exb 
             String transcrurl = transrepourl + id.getValue() + "/EXB/" + id.getValue() + ".exb";
             //Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
             //System.out.println(transcription.getText());
             //comrow[8] = transcription.getText();
-            comrow[8] = transcrurl;
+            comrow[9] = transcrurl;
             //scorehtml url
             //needs to look like 
             //https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_AGS_1964_SnakeInMouth_flk/SCORE/AGS_1964_SnakeInMouth_flk-score.html 
             String scoreurl = transrepourl + id.getValue() + "/SCORE/" + id.getValue() + "-score.html";
-            comrow[9] = scoreurl;
+            comrow[10] = scoreurl;
             //listhtml url
             //needs to look like 
             //https://corpora.uni-hamburg.de/repository/transcript:selkup-1.0_AGS_1964_SnakeInMouth_flk/LIST/AGS_1964_SnakeInMouth_flk-list.html
             String listurl = transrepourl + id.getValue() + "/LIST/" + id.getValue() + "-list.html";
-            comrow[10] = listurl;
+            comrow[11] = listurl;
             //pdf url
             Element pdf = (Element) XPath.selectSingleNode(communication, "descendant::File[mimetype='application/pdf']/relPath']");
             //audio url
@@ -182,34 +197,42 @@ public class VikusViewer extends Visualizer {
             String pdfrurl = filerepourl + id.getValue() + "/PDF/" + id.getValue() + ".pdf";
             String audiourl = recrepourl + id.getValue() + "/MP3/" + id.getValue() + ".mp3";
             Element transcription = (Element) XPath.selectSingleNode(communication, "descendant::Transcription/NSLink");
-            URL imageLocation = new URL(cd.getParentURL() + transcription.getText().replaceFirst("[.][^.]+$", "") + ".jpg");
+            URL imageLocation = null;
+            if (transcription != null) {
+                imageLocation = new URL(cd.getParentURL() + transcription.getText().replaceFirst("[.][^.]+$", "") + ".jpg");
+            } else {
+                stats.addCritical(function, cd, id.getValue() + ": No transcription linked in communication in the coma file!");
+            }
             if (pdf == null && audio == null) {
-                comrow[11] = "np pdf";
-                comrow[12] = "no audio";
-                stats.addCritical(function, cd, id.getValue() + ": No audio or pdf linked in the coma file!");
+                comrow[12] = "np pdf";
+                comrow[13] = "no audio";
+                stats.addCritical(function, cd, id.getValue() + ": No audio or pdf linked in communication in the coma file!");
             } else if (pdf != null && audio != null) {
                 //we have both - add both links but don't add an audio image
-                comrow[11] = pdfrurl;
-                comrow[12] = audiourl;
-                stats.addCritical(function, cd, id.getValue() + ": Audio AND pdf linked in the coma file!");
+                comrow[12] = pdfrurl;
+                comrow[13] = audiourl;
+                stats.addCritical(function, cd, id.getValue() + ": Audio AND pdf linked in communication in the coma file!");
             } else if (pdf != null) {
-                comrow[11] = pdfrurl;
-                comrow[12] = "no audio";
+                comrow[12] = pdfrurl;
+                comrow[13] = "no audio";
                 //TODO
                 //now we need an image jpeg of the first page
                 //cio.copyInternalBinaryFile(PDF_IMAGE_PATH, imageLocation); 
             } else {
-                comrow[11] = "no pdf";
-                comrow[12] = audiourl;
+                comrow[12] = "no pdf";
+                comrow[13] = audiourl;
                 //now save the audio image in the folder with the correct name
-                cio.copyInternalBinaryFile(AUDIO_IMAGE_PATH, imageLocation);
+                if (imageLocation != null) {
+                    cio.copyInternalBinaryFile(AUDIO_IMAGE_PATH, imageLocation);
+                }
             }
             //genre
             System.out.println(genre.getText());
-            comrow[13] = genre.getText();
+            comrow[14] = genre.getText();
             //description
             if (descriptiondesc != null) {
-                comrow[14] = descriptiondesc.getText();
+                String descdesc = "\"" + descriptiondesc.getText() +  "\"";
+                comrow[15] = descdesc;
             }
             data.add(comrow);
         }
