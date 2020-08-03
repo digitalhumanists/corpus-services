@@ -597,7 +597,7 @@ public class Report {
         String corpusspeaks = corpus.getCorpusSpeakerNumber();
         String corpuscomms = corpus.getCorpusCommunicationNumber();
         //"corpus-words":1234,"corpus-sentences":2345,"corpus-transcriptions":12,"corpus-speakers":34,"corpus-transcriptions":12
-        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"corpus\": \""
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{ \"doc\": { \"corpus\": \""
                 + corpusname + "\", \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \""
                 + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": "
                 + fix + ", \"corpus-words\": " + corpuswords + ", \"corpus-sentences\": " + corpussents + ", \"corpus-transcriptions\": " + corpustrans
