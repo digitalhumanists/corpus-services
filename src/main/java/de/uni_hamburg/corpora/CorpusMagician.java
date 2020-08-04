@@ -124,6 +124,7 @@ public class CorpusMagician {
     static String fsm = "fsm";
     static String segmentation = "segmentation";
     static String lang = "lang";
+    static String spelllang = "spelllang";
     static String corpusname = "corpusname";
     static String kml = "kml";
     static String mode = "mode";
@@ -813,9 +814,9 @@ public class CorpusMagician {
                     LanguageToolChecker ltc = new LanguageToolChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey(lang)) {
-                            ltc.setLanguage(cfProperties.getProperty(lang));
-                            System.out.println("Language set to " + cfProperties.getProperty(lang));
+                        if (cfProperties.containsKey(spelllang)) {
+                            ltc.setLanguage(cfProperties.getProperty(spelllang));
+                            System.out.println("Language set to " + cfProperties.getProperty(spelllang));
                         }
                         if (cfProperties.containsKey("tier")) {
                             ltc.setTierToCheck(cfProperties.getProperty("tier"));
