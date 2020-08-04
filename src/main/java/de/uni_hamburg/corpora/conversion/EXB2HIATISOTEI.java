@@ -71,6 +71,7 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
     static String SPANS2_ATTRIBUTES = "/xsl/spans2attributes.xsl";
 
     static String FSM = "";
+    static Boolean xeno = false;
 
     static String BODY_NODE = "//text";
 
@@ -227,36 +228,39 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
 
                             // filling xenoData element with Coma metadata
-                            XPath xenoDataXP = XPath.newInstance("//tei:xenoData");
-                            xenoDataXP.addNamespace(teiNamespace);
-                            List<Element> xenoDataList = xenoDataXP.selectNodes(finalRoot);
-                            for (Element xenoDataElement : xenoDataList) {
+                            if(xeno){
+                                XPath xenoDataXP = XPath.newInstance("//tei:xenoData");
+                                xenoDataXP.addNamespace(teiNamespace);
+                                List<Element> xenoDataList = xenoDataXP.selectNodes(finalRoot);
+                                for (Element xenoDataElement : xenoDataList) {
 
-                                Element CorpusDataElement = new Element("CorpusData");
+                                    Element CorpusDataElement = new Element("CorpusData");
 
-                                //fill xenoData with corresponding Communication element (in CorpusData element)
-                                Element communicationClone = (Element)communicationElement.clone();
-                                CorpusDataElement.addContent(communicationClone);
+                                    //fill xenoData with corresponding Communication element (in CorpusData element)
+                                    Element communicationClone = (Element)communicationElement.clone();
+                                    CorpusDataElement.addContent(communicationClone);
 
-                                //fill xenoData with corresponding Speaker elements (in CorpusData element)
-                                for (Element personE : personL) {
-                                    String personSigle = personE.getAttributeValue("n");
-                                    String xp2 = "//Speaker[Sigle='" + personSigle + "']";
-                                    Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
-                                    Element speakerClone = (Element)speakerE.clone();
-                                    CorpusDataElement.addContent(speakerClone);
+                                    //fill xenoData with corresponding Speaker elements (in CorpusData element)
+                                    for (Element personE : personL) {
+                                        String personSigle = personE.getAttributeValue("n");
+                                        String xp2 = "//Speaker[Sigle='" + personSigle + "']";
+                                        Element speakerE = (Element) XPath.selectSingleNode(comaDoc, xp2);
+                                        Element speakerClone = (Element)speakerE.clone();
+                                        CorpusDataElement.addContent(speakerClone);
+                                    }
+
+                                    //fill xenoData with Description element from Coma
+                                    String DescriptionXP = "/Corpus/Description";
+                                    Element DescriptionElement = (Element) XPath.selectSingleNode(comaDoc, DescriptionXP);
+                                    Element DescriptionClone = (Element)DescriptionElement.clone();
+
+                                    //set/add the elements
+                                    CorpusElement.setContent(CorpusDataElement);
+                                    CorpusElement.addContent(DescriptionClone);
+                                    xenoDataElement.setContent(CorpusElement);
                                 }
-
-                                //fill xenoData with Description element from Coma
-                                String DescriptionXP = "/Corpus/Description";
-                                Element DescriptionElement = (Element) XPath.selectSingleNode(comaDoc, DescriptionXP);
-                                Element DescriptionClone = (Element)DescriptionElement.clone();
-
-                                //set/add the elements
-                                CorpusElement.setContent(CorpusDataElement);
-                                CorpusElement.addContent(DescriptionClone);
-                                xenoDataElement.setContent(CorpusElement);
                             }
+                            
 
                             //setting the manipulated XML
                             //finalDoc.setContent(finalRoot);
@@ -889,6 +893,13 @@ public class EXB2HIATISOTEI extends Converter implements CorpusFunction {
 
     public void setFSM(String newfsm) {
         FSM = newfsm;
+    }
+
+    public void setXeno(String newXeno) {
+        if(newXeno.equals("yes") || newXeno.equals("y") || newXeno.equals("1") || newXeno.equals("true") || 
+           newXeno.equals("t") || newXeno.equals(1) || newXeno.equals(true)){
+            xeno = true;
+        }
     }
 
     @Override

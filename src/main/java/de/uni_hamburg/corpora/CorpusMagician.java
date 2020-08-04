@@ -124,6 +124,7 @@ public class CorpusMagician {
     static String corpusname = "corpusname";
     static String kml = "kml";
     static String mode = "mode";
+    static String xeno = "xeno";
     static URL reportlocation;
     static URL inputurl;
     static boolean isCorpus = false;
@@ -475,6 +476,10 @@ public class CorpusMagician {
                             eiit.setFSM(cfProperties.getProperty(fsm));
                             System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                         }
+                        if (cfProperties.containsKey(xeno)) {
+                            eiit.setXeno(cfProperties.getProperty(xeno));
+                            System.out.println("Output of coma metadata to TEI xenoData set to " + cfProperties.getProperty(xeno));
+                        }
                     }
                     cf2strcorpusfunctions.add(eiit);
                     break;
@@ -486,6 +491,10 @@ public class CorpusMagician {
                         eiitsel.setFSM(cfProperties.getProperty(fsm));
                         System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                     }
+                    if (cfProperties.containsKey(xeno)) {
+                        eiitsel.setXeno(cfProperties.getProperty(xeno));
+                        System.out.println("Output of coma metadata to TEI xenoData set to " + cfProperties.getProperty(xeno));
+                    }
                     eiitsel.setLanguage("sel");
                     cf2strcorpusfunctions.add(eiitsel);
                     break;
@@ -496,6 +505,10 @@ public class CorpusMagician {
                         eiitdlg.setFSM(cfProperties.getProperty(fsm));
                         System.out.println("FSM set to " + cfProperties.getProperty(fsm));
                     }
+                    if (cfProperties.containsKey(xeno)) {
+                        eiitdlg.setXeno(cfProperties.getProperty(xeno));
+                        System.out.println("Output of coma metadata to TEI xenoData set to " + cfProperties.getProperty(xeno));
+                    }
                     eiitdlg.setLanguage("dlg");
                     cf2strcorpusfunctions.add(eiitdlg);
                     break;
@@ -505,6 +518,10 @@ public class CorpusMagician {
                     if (cfProperties.containsKey(fsm)) {
                         eiitxas.setFSM(cfProperties.getProperty(fsm));
                         System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
+                    if (cfProperties.containsKey(xeno)) {
+                        eiitxas.setXeno(cfProperties.getProperty(xeno));
+                        System.out.println("Output of coma metadata to TEI xenoData set to " + cfProperties.getProperty(xeno));
                     }
                     eiitxas.setLanguage("xas");
                     cf2strcorpusfunctions.add(eiitxas);
@@ -529,6 +546,10 @@ public class CorpusMagician {
                         if (cfProperties.containsKey(fsm)) {
                             ehit.setFSM(cfProperties.getProperty(fsm));
                             System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
+                        if (cfProperties.containsKey(xeno)) {
+                            ehit.setXeno(cfProperties.getProperty(xeno));
+                            System.out.println("Output of coma metadata to TEI xenoData set to " + cfProperties.getProperty(xeno));
                         }
                     }
                     cf2strcorpusfunctions.add(ehit);
