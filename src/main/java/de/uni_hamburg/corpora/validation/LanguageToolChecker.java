@@ -86,7 +86,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             System.out.println("Language set to Russian");
         } else {
             Report report = new Report();
-            report.addCritical(function, cd, "Missing languagetool for language "
+            report.addCritical(function, cd, "Missing languagetool resource for language "
                     + language);
             return stats;
         }

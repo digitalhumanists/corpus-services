@@ -191,7 +191,17 @@
         </dependency>
         <dependency>
             <groupId>org.languagetool</groupId>
-            <artifactId>language-all</artifactId>
+            <artifactId>language-de</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-en</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-ru</artifactId>
             <version>4.2</version>
         </dependency>
         <dependency>
