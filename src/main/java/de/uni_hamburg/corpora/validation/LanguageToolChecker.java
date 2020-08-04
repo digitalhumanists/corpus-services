@@ -38,6 +38,8 @@ import org.jdom.JDOMException;
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.GermanyGerman;
+import org.languagetool.language.BritishEnglish;
+import org.languagetool.language.Russian;
 
 /**
  * A grammar and spelling error checker for EXB tiers mainly.
@@ -76,10 +78,12 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
             System.out.println("Language set to German");
         } else if (language.equals("en")) {
             //needs to be English!
-            langTool = new JLanguageTool(new GermanyGerman());
+            langTool = new JLanguageTool(new BritishEnglish());
+            System.out.println("Language set to English");
         } else if (language.equals("ru")) {
             //needs to be Russian!
-            langTool = new JLanguageTool(new GermanyGerman());
+            langTool = new JLanguageTool(new Russian());
+            System.out.println("Language set to Russian");
         } else {
             Report report = new Report();
             report.addCritical(function, cd, "Missing languagetool for language "
@@ -167,7 +171,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
     @Override
     public String getDescription() {
         String description = "This class takes a CorpusDataObject that is an Exb, "
-                + "checks if there are spell or grammar errors in German, English or Russian using LnaguageTool and"
+                + "checks if there are spell or grammar errors in German, English or Russian using LanguageTool and"
                 + " returns the errors in the Report and in the ExmaErrors.";
         return description;
     }
