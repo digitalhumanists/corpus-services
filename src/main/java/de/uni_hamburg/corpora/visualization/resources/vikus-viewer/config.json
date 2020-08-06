@@ -80,6 +80,12 @@
         "type": "text"
       },
       {
+        "name": "Settlement",
+        "source": "_region",
+        "display": "column",
+        "type": "text"
+      },
+      {
         "name": "Author or Speaker",
         "source": "_speaker",
         "display": "column",
