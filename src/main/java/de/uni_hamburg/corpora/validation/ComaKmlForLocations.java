@@ -135,10 +135,19 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 if (placeOfBirth.endsWith("`")) {
                                     placeOfBirth = placeOfBirth.substring(0, placeOfBirth.indexOf("`"));
                                 }
-                                if (coorFlag == false && lngLat.containsKey(placeOfBirth + "-" + languageCode)) {
+                                
+                                // test for existing coordinates
+                                String coordinates = "";
+                                if(lngLat.containsKey(domicileStr + "-" + languageCode)){
+                                    coordinates = lngLat.get(domicileStr + "-" + languageCode);
+                                } else if(lngLat.containsKey(domicileStr + "-")){
+                                    coordinates = lngLat.get(domicileStr + "-");
+                                }
+                                
+                                if (coorFlag == false && (!coordinates.equals(""))) {
                                     Element coordinatesKey = doc.createElement("Key");
                                     coordinatesKey.setAttribute("Name", KEYBIRTHPLACELL);
-                                    coordinatesKey.setTextContent(lngLat.get(placeOfBirth + "-" + languageCode));
+                                    coordinatesKey.setTextContent(coordinates);                                    
                                     Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                     loc.insertBefore(coordinatesKey, ref);
                                     String message = "Added Key " + KEYBIRTHPLACELL + ": " + coordinatesKey + ") from KML (" + kmlFile + ") " + domicileStr + "' "
@@ -151,6 +160,7 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                     stats.addWarning(function, cd, message);
                                 }
                             }
+                            
                             if (!domicileStr.equals("...") && !domicileStr.equals("")) {
                                 if (domicileStr.endsWith("(?)")) {
                                     domicileStr = domicileStr.substring(0, domicileStr.indexOf(" (?)"));
@@ -158,10 +168,19 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                                 if (domicileStr.endsWith("`")) {
                                     domicileStr = domicileStr.substring(0, domicileStr.indexOf("`"));
                                 }
-                                if (domCoor == false && lngLat.containsKey(domicileStr + "-" + languageCode)) {
+                                
+                                // test for existing coordinates
+                                String coordinates = "";
+                                if(lngLat.containsKey(domicileStr + "-" + languageCode)){
+                                    coordinates = lngLat.get(domicileStr + "-" + languageCode);
+                                } else if(lngLat.containsKey(domicileStr + "-")){
+                                    coordinates = lngLat.get(domicileStr + "-");
+                                }
+                        
+                                if (domCoor == false && (!coordinates.equals(""))) {
                                     Element coordinatesKey = doc.createElement("Key");
                                     coordinatesKey.setAttribute("Name", KEYDOMICILELL);
-                                    coordinatesKey.setTextContent(lngLat.get(domicileStr + "-" + languageCode));
+                                    coordinatesKey.setTextContent(coordinates);
                                     Element loc = (Element) location.getElementsByTagName("Description").item(0);
                                     loc.insertBefore(coordinatesKey, domRef);
                                     String message = "Added Key " + KEYDOMICILELL + ": " + coordinatesKey + ") from KML (" + kmlFile + ") " + domicileStr + "' "
@@ -215,10 +234,19 @@ public class ComaKmlForLocations extends Checker implements CorpusFunction {
                         if (settlement.endsWith("`")) {
                             settlement = settlement.substring(0, settlement.indexOf("`"));
                         }
-                        if (coorFlag == false && lngLat.containsKey(settlement + "-" + languageCode)) {
+                        
+                        // test for existing coordinates
+                        String coordinates = "";
+                        if(lngLat.containsKey(settlement + "-" + languageCode)){
+                            coordinates = lngLat.get(settlement + "-" + languageCode);
+                        } else if(lngLat.containsKey(settlement + "-")){
+                            coordinates = lngLat.get(settlement + "-");
+                        }
+                        
+                        if (coorFlag == false && (!coordinates.equals(""))) {
                             Element coordinatesKey = doc.createElement("Key");
                             coordinatesKey.setAttribute("Name", KEYSETTLEMENTLL);
-                            coordinatesKey.setTextContent(lngLat.get(settlement + "-" + languageCode));
+                            coordinatesKey.setTextContent(coordinates);                                    
                             Element loc = (Element) location.getElementsByTagName("Description").item(0);
                             loc.appendChild(coordinatesKey);
                             String message = "Added Key " + KEYSETTLEMENTLL + ": " + coordinatesKey + ") from KML (" + kmlFile + ") "
