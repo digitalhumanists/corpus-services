@@ -5,31 +5,17 @@
  */
 package de.uni_hamburg.corpora.publication;
 
-import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -103,10 +89,7 @@ public class RemoveUnlinkedFiles extends Publisher implements CorpusFunction {
                     String c = e.getTextContent(); 
                     c = c.replace('/', File.separatorChar).replace('\\', File.separatorChar);
                     //c = c.substring(c.lastIndexOf(baseDirectory.replace('/', File.separatorChar).replace('\\', File.separatorChar)) + 1);
-                    fileList.add(c);    
-                    System.out.println("#COMA# " + c);
-                    stats.addNote(function, comadata, "#COMA# " + c);
-                
+                    fileList.add(c);                    
                 }
             }
             
@@ -139,11 +122,28 @@ public class RemoveUnlinkedFiles extends Publisher implements CorpusFunction {
                 // see if this file is in the file list from Coma
                 // if it is not, then remove it from disk
                 String name = file.getAbsolutePath().replace('/', File.separatorChar).replace('\\', File.separatorChar);
-                name = name.substring(name.lastIndexOf(":") + 1);
-                String base = baseDirectory.replace('/', File.separatorChar).replace('\\', File.separatorChar).substring(baseDirectory.lastIndexOf(":") + 1);
-                name = name.substring(name.lastIndexOf(base) + 1);
-                System.out.println("**ALL** " + name);
-                stats.addNote(function, comadata, "**ALL** " + name + " / " + base);
+                
+                //iterate through files linked in Coma and see if the current one is there
+                Boolean keepFile = false;                
+                for (int i = 0; i < fileList.size(); i++) {                    
+                    String linkedFile = fileList.get(i);
+                    if(name.endsWith(linkedFile)){
+                        keepFile = true;
+                    }
+                }
+                    
+                                
+                if(keepFile){
+                        stats.addNote(function, comadata, "Keeping: " + name + " (found in Coma and file system).");
+                    } else{
+                        File FileToRemove = new File(name); 
+                        if(FileToRemove.delete()){ 
+                            stats.addNote(function, comadata, "Removed: " + name + " (not found in Coma).");
+                        } 
+                        else{ 
+                            stats.addWarning(function, comadata, "Removal unsuccessful: " + name + " (not found in Coma)."); 
+                        }
+                    }  
             }
         }
         
