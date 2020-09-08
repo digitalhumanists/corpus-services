@@ -58,6 +58,7 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
         resulturls = ccd.getAllBasicTranscriptionURLs();
         for (URL resulturl : resulturls) {
             CorpusData cdexb = cio.readFileURL(resulturl);
+            if (cdexb!=null) {
             BasicTranscriptionData btexb = (BasicTranscriptionData) cdexb;
 
             btds.add(btexb);
@@ -65,6 +66,9 @@ public class ComaTierOverviewCreator extends Checker implements CorpusFunction {
             for (int i = 0; i < btexb.getEXMARaLDAbt().getBody().getNumberOfTiers(); i++) {
                 t = btexb.getEXMARaLDAbt().getBody().getTierAt(i);
                 tiers.add(t);
+            }
+            } else {
+               stats.addCritical(function, cd, "The linked basic transcription " +  resulturl + " cannot be opened."); 
             }
         }
         List<String> stringtiers = new ArrayList<String>();
