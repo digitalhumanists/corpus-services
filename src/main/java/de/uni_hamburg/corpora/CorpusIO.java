@@ -151,11 +151,11 @@ public class CorpusIO {
                 return seg;
             } else {
                 System.out.println(url + " will not be read");
-                return cd;
+                return null;
             }
         } else {
             System.out.println("Critical: " + url + " cannot be read");
-            return cd;
+            return null;
         }
     }
 
@@ -169,7 +169,9 @@ public class CorpusIO {
         alldata = URLtoList(url);
         for (URL readurl : alldata) {
             CorpusData cdread = readFileURL(readurl);
-            cdc.add(cdread);
+            if (cdread != null && !cdc.contains(cdread)) {
+                cdc.add(cdread);
+            }
         }
         return cdc;
     }
