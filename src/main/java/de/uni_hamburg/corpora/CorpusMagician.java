@@ -40,6 +40,7 @@ import de.uni_hamburg.corpora.visualization.ScoreHTML;
 import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
 import de.uni_hamburg.corpora.publication.HandlePidRegistration;
+import de.uni_hamburg.corpora.publication.RemoveUnlinkedFiles;
 import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import de.uni_hamburg.corpora.validation.ComaChartsGeneration;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
@@ -260,6 +261,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaChartsGeneration");
         allExistingCFs.add("ZipCorpus");
         allExistingCFs.add("HandlePidRegistration");
+        allExistingCFs.add("RemoveUnlinkedFiles");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
         allExistingCFs.add("ExbFileCoverageChecker");
@@ -647,6 +649,10 @@ public class CorpusMagician {
                         }
                     }
                     cf2strcorpusfunctions.add(hppr);
+                    break;
+                case "removeunlinkedfiles":
+                    RemoveUnlinkedFiles ruf = new RemoveUnlinkedFiles();                    
+                    cf2strcorpusfunctions.add(ruf);
                     break;
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
