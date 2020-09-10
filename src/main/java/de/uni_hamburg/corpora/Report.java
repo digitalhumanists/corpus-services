@@ -343,8 +343,8 @@ public class Report {
                 + "= {6} items.\n", statId, 100 * good / totes,
                 good, severe, badish, unk, totes);
     }
-    
-        /**
+
+    /**
      * Generate a one-line text-only message summarising the named bucket.
      */
     public String getAllAsSummaryLine() {
@@ -353,7 +353,7 @@ public class Report {
         int badish = 0;
         int unk = 0;
         Collection<ReportItem> stats = new ArrayList<ReportItem>();
-        for (String statId: statistics.keySet()) {
+        for (String statId : statistics.keySet()) {
             //System.out.println("key : " + statId);
             //System.out.println("value : " + statistics.get(statId));
             stats.addAll(statistics.get(statId));
@@ -370,10 +370,14 @@ public class Report {
             }
         }
         int totes = good + severe + badish + unk;
-        return MessageFormat.format("  {0}: {1} %: {2} OK, {3} bad, "
-                + "{4} warnings and {5} unknown. "
-                + "= {6} items.\n", "Total", 100 * good / totes,
-                good, severe, badish, unk, totes);
+        if (totes > 0) {
+            return MessageFormat.format("  {0}: {1} %: {2} OK, {3} bad, "
+                    + "{4} warnings and {5} unknown. "
+                    + "= {6} items.\n", "Total", 100 * good / totes,
+                    good, severe, badish, unk, totes);
+        } else {
+            return "no elements present.";
+        }
     }
 
     /**
@@ -386,7 +390,7 @@ public class Report {
             rv += getSummaryLine(kv.getKey());
         }
         //add summary of all buckets in one line
-         rv += getAllAsSummaryLine();
+        rv += getAllAsSummaryLine();
         return rv;
     }
 
