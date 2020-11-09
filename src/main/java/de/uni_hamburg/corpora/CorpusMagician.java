@@ -54,6 +54,7 @@ import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import de.uni_hamburg.corpora.visualization.VikusViewer;
+import de.uni_hamburg.corpora.validation.ExbForbiddenSymbolsChecker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -310,6 +311,7 @@ public class CorpusMagician {
         allExistingCFs.add("DuplicateTierContentChecker");
         allExistingCFs.add("LanguageToolChecker");
         allExistingCFs.add("VikusViewer");
+        allExistingCFs.add("ExbForbiddenSymbolsChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -834,6 +836,10 @@ public class CorpusMagician {
                     case "vikusviewer":
                     VikusViewer vv = new VikusViewer();
                     cf2strcorpusfunctions.add(vv);
+                    break;
+                case "exbforbiddensymbolschecker":
+                    ExbForbiddenSymbolsChecker efsc = new ExbForbiddenSymbolsChecker();
+                    cf2strcorpusfunctions.add(efsc);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
