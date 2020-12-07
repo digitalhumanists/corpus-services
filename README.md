@@ -7,8 +7,11 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [Contributors][contributors-url]
+·
 [Forks][forks-url]
+·
 [Issues][issues-url]
+·
 [License][license-url]
 
 <!-- PROJECT LOGO -->
