@@ -14,8 +14,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="images/logo.pnge">
-    <img src="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/blob/develop/images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/images/logo.png">
+    <img src="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Corpus Services</h3>
