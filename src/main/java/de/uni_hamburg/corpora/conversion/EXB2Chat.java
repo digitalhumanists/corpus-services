@@ -1,9 +1,10 @@
 /**
  * @File EXB2Chat.java
  */
-
 package de.uni_hamburg.corpora.conversion;
 
+import de.uni_hamburg.corpora.ComaData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.jdom.JDOMException;
@@ -17,6 +18,7 @@ import org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation;
 import org.exmaralda.partitureditor.jexmaralda.ListTranscription;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusData;
+import de.uni_hamburg.corpora.CorpusFunction;
 import java.util.Collection;
 import java.net.URL;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -29,13 +31,52 @@ import javax.xml.xpath.XPathExpressionException;
  *
  * @author Tommi A Pirinen
  */
-public class EXB2Chat extends Converter {
+public class EXB2Chat extends Converter implements CorpusFunction {
 
-    public EXB2Chat(){
+    Boolean COMA = false;
+
+    public EXB2Chat() {
 
     }
 
     public static final String EXB2CHAT = "exb2chat";
+
+    /*
+    * this method takes a CorpusData object, converts it into CHAT and saves it 
+    * next to the CorpusData object
+    * and gives back a report how it worked
+     */
+    /**
+     *
+     * @param cd
+     * @return
+     * @throws SAXException
+     * @throws FSMException
+     * @throws XSLTransformException
+     * @throws JDOMException
+     * @throws IOException
+     * @throws Exception
+     */
+    public Report function(CorpusData cd) throws SAXException,
+            FSMException,
+            XSLTransformException,
+            JDOMException,
+            IOException,
+            Exception {
+        //it cannot be a coma file alone
+        return convert(cd);
+    }
+
+    public Report function(Corpus c) throws SAXException,
+            FSMException,
+            XSLTransformException,
+            JDOMException,
+            IOException,
+            Exception {
+        COMA = true;
+        ComaData comad = c.getComaData();
+        return convert(comad);
+    }
 
     public Report convert(CorpusData cod) {
         Report stats = new Report();
@@ -47,23 +88,23 @@ public class EXB2Chat extends Converter {
             CorpusIO cio = new CorpusIO();
             cio.write(data, targeturl);
             stats.addCorrect(EXB2CHAT, cod, "Conversion of file was successfully saved at " + targeturl);
-        } catch(JexmaraldaException je) {
+        } catch (JexmaraldaException je) {
             stats.addException(je, EXB2CHAT, cod, "Input Output Exception");
-        } catch(FSMException fe) {
+        } catch (FSMException fe) {
             stats.addException(fe, EXB2CHAT, cod, "Input Output Exception");
-        } catch(SAXException se) {
+        } catch (SAXException se) {
             stats.addException(se, EXB2CHAT, cod, "Input Output Exception");
-        } catch(FileNotFoundException fnfe) {
+        } catch (FileNotFoundException fnfe) {
             stats.addException(fnfe, EXB2CHAT, cod, "Input Output Exception");
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             stats.addException(ioe, EXB2CHAT, cod, "Input Output Exception");
-        } catch(XPathException xe) {
+        } catch (XPathException xe) {
             stats.addException(xe, EXB2CHAT, cod, "Input Output Exception");
-        } catch(XPathExpressionException xee) {
+        } catch (XPathExpressionException xee) {
             stats.addException(xee, EXB2CHAT, cod, "Input Output Exception");
-        } catch(ParserConfigurationException pe) {
+        } catch (ParserConfigurationException pe) {
             stats.addException(pe, EXB2CHAT, cod, "Input Output Exception");
-        } catch(TransformerException te) {
+        } catch (TransformerException te) {
             stats.addException(te, EXB2CHAT, cod, "Input Output Exception");
         }
         return stats;
@@ -85,42 +126,24 @@ public class EXB2Chat extends Converter {
         return IsUsableFor;
     }
 
-    /**
-     * No check is applicable for this feature.
-     */
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        this.cd = cd;
-        // FIXME:
-        return convert(cd);
-        // report.addCritical(EXB2CHAT,
-        //        "Automatic check is not yet supported.");
-        // return report;
-    }
-
-    /**
-     * No fix is applicable for this feature.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        this.cd = cd;
-        report.addCritical(EXB2CHAT,
-                "Automatic fix is not yet supported.");
-        return report;
-    }
 
     /**
      * export chat transcirpt from org/exmaralda/exmaralda/src/
      */
     String exportCHATTranscript(BasicTranscription bt, String encoding)
             throws JexmaraldaException, FSMException, SAXException,
-                              FileNotFoundException, IOException{
-         // segment the basic transcription and transform it into a list transcription
-         CHATSegmentation segmenter = new
-             org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation();
-         ListTranscription lt = segmenter.BasicToUtteranceList(bt);
-         String text = CHATSegmentation.toText(lt);
-         return text;
+            FileNotFoundException, IOException {
+        // segment the basic transcription and transform it into a list transcription
+        CHATSegmentation segmenter = new org.exmaralda.partitureditor.jexmaralda.segment.CHATSegmentation();
+        ListTranscription lt = segmenter.BasicToUtteranceList(bt);
+        String text = CHATSegmentation.toText(lt);
+        return text;
+    }
+
+    @Override
+    public String getDescription() {
+         String description = "This class takes an exb as input and converts it into CHAT format. ";
+        return description;
     }
 
 }
