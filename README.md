@@ -166,9 +166,8 @@ This README file was created on the basis of the [Best-README-Template](https://
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=flat-square
-[contributors-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/graphs/open-access-gitlab
+[contributors-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/graphs/develop
 [forks-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/forks
 [issues-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues
-[license-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/blob/open-access-gitlab/LICENSE
-[product-screenshot]: images/screenshot.png
+[license-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/blob/develop/LICENSE
 
