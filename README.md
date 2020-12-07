@@ -15,7 +15,7 @@
 <br />
 <p align="center">
   <a href="images/logo.pnge">
-    <img src="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/blob/develop/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Corpus Services</h3>
@@ -23,7 +23,7 @@
   <p align="center">
     The Corpus Services project bundles functionality used for maintenance, curation, conversion, and visualization of corpus data in various projects. 
     <br />
-    <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/doc"><strong>Explore the docs »</strong></a>
+    <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues">Report Bug</a>
@@ -58,11 +58,10 @@ The Corpus Services project bundles functionality used for maintenance, curation
 ## Getting Started
 
 Additional info on the Corpus services can be found here (internal documentation):
-* https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
-* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/doc/Build_with_Maven.md
-* https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-to_add_a_new_function
-* https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/List_of_validation_functions
-
+* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use_the_Corpus_Validator.md
+* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md
+* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How-to_add_a_new_function.md
+* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/List_of_validation_functions.md
 
 
 ### Prerequisites
@@ -82,7 +81,7 @@ https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifac
 #### Building
 
 To use the services for corpora, compile it using `mvn clean compile assembly:single`.
-(See https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/doc/Build_with_Maven.md)
+(See https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.mdBuild_with_Maven.md)
 or use a pregenerated artifact form gitlab (see Gitlab artifacts). 
 
 [EXMARaLDA](https://github.com/Exmaralda-Org/exmaralda) is used as a library.
@@ -96,7 +95,7 @@ The usable functions can be found in the help output:
 
 See here for the usage of the corpus services:
 
-https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
+https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use_the_Corpus_Validator
 
 
 <!-- ROADMAP -->
