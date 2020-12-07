@@ -12,28 +12,28 @@ mvn clean compile assembly:single
 </pre>
 
 (See https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven)
-The JAR with dependencies (hzsk-corpus-services-{version.number}-jar-with-dependencies.jar) will be generated in the target folder.
+The JAR with dependencies (corpus-services-{version.number}.jar) will be generated in the target folder.
 
 ## Gitlab
 
-You can also download the pre-compiled jar from gitlab: https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
+You can also download the pre-compiled jar from gitlab: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
 
 ## Server
 
 A recent version of the jar is also continuously available on the servers:
 
 /data/HZSK/hzsk-corpus-services/
-/data/INEL/utilities//hzsk-corpus-services/
+/data/INEL/utilities/corpus-services/
 
 #  Use of the corpus functions
 
 Add the generated .jar to the Folder above /Korpora/HZSK and execute something similar to:
 
-`java -Xmx3g -jar ../hzsk-corpus-services-1.0-jar-with-dependencies.jar -i E:\user\corpus -o E:\user\corpus\report-output.html -c function1 -c function2 -f `
+`java -Xmx3g -jar ../corpus-services-1.0.jar -i E:\user\corpus -o E:\user\corpus\report-output.html -c function1 -c function2 -f `
 
 Output of the help parameter:
 <pre>
-usage: hzsk-corpus-services -i <FILE PATH> -o <FILE PATH> -c <CORPUS
+usage: corpus-services -i <FILE PATH> -o <FILE PATH> -c <CORPUS
        FUNCTION> [-p <property=value>] [-f] [-h] [-e] [-j] [-s <FILE
        PATH>]
 Specify a corpus folder or file and a function to be applied
@@ -88,7 +88,7 @@ The settings file needs to look like:
 
 To get a list of all the available functions with their description and if they have a fixing option use the help parameter:
 
-`java -Xmx3g -jar hzsk-corpus-services-1.0-jar-with-dependencies.jar -h `
+`java -Xmx3g -jar corpus-services-1.0.jar -h `
 
 The usable functions can be found [[List of validation functions|here]].
 
@@ -96,14 +96,14 @@ The usable functions can be found [[List of validation functions|here]].
 
 You can see the complete command line functionality by running
 `
-java -Xmx3g -jar hzsk-corpus-services-1.0-jar-with-dependencies.jar -h
+java -Xmx3g -jar corpus-services-1.0.jar -h
 `
 
 ## Examples
 
 * Conversion to ISO/TEI for HIAT
 `
-java -Xmx3g -jar hzsk-corpus-services-1.0-jar-with-dependencies.jar -i euroWiss -o eurowiss.html -c EXB2HIATISOTEI
+java -Xmx3g -jar corpus-services-1.0.jar -i euroWiss -o eurowiss.html -c EXB2HIATISOTEI
 `
 
 Further example calls in scripts can be found here on Gitlab: https://gitlab.rrz.uni-hamburg.de/hzsk/corpus-curation/tree/master/corpus-services-calls
