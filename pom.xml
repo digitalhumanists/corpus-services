@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.uni_hamburg.corpora</groupId>
-    <artifactId>hzsk-corpus-services</artifactId>
+    <artifactId>corpus-services</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>hzsk-corpus-services</name>
+    <name>corpus-services</name>
     <url>http://maven.apache.org</url>
     <build>
         <plugins>
@@ -101,8 +101,8 @@
         </dependency>
         <dependency>
             <groupId>org.exmaralda</groupId>
-            <artifactId>exmaralda</artifactId>
-            <version>1.10</version>
+            <artifactId>EXMARaLDA</artifactId>
+            <version>Preview-20201130</version>
             <type>jar</type>
         </dependency>
         <dependency>
