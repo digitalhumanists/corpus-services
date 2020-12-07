@@ -8,7 +8,7 @@ The most recent list of validation functions can be found in Doxygen documentati
 
 An automatically derived list can be viewed by calling corpus services with the help flag: 
 <pre>
-java -jar target\hzsk-corpus-services-1.0-jar-with-dependencies.jar -h
+java -jar target\corpus-services-1.0.jar -h
 </pre>
 (cf. https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services#functions)
 
@@ -16,7 +16,7 @@ This is the help output list for Corpus Services v1.0 (12.05.2020, 07:00):
 
 <pre>
 <code>
-usage: hzsk-corpus-services -i <FILE PATH> -o <FILE PATH> -c <CORPUS FUNCTION> [-p <property=value>] [-f] [-h] [-e] [-j] [-s <FILE PATH>]
+usage: corpus-services -i <FILE PATH> -o <FILE PATH> -c <CORPUS FUNCTION> [-p <property=value>] [-f] [-h] [-e] [-j] [-s <FILE PATH>]
 </code>
 </pre>
 
