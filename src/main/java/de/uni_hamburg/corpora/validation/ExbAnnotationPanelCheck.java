@@ -1,5 +1,6 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
@@ -8,8 +9,6 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,7 +18,6 @@ import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.Event;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.exmaralda.partitureditor.jexmaralda.Tier;
-import org.jdom.JDOMException;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -35,34 +33,17 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     ArrayList<String> allTagStrings;
     String tierLoc = "";
 
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) throws JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
-        }
-        return stats;
+    public ExbAnnotationPanelCheck() {
+        //no fixing option available
+        super(false);
     }
 
     /**
      * Main functionality of the feature; adds tiers from the annotation
      * specification file first, then checks if tiers in exb files are correct.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
         Report stats = new Report(); //create a new report
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -97,7 +78,7 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
                             }
                             // check if the content is contained in the possible tags
                             if (!(allTagStrings.contains(content))) {
-                                System.err.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing annotation with incompatible tag ("
+                                System.out.println("Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1) + " is containing annotation with incompatible tag ("
                                         + content + ") in its tier " + tier.getID() + " for the event " + event.getStart() + " not specified by annotation spec file!");
                                 stats.addWarning("exb-annotation-panel-check", "Exb file " + cd.getURL().getFile().substring(cd.getURL().getFile().lastIndexOf("/") + 1)
                                         + " is containing annotation with incompatible tag (" + content
@@ -115,14 +96,6 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
     }
 
     /**
-     * Fixing the errors in tiers is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
@@ -135,9 +108,32 @@ public class ExbAnnotationPanelCheck extends Checker implements CorpusFunction {
             IsUsableFor.add(cl);
             IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbAnnotationPanelCheck.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
+    }
+
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks whether the annotations in exb "
+                + "files comply with the annotation specification panel. ";
+        return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        for (CorpusData adata : c.getAnnotationspecification()) {
+            stats.merge(function(adata, fix));
+        }
+        return stats;
     }
 
 }

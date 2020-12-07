@@ -9,12 +9,20 @@ import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.utilities.TypeConverter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.exmaralda.partitureditor.fsm.FSMException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
+import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -44,9 +52,11 @@ public abstract class Visualizer implements CorpusFunction {
     CorpusData cd;
     Report report;
     Collection<Class<? extends CorpusData>> IsUsableFor = new ArrayList<Class<? extends CorpusData>>();
+    final String function;
+    Boolean canfix = false;
 
     public Visualizer() {
-
+        function = this.getClass().getSimpleName();
     }
 
     /**
@@ -111,58 +121,102 @@ public abstract class Visualizer implements CorpusFunction {
         setHTML(Pattern.compile("<div[^>]*id=\"mediaplayer\".*?</div>", Pattern.DOTALL).matcher(html).replaceAll("<div id=\"mediaplayer\" class=\"sidebarcontrol\"></div>"));
 
     }
-    
-     //always take a coma file and the relative paths in there to generate a list of the files
-    //
-    //Methode arbeitet anhand von Liste von Dateien, im Moment wird diese aus Coma ausgelesen
-    public Report execute(Corpus c) {
-        return execute(c.getCorpusData());
-    }
 
-    //this will always be a coma file
     public Report execute(CorpusData cd) {
         report = new Report();
-        report = visualize(cd);
+        try {
+            report = function(cd);
+        } catch (JDOMException jdome) {
+            report.addException(jdome, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            report.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            report.addException(ioe, function, cd, "File reading error");
+        } catch (FSMException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, function, cd, "File reading erro");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (TransformerException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (NoSuchAlgorithmException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (JexmaraldaException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        }
+
         return report;
     }
 
-    public Report execute(Collection<CorpusData> cdc) {
-        report = new Report();
-        visualize(cdc);
-        return report;
-
-    }
-    
     //no fix boolean needed
-    public Report execute(CorpusData cd, boolean fix){
+    public Report execute(CorpusData cd, boolean fix) {
+        return execute(cd);
+    }
+
+    public Report execute(Corpus c) {
         report = new Report();
-        report = visualize(cd);
+        try {
+            report = function(c);
+        } catch (JexmaraldaException je) {
+            report.addException(je, function, cd, "Unknown parsing error");
+        } catch (JDOMException jdome) {
+            report.addException(jdome, function, cd, "Unknown parsing error");
+        } catch (SAXException saxe) {
+            report.addException(saxe, function, cd, "Unknown parsing error");
+        } catch (IOException ioe) {
+            report.addException(ioe, function, cd, "File reading error");
+        } catch (FSMException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (URISyntaxException ex) {
+            report.addException(ex, function, cd, "File reading erro");
+        } catch (ParserConfigurationException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (TransformerException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (XPathExpressionException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        } catch (NoSuchAlgorithmException ex) {
+            report.addException(ex, function, cd, "File reading error");
+        }
+
         return report;
     }
 
     //no fix boolean needed
-    public Report execute(Collection<CorpusData> cdc, boolean fix){
-        report = new Report();
-        visualize(cdc);
-        return report;
+    public Report execute(Corpus c, boolean fix) {
+        return execute(c);
     }
 
     //TODO
-    public abstract Report visualize(CorpusData cd);
+    public abstract Report function(CorpusData cd) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
 
-    //TODO
-    public Report visualize(Collection<CorpusData> cdc) {
-        for (CorpusData cd : cdc) {
-            report.merge(visualize(cd));
-        }
-        return report;
-    }
-    
-     public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
+    ;
 
-    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc){
-        for (Class<? extends CorpusData> cl : cdc){
-        IsUsableFor.add(cl);
+    public abstract Report function(Corpus c) throws NoSuchAlgorithmException, ClassNotFoundException, FSMException, URISyntaxException, SAXException, IOException, ParserConfigurationException, JexmaraldaException, TransformerException, XPathExpressionException, JDOMException;
+
+    ;
+
+    public abstract Collection<Class<? extends CorpusData>> getIsUsableFor();
+
+    public void setIsUsableFor(Collection<Class<? extends CorpusData>> cdc) {
+        for (Class<? extends CorpusData> cl : cdc) {
+            IsUsableFor.add(cl);
         }
     }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public Boolean getCanFix() {
+        return canfix;
+    }
+
 }

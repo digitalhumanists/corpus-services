@@ -13,6 +13,7 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import org.xml.sax.SAXParseException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 /**
@@ -151,7 +152,7 @@ public class ReportItem {
      */
     public boolean isGood() {
         if ((this.severity == Severity.CORRECT) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU))  {
             return true;
         } else if ((this.severity == Severity.WARNING) ||
                (this.severity == Severity.CRITICAL) ||
@@ -168,7 +169,7 @@ public class ReportItem {
      */
     public boolean isBad() {
         if ((this.severity == Severity.CORRECT) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU)) {
             return false;
         } else if ((this.severity == Severity.WARNING) ||
                (this.severity == Severity.CRITICAL) ||
@@ -186,13 +187,30 @@ public class ReportItem {
     public boolean isSevere() {
         if ((this.severity == Severity.CORRECT) ||
                (this.severity == Severity.WARNING) ||
-               (this.severity == Severity.NOTE)) {
+               (this.severity == Severity.NOTE) || (this.severity == Severity.IFIXEDITFORYOU)){
             return false;
         } else if ((this.severity == Severity.CRITICAL) ||
               (this.severity == Severity.MISSING)) {
             return true;
         } else {
             System.out.println("Missed a severity case in isSevere :-(");
+            return true;
+        }
+    }
+    
+        /**
+     * whether the stuff should be counted towards bad statistic.
+     */
+    public boolean isFix() {
+        if ((this.severity == Severity.CORRECT) ||
+               (this.severity == Severity.NOTE) || (this.severity == Severity.CRITICAL) ||
+              (this.severity == Severity.MISSING)  || (this.severity == Severity.WARNING)) {
+            return false;
+        } else if (this.severity == Severity.IFIXEDITFORYOU)
+                {
+            return true;
+        } else {
+            System.out.println("Missed a severity case in isFix :-(");
             return true;
         }
     }
@@ -503,11 +521,22 @@ public class ReportItem {
         
         //add custom CSS
         report += "<style>"+
+                "body{padding:15px;}"+
+                "#timestamp{margin-bottom:30px;}"+
                 ".critical{ background:#ffdddd; } "+
                 ".other{ background:#ffd39e; } "+
                 ".warning{ background:#fafcc2; } "+
+                ".char_Cyrillic{ color:#b51d0d; } "+
+                ".char_Greek{ background:#022299; } "+
+                ".char_Armenian{ background:#ad7600; } "+
+                ".char_Georgian{ background:#9c026d; } "+
                 "</style>\n";
         report += "   </head>\n   <body>\n";
+        
+        //add timestamp
+        report += "   <div id='timestamp'>Generated: ";        
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        report += timestamp + "</div>\n";
         
         report += "<table>\n  <thead><tr>" +
             "<th>Type</th>"+
@@ -544,9 +573,9 @@ public class ReportItem {
             report += "<td style='white-space: pre'>" +
                 error.getHowto() +
                 "</td>";
-            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px'>(" +
+            report += "<td style='font-face: monospace; color: gray; border: gray solid 1px; white-space: pre;'>(" +
                 error.getLocalisedMessage() +
-                ")</td style='white-space: pre'>\n";
+                ")</td>\n";
             report += "<!-- " + error.getStackTrace() + " -->\n";
             report += "</tr>";
         }

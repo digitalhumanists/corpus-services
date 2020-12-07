@@ -1,36 +1,175 @@
-# Introduction
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
+[Contributors][contributors-url]
+[Forks][forks-url]
+[Issues][issues-url]
+[License][license-url]
 
-The HZSK Corpus Services project bundles functionality used for maintenance, curation, conversion, and visualization of corpus data at the HZSK.  
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="images/logo.pnge">
+    <img src="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-# Gitlab artifacts
+  <h3 align="center">Corpus Services</h3>
 
-The latest compiled .jar can be found here: 
-https://gitlab.rrz.uni-hamburg.de/hzsk/hzsk-corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
+  <p align="center">
+    The Corpus Services project bundles functionality used for maintenance, curation, conversion, and visualization of corpus data in various projects. 
+    <br />
+    <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/doc"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues">Report Bug</a>
+    ·
+    <a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues">Request Feature</a>
+  </p>
+</p>
 
 
-# Info
 
-Additional info on the Corpus services can be found here:
-https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
-https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab
-https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/Setting_up_-_Libraries
-https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-to_add_a_new_function
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
+
+* [About the Project](#about-the-project)
+* [Getting Started](#getting-started)
+* [Usage](#usage)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+* [Authors](#authors)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
 
 
-# Functions
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+The Corpus Services project bundles functionality used for maintenance, curation, conversion, and visualization of corpus data in various projects. 
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+Additional info on the Corpus services can be found here (internal documentation):
+* https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
+* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/doc/Build_with_Maven.md
+* https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/How-to_add_a_new_function
+* https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/List_of_validation_functions
+
+
+
+### Prerequisites
+
+Java needs to be installed. 
+
+
+### Installation
+
+No installation is required. See section Usage for information on how to run the program.
+
+#### Gitlab artifacts
+
+The latest compiled .jar file can be found here: 
+https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
+
+#### Building
+
+To use the services for corpora, compile it using `mvn clean compile assembly:single`.
+(See https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/doc/Build_with_Maven.md)
+or use a pregenerated artifact form gitlab (see Gitlab artifacts). 
+
+[EXMARaLDA](https://github.com/Exmaralda-Org/exmaralda) is used as a library.
+
+<!-- USAGE EXAMPLES -->
+## Usage
 
 The usable functions can be found in the help output:
 
-`java -jar hzsk-corpus-services-0.2-jar-with-dependencies.jar -h`
-
-# Compilation
-
-To use the validator for HZSK corpora, compile it using `mvn clean compile assembly:single`.
-(See https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven)
-or use a pregenerated artifact form gitlab (see Gitlab artifacts). 
-
-# Usage
+`java -jar corpus-services-1.0-jar-with-dependencies.jar -h`
 
 See here for the usage of the corpus services:
 
 https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/How_to_use_the_Corpus_Validator
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+See the [open issues](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues) for a list of proposed features (and known issues).
+
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributing: https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under MIT License. See `LICENSE` for more information.
+
+
+<!-- AUTHORS -->
+## Authors
+
+Anne Ferger
+
+Hanna Hedeland
+
+Daniel Jettka
+
+Tommi Pirinen
+
+<!-- CONTACT -->
+## Contact
+
+Anne Ferger - [@anneferger1](https://twitter.com/anneferger1) - anne.ferger@uni-hamburg.de
+
+Project Link: [Corpus Services](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services)
+
+<!-- Supporting Projects-->
+<!--## Projects
+
+
+-->
+
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+Parts of this project have been produced in the context of the joint research funding of the German Federal Government and Federal States in the Academies’ Programme, with funding from the Federal Ministry of Education and Research and the Free and Hanseatic City of Hamburg. The Academies’ Programme is coordinated by the Union of the German Academies of Sciences and Humanities.
+
+Contributions to the project have been made by staff from several research projects, e.g. from the [HZSK](https://corpora.uni-hamburg.de) (WO 1886/1-2 within the DFG LIS program, 2011--2017), [INEL](https://inel.corpora.uni-hamburg.de), the CLARIN-D center at the HZSK (CLARIN-D 01UG1620G, 2011--2020), and [QUEST](https://www.slm.uni-hamburg.de/ifuu/forschung/forschungsprojekte/quest.html).
+
+Thank you to all funders, supporters and [contributors](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/graphs/)!
+
+This README file was created on the basis of the [Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md).
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=flat-square
+[contributors-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/graphs/open-access-gitlab
+[forks-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/forks
+[issues-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues
+[license-url]: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/blob/open-access-gitlab/LICENSE
+[product-screenshot]: images/screenshot.png
+

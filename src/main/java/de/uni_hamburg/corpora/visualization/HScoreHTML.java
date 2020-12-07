@@ -5,14 +5,13 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.utilities.XSLTransformer;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.PrintWriter;
@@ -21,18 +20,14 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import org.exmaralda.partitureditor.jexmaralda.TierFormatTable;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
@@ -44,17 +39,19 @@ public class HScoreHTML extends Visualizer {
     // resources loaded from directory supplied in pom.xml
     private static final String STYLESHEET_PATH = "/xsl/EXB2hScoreHTML.xsl";
     private final String SERVICE_NAME = "HScoreHTML";
-    Report stats;
     URL targeturl;
     CorpusData cd;
     String corpusname = "";
 
     public HScoreHTML() {
-
     }
 
     public HScoreHTML(String btAsString) {
-        createFromBasicTranscription(btAsString);
+        try {
+            createFromBasicTranscription(btAsString);
+        } catch (TransformerException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -64,35 +61,30 @@ public class HScoreHTML extends Visualizer {
      * @param btAsString the EXB file represented in a String object
      * @return
      */
-    public String createFromBasicTranscription(String btAsString) {
+    public String createFromBasicTranscription(String btAsString) throws TransformerConfigurationException, TransformerException {
 
         basicTranscriptionString = btAsString;
         basicTranscription = TypeConverter.String2BasicTranscription(btAsString);
 
         String result = null;
 
-        try {
-            BasicTranscription bt = basicTranscription;
-            bt.normalize();
-            basicTranscriptionString = bt.toXML();
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
+        BasicTranscription bt = basicTranscription;
+        bt.normalize();
+        basicTranscriptionString = bt.toXML();
+        String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(STYLESHEET_PATH));
 
-            // perform XSLT transformation
-            XSLTransformer xt = new XSLTransformer();
-            xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
-            xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
-            xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
-            String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
-            if (referencedRecording != null) {
-                System.out.println("not null " + referencedRecording);
-                xt.setParameter("RECORDING_PATH", referencedRecording);
-                xt.setParameter("RECORDING_TYPE", "wav");
-            }
-            result = xt.transform(basicTranscriptionString, xsl);
-
-        } catch (TransformerException ex) {
-            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        // perform XSLT transformation
+        XSLTransformer xt = new XSLTransformer();
+        xt.setParameter("EMAIL_ADDRESS", EMAIL_ADDRESS);
+        xt.setParameter("WEBSERVICE_NAME", SERVICE_NAME);
+        xt.setParameter("HZSK_WEBSITE", HZSK_WEBSITE);
+        String referencedRecording = bt.getHead().getMetaInformation().getReferencedFile("wav");
+        if (referencedRecording != null) {
+            System.out.println("not null " + referencedRecording);
+            xt.setParameter("RECORDING_PATH", referencedRecording);
+            xt.setParameter("RECORDING_TYPE", "wav");
         }
+        result = xt.transform(basicTranscriptionString, xsl);
 
         setHTML(result);
 
@@ -125,7 +117,8 @@ public class HScoreHTML extends Visualizer {
     }
 
     @Override
-    public Report visualize(CorpusData cod) {
+    public Report function(CorpusData cod) {
+        Report stats = new Report();
         try {
             cd = cod;
             stats = new Report();
@@ -149,6 +142,16 @@ public class HScoreHTML extends Visualizer {
         }
         return stats;
     }
+    
+    @Override
+    public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
+        Report stats = new Report();
+        Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
+        for (BasicTranscriptionData bt : btc) {
+            stats.merge(function(bt));
+        }
+        return stats;
+    }
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
@@ -156,12 +159,11 @@ public class HScoreHTML extends Visualizer {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            stats.addException(ex, "Usable class not found.");
+            report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         try {
             if (args.length == 0) {
@@ -181,11 +183,22 @@ public class HScoreHTML extends Visualizer {
                 }
             }
         } catch (UnsupportedEncodingException uee) {
-            stats.addException(SERVICE_NAME, uee, "encoding exception");
+            report.addException(SERVICE_NAME, uee, "encoding exception");
         } catch (IOException ioe) {
-            stats.addException(SERVICE_NAME, ioe, "input output exception");
+            report.addException(SERVICE_NAME, ioe, "input output exception");
+        } catch (JDOMException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(HScoreHTML.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return stats;
+        return report;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class creates an html visualization "
+                + "in the HScore format from an exb. ";
+        return description;
     }
 
 }

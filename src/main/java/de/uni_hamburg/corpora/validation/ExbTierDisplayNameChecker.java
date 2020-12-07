@@ -1,16 +1,15 @@
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.Report;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.ExmaErrorList;
 import static de.uni_hamburg.corpora.CorpusMagician.exmaError;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,35 +23,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * A class that can check out tiers and find out if there is a mismatch between
+ * A class that can check exb tiers and find out if there is a mismatch between
  * category, speaker abbreviation and display name for each tier.
  */
 public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction {
 
     String tierLoc = "";
-    final String tdnc = "tier-displayname-checker";
 
-    /**
-     * Default check function which calls the exceptionalCheck function so that
-     * the primal functionality of the feature can be implemented, and
-     * additionally checks for parser configuration, SAXE and IO exceptions.
-     */
-    public Report check(CorpusData cd) {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, tierLoc + ": Unknown parsing error");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, tierLoc + ": Unknown parsing error");
-        } catch (IOException ioe) {
-            stats.addException(ioe, tierLoc + ": Unknown file reading error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, tierLoc + ": Unknown file reading error");
-        }
-        return stats;
+    public ExbTierDisplayNameChecker() {
+        //fixing not possible
+        super(false);
     }
 
     /**
@@ -61,7 +41,8 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
      * warnings with respect to mismatches in tiers and add those warnings to
      * the report. At last, it returns the report with all the warnings.
      */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, TransformerException, XPathExpressionException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -86,6 +67,7 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
             String speakerName = tier.getAttribute("speaker"); // get speaker name
             String displayName = tier.getAttribute("display-name"); // get display name
             String displayNameCategory = displayName;
+
             String displayNameSpeaker = "";
             int openingPar = -1;
             int closingPar = -1;
@@ -98,26 +80,27 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                 } else if (displayName.contains("-")){
                     openingPar = displayName.lastIndexOf("-");
                     closingPar = displayName.length();
+                    //Could also be that the category has a dash!
                     displayNameSpeaker = displayName.substring(openingPar + 1, closingPar);
+                    //Could also be that the category has a dash!
                     displayNameCategory = displayName.substring(0, openingPar);
                 }
                 //System.out.println("Tier DisplayName " + displayName + " category " + category  + " displaycategory " + displayNameCategory  + " and speaker name " +  speakerName + " displayspeaker " + displayNameSpeaker);
                 if (!speakerName.isEmpty() && !category.isEmpty()) { // if speaker name exists check if it complies with tier display name
-                    if (category.equals(displayNameCategory) && speakerName.equals(displayNameSpeaker)) {
+                    if (((category.equals(displayNameCategory)) && (speakerName.equals(displayNameSpeaker))) || (category.equals(displayName))) {
                         //everything is correct
                         System.out.println("Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
-                        stats.addCorrect(tdnc, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
-                    } else if (category.equals(displayNameCategory) && displayNameSpeaker.isEmpty()){
-                        System.out.println("Tier DisplayName " + displayName + " matches category " + category);
+                        stats.addCorrect(function, cd, "Tier DisplayName " + displayName + " matches category " + category + " and speaker name " +  speakerName);
                     } else {
-                     System.err.println("Speaker abbreviation and display name for tier do not match"
-                                    + "for speaker " + speakerName + ", tier id " + tier.getAttribute("id")
+                     System.out.println("Speaker abbreviation and display name for tier do not match"
+                                    + "for speaker " + speakerName + ", tier: displayname " + displayName + " and id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            stats.addCritical(tdnc, cd, "Tier mismatch "
+                            stats.addCritical(function, cd, "Tier mismatch "
                                     + "for speaker " + speakerName + ", tier category " + category
-                                    +", tier id " + tier.getAttribute("id")
+                                    +", tier: displayname " + displayName
+                                    + " id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);
-                            exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier doES not match"
+                            exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Speaker abbreviation and display name for tier does not match"
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id")
                                     + " in transcription of " + transcriptName);   
@@ -125,10 +108,10 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
                 }
             }
             else{
-                stats.addWarning(tdnc, cd, "Display name is empty "
+                stats.addWarning(function, cd, "Display name is empty "
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id"));
-                exmaError.addError(tdnc, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Display name for tier is empty"
+                exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), "", false, "Error: Display name for tier is empty"
                                     + "for speaker " + speakerName + ", tier category " + category
                                     + ", tier id " + tier.getAttribute("id"));   
             }
@@ -136,13 +119,6 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
         return stats; // return all the warnings
     }
 
-    /**
-     * Fixing the errors in tiers is not supported yet.
-     */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     /**
      * Default function which determines for what type of files (basic
@@ -153,13 +129,33 @@ public class ExbTierDisplayNameChecker extends Checker implements CorpusFunction
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
-            Class clSecond = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
+            //Class clSecond = Class.forName("de.uni_hamburg.corpora.UnspecifiedXMLData");
             IsUsableFor.add(cl);
-            IsUsableFor.add(clSecond);
+            //IsUsableFor.add(clSecond);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ExbTierDisplayNameChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, "unknown class not found error");
         }
         return IsUsableFor;
+    }
+
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class checks exb tiers and finds out if there"
+                + " is a mismatch between category, speaker abbreviation and display"
+                + " name for each tier.";
+        return description;
+    }
+
+     @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
     }
     
 }

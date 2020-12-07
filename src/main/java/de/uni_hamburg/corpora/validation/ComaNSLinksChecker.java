@@ -10,19 +10,14 @@ package de.uni_hamburg.corpora.validation;
 
 import de.uni_hamburg.corpora.ComaData;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
-import de.uni_hamburg.corpora.CorpusIO;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.w3c.dom.Document;
@@ -35,55 +30,33 @@ import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
- * A class that can load coma data and check for potential problems with HZSK
- * repository depositing.
+ * This class checks for existence of files linked in the coma file.
  */
-public class ComaNSLinksChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ComaNSLinksChecker extends Checker implements CorpusFunction {
 
     String referencePath = "./";
     String comaLoc = "";
     String communicationname;
 
-    final String COMA_NSLINKS = "coma-nslinks";
-    final String COMA_RELPATHS = "coma-relpaths";
-
     public ComaNSLinksChecker() {
+        //no fixing available
+        super(false);
     }
 
-    /**
-     * Check for existence of files in a coma file.
-     *
-     * @return true, if all files were found, false otherwise
-     */
-    public Report check(CorpusData cd) {
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, JDOMException, IOException, JexmaraldaException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch (ParserConfigurationException pce) {
-            stats.addException(pce, COMA_NSLINKS, cd, "Unknown parsing error.");
-        } catch (SAXException saxe) {
-            stats.addException(saxe, COMA_NSLINKS, cd, "Unknown parsing error.");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            stats.addException(ioe, COMA_NSLINKS, cd, "Unknown file reading error.");
-        } catch (URISyntaxException ex) {
-            ex.printStackTrace();
-            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
-        } catch (TransformerException ex) {
-            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, COMA_NSLINKS, cd, "Unknown file reading error.");
-        }
+        cd = c.getComaData();
+        stats = function(cd, fix);
         return stats;
     }
 
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, IOException, ParserConfigurationException, URISyntaxException, TransformerException, XPathExpressionException {
         Document doc = TypeConverter.JdomDocument2W3cDocument(TypeConverter.String2JdomDocument(cd.toSaveableString()));
         NodeList nslinks = doc.getElementsByTagName("NSLink");
@@ -94,7 +67,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
             Node communication = nslink.getParentNode();
             if (communication.getNodeName() != null && communication.getNodeName().equals("Transcription")) {
                 communicationname = communication.getParentNode().getAttributes().getNamedItem("Name").getTextContent();
-            } else if (communication.getNodeName() != null && communication.getNodeName().equals("Recording")) {
+            } else if (communication.getNodeName() != null && communication.getNodeName().equals("Media")) {
                 communicationname = communication.getParentNode().getParentNode().getAttributes().getNamedItem("Name").getTextContent();
             } else {
                 //could not find matching communication name
@@ -104,7 +77,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
             for (int j = 0; j < nstexts.getLength(); j++) {
                 Node maybeText = nstexts.item(j);
                 if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                    System.err.print("This is not a text node: "
+                    System.out.println("This is not a text node: "
                             + maybeText);
                     continue;
                 }
@@ -144,10 +117,10 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS, cd,
+                    stats.addCritical(function, cd,
                             "In Communication: " + communicationname + " File in NSLink not found: " + nspath);
                 } else {
-                    stats.addCorrect(COMA_NSLINKS, cd,
+                    stats.addCorrect(function, cd,
                             "File in NSLink was found: " + nspath);
                 }
             }
@@ -166,7 +139,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     communicationname = "Could not figure out Communication name";
                 }
                 if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                    System.err.print("This is not a text node: "
+                    System.out.println("This is not a text node: "
                             + maybeText);
                     continue;
                 }
@@ -190,7 +163,7 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                         found = true;
                     }
                 }
-               if (cdcoma.getBasedirectory() != null) {
+                if (cdcoma.getBasedirectory() != null) {
                     URI uri = cdcoma.getBasedirectory().toURI();
                     URI parentURI = uri.getPath().endsWith("/") ? uri.resolve("..") : uri.resolve(".");
                     String basePath
@@ -202,77 +175,15 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
                     }
                 }
                 if (!found) {
-                    stats.addCritical(COMA_NSLINKS, cd,
+                    stats.addCritical(function, cd,
                             "In Communication: " + communicationname + " File in relPath not found: " + relpath);
                 } else {
-                    stats.addCorrect(COMA_NSLINKS, cd,
+                    stats.addCorrect(function, cd,
                             "File in relPath was found: " + relpath);
                 }
             }
         }
         return stats;
-    }
-
-    public Report doMain(String[] args) {
-        settings = new ValidatorSettings("ComaNSLinksChecker",
-                "Checks Exmaralda .coma file for NSLink references that do not "
-                + "exist", "If input is a directory, performs recursive check "
-                + "from that directory, otherwise checks input file");
-        settings.handleCommandLine(args, new ArrayList<Option>());
-        if (settings.isVerbose()) {
-            System.out.println("Checking COMA files for references...");
-        }
-        Report stats = new Report();
-        for (File f : settings.getInputFiles()) {
-            try {
-                if (settings.isVerbose()) {
-                    System.out.println(" * " + f.getName());
-                }
-                referencePath = "./";
-                if (f.getParentFile() != null) {
-                    referencePath = f.getParentFile()
-                            .getCanonicalPath();
-                }
-                comaLoc = f.getName();
-                CorpusIO cio = new CorpusIO();
-                CorpusData cd = cio.readFileURL(f.toURI().toURL());
-                stats = check(cd);
-            } catch (FileNotFoundException fnfe) {
-                fnfe.printStackTrace();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-        return stats;
-    }
-
-    public static void main(String[] args) {
-        ComaNSLinksChecker checker = new ComaNSLinksChecker();
-        Report stats = checker.doMain(args);
-        System.out.println(stats.getSummaryLines());
-        System.out.println(stats.getErrorReports());
-    }
-
-    @Override
-    public Report check(Collection<CorpusData> cdc) throws SAXException, JexmaraldaException, IOException, JDOMException {
-        for (CorpusData cd : cdc) {
-            report.merge(check(cd));
-        }
-        return report;
-    }
-
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_NSLINKS,
-                "Wrong NS links cannot be fixed automatically");
-        return report;
-    }
-
-    @Override
-    public Report fix(Collection<CorpusData> cdc) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(COMA_NSLINKS,
-                "Wrong NS links cannot be fixed automatically");
-        return report;
     }
 
     @Override
@@ -286,12 +197,15 @@ public class ComaNSLinksChecker extends Checker implements CommandLineable, Corp
         return IsUsableFor;
     }
 
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
+     */
     @Override
-    public Report execute(Corpus c) {
-        for (CorpusData cd : c.getCorpusData()) {
-            report.merge(check(cd));
-        }
-        return report;
+    public String getDescription() {
+        String description = "This class checks for existence of files linked in the "
+                + "coma file.";
+        return description;
     }
 
 }

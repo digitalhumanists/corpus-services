@@ -8,28 +8,22 @@
  */
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.jdom.Document;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.SAXException;
 import org.jdom.JDOMException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,7 +31,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.apache.commons.io.FilenameUtils;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
-import org.exmaralda.partitureditor.jexmaralda.Tier;
 
 /**
  * Provides access to basic transcriptions as a data type that can be read and
@@ -127,8 +120,9 @@ public class BasicTranscriptionData implements CorpusData, ContentData, XMLData 
     //will always get pretty printed in the same way
     //TODO
     private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException{
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 

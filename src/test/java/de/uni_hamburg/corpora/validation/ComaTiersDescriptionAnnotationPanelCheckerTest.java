@@ -58,11 +58,11 @@ public class ComaTiersDescriptionAnnotationPanelCheckerTest {
         Collection<CorpusData> cdc;
         //what happens when we check coma files
         for (CorpusData cd : corp.getMetadata()) {
-            assertNotNull(instance.check(cd));
+            assertNotNull(instance.function(cd,false));
         }
         //what happens when we check annotation files
         for (CorpusData cd : corp.getAnnotationspecification()) {
-            assertNotNull(instance.check(cd));
+            assertNotNull(instance.function(cd,false));
         }
     }
 

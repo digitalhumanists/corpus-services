@@ -14,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
+import org.jdom.JDOMException;
+import org.jdom.xpath.XPath;
 import org.xml.sax.SAXException;
 
 /**
@@ -23,24 +25,77 @@ import org.xml.sax.SAXException;
 public class Corpus {
 
     //only the metadata file, coma or cmdi in most cases, or a list of files
-    Collection<Metadata> metadata  = new ArrayList();
+    Collection<Metadata> metadata = new ArrayList();
     //the transcriptions
     Collection<ContentData> contentdata = new ArrayList();
-    Collection<Recording> recording  = new ArrayList();
-    Collection<AdditionalData> additionaldata  = new ArrayList();
-    Collection<AnnotationSpecification> annotationspecification  = new ArrayList();
-    Collection<ConfigParameters> configparameters  = new ArrayList();
+    Collection<Recording> recording = new ArrayList();
+    Collection<AdditionalData> additionaldata = new ArrayList();
+    Collection<AnnotationSpecification> annotationspecification = new ArrayList();
+    Collection<ConfigParameters> configparameters = new ArrayList();
     private Collection<CmdiData> cmdidata = new ArrayList();
+    Collection<BasicTranscriptionData> basictranscriptiondata = new ArrayList();
+    Collection<SegmentedTranscriptionData> segmentedtranscriptiondata = new ArrayList();
+    ComaData comadata;
     //all the data together
-    Collection<CorpusData> cdc;
+    Collection<CorpusData> cdc = new ArrayList<CorpusData>();
+    URL basedirectory;
+    String corpusname;
 
     public Corpus() {
-
     }
 
-    public Corpus(URL url) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
+    public Corpus(URL url) {
+    }
+
+    //only read in the files we need!
+    public Corpus(ComaData coma, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException, JDOMException {
         CorpusIO cio = new CorpusIO();
-        cdc = cio.read(url);
+        //todo: only read what we need :)
+        //cl.isInstance(cd) - needs to be read already for this :/
+        //TODO
+        //get the needed files from the NSLinks in the coma file as URLs
+        // public Collection<URL> URLtoList(URL url)
+        Collection<URL> urllist = coma.getReferencedCorpusDataURLs();
+        basedirectory = coma.getParentURL();
+        corpusname = coma.getCorpusName();
+        for (URL url : urllist) {
+            CorpusData cddd = cio.readFileURL(url, clcds);
+            if (cddd != null && !cdc.contains(cddd)) {
+                cdc.add(cddd);
+            }
+        }
+        //Coma is coma is 
+        comadata = coma;
+        //Now create the needed 
+        for (CorpusData cd : cdc) {
+            if (cd instanceof ContentData) {
+                contentdata.add((ContentData) cd);
+                if (cd instanceof BasicTranscriptionData) {
+                    basictranscriptiondata.add((BasicTranscriptionData) cd);
+                } else if (cd instanceof SegmentedTranscriptionData) {
+                    segmentedtranscriptiondata.add((SegmentedTranscriptionData) cd);
+                }
+            } else if (cd instanceof Recording) {
+                recording.add((Recording) cd);
+            } else if (cd instanceof AdditionalData) {
+                additionaldata.add((AdditionalData) cd);
+            } else if (cd instanceof Metadata) {
+                //can only be CMDI since it's a coma file...
+                metadata.add((Metadata) cd);
+                if (cd instanceof CmdiData) {
+                    cmdidata.add((CmdiData) cd);
+                } else if (cd instanceof AnnotationSpecification) {
+                    annotationspecification.add((AnnotationSpecification) cd);
+                } else if (cd instanceof ConfigParameters) {
+                    configparameters.add((ConfigParameters) cd);
+                }
+            }
+        }
+        //we don't need to check it because we know it
+        cdc.add(coma);
+    }
+
+    public Corpus(Collection<CorpusData> cdc) throws MalformedURLException, MalformedURLException, MalformedURLException, SAXException, JexmaraldaException {
         for (CorpusData cd : cdc) {
             if (cd instanceof ContentData) {
                 contentdata.add((ContentData) cd);
@@ -88,9 +143,21 @@ public class Corpus {
     public Collection<ConfigParameters> getConfigparameters() {
         return configparameters;
     }
-    
+
     public Collection<CmdiData> getCmdidata() {
         return cmdidata;
+    }
+
+    public Collection<BasicTranscriptionData> getBasicTranscriptionData() {
+        return basictranscriptiondata;
+    }
+
+    public Collection<SegmentedTranscriptionData> getSegmentedTranscriptionData() {
+        return segmentedtranscriptiondata;
+    }
+
+    public ComaData getComaData() {
+        return comadata;
     }
 
     public void setMetadata(Collection<Metadata> metadata) {
@@ -125,4 +192,63 @@ public class Corpus {
         this.cmdidata = cmdidata;
     }
 
+    public void setBasicTranscriptionData(Collection<BasicTranscriptionData> basictranscriptions) {
+        this.basictranscriptiondata = basictranscriptions;
+    }
+
+    public void setSegmentedTranscriptionData(Collection<SegmentedTranscriptionData> segmentedtranscriptions) {
+        this.segmentedtranscriptiondata = segmentedtranscriptions;
+    }
+
+    public void setComaData(ComaData coma) {
+        this.comadata = coma;
+    }
+
+    public URL getBaseDirectory() {
+        return basedirectory;
+    }
+
+    public String getCorpusName() {
+        return corpusname;
+    }
+
+    public void setCorpusName(String s) {
+        corpusname = s;
+    }
+
+    //TODO make this more sustainable, it is very INEL specific
+    String getCorpusSentenceNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("sum(//Transcription/Description/Key[@Name = '# HIAT:u'])");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusTranscriptionNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("count(//Transcription/Description/Key[@Name = 'segmented' and text() = 'false'])");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusSpeakerNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("count(//Speaker)");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusCommunicationNumber() throws JDOMException {
+        XPath xpath = XPath.newInstance("count(//Communication)");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
+
+    String getCorpusWords() throws JDOMException {
+        XPath xpath = XPath.newInstance("sum(//Transcription/Description/Key[@Name = '# HIAT:w'])");
+        double DoubleValue = (double) xpath.selectSingleNode(comadata.getJdom());
+        int IntValue = (int) DoubleValue;
+        return "" + IntValue;
+    }
 }

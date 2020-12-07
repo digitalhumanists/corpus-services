@@ -9,18 +9,17 @@
 
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.Report;
-import de.uni_hamburg.corpora.CommandLineable;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -30,57 +29,30 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import org.apache.commons.cli.Option;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
-import org.xml.sax.ErrorHandler;
 
 /**
- * A class that can load basic transcription data and check for potential problems with HZSK
- * repository depositing.
+ * This class validates a exb file with its DTD file.
  */
 
-public class ExbSchemaChecker extends Checker implements CommandLineable, CorpusFunction {
+public class ExbSchemaChecker extends Checker implements CorpusFunction {
 
-    final String EXB_DTD_CHECKER = "exb-dtd";
+
+    public ExbSchemaChecker() {
+        super(false);
+    }
 
     /**
      * Validate an exb file with a DTD file.
      */
     
     /**
-    * Default check function which calls the exceptionalCheck function so that the
-    * primal functionality of the feature can be implemented, and additionally 
-    * checks for exceptions.
-    */   
-    @Override
-    public Report check(CorpusData cd) throws SAXException, JexmaraldaException {
-        Report stats = new Report();
-        try {
-            stats = exceptionalCheck(cd);
-        } catch(JexmaraldaException je) {
-            stats.addException(je, "Unknown parsing error");
-        } catch(JDOMException jdome) {
-            stats.addException(jdome, "Unknown parsing error");
-        } catch(SAXException saxe) {
-            stats.addException(saxe, "Unknown parsing error");
-        } catch(IOException ioe) {
-            stats.addException(ioe, "Reading/writing error");
-        } catch (TransformerException ex) {
-            stats.addException(ex, "Reading/writing error");
-        } catch (ParserConfigurationException ex) {
-            stats.addException(ex, "Reading/writing error");
-        } catch (XPathExpressionException ex) {
-            stats.addException(ex, "Reading/writing error");
-        }
-        return stats;
-    }
-    
-    /**
     * Main functionality of the feature; validates an exb file with a DTD file.
     */
-    private Report exceptionalCheck(CorpusData cd)
+    @Override
+    public Report function(CorpusData cd, Boolean fix)
             throws SAXException, JDOMException, IOException, JexmaraldaException, TransformerException, ParserConfigurationException, XPathExpressionException{
         System.out.println("Checking the exb file against DTD...");
         String exbSchemaPath = new File("src\\test\\java\\de\\uni_hamburg\\corpora\\resources\\schemas\\exb_schema.xsd").getAbsolutePath();
@@ -97,16 +69,6 @@ public class ExbSchemaChecker extends Checker implements CommandLineable, Corpus
     }
     
     /**
-    * No fix is applicable for this feature.
-    */
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-        report.addCritical(EXB_DTD_CHECKER,
-                "No fix is applicable for this feature.");
-        return report;
-    }
-    
-    /**
     * Default function which determines for what type of files (basic transcription, 
     * segmented transcription, coma etc.) this feature can be used.
     */
@@ -116,10 +78,27 @@ public class ExbSchemaChecker extends Checker implements CommandLineable, Corpus
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
             IsUsableFor.add(cl);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ComaXsdChecker.class.getName()).log(Level.SEVERE, null, ex);
+            report.addException(ex, " usable class not found");
         }
         return IsUsableFor;
     }
 
+    /**Default function which returns a two/three line description of what 
+     * this class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class validates a exb file with its DTD file. ";
+        return description;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, JDOMException, TransformerException, XPathExpressionException, JexmaraldaException {
+        Report stats = new Report();
+        for (CorpusData cdata : c.getBasicTranscriptionData()) {
+            stats.merge(function(cdata, fix));
+        }
+        return stats;
+    }
 }
 

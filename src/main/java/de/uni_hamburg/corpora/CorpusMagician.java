@@ -4,7 +4,6 @@ import de.uni_hamburg.corpora.validation.ComaAddTiersFromExbsCorrector;
 import de.uni_hamburg.corpora.validation.CmdiChecker;
 import de.uni_hamburg.corpora.publication.ZipCorpus;
 import de.uni_hamburg.corpora.conversion.EXB2HIATISOTEI;
-import de.uni_hamburg.corpora.conversion.EXB2INELISOTEI;
 import de.uni_hamburg.corpora.utilities.TypeConverter;
 import de.uni_hamburg.corpora.validation.ComaApostropheChecker;
 import de.uni_hamburg.corpora.validation.ComaNSLinksChecker;
@@ -14,13 +13,13 @@ import de.uni_hamburg.corpora.validation.GenerateAnnotationPanel;
 import de.uni_hamburg.corpora.validation.ComaFedoraIdentifierLengthChecker;
 import de.uni_hamburg.corpora.validation.ComaSegmentCountChecker;
 import de.uni_hamburg.corpora.validation.ExbFileReferenceChecker;
+import de.uni_hamburg.corpora.validation.ExbFileCoverageChecker;
 import de.uni_hamburg.corpora.validation.ExbAnnotationPanelCheck;
-//import de.uni_hamburg.corpora.validation.ExbPatternChecker;
-import de.uni_hamburg.corpora.validation.CalculateAnnotatedTime;
-import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+import de.uni_hamburg.corpora.validation.ExbRefTierChecker;
+import de.uni_hamburg.corpora.validation.ExbCalculateAnnotatedTime;
 import de.uni_hamburg.corpora.validation.ExbStructureChecker;
-import de.uni_hamburg.corpora.validation.FileCoverageChecker;
-import de.uni_hamburg.corpora.validation.FilenameChecker;
+import de.uni_hamburg.corpora.validation.ComaFileCoverageChecker;
+import de.uni_hamburg.corpora.validation.ComaFilenameChecker;
 import de.uni_hamburg.corpora.validation.IAAFunctionality;
 import de.uni_hamburg.corpora.validation.ExbNormalize;
 import de.uni_hamburg.corpora.validation.NgexmaraldaCorpusChecker;
@@ -34,16 +33,32 @@ import de.uni_hamburg.corpora.validation.XSLTChecker;
 import de.uni_hamburg.corpora.validation.CorpusDataRegexReplacer;
 import de.uni_hamburg.corpora.validation.ExbEventLinebreaksChecker;
 import de.uni_hamburg.corpora.validation.ExbMakeTimelineConsistent;
+import de.uni_hamburg.corpora.validation.ExbScriptMixChecker;
 import de.uni_hamburg.corpora.visualization.CorpusHTML;
 import de.uni_hamburg.corpora.visualization.ListHTML;
 import de.uni_hamburg.corpora.visualization.ScoreHTML;
+import de.uni_hamburg.corpora.validation.ComaKmlForLocations;
 import de.uni_hamburg.corpora.conversion.AddCSVMetadataToComa;
+import de.uni_hamburg.corpora.publication.HandlePidRegistration;
+import de.uni_hamburg.corpora.publication.RemoveUnlinkedFiles;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
+import de.uni_hamburg.corpora.validation.ComaChartsGeneration;
 import de.uni_hamburg.corpora.validation.ComaTierOverviewCreator;
 import de.uni_hamburg.corpora.validation.GeneralTransformer;
 import de.uni_hamburg.corpora.validation.RemoveEmptyEvents;
 import de.uni_hamburg.corpora.validation.ComaTranscriptionsNameChecker;
+import de.uni_hamburg.corpora.validation.DuplicateTierContentChecker;
+import de.uni_hamburg.corpora.validation.ExbMP3Next2WavAdder;
+import de.uni_hamburg.corpora.validation.ExbSegmentationChecker;
+import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
+import de.uni_hamburg.corpora.validation.ReportStatistics;
+import de.uni_hamburg.corpora.visualization.VikusViewer;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -66,6 +81,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.Document;
+import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
 
 /**
@@ -78,15 +94,19 @@ public class CorpusMagician {
 
     //the whole corpus I want to run checks on
     static Corpus corpus;
+    //a collection of unordered files I want to run checks on
+    Collection<CorpusData> cdc;
+    //a single file I want to run checks on
+    CorpusData corpusData;
     //Basedirectory if it exists
     static URL basedirectory;
-    //one file I want to run a check on
-    CorpusData corpusData;
     //all functions there are in the code
-    static Collection<String> allExistingCFs = new ArrayList<String>();
+    static Collection<String> allExistingCFs;
     //all functions that should be run
     static Collection<String> chosencorpusfunctions = new ArrayList<String>();
     static Collection<CorpusFunction> corpusfunctions = new ArrayList<CorpusFunction>();
+    //need to have Map or something for this
+    static Collection<Class<? extends CorpusData>> neededcorpusdatatypes = new ArrayList<Class<? extends CorpusData>>();
     //the final Report
     static Report report = new Report();
     //a list of all the available corpus data (no java objects, just URLs)
@@ -94,126 +114,64 @@ public class CorpusMagician {
     static CorpusIO cio = new CorpusIO();
     static boolean fixing = false;
     static boolean iserrorsonly = false;
+    static boolean isfixesjson = false;
     static CommandLine cmd = null;
     //the final Exmaralda error list
     public static ExmaErrorList exmaError = new ExmaErrorList();
-    static Properties cfProperties;
+    static Properties cfProperties = new Properties();
+    static PrettyPrinter pp = new PrettyPrinter();
+    static String settingsfilepath = "settings.xml";
+    //Properties Key Names
+    static String fsm = "fsm";
+    static String segmentation = "segmentation";
+    static String lang = "lang";
+    static String spelllang = "spelllang";
+    static String corpusname = "corpusname";
+    static String kml = "kml";
+    static String mode = "mode";
+    static URL reportlocation;
+    static URL inputurl;
+    static boolean isCorpus = false;
+    static boolean isCollection = false;
 
     public CorpusMagician() {
     }
 
-    //TODO main method
     //TODO we need a webservice for this functionality too
-    //in the furture (for repo and external users)
-    //this should work via commandline like that:
-    //java -cp hzsk-corpus-services-0.1.1.jar de.uni_hamburg.corpora.validation.CorpusMagician {File:///URLtocorpusfolder}
-    //%cd%/report.txt(where and how report should be stored) PrettyPrintDataFix ComaNSLinkChecker(Functions that should be run)
+    //in the future (for repo and external users)
     public static void main(String[] args) {
 
         //first args needs to be the URL
-        //check if it's a filepath, we could just convert it to an url
-        createCommandLineOptions(args);
+        //check if it's a filepath, we could just convert it to an url    
+        System.out.println("CorpusMagician is now doing its magic.");
+        CorpusMagician corpuma = new CorpusMagician();
         try {
-            String urlstring = cmd.getOptionValue("input");
-            URL url;
-            fixing = cmd.hasOption("f");
-            iserrorsonly = cmd.hasOption("e");
-            if (urlstring.startsWith("file://")) {
-                url = new URL(urlstring);
-            } else {
-                url = Paths.get(urlstring).toUri().toURL();
-            }
-            CorpusMagician corpuma = new CorpusMagician();
-            //now the place where Report should end up
-            //also allow normal filepaths and convert them
-            String reportstring = cmd.getOptionValue("output");
-            URL reportlocation;
-            if (reportstring.startsWith("file://")) {
-                reportlocation = new URL(reportstring);
-            } else {
-                reportlocation = Paths.get(reportstring).toUri().toURL();
-            }
-            //now add the functionsstrings to array
-            String[] corpusfunctionarray = cmd.getOptionValues("c");
-            for (String cf : corpusfunctionarray) {
-                CorpusMagician.chosencorpusfunctions.add(cf);
-                System.out.println(CorpusMagician.chosencorpusfunctions.toString());
-            }
-            corpusfunctions = corpusFunctionStrings2Classes();
-
-            //here is the heap space problem: everything is read all at one
-            //and kept in the heap space the whole time
-            corpuma.initCorpusWithURL(url);
-            //get the basedirectory
-            basedirectory = url;
-            //and here is another problem, all the corpusfiles are given as objects
-            report = corpuma.runChosencorpusfunctions();
-            //this is a possible solution, but not working yet
-            /*
-             if (cmd.hasOption("s")) {
-             corpuma.initCorpusWithURL(url);
-             //and here is another problem, all the corpusfiles are given as objects
-             report = corpuma.runChosencorpusfunctions();
-             } else {
-             //if we don't have so much heap space, we want things to be slower
-             //so we just save a string array lsit of all the available files/urls/datastreams
-             alldata = corpuma.createListofData(url);
-             for (URL allurl : alldata) {
-             try {
-             File f = new File(allurl.getFile());
-             CorpusData cd;
-             cd = cio.toCorpusData(f);
-             if (cd != null) {
-             if (fixing) {
-             report.merge(runCorpusFunctions(cd, corpusfunctions, true));
-             } else {
-             report.merge(runCorpusFunctions(cd, corpusfunctions));
-             }
-             }
-             } catch (SAXException ex) {
-             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (JexmaraldaException ex) {
-             Logger.getLogger(CorpusMagician.class.getName()).log(Level.SEVERE, null, ex);
-             }
-
-             }
-             }
-             */
-            System.out.println(report.getFullReports());
-            String reportOutput;
-            if (reportlocation.getFile().endsWith("html")) {
-                if (iserrorsonly) {
-                    //ToDo
-                    //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
-                    reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
-                } else {
-                    reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+            //create the options for the commandline
+            createCommandLineOptions(args);
+            //read the options specified on the commandline
+            readCommandLineOptions();
+            //convert strings from commandline to corpusfunction objects
+            corpusfunctions = corpusFunctionStrings2Classes(chosencorpusfunctions);
+            //find out which files the chosencorpusfunctions need as input
+            for (CorpusFunction cf : corpusfunctions) {
+                for (Class<? extends CorpusData> cecd : cf.getIsUsableFor()) {
+                    if (!neededcorpusdatatypes.contains(cecd)) {
+                        neededcorpusdatatypes.add(cecd);
+                    }
                 }
-            } else {
-                //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
-                reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
             }
-            String absoluteReport = reportOutput;
-            if (absoluteReport != null && basedirectory != null && absoluteReport.contains(basedirectory.toString())) {
-                absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
-            }
-            if (absoluteReport != null) {
-                cio.write(absoluteReport, reportlocation);
-            }
-            //create the error list file
-            System.out.println("Basedirectory is " + basedirectory);
-            System.out.println("BasedirectoryPath is " + basedirectory.getPath());
-            URL errorlistlocation = new URL(basedirectory + "CorpusServices_Errors.xml");
-            Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
-            String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
-            if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
-                exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "");
-                exmaErrorList = TypeConverter.String2JdomDocument(exmaErrorListString);
-            }
-            if (exmaErrorList != null) {
-                cio.write(exmaErrorList, errorlistlocation);
-                System.out.println("Wrote ErrorList at " + errorlistlocation);
-            }
+            //the input can be a filepath or an url pointing to a file or a folder
+            //if the input is a coma file we have a structured corpus
+            //if it is a folder or another corpus file we don't
+            //we can maybe minmize the heapspace when having a structured corpus
+            //we only want to have the data as objects that will be really needed in the functions
+            corpuma.initDataWithURL(inputurl, neededcorpusdatatypes);
+            //We can only init an corpus object if we know it's a structured corpus
+            //now all chosen functions must be run
+            //if we have the coma file, we just give Coma as Input and the Functions need to take care of using the
+            //iterating function
+            report = corpuma.runChosencorpusfunctions();
+            createReports();
         } catch (MalformedURLException ex) {
             report.addException(ex, "The given URL was incorrect");
         } catch (IOException ex) {
@@ -230,6 +188,10 @@ public class CorpusMagician {
             report.addException(ex, "A URI was incorrect");
         } catch (XPathExpressionException ex) {
             report.addException(ex, "An Xpath expression was incorrect");
+        } catch (ClassNotFoundException ex) {
+            report.addException(ex, "Class not found");
+        } catch (JDOMException ex) {
+            report.addException(ex, "JDOM error");
         }
 
     }
@@ -252,14 +214,32 @@ public class CorpusMagician {
         allExistingCFs.add(cf.getClass().getName());
     }
 
-    //creates a new empty corpus object
-    public void initCorpus() {
-        corpus = new Corpus();
-    }
-
     //creates a corpus object from an URL (filepath or "real" url)
-    public void initCorpusWithURL(URL url) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException {
-        corpus = new Corpus(url);
+    //we need to make a difference between an unsorted folder, a miscellaneous file or a Coma file which represents a complete folder structure of the corpus
+    public void initDataWithURL(URL url, Collection<Class<? extends CorpusData>> clcds) throws MalformedURLException, SAXException, JexmaraldaException, URISyntaxException, IOException, ClassNotFoundException, JDOMException {
+        if (cio.isDirectory(url)) {
+            //TODO
+            //only read the filetypes from clcds!
+            cdc = cio.read(url, clcds);
+            basedirectory = url;
+            isCollection = true;
+        } else {
+            CorpusData cdata = cio.readFileURL(url);
+            //get the basedirectory
+            basedirectory = cdata.getParentURL();
+            //it could be a ComaFile if it is a Metadata file
+            if (cdata instanceof ComaData) {
+                //if it is we set the boolean
+                isCorpus = true;
+                System.out.println("It's a corpus");
+                //TODO
+                //only read the filetypes from clcds!
+                corpus = new Corpus((ComaData) cdata, clcds);
+                //otherwise it is a single file I want to check
+            } else {
+                corpusData = cdata;
+            }
+        }
     }
 
     //creates a list of all the available data from an url (being a file oder directory)
@@ -274,18 +254,22 @@ public class CorpusMagician {
     //probably need to check for implementations of CorpusFunction?
     //TODO
     public static Collection<String> getAllExistingCFs() {
+        allExistingCFs = new ArrayList<String>();
         allExistingCFs.add("ComaApostropheChecker");
         allExistingCFs.add("ComaNSLinksChecker");
         allExistingCFs.add("ComaOverviewGeneration");
+        allExistingCFs.add("ComaChartsGeneration");
         allExistingCFs.add("ZipCorpus");
+        allExistingCFs.add("HandlePidRegistration");
+        allExistingCFs.add("RemoveUnlinkedFiles");
         allExistingCFs.add("ComaSegmentCountChecker");
         allExistingCFs.add("ExbFileReferenceChecker");
+        allExistingCFs.add("ExbFileCoverageChecker");
         allExistingCFs.add("ExbAnnotationPanelCheck");
         allExistingCFs.add("EXB2INELISOTEI");
         allExistingCFs.add("EXB2HIATISOTEI");
         allExistingCFs.add("ExbStructureChecker");
-        allExistingCFs.add("FileCoverageChecker");
-        allExistingCFs.add("FileCoverageCheckerInel");
+        allExistingCFs.add("ComaFileCoverageChecker");
         allExistingCFs.add("NormalizeEXB");
         allExistingCFs.add("PrettyPrintData");
         allExistingCFs.add("RemoveAbsolutePaths");
@@ -299,7 +283,7 @@ public class CorpusMagician {
         allExistingCFs.add("ComaTiersDescriptionAnnotationPanelChecker");
         allExistingCFs.add("ExbTierDisplayNameChecker");
         allExistingCFs.add("NgTierCheckerWithAnnotation");
-        allExistingCFs.add("XsltCheckerInel");
+        //allExistingCFs.add("XsltCheckerInel");
         allExistingCFs.add("GenerateAnnotationPanel");
         allExistingCFs.add("CorpusDataRegexReplacer");
         allExistingCFs.add("ScoreHTML");
@@ -312,11 +296,20 @@ public class CorpusMagician {
         allExistingCFs.add("ExbSegmentationChecker");
         allExistingCFs.add("CalculateAnnotatedTime");
         allExistingCFs.add("AddCSVMetadataToComa");
+        allExistingCFs.add("ComaKmlForLocations");
         allExistingCFs.add("RemoveEmptyEvents");
         allExistingCFs.add("ComaTranscriptionsNameChecker");
         allExistingCFs.add("ComaTierOverviewCreator");
         allExistingCFs.add("GeneralTransformer");
         allExistingCFs.add("ComaFedoraIdentifierLengthChecker");
+        allExistingCFs.add("ExbMP3Next2WavAdder");
+        allExistingCFs.add("ExbRefTierChecker");
+        allExistingCFs.add("ReportStatistics");
+        allExistingCFs.add("ExbSegmenter");
+        allExistingCFs.add("ExbScriptMixChecker");
+        allExistingCFs.add("DuplicateTierContentChecker");
+        allExistingCFs.add("LanguageToolChecker");
+        allExistingCFs.add("VikusViewer");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -328,6 +321,11 @@ public class CorpusMagician {
             all = all + "\n" + s;
         }
         return all;
+    }
+
+    public static Collection<CorpusFunction> getAllExistingCFsAsCFs() {
+
+        return corpusFunctionStrings2Classes(getAllExistingCFs());
     }
 
     //TODO checks which functions can be run on specified data
@@ -353,117 +351,206 @@ public class CorpusMagician {
         return chosencorpusfunctions;
     }
 
-    public static Collection<CorpusFunction> corpusFunctionStrings2Classes() {
-        for (String function : chosencorpusfunctions) {
+    public static Collection<CorpusFunction> corpusFunctionStrings2Classes(Collection<String> corpusfunctionstrings) {
+        Collection<CorpusFunction> cf2strcorpusfunctions = new ArrayList<CorpusFunction>();
+        for (String function : corpusfunctionstrings) {
             switch (function.toLowerCase()) {
                 case "comaapostrophechecker":
                     ComaApostropheChecker cac = new ComaApostropheChecker();
-                    corpusfunctions.add(cac);
+                    cf2strcorpusfunctions.add(cac);
                     break;
                 case "comanslinkschecker":
                     ComaNSLinksChecker cnslc = new ComaNSLinksChecker();
-                    corpusfunctions.add(cnslc);
+                    cf2strcorpusfunctions.add(cnslc);
                     break;
                 case "comaoverviewgeneration":
                     ComaOverviewGeneration cog = new ComaOverviewGeneration();
-                    corpusfunctions.add(cog);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
+                            cog.setInel();
+                            System.out.println("Mode set to inel");
+                        }
+                    }
+                    cf2strcorpusfunctions.add(cog);
+                    break;
+                case "comachartsgeneration":
+                    ComaChartsGeneration coc = new ComaChartsGeneration();if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
+                            coc.setInel();
+                            System.out.println("Mode set to inel");
+                        }
+                    }
+                    cf2strcorpusfunctions.add(coc);
                     break;
                 case "comasegmentcountchecker":
                     ComaSegmentCountChecker cscc = new ComaSegmentCountChecker();
-                    corpusfunctions.add(cscc);
+                    cf2strcorpusfunctions.add(cscc);
                     break;
                 case "exbfilereferencechecker":
                     ExbFileReferenceChecker efrc = new ExbFileReferenceChecker();
-                    corpusfunctions.add(efrc);
+                    cf2strcorpusfunctions.add(efrc);
+                    break;
+                case "exbfilecoveragechecker":
+                    ExbFileCoverageChecker efcc = new ExbFileCoverageChecker();
+                    cf2strcorpusfunctions.add(efcc);
                     break;
                 case "exbannotationpanelcheck":
                     ExbAnnotationPanelCheck eapc = new ExbAnnotationPanelCheck();
-                    corpusfunctions.add(eapc);
+                    cf2strcorpusfunctions.add(eapc);
                     break;
-                case "filecoveragechecker":
-                    FileCoverageChecker fcc = new FileCoverageChecker();
-                    corpusfunctions.add(fcc);
+                case "comafilecoveragechecker":
+                    ComaFileCoverageChecker fcc = new ComaFileCoverageChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).equals("inel")) {
+                            fcc.addFileEndingWhiteListString("flextext");
+                            fcc.addWhiteListString("report-output.html");
+                            fcc.addWhiteListString("Segmentation_Errors.xml");
+                            fcc.addWhiteListString("Structure_Errors.xml");
+                            System.out.println("Mode set to inel");
+                        }
+                    }
+                    cf2strcorpusfunctions.add(fcc);
                     break;
                 case "prettyprintdata":
                     PrettyPrintData pd = new PrettyPrintData();
-                    corpusfunctions.add(pd);
+                    cf2strcorpusfunctions.add(pd);
                     break;
                 case "removeabsolutepaths":
                     RemoveAbsolutePaths rap = new RemoveAbsolutePaths();
-                    corpusfunctions.add(rap);
+                    cf2strcorpusfunctions.add(rap);
                     break;
                 case "removeautosaveexb":
                     RemoveAutoSaveExb rase = new RemoveAutoSaveExb();
-                    corpusfunctions.add(rase);
+                    cf2strcorpusfunctions.add(rase);
                     break;
                 case "xsltchecker":
                     XSLTChecker xc = new XSLTChecker();
-                    corpusfunctions.add(xc);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(mode) && cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
+                            xc.setXSLresource("/xsl/inel-checks.xsl");
+                            System.out.println("Mode set to inel");
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            xc.setFSMpath(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(xc);
                     break;
                 case "comaaddtiersfromexbscorrector":
                     ComaAddTiersFromExbsCorrector catfec = new ComaAddTiersFromExbsCorrector();
-                    corpusfunctions.add(catfec);
+                    cf2strcorpusfunctions.add(catfec);
                     break;
                 case "comaxsdchecker":
                     ComaXsdChecker cxsd = new ComaXsdChecker();
-                    corpusfunctions.add(cxsd);
+                    cf2strcorpusfunctions.add(cxsd);
                     break;
                 case "ngexmaraldacorpuschecker":
                     NgexmaraldaCorpusChecker ngex = new NgexmaraldaCorpusChecker();
-                    corpusfunctions.add(ngex);
+                    cf2strcorpusfunctions.add(ngex);
+                    break;
                 case "filenamechecker":
-                    FilenameChecker fnc = new FilenameChecker();
-                    corpusfunctions.add(fnc);
+                    ComaFilenameChecker fnc = new ComaFilenameChecker();
+                    cf2strcorpusfunctions.add(fnc);
                     break;
                 case "cmdichecker":
                     CmdiChecker cmdi = new CmdiChecker();
-                    corpusfunctions.add(cmdi);
+                    cf2strcorpusfunctions.add(cmdi);
                     break;
                 case "comafedoraidentifierlengthchecker":
                     ComaFedoraIdentifierLengthChecker cplc = new ComaFedoraIdentifierLengthChecker();
-                    corpusfunctions.add(cplc);
+                    cf2strcorpusfunctions.add(cplc);
                     break;
                 case "comatranscriptionsnamechecker":
                     ComaTranscriptionsNameChecker cnc = new ComaTranscriptionsNameChecker();
-                    corpusfunctions.add(cnc);
+                    cf2strcorpusfunctions.add(cnc);
                     break;
                 case "comatiersdescriptionannotationpanelchecker":
                     ComaTiersDescriptionAnnotationPanelChecker tcwa = new ComaTiersDescriptionAnnotationPanelChecker();
-                    corpusfunctions.add(tcwa);
+                    cf2strcorpusfunctions.add(tcwa);
+                    break;
                 case "exbtierdisplaynamechecker":
                     ExbTierDisplayNameChecker tc = new ExbTierDisplayNameChecker();
-                    corpusfunctions.add(tc);
+                    cf2strcorpusfunctions.add(tc);
+                    break;
                 case "ngtiercheckerwithannotation":
                     NgTierCheckerWithAnnotation ngtcwa = new NgTierCheckerWithAnnotation();
-                    corpusfunctions.add(ngtcwa);
-                    break;
-                case "xsltcheckerinel":
-                    XSLTChecker xci = new XSLTChecker();
-                    xci.setXSLresource("/xsl/inel-checks.xsl");
-                    corpusfunctions.add(xci);
+                    cf2strcorpusfunctions.add(ngtcwa);
                     break;
                 case "exb2inelisotei":
-                    EXB2INELISOTEI eiit = new EXB2INELISOTEI();
-                    corpusfunctions.add(eiit);
+                    EXB2HIATISOTEI eiit = new EXB2HIATISOTEI();
+                    eiit.setInel();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(lang)) {
+                            eiit.setLanguage(cfProperties.getProperty(lang));
+                            System.out.println("Language set to " + cfProperties.getProperty(lang));
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            eiit.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(eiit);
                     break;
+                //Maybe get rid of those special cases too!
                 case "exb2inelisoteisel":
-                    EXB2INELISOTEI eiitsel = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitsel = new EXB2HIATISOTEI();
+                    eiitsel.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                        eiitsel.setFSM(cfProperties.getProperty(fsm));
+                        System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
                     eiitsel.setLanguage("sel");
-                    corpusfunctions.add(eiitsel);
+                    cf2strcorpusfunctions.add(eiitsel);
                     break;
                 case "exb2inelisoteidlg":
-                    EXB2INELISOTEI eiitdlg = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitdlg = new EXB2HIATISOTEI();
+                    eiitdlg.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                        eiitdlg.setFSM(cfProperties.getProperty(fsm));
+                        System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
                     eiitdlg.setLanguage("dlg");
-                    corpusfunctions.add(eiitdlg);
+                    cf2strcorpusfunctions.add(eiitdlg);
                     break;
                 case "exb2inelisoteixas":
-                    EXB2INELISOTEI eiitxas = new EXB2INELISOTEI();
+                    EXB2HIATISOTEI eiitxas = new EXB2HIATISOTEI();
+                    eiitxas.setInel();
+                    if (cfProperties.containsKey(fsm)) {
+                        eiitxas.setFSM(cfProperties.getProperty(fsm));
+                        System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                    }
                     eiitxas.setLanguage("xas");
-                    corpusfunctions.add(eiitxas);
+                    cf2strcorpusfunctions.add(eiitxas);
                     break;
                 case "exb2hiatisotei":
                     EXB2HIATISOTEI ehit = new EXB2HIATISOTEI();
-                    corpusfunctions.add(ehit);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(lang)) {
+                            ehit.setLanguage(cfProperties.getProperty(lang));
+                            System.out.println("Language set to " + cfProperties.getProperty(lang));
+                        }
+                        if (cfProperties.containsKey(mode)) {
+                            if (cfProperties.getProperty(mode).toLowerCase().equals("inel")) {
+                                ehit.setInel();
+                                System.out.println("Mode set to inel");
+                            } else if (cfProperties.getProperty(mode).toLowerCase().equals("token")) {
+                                ehit.setToken();
+                                System.out.println("Mode set to token");
+                            }
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            ehit.setFSM(cfProperties.getProperty(fsm));
+                            System.out.println("FSM set to " + cfProperties.getProperty(fsm));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(ehit);
                     break;
                 case "normalizeexb":
                     ExbNormalize ne = new ExbNormalize();
@@ -474,23 +561,30 @@ public class CorpusMagician {
                             System.out.println("FixWhitespace set to " + cfProperties.getProperty("whitespace"));
                         }
                     }
-                    corpusfunctions.add(ne);
+                    cf2strcorpusfunctions.add(ne);
                     break;
                 case "generateannotationpanel":
                     GenerateAnnotationPanel gap = new GenerateAnnotationPanel();
-                    corpusfunctions.add(gap);
+                    cf2strcorpusfunctions.add(gap);
                     break;
                 case "iaafunctionality":
                     IAAFunctionality iaa = new IAAFunctionality();
-                    corpusfunctions.add(iaa);
+                    cf2strcorpusfunctions.add(iaa);
                     break;
-                case "filecoveragecheckerinel":
-                    FileCoverageChecker fcci = new FileCoverageChecker();
-                    fcci.addFileEndingWhiteListString("flextext");
-                    fcci.addWhiteListString("report-output.html");
-                    fcci.addWhiteListString("Segmentation_Errors.xml");
-                    fcci.addWhiteListString("Structure_Errors.xml");
-                    corpusfunctions.add(fcci);
+                case "comakmlforlocations":
+                    ComaKmlForLocations ckml = new ComaKmlForLocations();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(kml)) {
+                            ckml.setKMLFilePath(cfProperties.getProperty(kml));
+                            System.out.println("KML file path set to " + cfProperties.getProperty(kml));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(ckml);
+                    break;
+                case "reportstatistics":
+                    ReportStatistics rs = new ReportStatistics();
+                    cf2strcorpusfunctions.add(rs);
                     break;
                 case "corpusdataregexreplacer":
                     //ToDo                   
@@ -515,63 +609,91 @@ public class CorpusMagician {
                             System.out.println("Replace in Coma set to " + cfProperties.getProperty("coma"));
                         }
                     }
-                    corpusfunctions.add(cdrr);
+                    cf2strcorpusfunctions.add(cdrr);
                     break;
                 case "zipcorpus":
                     ZipCorpus zc = new ZipCorpus();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SOURCE_FOLDER")) {
-                            zc.setSourceFolder(cfProperties.getProperty("SOURCE_FOLDER"));
-                            System.out.println("Location of source folder set to " + cfProperties.getProperty("SOURCE_FOLDER"));
+                        if (cfProperties.containsKey("source_folder")) {
+                            zc.setSourceFolder(cfProperties.getProperty("source_folder"));
+                            System.out.println("Location of source folder set to " + cfProperties.getProperty("source_folder"));
                         }
-                        if (cfProperties.containsKey("OUTPUT_ZIP_FILE")) {
-                            zc.setOutputFile(cfProperties.getProperty("OUTPUT_ZIP_FILE"));
-                            System.out.println("Location of output file set to " + cfProperties.getProperty("OUTPUT_ZIP_FILE"));
+                        if (cfProperties.containsKey("output_zip_file")) {
+                            zc.setOutputFile(cfProperties.getProperty("output_zip_file"));
+                            System.out.println("Location of output file set to " + cfProperties.getProperty("output_zip_file"));
                         }
-                        if (cfProperties.containsKey("AUDIO")) {
-                            zc.setWithAudio(cfProperties.getProperty("AUDIO"));
-                            System.out.println("Should contain audio set to " + cfProperties.getProperty("AUDIO"));
+                        if (cfProperties.containsKey("audio")) {
+                            zc.setWithAudio(cfProperties.getProperty("audio"));
+                            System.out.println("Should contain audio set to " + cfProperties.getProperty("audio"));
                         }
                     }
-                    corpusfunctions.add(zc);
+                    cf2strcorpusfunctions.add(zc);
+                    break;
+                case "handlepidregistration":
+                    HandlePidRegistration hppr = new HandlePidRegistration();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("user")) {
+                            hppr.setUser(cfProperties.getProperty("user"));
+                            System.out.println("User set to " + cfProperties.getProperty("user"));
+                        }
+                        if (cfProperties.containsKey("pass")) {
+                            hppr.setPass(cfProperties.getProperty("pass"));
+                            System.out.println("Password set to " + cfProperties.getProperty("pass").replaceAll(".", "*"));
+                            //System.out.println("Password set to " + cfProperties.getProperty("pass"));
+                        }
+                        if (cfProperties.containsKey("prefix")) {
+                            hppr.setHandlePrefix(cfProperties.getProperty("prefix"));
+                            System.out.println("Prefix set to " + cfProperties.getProperty("prefix"));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(hppr);
+                    break;
+                case "removeunlinkedfiles":
+                    RemoveUnlinkedFiles ruf = new RemoveUnlinkedFiles();                    
+                    cf2strcorpusfunctions.add(ruf);
                     break;
                 case "scorehtml":
                     ScoreHTML shtml = new ScoreHTML();
                     if (cfProperties != null) {
-                        if (cfProperties.containsKey("CORPUSNAME")) {
-                            shtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
-                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        if (cfProperties.containsKey(corpusname)) {
+                            shtml.setCorpusName(cfProperties.getProperty(corpusname));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
                         }
                     }
-                    corpusfunctions.add(shtml);
+                    cf2strcorpusfunctions.add(shtml);
                     break;
-                 case "hscorehtml":
+                case "hscorehtml":
                     HScoreHTML hshtml = new HScoreHTML();
-                    corpusfunctions.add(hshtml);
+                    cf2strcorpusfunctions.add(hshtml);
                     break;
                 case "corpushtml":
                     CorpusHTML chtml = new CorpusHTML();
-                    corpusfunctions.add(chtml);
+                    cf2strcorpusfunctions.add(chtml);
                     break;
                 case "listhtml":
                     ListHTML lhtml = new ListHTML();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SEGMENTATION")) {
-                            lhtml.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
-                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        if (cfProperties.containsKey(segmentation)) {
+                            lhtml.setSegmentation(cfProperties.getProperty(segmentation));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty(segmentation));
                         }
-                        if (cfProperties.containsKey("CORPUSNAME")) {
-                            lhtml.setCorpusName(cfProperties.getProperty("CORPUSNAME"));
-                            System.out.println("Corpus name set to " + cfProperties.getProperty("CORPUSNAME"));
+                        if (cfProperties.containsKey(corpusname)) {
+                            lhtml.setCorpusName(cfProperties.getProperty(corpusname));
+                            System.out.println("Corpus name set to " + cfProperties.getProperty(corpusname));
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            lhtml.setExternalFSM(cfProperties.getProperty(fsm));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(lhtml);
+                    cf2strcorpusfunctions.add(lhtml);
                     break;
                 case "exbeventlinebreakschecker":
                     ExbEventLinebreaksChecker elb = new ExbEventLinebreaksChecker();
-                    corpusfunctions.add(elb);
+                    cf2strcorpusfunctions.add(elb);
                     break;
                 case "maketimelineconsistent":
                     ExbMakeTimelineConsistent emtc = new ExbMakeTimelineConsistent();
@@ -582,101 +704,181 @@ public class CorpusMagician {
                             System.out.println("FixWhitespace set to " + cfProperties.getProperty("interpolate"));
                         }
                     }
-                    corpusfunctions.add(emtc);
+                    cf2strcorpusfunctions.add(emtc);
                     break;
                 case "exbstructurechecker":
                     ExbStructureChecker esc = new ExbStructureChecker();
-                    corpusfunctions.add(esc);
+                    cf2strcorpusfunctions.add(esc);
                     break;
                 case "exbsegmentationchecker":
                     ExbSegmentationChecker eseg = new ExbSegmentationChecker();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("SEGMENTATION")) {
-                            eseg.setSegmentation(cfProperties.getProperty("SEGMENTATION"));
-                            System.out.println("Segmentation set to " + cfProperties.getProperty("SEGMENTATION"));
+                        if (cfProperties.containsKey(segmentation)) {
+                            eseg.setSegmentation(cfProperties.getProperty(segmentation));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty(segmentation));
                         }
-                        if (cfProperties.containsKey("FSM")) {
-                            eseg.setExternalFSM(cfProperties.getProperty("FSM"));
-                            System.out.println("External FSM path set to " + cfProperties.getProperty("FSM"));
+                        if (cfProperties.containsKey(fsm)) {
+                            eseg.setExternalFSM(cfProperties.getProperty(fsm));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
                         }
                     }
-                    corpusfunctions.add(eseg);
+                    cf2strcorpusfunctions.add(eseg);
+                    break;
+                case "exbsegmenter":
+                    ExbSegmentationChecker esegr = new ExbSegmentationChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(segmentation)) {
+                            esegr.setSegmentation(cfProperties.getProperty(segmentation));
+                            System.out.println("Segmentation set to " + cfProperties.getProperty(segmentation));
+                        }
+                        if (cfProperties.containsKey(fsm)) {
+                            esegr.setExternalFSM(cfProperties.getProperty(fsm));
+                            System.out.println("External FSM path set to " + cfProperties.getProperty(fsm));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(esegr);
                     break;
                 case "calculateannotatedtime":
-                    CalculateAnnotatedTime cat = new CalculateAnnotatedTime();
-                    corpusfunctions.add(cat);
+                    ExbCalculateAnnotatedTime cat = new ExbCalculateAnnotatedTime();
+                    cf2strcorpusfunctions.add(cat);
                     break;
                 case "addcsvmetadatatocoma":
                     AddCSVMetadataToComa acmtc = new AddCSVMetadataToComa();
                     if (cfProperties != null) {
                         // Pass on the configuration parameter
-                        if (cfProperties.containsKey("CSV")) {
-                            acmtc.setCSVFilePath(cfProperties.getProperty("CSV"));
-                            System.out.println("CSV file path set to " + cfProperties.getProperty("CSV"));
+                        if (cfProperties.containsKey("csv")) {
+                            acmtc.setCSVFilePath(cfProperties.getProperty("csv"));
+                            System.out.println("CSV file path set to " + cfProperties.getProperty("csv"));
                         }
-                        if (cfProperties.containsKey("SPEAKER")) {
-                            acmtc.setSpeakerOrCommunication(cfProperties.getProperty("SPEAKER"));
-                            System.out.println("CSV file set for " + cfProperties.getProperty("SPEAKER"));
+                        if (cfProperties.containsKey("speaker")) {
+                            acmtc.setSpeakerOrCommunication(cfProperties.getProperty("speaker"));
+                            System.out.println("CSV file set for " + cfProperties.getProperty("speaker"));
                         }
                     }
-                    corpusfunctions.add(acmtc);
+                    cf2strcorpusfunctions.add(acmtc);
                     break;
                 case "removeemptyevents":
                     RemoveEmptyEvents ree = new RemoveEmptyEvents();
-                    corpusfunctions.add(ree);
+                    cf2strcorpusfunctions.add(ree);
                     break;
-
-                 case "comatieroverviewcreator":
+                case "comatieroverviewcreator":
                     ComaTierOverviewCreator ctoc = new ComaTierOverviewCreator();
-                    corpusfunctions.add(ctoc);
+                    cf2strcorpusfunctions.add(ctoc);
+                    break;
                 case "generaltransformer":
                     GeneralTransformer gt = new GeneralTransformer();
-                     if (cfProperties.containsKey("coma")) {
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("coma")) {
                             gt.setComa(cfProperties.getProperty("coma"));
                             System.out.println("Run on Coma set to " + cfProperties.getProperty("coma"));
                         }
-                     if (cfProperties.containsKey("exb")) {
+                        if (cfProperties.containsKey("exb")) {
                             gt.setExb(cfProperties.getProperty("exb"));
                             System.out.println("Run on exb set to " + cfProperties.getProperty("exb"));
                         }
-                     if (cfProperties.containsKey("exs")) {
+                        if (cfProperties.containsKey("exs")) {
                             gt.setExs(cfProperties.getProperty("exs"));
                             System.out.println("Run on exs set to " + cfProperties.getProperty("exs"));
                         }
-                     if (cfProperties.containsKey("xsl")) {
+                        if (cfProperties.containsKey("xsl")) {
                             gt.setPathToXSL(cfProperties.getProperty("xsl"));
                             System.out.println("Path to XSL set to " + cfProperties.getProperty("xsl"));
                         }
-                     if (cfProperties.containsKey("overwritefiles")) {
+                        if (cfProperties.containsKey("overwritefiles")) {
                             gt.setOverwriteFiles(cfProperties.getProperty("overwritefiles"));
                             System.out.println("overwritefiles set to " + cfProperties.getProperty("overwritefiles"));
                         }
-                    corpusfunctions.add(gt);
+                    }
+                    cf2strcorpusfunctions.add(gt);
+                    break;
+                case "exbmp3next2wavadder":
+                    ExbMP3Next2WavAdder emn2wa = new ExbMP3Next2WavAdder();
+                    cf2strcorpusfunctions.add(emn2wa);
+                    break;
+                case "exbreftierchecker":
+                    ExbRefTierChecker ertc = new ExbRefTierChecker();
+                    cf2strcorpusfunctions.add(ertc);
+                    break;
+                case "exbscriptmixchecker":
+                    ExbScriptMixChecker esmc = new ExbScriptMixChecker();
+                    cf2strcorpusfunctions.add(esmc);
+                    break;
+                case "duplicatetiercontentchecker":
+                    DuplicateTierContentChecker duplc = new DuplicateTierContentChecker();
+                    cf2strcorpusfunctions.add(duplc);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("tiers")) {
+                            duplc.setTierNames(cfProperties.getProperty("tiers"));
+                            System.out.println("Tier names set to " + cfProperties.getProperty("tiers"));
+                        }
+                    }
+                    break;
+                case "languagetoolchecker":
+                    LanguageToolChecker ltc = new LanguageToolChecker();
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey(spelllang)) {
+                            ltc.setLanguage(cfProperties.getProperty(spelllang));
+                            System.out.println("Language set to " + cfProperties.getProperty(spelllang));
+                        }
+                        if (cfProperties.containsKey("tier")) {
+                            ltc.setTierToCheck(cfProperties.getProperty("tier"));
+                            System.out.println("Tier to check set to " + cfProperties.getProperty("tier"));
+                        }
+                    }
+                    cf2strcorpusfunctions.add(ltc);
+                    break;
+                    case "vikusviewer":
+                    VikusViewer vv = new VikusViewer();
+                    cf2strcorpusfunctions.add(vv);
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
             }
         }
-        return corpusfunctions;
+        return cf2strcorpusfunctions;
     }
 
-    //TODO
-    //run the chosen functions on the chosen corpus
+    //run the chosen functions on the chosen corpus data
     Report runChosencorpusfunctions() {
-        for (CorpusFunction function : corpusfunctions) {
-            if (fixing) {
-                report.merge(runCorpusFunction(corpus, function, true));
-            } else {
-                report.merge(runCorpusFunction(corpus, function));
+        //it's an unordered Collection of corpus data
+        if (isCollection) {
+            for (CorpusFunction function : corpusfunctions) {
+                if (fixing) {
+                    report.merge(runCorpusFunction(cdc, function, true));
+                } else {
+                    report.merge(runCorpusFunction(cdc, function));
+                }
+            }
+            //Congrats - It's a corpus!
+        } else if (isCorpus) {
+            for (CorpusFunction function : corpusfunctions) {
+                if (fixing) {
+                    report.merge(runCorpusFunction(corpus, function, true));
+                } else {
+                    report.merge(runCorpusFunction(corpus, function));
+                }
+            }
+            //must be a single file then
+        } else {
+            for (CorpusFunction function : corpusfunctions) {
+                if (fixing) {
+                    report.merge(runCorpusFunction(corpusData, function, true));
+                } else {
+                    report.merge(runCorpusFunction(corpusData, function));
+                }
             }
         }
+
         return report;
     }
-
     //run multiple functions on a corpus, that means all the files in the corpus
     //the function can run on
-    public Report runCorpusFunction(Corpus c, Collection<CorpusFunction> cfc) {
+
+    public Report runCorpusFunctions(Corpus c, Collection<CorpusFunction> cfc) {
         Report report = new Report();
         for (CorpusFunction cf : cfc) {
             Report newReport = runCorpusFunction(c, cf);
@@ -687,33 +889,14 @@ public class CorpusMagician {
 
     //run multiple functions on the set corpus, that means all the files in the corpus
     //the function can run on
-    public Report runCorpusFunction(Collection<CorpusFunction> cfc) {
-        Report report = new Report();
-        for (CorpusFunction cf : cfc) {
-            Report newReport = runCorpusFunction(corpus, cf);
-            report.merge(newReport);
-        }
-        return report;
+    public Report runCorpusFunctions(Collection<CorpusFunction> cfc) {
+        return runCorpusFunctions(corpus, cfc);
     }
 
     //run one function on a corpus, that means all the files in the corpus
     //the funciton can run on
     public Report runCorpusFunction(Corpus c, CorpusFunction cf) {
-        Report report = new Report();
-        //find out on which objects this corpus function can run
-        //choose those from the corpus
-        //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
-            //of the class cl, run the function
-            {
-                if (cl.isInstance(cd)) {
-                    Report newReport = runCorpusFunction(cd, cf);
-                    report.merge(newReport);
-                }
-            }
-        }
-        return report;
+        return runCorpusFunction(c, cf, false);
     }
 
     //run one function on a corpus, that means all the files in the corpus
@@ -723,15 +906,16 @@ public class CorpusMagician {
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            for (CorpusData cd : c.getCorpusData()) //if the corpus files are an instance
-            //of the class cl, run the function
-            {
-                if (cd != null && cl.isInstance(cd)) {
-                    Report newReport = runCorpusFunction(cd, cf, fix);
-                    report.merge(newReport);
-                }
+        Collection<Class<? extends CorpusData>> usableTypes = cf.getIsUsableFor();
+
+        //if the corpus files are an instance
+        //of the class cl, run the function
+        for (CorpusData cd : c.getCorpusData()) {
+            if (usableTypes.contains(cd.getClass())) {
+                Report newReport = runCorpusFunction(cd, cf, fix);
+                report.merge(newReport);
             }
+
         }
         return report;
     }
@@ -739,15 +923,32 @@ public class CorpusMagician {
     //run one function on a corpus, that means all the files in the corpus
     //the function can run on
     public Report runCorpusFunction(CorpusFunction cf) {
+        return runCorpusFunction(corpus, cf, false);
+    }
+
+    //run one function on a corpus, that means all the files in the corpus
+    //the funciton can run on
+    public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf, boolean fix) {
         Report report = new Report();
         //find out on which objects this corpus function can run
         //choose those from the corpus
         //and run the checks on those files recursively
-        for (Class<? extends CorpusData> cl : cf.getIsUsableFor()) {
-            Report newReport = runCorpusFunction(corpus, cf);
-            report.merge(newReport);
+        Collection<Class<? extends CorpusData>> usableTypes = cf.getIsUsableFor();
+        //if the corpus files are an instance
+        //of the class cl, run the function
+        for (CorpusData cd : cdc) {
+            if (usableTypes.contains(cd.getClass())) {
+                Report newReport = runCorpusFunction(cd, cf, fix);
+                report.merge(newReport);
+            }
         }
         return report;
+    }
+
+    //run one function on a corpus, that means all the files in the corpus
+    //the funciton can run on
+    public Report runCorpusFunction(Collection<CorpusData> cdc, CorpusFunction cf) {
+        return runCorpusFunction(cdc, cf, false);
     }
 
     public Report runCorpusFunction(CorpusData cd, CorpusFunction cf) {
@@ -780,7 +981,7 @@ public class CorpusMagician {
     //to save individual corpusparameters in a file
     //and maybe also save the functions todos there
     public void readParameters() {
-
+        //read the XML file as variables
     }
 
     public void setCorpusData(CorpusData corpusData) {
@@ -803,10 +1004,92 @@ public class CorpusMagician {
         return chosencorpusfunctions;
     }
 
-    private static void createCommandLineOptions(String[] args) {
+    public static void createReports() throws IOException, TransformerException, ParserConfigurationException, UnsupportedEncodingException, SAXException, XPathExpressionException, JDOMException {
+        System.out.println(report.getFullReports());
+        String reportOutput;
+        if (reportlocation.getFile().endsWith("html")) {
+            if (iserrorsonly) {
+                //ToDo
+                //reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(basedirectory), report.getSummaryLines());
+                reportOutput = ReportItem.generateDataTableHTML(report.getErrorStatistics(), report.getSummaryLines());
+            } else {
+                reportOutput = ReportItem.generateDataTableHTML(report.getRawStatistics(), report.getSummaryLines());
+            }
+        } else {
+            //reportOutput = report.getSummaryLines() + "\n" + report.getErrorReports();
+            reportOutput = report.getSummaryLines() + "\n" + report.getFullReports();
+        }
+        String absoluteReport = reportOutput;
+        if (absoluteReport != null && basedirectory != null && absoluteReport.contains(basedirectory.toString())) {
+            absoluteReport = reportOutput.replaceAll(basedirectory.toString(), "");
+        }
+        if (absoluteReport != null) {
+            cio.write(absoluteReport, reportlocation);
+        }
+        //create the error list file
+        System.out.println("Basedirectory is " + basedirectory);
+        System.out.println("BasedirectoryPath is " + basedirectory.getPath());
+        URL errorlistlocation = new URL(basedirectory + "curation/CorpusServices_Errors.xml");
+        URL fixJsonlocation = new URL(basedirectory + "curation/fixes.json");
+        File curationFolder = new File((new URL(basedirectory + "curation").getFile()));
+        if (!curationFolder.exists()) {
+            //the curation folder it not there and needs to be created
+            curationFolder.mkdirs();
+        }
+        Document exmaErrorList = TypeConverter.W3cDocument2JdomDocument(ExmaErrorList.createFullErrorList());
+        String exmaErrorListString = TypeConverter.JdomDocument2String(exmaErrorList);
+        if (exmaErrorListString != null && basedirectory != null && exmaErrorListString.contains(basedirectory.getPath())) {
+            exmaErrorListString = exmaErrorListString.replaceAll(basedirectory.getPath(), "../");
+        }
+        if (exmaErrorListString != null) {
+            exmaErrorListString = pp.indent(exmaErrorListString, "event");
+            cio.write(exmaErrorListString, errorlistlocation);
+            System.out.println("Wrote ErrorList at " + errorlistlocation);
+        }
+        if (isfixesjson) {
+            String fixJson = "";
+            if (isCorpus) {
+                fixJson = report.getFixJson(corpus);
+            } else {
+                fixJson = report.getFixJson();
+            }
+            if (fixJson != null) {
+                cio.write(fixJson, fixJsonlocation);
+                System.out.println("Wrote JSON file for fixes at " + fixJsonlocation);
+            }
+        }
+    }
+
+    public static void readCommandLineOptions() throws MalformedURLException {
+        String urlstring = cmd.getOptionValue("input");
+        fixing = cmd.hasOption("f");
+        iserrorsonly = cmd.hasOption("e");
+        isfixesjson = cmd.hasOption("j");
+        if (urlstring.startsWith("file://")) {
+            inputurl = new URL(urlstring);
+        } else {
+            inputurl = Paths.get(urlstring).toUri().toURL();
+        }
+        //now the place where Report should end up
+        //also allow normal filepaths and convert them
+        String reportstring = cmd.getOptionValue("output");
+        if (reportstring.startsWith("file://")) {
+            reportlocation = new URL(reportstring);
+        } else {
+            reportlocation = Paths.get(reportstring).toUri().toURL();
+        }
+        //now add the functionsstrings to array
+        String[] corpusfunctionarray = cmd.getOptionValues("c");
+        for (String cf : corpusfunctionarray) {
+            CorpusMagician.chosencorpusfunctions.add(cf);
+        }
+        System.out.println(CorpusMagician.chosencorpusfunctions.toString());
+    }
+
+    private static void createCommandLineOptions(String[] args) throws FileNotFoundException, IOException {
         Options options = new Options();
 
-        Option input = new Option("i", "input", true, "input file path");
+        Option input = new Option("i", "input", true, "input file path (coma file for corpus, folder or other file for unstructured data)");
         input.setRequired(true);
         input.setArgName("FILE PATH");
         options.addOption(input);
@@ -852,29 +1135,91 @@ public class CorpusMagician {
         fix.setRequired(false);
         options.addOption(errorsonly);
 
+        Option fixesjson = new Option("j", "fixesjson", false, "output json file for fixes");
+        fix.setRequired(false);
+        options.addOption(fixesjson);
+
+        Option settingsfile = new Option("s", "settingsfile", true, "settings file path");
+        settingsfile.setRequired(false);
+        settingsfile.setArgName("FILE PATH");
+        options.addOption(settingsfile);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
 
         String header = "Specify a corpus folder or file and a function to be applied\n\n";
-        String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
-
+        //String footer = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
+        String footerverbose = "\nthe available functions are:\n" + getAllExistingCFsAsString() + "\n\nDescriptions of the available functions follow:\n\n";
+        String desc;
+        String hasfix;
+        String usable;
+        for (CorpusFunction cf : getAllExistingCFsAsCFs()) {
+            desc = cf.getFunction() + ":   " + cf.getDescription();
+            usable = "\nThe function can be used on:\n";
+            for (Class cl : cf.getIsUsableFor()) {
+                usable += cl.getSimpleName() + " ";
+            }
+            hasfix = "\nThe function has a fixing option: " + cf.getCanFix().toString();
+            footerverbose += desc + hasfix + usable + "\n\n";
+            usable = "";
+        }
+        footerverbose += "\n\nPlease report issues at https://lab.multilingua.uni-hamburg.de/redmine/projects/corpus-services/issues";
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
-            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+            formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
 
+        //TODO
+        //in reality this never works because there will be an error since the required parameters are missing - but that returns the help as well....
         if (cmd.hasOption("h")) {
             // automatically generate the help statement
-            formatter.printHelp("hzsk-corpus-services", header, options, footer, true);
+            formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
             System.exit(1);
         }
+
         if (cmd.hasOption("p")) {
-            cfProperties = cmd.getOptionProperties("p");
+            if (cmd.hasOption("s")) {
+                System.out.println("Options s and p for parameters are not allowed at the same time!!");
+                formatter.printHelp("hzsk-corpus-services", header, options, footerverbose, true);
+                System.exit(1);
+            } else {
+                cfProperties = cmd.getOptionProperties("p");
+            }
+        } else {
+            if (cmd.hasOption("s")) {
+                //read filepath
+                settingsfilepath = cmd.getOptionValue("s");
+            } else {
+                //default
+                settingsfilepath = "settings.param";
+            }
+            //also need to allow for not findind the xml settings file here!
+            if (new File(settingsfilepath).exists()) {
+                FileInputStream test = new FileInputStream(settingsfilepath);
+                cfProperties.loadFromXML(test);
+                System.out.println("Properties are: " + cfProperties);
+            } else {
+                System.out.println("No parameters loaded.");
+            }
         }
+
+        //we can save the properties if the input was not from an settings.xml
+        //cfProperties.storeToXML() 
+        //add function to read properties from file! Needs to be a key value list though not xml
+        //Reads a property list (key and element pairs) from the input
+        //Need to use 
+//     * byte stream. The input stream is in a simple line-oriented
+//     * format as specified in
+//     * {@link #load(java.io.Reader) load(Reader)} and is assumed to use
+//     * the ISO 8859-1 character encoding; that is each byte is one Latin1
+//     * character. Characters not in Latin1, and certain special characters,
+//     * are represented in keys and elements using Unicode escapes as defined in
+//     * section 3.3 of
+
         /*
          String inputFilePath = cmd.getOptionValue("input");
          String outputFilePath = cmd.getOptionValue("output");
@@ -882,7 +1227,6 @@ public class CorpusMagician {
          System.out.println(inputFilePath);
          System.out.println(outputFilePath);
          */
-
     }
 
 }

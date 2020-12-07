@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exmaralda="http://www.exmaralda.org/xml"
+    xmlns:string="https://corpora.uni-hamburg.de/hzsk/xmlns/string"
     xmlns:hzsk-pi="https://corpora.uni-hamburg.de/hzsk/xmlns/processing-instruction" exclude-result-prefixes="#all" version="2.0">
     <xsl:output encoding="UTF-8" method="xml" omit-xml-declaration="yes"/>
 
@@ -12,7 +13,12 @@
 
     <xsl:param name="TRANSCRIPTION_ID" as="xs:string?" required="no"/>
     <xsl:param name="COMMUNICATION_ID" as="xs:string?" required="no"/>
-    <xsl:param name="RECORDING_PATH" select="(//referenced-file/@url)[1]" as="xs:string?" required="no"/>
+    <xsl:param name="RECORDING_PATH"
+        select="
+            (for $type in ($SUPPORTED_VIDEO_TYPES, $SUPPORTED_AUDIO_TYPES)
+            return
+                //referenced-file/@url[ends-with(lower-case(.), $type)])[1]"
+        as="xs:string?" required="no"/>
     <xsl:param name="RECORDING_TYPE" select="tokenize($RECORDING_PATH, '\.')[last()]" as="xs:string?" required="no"/>
     <xsl:param name="EMAIL_ADDRESS" select="'corpora@uni-hamburg.de'" as="xs:string?" required="no"/>
     <xsl:param name="WEBSERVICE_NAME" select="'ScoreHTML'" as="xs:string?" required="no"/>
@@ -24,6 +30,10 @@
         <!-- The displayed name of the corpus -->
     <!-- occurs, for example in the navigation bar -->
     <xsl:param name="CORPUS_NAME" select="//project-name" as="xs:string?" required="no"/>
+    <xsl:variable name="SUPPORTED_VIDEO_TYPES" select="('webm', 'mpeg', 'mpg')" as="xs:string+"/>
+    <!-- sorted by favourited format -->
+    <xsl:variable name="SUPPORTED_AUDIO_TYPES" select="('mp3', 'ogg', 'wav')" as="xs:string+"/>
+    <!-- sorted by favourited format -->
 
     <!-- ********************* -->
     <!-- Variables Declaration -->
@@ -40,7 +50,7 @@
     </xsl:variable>
 
     <!-- the path to the folder with resources -->
-    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'//corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
+    <xsl:variable name="TOP_LEVEL_PATH" as="xs:string" select="'https://corpora.uni-hamburg.de/drupal/sites/default/files/visualization/'"/>
 
     <xsl:variable name="DATASTREAM_VIDEO" as="xs:string?" select="$RECORDING_PATH"/>
 
@@ -53,10 +63,10 @@
     <xsl:variable name="PROJECT_URL" as="xs:string" select="'http://www.exmaralda.org/'"/>
 
     <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = ('webm', 'mpeg', 'mpg')"/>
+    <xsl:variable name="HAS_VIDEO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_VIDEO_TYPES"/>
 
-    <!-- whether or not the transcription contains video -->
-    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = ('wav', 'ogg', 'mp3')"/>
+    <!-- whether or not the transcription contains audio -->
+    <xsl:variable name="HAS_AUDIO" as="xs:boolean" select="lower-case($RECORDING_TYPE) = $SUPPORTED_AUDIO_TYPES"/>
 
     <!-- Titles of tiers by category -->
     <xsl:variable name="TIER_TITLES">
@@ -329,12 +339,18 @@
         <div id="mediaplayer" class="sidebarcontrol">
             <xsl:if test="$HAS_VIDEO">
                 <video controls="controls" width="320" height="240" data-tlid="media">
-                    <source src="{$DATASTREAM_VIDEO}" type="video/webm"/>
+                    <source src="{$DATASTREAM_VIDEO}" type="video/{$RECORDING_TYPE}"/>
+                    <xsl:if test="not(starts-with($RECORDING_PATH, 'http'))">
+                        <source src="https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:{replace(lower-case($CORPUS_NAME), '\s+corpus\s+', '-')}_{$TRANSCRIPTION_NAME}/datastream/{upper-case($RECORDING_TYPE)}/{$RECORDING_PATH}" type="video/{$RECORDING_TYPE}"/>
+                    </xsl:if>
                 </video>
             </xsl:if>
             <xsl:if test="not($HAS_VIDEO) and ($HAS_AUDIO)">
                 <audio controls="controls" data-tlid="media">
-                    <source src="{$DATASTREAM_AUDIO}" type="audio/ogg"/>
+                    <source src="{$DATASTREAM_AUDIO}" type="audio/{$RECORDING_TYPE}"/>
+                    <xsl:if test="not(starts-with($RECORDING_PATH, 'http'))">
+                        <source src="https://corpora.uni-hamburg.de/hzsk/de/islandora/object/recording:{replace(lower-case($CORPUS_NAME), '\s+corpus\s+', '-')}_{$TRANSCRIPTION_NAME}/datastream/{upper-case($RECORDING_TYPE)}/{$RECORDING_PATH}" type="audio/{$RECORDING_TYPE}"/>
+                    </xsl:if>
                 </audio>
             </xsl:if>
         </div>
@@ -440,6 +456,25 @@
         <xsl:param name="TIME"/>
         <xsl:variable name="totalseconds" select="0 + $TIME"/>
         <xsl:value-of select="$totalseconds"/>
+    </xsl:function>
+
+    <xsl:function name="string:ID-conform" as="xs:string">
+        <xsl:param name="string" as="xs:string"/>
+        <xsl:value-of select="string:multi-replace($string, ('^\s+', '[\s\\/\(\)\[\]´`''\.:,;\?#=\+_]+$', '[\s\\/\(\)\[\]´`'':,;\?#=\+_]+', 'Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü', 'ß', '[éèê]', '[íìî]', '[úùû]', '[áàâ]', '[óòô]'), ('', '', '_', 'Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss', 'e', 'i', 'u', 'a', 'o' ))"/>
+    </xsl:function>
+    
+    <xsl:function name="string:multi-replace" as="xs:string">
+        <xsl:param name="input" as="xs:string"/>
+        <xsl:param name="replace" as="xs:string*"/>
+        <xsl:param name="with" as="xs:string*"/>
+        <xsl:choose>
+            <xsl:when test="$replace[1]">
+                <xsl:copy-of select="string:multi-replace(replace($input, $replace[1], $with[1]), subsequence($replace, 2), subsequence($with, 2))"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$input"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
 
 </xsl:stylesheet>

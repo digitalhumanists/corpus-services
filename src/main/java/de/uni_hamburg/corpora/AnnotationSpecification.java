@@ -1,6 +1,6 @@
 package de.uni_hamburg.corpora;
 
-import static de.uni_hamburg.corpora.utilities.PrettyPrinter.indent;
+import de.uni_hamburg.corpora.utilities.PrettyPrinter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +16,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 
 /**
@@ -32,6 +31,10 @@ class AnnotationSpecification implements CorpusData, XMLData {
     String filename;
     String filenamewithoutending;
 
+    public AnnotationSpecification(){
+        
+    }
+    
     public AnnotationSpecification(URL url) {
         try {
             this.url = url;
@@ -68,8 +71,9 @@ class AnnotationSpecification implements CorpusData, XMLData {
     }
 
     private String toPrettyPrintedXML() throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        String prettyCorpusData = indent(toUnformattedString(), "event");
-        //String prettyCorpusData = indent(bt.toXML(bt.getTierFormatTable()), "event");
+        PrettyPrinter pp = new PrettyPrinter();
+        String prettyCorpusData = pp.indent(toUnformattedString(), "event");
+        //String prettyCorpusData = pp.indent(bt.toXML(bt.getTierFormatTable()), "event");
         return prettyCorpusData;
     }
 

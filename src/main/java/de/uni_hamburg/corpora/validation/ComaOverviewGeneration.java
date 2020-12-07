@@ -5,6 +5,7 @@
  */
 package de.uni_hamburg.corpora.validation;
 
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusFunction;
 import de.uni_hamburg.corpora.CorpusIO;
@@ -26,69 +27,99 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author fsnv625
+ *
+ * This class creates a sort- and filterable html overview in table form of the
+ * content of the coma file to make error checking and harmonizing easier.
  */
 public class ComaOverviewGeneration extends Checker implements CorpusFunction {
 
-    final String COMA_OVERVIEW = "coma-overview";
+    boolean inel = false;
+    String xslpath = "/xsl/Output_metadata_summary.xsl";
+    
+    public ComaOverviewGeneration() {
+        //no fixing available
+        super(false);
+    }
 
     @Override
-    public Report check(CorpusData cd){
+    public Report function(CorpusData cd, Boolean fix) {
         Report r = new Report();
-        
-        try{
+        String xsl;
+        try {
 
-            // get the XSLT stylesheet
-            String xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream("/xsl/Output_metadata_summary.xsl"));
-
+            // get the XSLT stylesheet as String
+            xsl = TypeConverter.InputStream2String(getClass().getResourceAsStream(xslpath));
             // create XSLTransformer and set the parameters 
             XSLTransformer xt = new XSLTransformer();
-        
+            //set an parameter for INEL
+            if(inel){  
+                xt.setParameter("mode", "inel");
+            }
             // perform XSLT transformation
             String result = xt.transform(cd.toSaveableString(), xsl);
-            //get locatino to save new result
-            URL overviewurl = new URL(cd.getParentURL(), "coma_overview.html");
+            //get location to save new result
+            URL overviewurl = new URL(cd.getParentURL(), "curation/coma_overview.html");
             CorpusIO cio = new CorpusIO();
             //save it
             cio.write(result, overviewurl);
             //everything worked
-            r.addCorrect(COMA_OVERVIEW, cd, "created html overview at " + overviewurl);
-            
+            r.addCorrect(function, cd, "created html overview at " + overviewurl);
+           
 
         } catch (TransformerConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Transformer configuration error");
+            r.addException(ex, function, cd, "Transformer configuration error");
         } catch (TransformerException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Transformer error");
+            r.addException(ex, function, cd, "Transformer error");
         } catch (MalformedURLException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Malformed URL error");
+            r.addException(ex, function, cd, "Malformed URL error");
         } catch (IOException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown input/output error");
+            r.addException(ex, function, cd, "Unknown input/output error");
         } catch (ParserConfigurationException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown Parser error");
+            r.addException(ex, function, cd, "Unknown Parser error");
         } catch (SAXException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XML error");
+            r.addException(ex, function, cd, "Unknown XML error");
         } catch (XPathExpressionException ex) {
-            r.addException(ex, COMA_OVERVIEW, cd, "Unknown XPath error");
+            r.addException(ex, function, cd, "Unknown XPath error");
         }
-        
+
         return r;
-        
+
     }
 
-    @Override
-    public Report fix(CorpusData cd) throws SAXException, JDOMException, IOException, JexmaraldaException {
-       return check(cd);
-    }
 
     @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
-        Class cl1;   
+        Class cl1;
         try {
             cl1 = Class.forName("de.uni_hamburg.corpora.ComaData");
-             IsUsableFor.add(cl1);
+            IsUsableFor.add(cl1);
         } catch (ClassNotFoundException ex) {
             report.addException(ex, "Usable class not found.");
         }
-            return IsUsableFor;
+        return IsUsableFor;
+    }
+
+    /**
+     * Default function which returns a two/three line description of what this
+     * class is about.
+     */
+    @Override
+    public String getDescription() {
+        String description = "This class creates a sort- and filterable html overview in table form "
+                + " of the content of the coma file to make error checking and harmonizing easier. ";
+        return description;
+    }
+
+    public void setInel() {
+        inel = true;
+    }
+
+    @Override
+    public Report function(Corpus c, Boolean fix) {
+        Report stats;
+        cd = c.getComaData();
+        stats = function(cd, fix);
+        return stats;
     }
 
 }

@@ -10,13 +10,14 @@
 package de.uni_hamburg.corpora;
 
 import de.uni_hamburg.corpora.ReportItem.Severity;
-import java.io.StringWriter;
-import java.io.PrintWriter;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Date;
+import org.jdom.JDOMException;
 
 /**
  * Statistics report is a container class to facilitate building reports for
@@ -145,6 +146,15 @@ public class Report {
     public void addCritical(String statId, CorpusData cd, String description) {
         Collection<ReportItem> stat = getOrCreateStatistic(statId);
         stat.add(new ReportItem(ReportItem.Severity.CRITICAL,
+                cd.getURL().toString(), description, statId));
+    }
+
+    /**
+     * Add a critical error in named statistics bucket. with CorpusData object
+     */
+    public void addFix(String statId, CorpusData cd, String description) {
+        Collection<ReportItem> stat = getOrCreateStatistic(statId);
+        stat.add(new ReportItem(ReportItem.Severity.IFIXEDITFORYOU,
                 cd.getURL().toString(), description, statId));
     }
 
@@ -335,6 +345,42 @@ public class Report {
     }
 
     /**
+     * Generate a one-line text-only message summarising the named bucket.
+     */
+    public String getAllAsSummaryLine() {
+        int good = 0;
+        int severe = 0;
+        int badish = 0;
+        int unk = 0;
+        Collection<ReportItem> stats = new ArrayList<ReportItem>();
+        for (String statId : statistics.keySet()) {
+            //System.out.println("key : " + statId);
+            //System.out.println("value : " + statistics.get(statId));
+            stats.addAll(statistics.get(statId));
+        }
+        for (ReportItem s : stats) {
+            if (s.isSevere()) {
+                severe += 1;
+            } else if (s.isBad()) {
+                badish += 1;
+            } else if (s.isGood()) {
+                good += 1;
+            } else {
+                unk += 1;
+            }
+        }
+        int totes = good + severe + badish + unk;
+        if (totes > 0) {
+            return MessageFormat.format("  {0}: {1} %: {2} OK, {3} bad, "
+                    + "{4} warnings and {5} unknown. "
+                    + "= {6} items.\n", "Total", 100 * good / totes,
+                    good, severe, badish, unk, totes);
+        } else {
+            return "no elements present.";
+        }
+    }
+
+    /**
      * Generate summaries for all buckets.
      */
     public String getSummaryLines() {
@@ -343,6 +389,8 @@ public class Report {
                 : statistics.entrySet()) {
             rv += getSummaryLine(kv.getKey());
         }
+        //add summary of all buckets in one line
+        rv += getAllAsSummaryLine();
         return rv;
     }
 
@@ -468,13 +516,135 @@ public class Report {
             errorStats.addAll(kv.getValue());
         }
         for (ReportItem ri : errorStats) {
-               if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
-                   //now make the Location relative to the base dir
-                   ri.getLocation();
-                   onlyerrorStats.add(ri);
-                }
-
+            if (ri.getSeverity().equals(Severity.CRITICAL) || ri.getSeverity().equals(Severity.WARNING) || ri.getSeverity().equals(Severity.MISSING)) {
+                //now make the Location relative to the base dir
+                ri.getLocation();
+                onlyerrorStats.add(ri);
             }
+
+        }
         return onlyerrorStats;
     }
+
+    /**
+     * Generate summaries for all buckets.
+     */
+    public String getFixJson(Corpus corpus) throws JDOMException {
+        String rv = "";
+        for (Map.Entry<String, Collection<ReportItem>> kfj
+                : statistics.entrySet()) {
+            rv += getFixLine(kfj.getKey(), corpus);
+        }
+        rv = rv + "\n";
+        return rv;
+    }
+
+    /**
+     * Generate summaries for all buckets.
+     */
+    public String getFixJson() {
+        String rv = "";
+        for (Map.Entry<String, Collection<ReportItem>> kfj
+                : statistics.entrySet()) {
+            rv += getFixLine(kfj.getKey());
+        }
+        rv = rv + "\n";
+        return rv;
+    }
+
+    /**
+     * Generate a one-line text-only message summarising the named bucket.
+     */
+    public String getFixLine(String statId, Corpus corpus) throws JDOMException {
+        Collection<ReportItem> stats = statistics.get(statId);
+        int fix = 0;
+        int good = 0;
+        int severe = 0;
+        int badish = 0;
+        int unk = 0;
+        String line = "";
+        for (ReportItem s : stats) {
+            if (s.isFix()) {
+                fix += 1;
+            } else if (s.isSevere()) {
+                severe += 1;
+            } else if (s.isBad()) {
+                badish += 1;
+            } else if (s.isGood()) {
+                good += 1;
+            } else {
+                unk += 1;
+            }
+        }
+        //"2020-02-17T11:41:00Z"
+        //now add the T that is needed for Kibana between date and time
+        String patternDate = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(patternDate);
+        String date = simpleDateFormat.format(new Date());
+        String patternTime = "hh:mm:ssZ";
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(patternTime);
+        String time = simpleTimeFormat.format(new Date());
+        String dateTime = date + "T" + time;
+        //System.out.println(dateTime);
+        String corpusname = corpus.getCorpusName();
+        //now we also need 
+        /*
+                number of words whole corpus
+                number of sentences whole corpus
+                number of transcriptions
+                number of speakers whole corpus
+                number of communications whole corpus
+         */
+        String corpuswords = corpus.getCorpusWords();
+        String corpussents = corpus.getCorpusSentenceNumber();
+        String corpustrans = corpus.getCorpusTranscriptionNumber();
+        String corpusspeaks = corpus.getCorpusSpeakerNumber();
+        String corpuscomms = corpus.getCorpusCommunicationNumber();
+        //"corpus-words":1234,"corpus-sentences":2345,"corpus-transcriptions":12,"corpus-speakers":34,"corpus-transcriptions":12
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{ \"doc\": { \"corpus\": \""
+                + corpusname + "\", \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \""
+                + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": "
+                + fix + ", \"corpus-words\": " + corpuswords + ", \"corpus-sentences\": " + corpussents + ", \"corpus-transcriptions\": " + corpustrans
+                + ", \"corpus-speaker\": " + corpusspeaks + ", \"corpus-communications\": " + corpuscomms + " }}\n";
+        return line;
+    }
+
+    /**
+     * Generate a one-line text-only message summarising the named bucket.
+     */
+    public String getFixLine(String statId) {
+        Collection<ReportItem> stats = statistics.get(statId);
+        int fix = 0;
+        int good = 0;
+        int severe = 0;
+        int badish = 0;
+        int unk = 0;
+        String line = "";
+        for (ReportItem s : stats) {
+            if (s.isFix()) {
+                fix += 1;
+            } else if (s.isSevere()) {
+                severe += 1;
+            } else if (s.isBad()) {
+                badish += 1;
+            } else if (s.isGood()) {
+                good += 1;
+            } else {
+                unk += 1;
+            }
+        }
+        //"2020-02-17T11:41:00Z"
+        //now add the T that is needed for Kibana between date and time
+        String patternDate = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(patternDate);
+        String date = simpleDateFormat.format(new Date());
+        String patternTime = "hh:mm:ssZ";
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(patternTime);
+        String time = simpleTimeFormat.format(new Date());
+        String dateTime = date + "T" + time;
+        //System.out.println(dateTime);
+        line = "{ \"index\": { \"_index\": \"inel-curation\", \"_type\": \"corpus-service-report\" }}\n{\"doc\": { \"name\": \"" + statId + "\", \"method\": \"fix\", \"date\": \"" + dateTime + "\", \"ok\": " + good + ", \"bad\": " + severe + ", \"fixed\": " + fix + " }}\n";
+        return line;
+    }
+
 }

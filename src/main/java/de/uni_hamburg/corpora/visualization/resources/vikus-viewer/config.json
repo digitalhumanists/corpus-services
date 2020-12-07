@@ -1,0 +1,144 @@
+{
+  "project": {
+    "name": "NAME",
+    "quality": 1
+ },
+  "loader": {
+    "info": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/info.md",
+    "timeline": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/timeline.csv",
+    "items": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/data.csv",
+    "tsne": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/tsne.csv",
+    "textures": {
+      "medium": {
+        "size": 256,
+        "url": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/sprites/web_web_full.json"
+      },
+      "detail": {
+        "size": 1024,
+        "url": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/1024/"
+      },
+      "big": {
+        "size": 4096,
+        "url": "https://inel.corpora.uni-hamburg.de/vikus_viewer/data/4096/"
+      }
+    }
+  },
+  "style": {
+    "fontColor": "#2d3b43",
+    "fontColorActive": "#eae2cb",
+    "fontBackground": "#295b71",
+    "textShadow": "1px 1px 0px #f8f4e9",
+    "canvasBackground": "#cbe8ea",
+    "timelineBackground": "#fff9eb",
+    "timelineFontColor": "#000",
+    "backgroundHeader": "#035151",
+    "fontColorHeader": "#f8774f",
+    "detailBackground": "#EEE",
+    "infoBackground": "#295B71",
+    "infoFontColor": "#fff",
+    "searchbarBackground": "#295b71"
+  },
+  "projection": {
+    "columns": 6
+  },
+  "detail": {
+    "structure": [      
+      {
+        "name": "Description",
+        "source": "_description",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Year",
+        "source": "_year",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Language",
+        "source": "_language",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Dialect",
+        "source": "_dialect",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Country",
+        "source": "_country",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Region",
+        "source": "_region",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Settlement",
+        "source": "_region",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Author or Speaker",
+        "source": "_speaker",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Score View of Transcription",
+        "source": "_scorehtml",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "List View of Transcription",
+        "source": "_listhtml",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "EXMARaLDA Transcription",
+        "source": "_transcription",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "Audio",
+        "source": "_audio",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "Full PDF",
+        "source": "_pdf",
+        "display": "column",
+        "type": "overlay"
+      },
+      {
+        "name": "Genre",
+        "source": "_genre",
+        "display": "column",
+        "type": "text"
+      },
+      {
+        "name": "Keywords",
+        "source": "_keywords",
+        "display": "column",
+        "type": "array"
+      },
+      {
+        "name": "Id",
+        "source": "_id",
+        "display": "column",
+        "type": "text"
+      }
+    ]
+  }
+}

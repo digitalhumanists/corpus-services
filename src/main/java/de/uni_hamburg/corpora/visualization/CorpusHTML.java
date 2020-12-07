@@ -5,6 +5,8 @@
  */
 package de.uni_hamburg.corpora.visualization;
 
+import de.uni_hamburg.corpora.BasicTranscriptionData;
+import de.uni_hamburg.corpora.Corpus;
 import de.uni_hamburg.corpora.CorpusData;
 import de.uni_hamburg.corpora.CorpusIO;
 import de.uni_hamburg.corpora.Report;
@@ -29,16 +31,15 @@ public class CorpusHTML extends Visualizer {
     // resources loaded from directory supplied in pom.xml
     static final String STYLESHEET_PATH = "/xsl/Coma2HTML.xsl";
     private static final String SERVICE_NAME = "ComaHTML";
-    Report stats = new Report();
     URL targeturl;
     CorpusData cod;
 
     public CorpusHTML() {
-
     }
 
     public String createFromComa(String coma) {
-
+        //TODO this report is never used anywhere
+        Report stats = new Report();
         String result = null;
 
         try {
@@ -62,7 +63,8 @@ public class CorpusHTML extends Visualizer {
     }
 
     @Override
-    public Report visualize(CorpusData cd) {
+    public Report function(CorpusData cd) {
+        Report stats = new Report();
         try {
             cod = cd;
             String result = createFromComa(cd.toSaveableString());
@@ -86,6 +88,16 @@ public class CorpusHTML extends Visualizer {
     }
 
     @Override
+    public Report function(Corpus co) throws TransformerException, TransformerConfigurationException, IOException, SAXException {
+        Report stats = new Report();
+        Collection<BasicTranscriptionData> btc = co.getBasicTranscriptionData();
+        for (BasicTranscriptionData bt : btc) {
+            stats.merge(function(bt));
+        }
+        return stats;
+    }
+
+    @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.ComaData");
@@ -96,7 +108,6 @@ public class CorpusHTML extends Visualizer {
         return IsUsableFor;
     }
 
-    @Override
     public Report doMain(String[] args) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -107,6 +118,14 @@ public class CorpusHTML extends Visualizer {
 
     public URL getTargetURL() throws MalformedURLException {
         return targeturl;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "This class creates an html overview of the corpus "
+                + "needed for the ingest into the repository. ";
+        return description;
+
     }
 
 }
