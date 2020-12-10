@@ -165,7 +165,7 @@ Contributions to the project have been made by staff from several research proje
 
 <sub>Parts of this project have been produced in the context of the joint research funding of the German Federal Government and Federal States in the Academies’ Programme, with funding from the Federal Ministry of Education and Research and the Free and Hanseatic City of Hamburg. The Academies’ Programme is coordinated by the Union of the German Academies of Sciences and Humanities.</sub>
 
-Thank you to all funders, supporters and [contributors](contributors-url)!
+Thank you to all funders, supporters and [contributors][contributors-url]!
 
 This README file was created on the basis of the [Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md).
 
