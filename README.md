@@ -161,7 +161,7 @@ Hedeland, H. & Ferger, A. (2020). Towards Continuous Quality Control for Spoken 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-Contributions to the project have been made by staff from several research projects, e.g. from the [HZSK](https://corpora.uni-hamburg.de) (WO 1886/1-2 within the DFG LIS program, 2011--2017), [INEL](https://inel.corpora.uni-hamburg.de), the CLARIN-D center at the HZSK (CLARIN-D 01UG1620G, 2011--2020), and [QUEST](https://www.slm.uni-hamburg.de/ifuu/forschung/forschungsprojekte/quest.html).
+Contributions to the project have been made by staff from the HZSK and several research projects at the University of Hamburg: [INEL](https://inel.corpora.uni-hamburg.de), the BMBF-funded CLARIN-D project (01UG1620G), the project WO 1886/1-2 within the DFG LIS program, and the BMBF-funded project [QUEST](https://www.slm.uni-hamburg.de/ifuu/forschung/forschungsprojekte/quest.html).
 
 <sub>Parts of this project have been produced in the context of the joint research funding of the German Federal Government and Federal States in the Academies’ Programme, with funding from the Federal Ministry of Education and Research and the Free and Hanseatic City of Hamburg. The Academies’ Programme is coordinated by the Union of the German Academies of Sciences and Humanities.</sub>
 
