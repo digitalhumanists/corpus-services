@@ -55,7 +55,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The Corpus Services project bundles functionality used for maintenance, curation, conversion, and visualization of corpus data in various projects. 
+The (HZSK) Corpus Services were initially developed at the Hamburg Centre for Language Corpora (HZSK) as a quality control and publication framework for [EXMARaLDA](https://exmaralda.org/en/) corpora. Since then, most development work has been done within the [INEL](https://inel.corpora.uni-hamburg.de) project. A focus has been set on making the code adaptable to other use cases and data types.
+The Corpus Services project now bundles functionality used for maintenance, curation, conversion, and visualization of corpus data in various projects. 
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -87,8 +88,6 @@ To use the services for corpora, compile it using `mvn clean compile assembly:si
 (See https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.mdBuild_with_Maven.md)
 or use a pregenerated artifact form gitlab (see Gitlab artifacts). 
 
-[EXMARaLDA](https://github.com/Exmaralda-Org/exmaralda) is used as a library.
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -100,6 +99,11 @@ See here for the usage of the corpus services:
 
 https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use_the_Corpus_Validator
 
+<!-- LIBRARIES -->
+## Libraries
+
+* [EXMARaLDA](https://github.com/Exmaralda-Org/exmaralda)
+* [Doxygen](https://www.doxygen.nl)
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -147,20 +151,28 @@ Anne Ferger - [@anneferger1](https://twitter.com/anneferger1) - anne.ferger@uni-
 
 Project Link: [Corpus Services](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services)
 
-<!-- Supporting Projects-->
-<!--## Projects
 
+## Metadata
 
--->
+PID: http://hdl.handle.net/11022/0000-0007-D8A6-A
+
+# Citation
+
+For an introduction to the system please cite 
+
+Hedeland, H. & Ferger, A. (2020). Towards Continuous Quality Control for Spoken Language Corpora. International Journal for Digital Curation, 15(1). https://doi.org/10.2218/ijdc.v15i1.601 
+
+[comment]: # (for more recent information please refer to ...)
 
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-Parts of this project have been produced in the context of the joint research funding of the German Federal Government and Federal States in the Academies’ Programme, with funding from the Federal Ministry of Education and Research and the Free and Hanseatic City of Hamburg. The Academies’ Programme is coordinated by the Union of the German Academies of Sciences and Humanities.
 
 Contributions to the project have been made by staff from several research projects, e.g. from the [HZSK](https://corpora.uni-hamburg.de) (WO 1886/1-2 within the DFG LIS program, 2011--2017), [INEL](https://inel.corpora.uni-hamburg.de), the CLARIN-D center at the HZSK (CLARIN-D 01UG1620G, 2011--2020), and [QUEST](https://www.slm.uni-hamburg.de/ifuu/forschung/forschungsprojekte/quest.html).
 
-Thank you to all funders, supporters and [contributors](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/graphs/)!
+<sub>Parts of this project have been produced in the context of the joint research funding of the German Federal Government and Federal States in the Academies’ Programme, with funding from the Federal Ministry of Education and Research and the Free and Hanseatic City of Hamburg. The Academies’ Programme is coordinated by the Union of the German Academies of Sciences and Humanities.</sub>
+
+Thank you to all funders, supporters and [contributors](contributors-url)!
 
 This README file was created on the basis of the [Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md).
 
