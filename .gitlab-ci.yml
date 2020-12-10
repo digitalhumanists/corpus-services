@@ -8,4 +8,4 @@ compile_withmaven:
     expire_in: 10 week
     paths:
     
-      - target/corpus-services-1.0-jar-with-dependencies.jar
+      - target/corpus-services-1.0.jar
