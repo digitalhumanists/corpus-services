@@ -149,7 +149,7 @@ Project Link: [Corpus Services](https://gitlab.rrz.uni-hamburg.de/corpus-service
 
 PID: http://hdl.handle.net/11022/0000-0007-D8A6-A
 
-# Citation
+## Citation
 
 For an introduction to the system please cite 
 
