@@ -1,33 +1,8 @@
 # How to use the CorpusFunctions in the Corpus Services
 
-# Compile
-
-## Manual compile
-
-For compiling it can be necessary to add EXMARaLDA.jar manually to Maven project (i.e. "manually install artifact":https://lab.multilingua.uni-hamburg.de/redmine/projects/infrastruktur/wiki/Setting_up_-_Libraries#hzsk-corpus-services-code).
-
-To use the validator for HZSK corpora, compile it using 
-<pre>
-mvn clean compile assembly:single
-</pre>
-
-(See https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven)
-The JAR with dependencies (corpus-services-{version.number}.jar) will be generated in the target folder.
-
-## Gitlab
-
-You can also download the pre-compiled jar from gitlab: https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
-
-## Server
-
-A recent version of the jar is also continuously available on the servers:
-
-/data/HZSK/hzsk-corpus-services/
-/data/INEL/utilities/corpus-services/
-
 #  Use of the corpus functions
 
-Add the generated .jar to the Folder above /Korpora/HZSK and execute something similar to:
+Download the generated .jar and execute something similar to:
 
 `java -Xmx3g -jar ../corpus-services-1.0.jar -i E:\user\corpus -o E:\user\corpus\report-output.html -c function1 -c function2 -f `
 
@@ -90,7 +65,7 @@ To get a list of all the available functions with their description and if they 
 
 `java -Xmx3g -jar corpus-services-1.0.jar -h `
 
-The usable functions can be found [[List of validation functions|here]].
+The usable functions can be found here: [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/doc/List_of_corpus_functions.md).
 
 ## Help
 
@@ -105,8 +80,6 @@ java -Xmx3g -jar corpus-services-1.0.jar -h
 `
 java -Xmx3g -jar corpus-services-1.0.jar -i euroWiss -o eurowiss.html -c EXB2HIATISOTEI
 `
-
-Further example calls in scripts can be found here on Gitlab: https://gitlab.rrz.uni-hamburg.de/hzsk/corpus-curation/tree/master/corpus-services-calls
 
 # Trouble Shooting
 

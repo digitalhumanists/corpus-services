@@ -61,12 +61,13 @@ The Corpus Services project now bundles functionality used for maintenance, cura
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Additional info on the Corpus services can be found here (internal documentation):
-* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use_the_Corpus_Validator.md
-* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md
-* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How-to_add_a_new_function.md
-* https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/List_of_validation_functions.md
+Additional documentation on the Corpus services can be found in the doc folder:
 
+
+* [How to use](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use.md)
+* [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/List_of_corpus_functions.md)
+* [How to add a new function](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How-to_add_a_new_function.md)
+* [Build with Maven](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md)
 
 ### Prerequisites
 
@@ -79,13 +80,12 @@ No installation is required. See section Usage for information on how to run the
 
 #### Gitlab artifacts
 
-The latest compiled .jar file can be found here: 
-https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven
+The latest compiled .jar file can be found [here] (https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven)
 
 #### Building
 
 To use the services for corpora, compile it using `mvn clean compile assembly:single`.
-(See https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.mdBuild_with_Maven.md)
+(See [Build with Maven](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md)
 or use a pregenerated artifact form gitlab (see Gitlab artifacts). 
 
 <!-- USAGE EXAMPLES -->
@@ -95,10 +95,9 @@ The usable functions can be found in the help output:
 
 `java -jar corpus-services-1.0-jar-with-dependencies.jar -h`
 
-See here for the usage of the corpus services:
-
-https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use_the_Corpus_Validator
-
+See [How to use](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use.md)
+ for the usage of the corpus services.
+ 
 <!-- LIBRARIES -->
 ## Libraries
 
@@ -109,7 +108,6 @@ https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop
 ## Roadmap
 
 See the [open issues](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/issues) for a list of proposed features (and known issues).
-
 
 
 <!-- CONTRIBUTING -->

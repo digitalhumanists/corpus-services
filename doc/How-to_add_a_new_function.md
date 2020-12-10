@@ -1,6 +1,6 @@
-A function in the corpus-services is a routine to be carried out on corpus data (e.g. transcriptions) that processes it or changes it (e.g. for automatic fixes) and creates an error Report and possibly newly created files (e.g. for data conversion into other formats).
+A function in the corpus-services is a routine to be carried out on corpus data (e.g. transcriptions) that processes it or changes it (e.g. for automatic fixes) and creates an error report and possibly newly created files (e.g. for data conversion into other formats).
 
-See the list of all currently available validation functions [[List of validation functions|here]].
+See the list of all currently available validation functions [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/doc/List_of_corpus_functions.md).
 
 
 # How-to add a new function to the corpus-services
@@ -23,13 +23,13 @@ super(false);
 * you need to implement the methods function(CorpusData cd, Boolean fix) and the function(Corpus c, Boolean fix). The function for the Corpus object will iterate over the files present in the corpus and then call the CorpusData function for each, using the Report.merge(Report) function to merge the different Reports together
 * the `getIsUsableFor()` method needs to add all the Classes (in our java project, e.g. `BasicTranscriptionData`,`SegmentedTranscriptionData`,`ComaData`,`UnspecifiedXMLData` to the IsUsableFor Collection
 * example:
-<pre><code class="java">
+<pre><code class="language-java">
     /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
      * used.
      */
-    `Override
+    @Override
     public Collection<Class<? extends CorpusData>> getIsUsableFor() {
         try {
             Class cl = Class.forName("de.uni_hamburg.corpora.BasicTranscriptionData");
@@ -86,7 +86,7 @@ Example:
      * Default function which returns a two/three line description of what this
      * class is about.
      */
-    `Override
+    @Override
     public String getDescription() {
         String description = "This class checks whether or not the coma file "
                 + "contains an apostrophe '. If it does then these all apostrophes"
@@ -105,8 +105,7 @@ Example:
 In Netbeans there is the plugin "JUnit" (installed by default) which you can use to create an empty JUnit test class for your class. 
 To use it: 
  * right-click class
- * >Tools >Create/Update Test
--> this creates an empty template test class, that gives errors by default
+ * `>Tools >Create/Update Test` this creates an empty template test class, that gives errors by default
 Fill this class with sensible test, one existing test class for reference is corpus-services\src\test\java\de\uni_hamburg\corpora\validation\PrettyPrintDataTest.java
 There are some test files in the code with mockup audio and video  located here: corpus-services\src\test\java\de\uni_hamburg\corpora\resources\example
 Run the test and only merge into develop if the test passes.
