@@ -73,11 +73,6 @@ Additional documentation on the Corpus services can be found in the doc folder:
 
 Java needs to be installed. 
 
-
-### Installation
-
-No installation is required. See section Usage for information on how to run the program.
-
 #### Gitlab artifacts
 
 The latest compiled .jar file can be found [here] (https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven)
