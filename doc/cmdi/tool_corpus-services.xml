@@ -1,0 +1,178 @@
+<CMD xmlns="http://www.clarin.eu/cmd/" xmlns:xsi2="http://www.w3.org/2001/XMLSchema-instance" CMDVersion="1.1" xsi2:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1290431694581/xsd"><script xmlns="" id="__gaOptOutExtension"/>
+  <Header>
+    <MdCreator>HZSK</MdCreator>
+    <MdCreationDate>2021-01-07</MdCreationDate>
+    <MdSelfLink>http://hdl.handle.net/11022/0000-0007-D8A6-A</MdSelfLink>
+    <MdProfile>clarin.eu:cr1:p_1290431694581</MdProfile>
+    <MdCollectionDisplayName>HZSK Tools</MdCollectionDisplayName>
+  </Header>
+  <Resources>
+    <ResourceProxyList>
+      <ResourceProxy id="LDP-7AEFA3F400-F331-11E4-1794-09173F13E4C5">
+        <ResourceType>LandingPage</ResourceType>
+        <ResourceRef>https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services</ResourceRef>
+      </ResourceProxy>
+    </ResourceProxyList>
+    <JournalFileProxyList/>
+    <ResourceRelationList/>
+  </Resources>
+  <Components>
+    <ToolProfile>
+      <GeneralInfo ComponentId="clarin.eu:cr1:c_1290431694495">
+        <ResourceName xml:lang="en-US">Corpus Services</ResourceName>
+        <ResourceTitle xml:lang="en-US">Corpus Services</ResourceTitle>
+        <ResourceClass>Tool</ResourceClass>
+        <Version xml:lang="en-US">1.0</Version>
+        <LifeCycleStatus>released</LifeCycleStatus>
+        <LastUpdate>2021-01-07</LastUpdate>
+        <Descriptions ComponentId="clarin.eu:cr1:c_1290431694486">
+          <Description type="short" xml:lang="en-US">The Corpus Services bundles functionality used for maintenance, curation, conversion, and visualization of corpus data.</Description>
+          <Description type="short" xml:lang="deu">Die Corpus Services sind ein Werkzeug, um Korpus-Dateien instandzuhalten, zu kuratieren, zu konvertieren und zu visualisieren.</Description>
+        </Descriptions>
+        <tags ComponentId="clarin.eu:cr1:c_1342181139653">
+          <tag xml:lang="en-US">corpus linguistics</tag>
+          <tag xml:lang="deu">Korpuslinguistik</tag>
+          <tag xml:lang="en-US">corpus curation</tag>
+          <tag xml:lang="deu">Korpuskuration</tag>
+          <tag xml:lang="en-US">corpus visualization</tag>
+          <tag xml:lang="deu">Korpusvisualisierung</tag>
+          <tag xml:lang="en-US">metadata</tag>
+          <tag xml:lang="deu">Metadaten</tag>
+        </tags>
+      </GeneralInfo>
+      <Creators ComponentId="clarin.eu:cr1:c_1290431694499">
+        <Creator ComponentId="clarin.eu:cr1:c_1290431694498">
+          <Contact ComponentId="clarin.eu:cr1:c_1290431694487">
+            <Person>Anne Ferger</Person>
+            <Role xml:lang="en-US">creator</Role>
+            <Role xml:lang="deu">Creator</Role>
+            <Role xml:lang="en-US">developer</Role>
+            <Role xml:lang="deu">Entwickler</Role>
+            <Department xml:lang="en-US">Institut für Finnougristik/Uralistik (IFUU)</Department>
+            <Department xml:lang="deu">Institut für Finnougristik/Uralistik (IFUU)</Department>
+            <Organisation xml:lang="en-US">University of Hamburg</Organisation>
+            <Organisation xml:lang="deu">Universität Hamburg</Organisation>
+            <Url targetLang="en-US">https://inel.corpora.uni-hamburg.de</Url>
+            <Url targetLang="deu">https://inel.corpora.uni-hamburg.de</Url>
+          </Contact>
+        </Creator>
+        <Creator ComponentId="clarin.eu:cr1:c_1290431694498">
+          <Contact ComponentId="clarin.eu:cr1:c_1290431694487">
+            <Person>Hanna Hedeland</Person>
+            <Role xml:lang="en-US">creator</Role>
+            <Role xml:lang="deu">Creator</Role>
+            <Role xml:lang="en-US">developer</Role>
+            <Role xml:lang="deu">Entwickler</Role>
+            <Department xml:lang="en-US">Hamburg Center for Language Corpora (HZSK)</Department>
+            <Department xml:lang="deu">Hamburger Zentrum für Sprachkorpora (HZSK)</Department>
+            <Organisation xml:lang="en-US">University of Hamburg</Organisation>
+            <Organisation xml:lang="deu">Universität Hamburg</Organisation>
+            <Url targetLang="en-US">https://corpora.uni-hamburg.de/en</Url>
+            <Url targetLang="deu">https://corpora.uni-hamburg.de/de</Url>
+          </Contact>
+        </Creator>
+        <Creator ComponentId="clarin.eu:cr1:c_1290431694498">
+          <Contact ComponentId="clarin.eu:cr1:c_1290431694487">
+            <Person>Daniel Jettka</Person>
+            <Role xml:lang="en-US">developer</Role>
+            <Role xml:lang="deu">Entwickler</Role>
+            <Department xml:lang="en-US">Institut für Finnougristik/Uralistik (IFUU)</Department>
+            <Department xml:lang="deu">Institut für Finnougristik/Uralistik (IFUU)</Department>
+            <Organisation xml:lang="en-US">University of Hamburg</Organisation>
+            <Organisation xml:lang="deu">Universität Hamburg</Organisation>
+            <Url targetLang="en-US">https://inel.corpora.uni-hamburg.de</Url>
+            <Url targetLang="deu">https://inel.corpora.uni-hamburg.de</Url>
+          </Contact>
+        </Creator>
+        <Creator ComponentId="clarin.eu:cr1:c_1290431694498">
+          <Contact ComponentId="clarin.eu:cr1:c_1290431694487">
+            <Person>Tommi Pirinen</Person>
+            <Role xml:lang="en-US">developer</Role>
+            <Role xml:lang="deu">Entwickler</Role>
+            <Department xml:lang="en-US">Hamburg Center for Language Corpora (HZSK)</Department>
+            <Department xml:lang="deu">Hamburger Zentrum für Sprachkorpora (HZSK)</Department>
+            <Organisation xml:lang="en-US">University of Hamburg</Organisation>
+            <Organisation xml:lang="deu">Universität Hamburg</Organisation>
+            <Url targetLang="en-US">https://corpora.uni-hamburg.de/en</Url>
+            <Url targetLang="deu">https://corpora.uni-hamburg.de/de</Url>
+          </Contact>
+        </Creator>
+      </Creators>
+      <Access ComponentId="clarin.eu:cr1:c_1290431694501">
+        <Availability xml:lang="en-US">free</Availability>
+        <DistributionMedium xml:lang="en-US">download</DistributionMedium>
+        <Licence>https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode</Licence>
+        <Contact ComponentId="clarin.eu:cr1:c_1290431694487">
+          <Person>Anne Ferger</Person>
+          <Department xml:lang="en-US">Institut für Finnougristik/Uralistik (IFUU)</Department>
+          <Department xml:lang="deu">Institut für Finnougristik/Uralistik (IFUU)</Department>
+          <Organisation xml:lang="en-US">University of Hamburg</Organisation>
+          <Organisation xml:lang="deu">Universität Hamburg</Organisation>
+          <Url targetLang="en-US">https://inel.corpora.uni-hamburg.de</Url>
+          <Url targetLang="deu">https://inel.corpora.uni-hamburg.de</Url>
+        </Contact>
+      </Access>
+      <Copyright ComponentId="clarin.eu:cr1:c_1290431694531">
+        <CopyrightLicence ComponentId="clarin.eu:cr1:c_1290431694490">
+          <OpenSource>true</OpenSource>
+          <LicenceType xml:lang="en-US">open source</LicenceType>
+        </CopyrightLicence>
+        <UsageLicence ComponentId="clarin.eu:cr1:c_1290431694530">
+          <Availability xml:lang="en-US">free to use</Availability>
+          <Availability xml:lang="deu">frei verfügbar</Availability>
+        </UsageLicence>
+      </Copyright>
+      <ResourceContext ComponentId="clarin.eu:cr1:c_1290431694515">
+        <FieldOfResearch>linguistics</FieldOfResearch>
+        <FieldOfResearch>discourse analysis</FieldOfResearch>
+        <FieldOfResearch>pragmatics</FieldOfResearch>
+        <FieldOfResearch>various</FieldOfResearch>
+        <Genre>unspecified</Genre>
+        <ModalityInfo ComponentId="clarin.eu:cr1:c_1290431694513">
+          <Modalities>spoken</Modalities>
+          <Modalities>written</Modalities>
+        </ModalityInfo>
+      </ResourceContext>
+      <ToolContext ComponentId="clarin.eu:cr1:c_1290431694562">
+        <ToolClassification ComponentId="clarin.eu:cr1:c_1290431694528">
+          <ToolType xml:lang="en-US">corpus data processing</ToolType>
+          <ToolType xml:lang="deu">Korpusdatenbearbeitung</ToolType>
+          <ClassificationType xml:lang="en-US">maintenance</ClassificationType>    
+      <ClassificationType xml:lang="deu">Instandhaltung</ClassificationType>
+          <ClassificationType xml:lang="en-US">curation</ClassificationType>
+          <ClassificationType xml:lang="deu">Kuration</ClassificationType>
+          <ClassificationType xml:lang="en-US">conversion</ClassificationType>
+          <ClassificationType xml:lang="deu">Konversion</ClassificationType>
+          <ClassificationType xml:lang="en-US">visualization</ClassificationType>
+          <ClassificationType xml:lang="deu">Visualisierung</ClassificationType>
+        </ToolClassification>
+        <Distribution ComponentId="clarin.eu:cr1:c_1290431694504">
+          <DistributionType>compressed</DistributionType>
+          <DeliveryFormat xml:lang="en-US">jar</DeliveryFormat>
+          <DistributionMedium xml:lang="en-US">download</DistributionMedium>
+        </Distribution>
+        <DocumentationLanguages ComponentId="clarin.eu:cr1:c_1290431694561">
+          <DocumentationLanguage ComponentId="clarin.eu:cr1:c_1290431694560">
+            <Language ComponentId="clarin.eu:cr1:c_1271859438111">
+              <LanguageName xml:lang="en-US">English</LanguageName>
+              <LanguageName xml:lang="deu">Englisch</LanguageName>
+              <ISO639 ComponentId="clarin.eu:cr1:c_1271859438110">
+                <iso-639-3-code>eng</iso-639-3-code>
+              </ISO639>
+            </Language>
+          </DocumentationLanguage>
+        </DocumentationLanguages>
+        <Inputs ComponentId="clarin.eu:cr1:c_1290431694559">
+          <Input ComponentId="clarin.eu:cr1:c_1290431694558">
+            <InputType>Corpus data files</InputType>
+          </Input>
+        </Inputs>
+        <Outputs ComponentId="clarin.eu:cr1:c_1290431694555">
+          <Output ComponentId="clarin.eu:cr1:c_1290431694554">
+            <OutputType>Corpus data files</OutputType>
+          </Output>
+        </Outputs>
+      </ToolContext>
+    </ToolProfile>
+  </Components>
+</CMD>
