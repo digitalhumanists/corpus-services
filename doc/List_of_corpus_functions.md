@@ -1,16 +1,15 @@
-# List of validation functions
+# List of corpus functions
 
 # Doxygen documentation
 
 The most recent list of validation functions can be found in the [Doxygen documentation](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/doxygen)
 
-# List of validation functions
+# List of corpus functions
 
 An automatically derived list can be viewed by calling corpus services with the help flag: 
 <pre>
 java -jar target\corpus-services-1.0.jar -h
 </pre>
-(cf. https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services#functions)
 
 This is the help output list for Corpus Services v1.0 (12.05.2020, 07:00):
 
@@ -22,8 +21,7 @@ usage: corpus-services -i <FILE PATH> -o <FILE PATH> -c <CORPUS FUNCTION> [-p <p
 
 Specify a corpus folder or file and a function to be applied
 
-<pre>
-<code>
+```
  -i,--input <FILE PATH>                  input file path (coma file for
                                          corpus, folder or other file for
                                          unstructured data)
@@ -35,8 +33,7 @@ Specify a corpus folder or file and a function to be applied
  -e,--errorsonly                         output only errors
  -j,--fixesjson                          output json file for fixes
  -s,--settingsfile <FILE PATH>           settings file path
-</code>
-</pre>
+```
 
 the available functions are:
 

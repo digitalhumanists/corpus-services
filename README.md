@@ -75,7 +75,7 @@ Java needs to be installed.
 
 #### Gitlab artifacts
 
-The latest compiled .jar file can be found [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven)
+The latest compiled .jar file can be found [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven).
 
 #### Building
 

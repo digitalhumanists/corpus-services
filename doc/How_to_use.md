@@ -66,7 +66,7 @@ To get a list of all the available functions with their description and if they 
 
 `java -Xmx3g -jar corpus-services-1.0.jar -h `
 
-The usable functions can be found here: [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/doc/List_of_corpus_functions.md).
+The usable functions can be found here: [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/List_of_corpus_functions.md).
 
 ## Help
 

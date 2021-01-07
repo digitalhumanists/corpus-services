@@ -3,7 +3,7 @@ A function in the corpus-services is a routine to be carried out on corpus data 
 See the list of all currently available validation functions [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/List_of_corpus_functions.md).
 
 
-# How-to add a new function to the corpus-services
+# How to add a new function to the corpus-services
 
 ## 1. Create a new class with a describing name to the matching package (e.g. `PrettyPrintData` in validation package)
 
@@ -106,6 +106,6 @@ In Netbeans there is the plugin "JUnit" (installed by default) which you can use
 To use it: 
 - right-click class
 - `>Tools >Create/Update Test` this creates an empty template test class, that gives errors by default
-Fill this class with sensible test, one existing test class for reference is corpus-services\src\test\java\de\uni_hamburg\corpora\validation\PrettyPrintDataTest.java
-There are some test files in the code with mockup audio and video  located here: corpus-services\src\test\java\de\uni_hamburg\corpora\resources\example
+Fill this class with sensible test, one existing test class for reference is `corpus-services\src\test\java\de\uni_hamburg\corpora\validation\PrettyPrintDataTest.java`
+There are some test files in the code with mockup audio and video  located here: `corpus-services\src\test\java\de\uni_hamburg\corpora\resources\example`
 Run the test and only merge into develop if the test passes.
