@@ -1,6 +1,6 @@
 Corpus-services is a Maven project. All sources can be added via Maven, except the EXMARaLDA.jar.
 
-Use the EXMARaLDA.jar in the [lib folder](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/lib).
+Use the EXMARaLDA.jar in the [lib folder](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/lib).
 You can also download the software [from its website](https://exmaralda.org/de/vorschau-version/) or build the code yourself from [Github](https://github.com/Exmaralda-Org/exmaralda). 
 
 For compiling it is necessary to add the EXMARaLDA.jar manually to the Maven project:
@@ -18,6 +18,8 @@ mvn install:install-file -Dfile=lib/EXMARaLDA-Preview-20201130.jar -DgroupId=org
 
 If you use an IDE (like Netbeans, Eclipse), You can just open the project in there. You will get a lot of errors because the EXMARaLDA.jar isn't included in the maven repos. To fix this, in the IDE go to the dependencies, look for the exmaralda.jar and right click on it. Choose "Manually install artifact" and choose the location where you put your EXMARaLDA.jar (preferably in the lib folder of corpus-services). The errors should be solved then and everything should compile. 
 
-!https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/images/manually-install-artifact.png!
+<a href="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/images/manually-install-artifact.png">
+    <img src="https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/raw/develop/images/manually-install-artifact.png" alt="Logo" width="200" height="200">
+  </a>
 
-To get the automatic Doxygen creation to work to without receiving errors, for Windows download the doxygen.exe from [here](http://www.stack.nl/~dimitri/doxygen/download.html) and put it directly into the corpus-services folder or install Doxygen for linux. 
+To get the automatic Doxygen creation to work to without receiving errors, for Windows download the doxygen.exe from [here](https://www.doxygen.nl/download.html) and put it directly into the corpus-services folder or install Doxygen for linux. 

@@ -2,7 +2,7 @@
 
 # Doxygen documentation
 
-The most recent list of validation functions can be found in Doxygen documentation of https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services
+The most recent list of validation functions can be found in the [Doxygen documentation](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/doxygen)
 
 # List of validation functions
 

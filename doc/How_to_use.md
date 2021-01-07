@@ -36,9 +36,9 @@ Specify a corpus folder or file and a function to be applied
 
 *-h* is the help flag to generate a very detailed help output
 
-* -e* outputs only errors (Warnings and Criticals), no Notes or Correct ReportItems
+*-e* outputs only errors (Warnings and Criticals), no Notes or Correct ReportItems
 
-* -j* outputs an additional json file for fixes that can be used for statistical evaluation of the curation
+*-j* outputs an additional json file for fixes that can be used for statistical evaluation of the curation
 
 Only use one of the following:
 
@@ -48,7 +48,8 @@ OR
 
 *-s* specifies a path to a settings file containing all needed p parameter pairs
 The settings file needs to look like:
-<pre><code class="xml">
+
+```
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties> 
@@ -56,7 +57,7 @@ The settings file needs to look like:
     <entry key="FSM">L:\\utilities\\inelutilities\\INEL_Segmentation_FSM_noColons.xml</entry>
     <entry key="CORPUSNAME">Kamas Corpus 1.0</entry>
 </properties>
-</code></pre>
+```
 
 
 ## Listing Functions

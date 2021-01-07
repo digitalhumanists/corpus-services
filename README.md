@@ -75,13 +75,13 @@ Java needs to be installed.
 
 #### Gitlab artifacts
 
-The latest compiled .jar file can be found [here] (https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven)
+The latest compiled .jar file can be found [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven)
 
 #### Building
 
 To use the services for corpora, compile it using `mvn clean compile assembly:single`.
 (See [Build with Maven](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md)
-or use a pregenerated artifact form gitlab (see Gitlab artifacts). 
+or use a pregenerated artifact from Gitlab (see Gitlab artifacts). 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -108,7 +108,7 @@ See the [open issues](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-s
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributing: https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab
+[Contributing](https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab)
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions are **greatly appreciated**.
 
