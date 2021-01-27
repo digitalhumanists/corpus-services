@@ -11,7 +11,6 @@ See the list of all currently available validation functions [List of corpus fun
 - The constructor needs to overwrite the constructor of the abstract class it implements, using the super(Boolean) method
   - the super method takes a Boolean as a parameter, `false` means you class does not have a fixing option, `true` means it does have one
   - example:
-
 <pre><code class="java">
 public MyNewFunction(){
 super(false);
@@ -72,7 +71,6 @@ To do so,  add `import static de.uni_hamburg.corpora.CorpusMagician.exmaError;` 
 ` exmaError.addError(EXB_REFS, cd.getURL().getFile(), tierID, eventStart, false, "Error: File in referenced-file NOT found");` 
 with the method: 
 `addError(String statId, String fileName, String tierID, String eventStart, boolean done, String description)`
-
 <pre><code class="java">
 exmaError.addError(function, filename, fsme.getTierID(), fsme.getTLI(), false, text);
 </pre>
