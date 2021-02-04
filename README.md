@@ -63,11 +63,12 @@ The Corpus Services project now bundles functionality used for maintenance, cura
 
 Additional documentation on the Corpus services can be found in the doc folder:
 
-
 * [How to use](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use.md)
 * [List of corpus functions](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/List_of_corpus_functions.md)
 * [How to add a new function](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How-to_add_a_new_function.md)
 * [Build with Maven](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md)
+
+You can also find some sample scripts (batch and shell) to use for calls to the corpus services jar and some further utilities [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/utilities).
 
 ### Prerequisites
 
@@ -81,14 +82,14 @@ The latest compiled .jar file can be found [here](https://gitlab.rrz.uni-hamburg
 
 To use the services for corpora, compile it using `mvn clean compile assembly:single`.
 (See [Build with Maven](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md)
-or use a pregenerated artifact from Gitlab (see Gitlab artifacts). 
+or use a pregenerated artifact from Gitlab that you can download [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven). 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 The usable functions can be found in the help output:
 
-`java -jar corpus-services-1.0-jar-with-dependencies.jar -h`
+`java -jar corpus-services-1.0.jar -h`
 
 See [How to use](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use.md)
  for the usage of the corpus services.
