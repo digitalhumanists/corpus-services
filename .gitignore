@@ -17,3 +17,4 @@ target/
 !LICENSE
 !*.md
 !lib/EXMARaLDA-*.jar
+!utilities/*

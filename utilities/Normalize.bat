@@ -1,0 +1,2 @@
+java -Xmx3g -jar corpus-services-1.0.jar -i E:\PathTo\Corpus -o fixfunxtion-report-output.html -c RemoveAbsolutePaths -c RemoveAutoSaveExb -c ComaApostropheChecker -c ExbSegmentationChecker -p SEGMENTATION=HIAT -p FSM=C:\PathTo\FSM -c ComaSegmentCountChecker -c RemoveEmptyEvents -c ComaTranscriptionsNameChecker -c ExbSegmentationChecker -c RemoveAbsolutePaths -c RemoveAutoSaveExb -c ComaApostropheChecker -c PrettyPrintData -f
+PAUSE

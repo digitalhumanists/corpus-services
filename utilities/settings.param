@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+   <entry key="mode">inel</entry>
+   <entry key="segmentation">HIAT</entry>
+   <entry key="fsm">/data/INEL/evenki/EvenkiCorpus/corpus-utilities/segmentation.fsm</entry>
+   <entry key="corpusname">Evenki Corpus 1.0</entry>
+   <entry key="kml">/data/INEL/geodata/kml/INEL-working-copy.kml</entry>
+</properties>

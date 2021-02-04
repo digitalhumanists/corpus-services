@@ -1,0 +1,2 @@
+java -Xmx3g -jar corpus-services-1.0.jar -i E:\PathTo\Corpus -o critical-report-output.html -c ComaFileCoverageChecker -c ComaNSLinksChecker -c ComaSegmentCountChecker -c ExbFileReferenceChecker -c ExbStructureChecker -c ExbSegmentationChecker -p SEGMENTATION=HIAT -p FSM=C:\PathTo\FSM-c ComaOverviewGeneration -c ComaFedoraIdentifierLengthChecker -c ComaTranscriptionsNameChecker -c ComaTierOverviewCreator -c ExbEventLinebreaksChecker -c ExbTierDisplayNameChecker -e
+PAUSE
