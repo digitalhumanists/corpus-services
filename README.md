@@ -109,8 +109,6 @@ See the [open issues](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-s
 <!-- CONTRIBUTING -->
 ## Contributing
 
-[Contributing](https://lab.multilingua.uni-hamburg.de/redmine/projects/redmine/wiki/Git-flow_with_CI_from_GitLab)
-
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions are **greatly appreciated**.
 
 1. Fork the Project
