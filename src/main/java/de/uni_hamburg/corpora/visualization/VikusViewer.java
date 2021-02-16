@@ -136,6 +136,9 @@ public class VikusViewer extends Visualizer {
             Element genre = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Genre')]");
             System.out.println(genre.getText());
             Element settlement = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Settlement')]");
+            if(settlement==null){
+                settlement = new Element("Settlement");
+            }
             System.out.println(settlement.getText());
             Element speaker = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Speakers')]");
             System.out.println(speaker.getText());
@@ -159,10 +162,16 @@ public class VikusViewer extends Visualizer {
             comrow[3] = dialect.getText();
             //country
             Element country = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Country')]");
+            if(country==null){
+                country = new Element("Country");
+            }
             System.out.println(country.getText());
             comrow[4] = country.getText();
             //region
             Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Region')]");
+            if(region==null){
+                region = new Element("Region");
+            }
             System.out.println(region.getText());
             comrow[5] = region.getText();
             //settlement
