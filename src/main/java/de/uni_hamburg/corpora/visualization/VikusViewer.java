@@ -155,31 +155,31 @@ public class VikusViewer extends Visualizer {
             keywords += year.getText() + "," + genre.getText() + "," + settlement.getText() + "," + speaker.getText() + "\"";
             comrow[1] = keywords;
             //year - Description Date of Recording
-            comrow[2] = year.getText();
+            comrow[2] = cleanForCSV(year.getText());
             //dialect
             Element dialect = (Element) XPath.selectSingleNode(communication, "descendant::Description/Key[contains(@Name,'Dialect')]");
             System.out.println(dialect.getText());
-            comrow[3] = dialect.getText();
+            comrow[3] = cleanForCSV(dialect.getText());
             //country
             Element country = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Country')]");
             if(country==null){
                 country = new Element("Country");
             }
             System.out.println(country.getText());
-            comrow[4] = country.getText();
+            comrow[4] = cleanForCSV(country.getText());
             //region
             Element region = (Element) XPath.selectSingleNode(communication, "descendant::Location/Description/Key[contains(@Name,'Region')]");
             if(region==null){
                 region = new Element("Region");
             }
             System.out.println(region.getText());
-            comrow[5] = region.getText();
+            comrow[5] = cleanForCSV(region.getText());
             //settlement
-            comrow[6] = settlement.getText();
+            comrow[6] = cleanForCSV(settlement.getText());
             //language
             Element language = (Element) XPath.selectSingleNode(communication, "descendant::Language/LanguageCode");
             System.out.println(language.getText());
-            comrow[7] = language.getText();
+            comrow[7] = cleanForCSV(language.getText());
             //speaker
             comrow[8] = "\"" + speaker.getText() + "\"";
             //transcription url
@@ -341,6 +341,13 @@ public class VikusViewer extends Visualizer {
             report.addException(ex, "Usable class not found.");
         }
         return IsUsableFor;
+    }
+    
+    public String cleanForCSV(String s){
+        s = s.replace(',', ' ');
+        s = s.replace('"', ' ');
+        s = s.replace('\'', ' ');
+        return s;
     }
 
     @Override

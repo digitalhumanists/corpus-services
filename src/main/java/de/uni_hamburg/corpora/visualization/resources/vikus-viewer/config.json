@@ -81,7 +81,7 @@
       },
       {
         "name": "Settlement",
-        "source": "_region",
+        "source": "_settlement",
         "display": "column",
         "type": "text"
       },
