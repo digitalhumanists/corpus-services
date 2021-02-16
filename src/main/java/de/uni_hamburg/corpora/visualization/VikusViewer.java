@@ -30,6 +30,7 @@ import de.uni_hamburg.corpora.ComaData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,7 +113,7 @@ public class VikusViewer extends Visualizer {
         Report stats = new Report();
         CSVReader reader;
         CorpusIO cio = new CorpusIO();
-        reader = new CSVReader(new FileReader(getClass().getResource(DATA_PATH).getPath()), ',');
+        reader = new CSVReader(new InputStreamReader(getClass().getResourceAsStream(DATA_PATH)), ',');
         List<String[]> data = reader.readAll();
         //create Row ForCommunications
         ComaData coma = (ComaData) cd;
@@ -290,7 +291,7 @@ public class VikusViewer extends Visualizer {
         Report stats = new Report();
         CSVReader reader;
         CorpusIO cio = new CorpusIO();
-        reader = new CSVReader(new FileReader(getClass().getResource(TIMELINE_PATH).getPath()), ',');
+        reader = new CSVReader(new InputStreamReader(getClass().getResourceAsStream(TIMELINE_PATH)), ',');
         Collections.sort(allDistinctYears);
         List<String[]> time = reader.readAll();
         for (String year : allDistinctYears) {
