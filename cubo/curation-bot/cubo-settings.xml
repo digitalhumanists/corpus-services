@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<corpus-functions> 
+    <replacings>
+        <replacing>
+            <replace>\.\.\.</replace>
+            <replacement>…</replacement>
+            <xpathcontext>///event</xpathcontext>
+            <scope></scope>
+        </replacing>
+        <replacing>
+            <replace>(\r\n|\r|\n|\s{2,})</replace>
+            <replacement> </replacement>
+            <xpathcontext>///event</xpathcontext>
+            <scope></scope>
+        </replacing>
+    </replacings>
+   <transformations>
+       <transformation>
+           <xsl>file:/path/to/set-format-table.xsl</xsl>
+           <overwrite>true</overwrite>
+           <scope>exb</scope>
+       </transformation>
+   </transformations>
+</corpus-functions>

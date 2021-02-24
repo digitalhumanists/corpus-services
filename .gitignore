@@ -1,6 +1,7 @@
 *
 !*/
 !.gitignore
+!*.gitattributes
 !*.java
 !*.form
 !*.xsl
@@ -18,3 +19,11 @@ target/
 !*.md
 !lib/EXMARaLDA-*.jar
 !utilities/*
+!*.sh
+!*.txt
+!*.bat
+!*.sh
+!*.php
+!crontab-example.bak
+!holidays
+

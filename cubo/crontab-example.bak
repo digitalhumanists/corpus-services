@@ -1,0 +1,30 @@
+#KML update
+55 * * * * bash /path/to/corpus-services/cubo/corpus-synchronization-git/update-kml.sh | ts "[\%Y-\%m-\%d \%H:\%M:\%S]" >> /path/to/reports/cronjob.log 2>&1
+
+#Automatic checks and fixes
+0 23 * * * bash /path/to/corpus-services/cubo/RunSilentGitAndAutoFixAndCheck.sh | ts "[\%Y-\%m-\%d \%H:\%M:\%S]" >> /path/to/reports/cronjob.log 2>&1
+
+#get recent corpus services jar from GitLab
+0 20 * * * bash /path/to/corpus-services/cubo/update-jar/copy-most-recent-artifact.sh | ts "[\%Y-\%m-\%d \%H:\%M:\%S]" >> /path/to/reports/cronjob.log 2>&1
+
+#Cubo message: weekend
+0 16 * * 5 bash /path/to/corpus-services/cubo/messenger/mattermost-message.sh "Happy weekend everyone. :sunrise: I'll stay here and continue working... as always :-)" XXXXXX | ts "[\%Y-\%m-\%d \%H:\%M:\%S]" >> /path/to/reports/cronjob.log 2>&1
+#Cubo message: stand-up call
+55 6 * * 2 bash /path/to/corpus-services/cubo/messenger/mattermost-standup-message.sh "Hi @all, standup is in **5 minutes**: XXXXXX... :clock11: I'll go back to sleep now, already getting hungry for data again. :yum:" XXXXX order | ts "[\%Y-\%m-\%d \%H:\%M:\%S]" >> /path/to/reports/cronjob.log 2>&1
+#Cubo message: morning call
+57 6 * * 1,3,4,5 bash /path/to/corpus-services/cubo/messenger/mattermost-standup-message.sh "Good morning @all, ZOOM call is in **3 minutes** XXXXXX :telephone_receiver: :grinning:" XXXXXX | ts "[\%Y-\%m-\%d \%H:\%M:\%S]" >> /path/to/reports/cronjob.log 2>&1
+
+#remove old reports that are not needed anymore
+15 6 1 * * find /path/to/reports/ -name "*git-sync.txt" -mtime +60 -type f -delete
+45 6 1 * * find /path/to/reports/ -name "*report.txt" -mtime +60 -type f -delete
+15 7 1 * * find /path/to/reports/ -name "*conflict.txt" -mtime +60 -type f -delete
+
+#check if the reports in all the report folders are younger than two days and thus are run correctly
+0 4 * * * bash /path/to/corpus-services/cubo/cronjob-check/check-report-dates.sh
+
+#check if there are not more than 7 cleanup tasks open in Redmine 
+0 4 * * * bash /path/to/corpus-services/cubo/cronjob-check/check-cleanup-task-number.sh 
+
+#check if there are too many errors in the report outputs
+30 4 * * 2 bash /path/to/corpus-services/cubo/cronjob-check/check-report-error-number.sh "2500"
+
