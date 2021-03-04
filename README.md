@@ -70,6 +70,8 @@ Additional documentation on the Corpus services can be found in the doc folder:
 
 You can also find some sample scripts (batch and shell) to use for calls to the corpus services jar and some further utilities [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/utilities).
 
+There is also some information and scripts useful for automating the use of corpus-services available [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/cubo).
+
 ### Prerequisites
 
 Java needs to be installed. 
