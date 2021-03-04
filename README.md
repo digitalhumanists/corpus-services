@@ -165,7 +165,7 @@ Contributions to the project have been made by staff from the HZSK and several r
 
 Thank you to all funders, supporters and [contributors][contributors-url]!
 
-Logo created at LogoMakr.com.
+Logo created at [LogoMakr.com](https://logomakr.com/).
 This README file was created on the basis of the [Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md).
 
 <!-- MARKDOWN LINKS & IMAGES -->
