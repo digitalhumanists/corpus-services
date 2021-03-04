@@ -91,8 +91,7 @@ The usable functions can be found in the help output:
 
 `java -jar corpus-services-1.0.jar -h`
 
-See [How to use](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use.md)
- for the usage of the corpus services.
+See [How to use](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/How_to_use.md) for the usage of the corpus services.
  
 <!-- LIBRARIES -->
 ## Libraries
