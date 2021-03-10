@@ -192,8 +192,8 @@
         </dependency>
         <dependency>
             <groupId>org.languagetool</groupId>
-            <artifactId>language-de</artifactId>
-            <version>4.2</version>
+            <artifactId>language-all</artifactId>
+            <version>5.2</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
