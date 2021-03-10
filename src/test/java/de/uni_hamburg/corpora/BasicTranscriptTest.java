@@ -35,7 +35,7 @@ public class BasicTranscriptTest {
     @Test
     public void readWriteBT() {
         try {
-            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/Beckhams/Beckhams.exb";
+            String exbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/HardTalk.exb";
             String newExbFilename = "src/test/java/de/uni_hamburg/corpora/resources/example/outxample.exb";
             String exbString = new
                 String(Files.readAllBytes(Paths.get(exbFilename)), "UTF-8");
