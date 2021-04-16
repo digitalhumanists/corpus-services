@@ -25,15 +25,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import org.exmaralda.partitureditor.jexmaralda.BasicTranscription;
 import org.exmaralda.partitureditor.jexmaralda.JexmaraldaException;
 import org.jdom.JDOMException;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
 
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.JLanguageTool;
@@ -70,7 +68,7 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
      */
     @Override
     public Report function(CorpusData cd, Boolean fix)
-            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException {
+            throws SAXException, IOException, ParserConfigurationException, JexmaraldaException, JDOMException, XPathExpressionException, TransformerException {
         Report stats = new Report();
         btd = new BasicTranscriptionData(cd.getURL());
         if (language.equals("de")) {
@@ -92,68 +90,66 @@ public class LanguageToolChecker extends Checker implements CorpusFunction {
                     + language);
             return stats;
         }
-        Document doc = TypeConverter.JdomDocument2W3cDocument(btd.getJdom());
-        NodeList tiers = doc.getElementsByTagName("tier");
+        boolean spellingError = false;
+        Document jDoc = TypeConverter.String2JdomDocument(cd.toSaveableString());
         List<RuleMatch> matches = new ArrayList<RuleMatch>();
-        int count = 0;
-        for (int k = 0; k < tiers.getLength(); k++) {
-            Element tier = (Element) tiers.item(k);
-            if (!tier.getAttribute("category").equals(tierToCheck)) {
-                continue;
-            }
-            NodeList events = tier.getElementsByTagName("event");
-            for (int i = 0; i < events.getLength(); i++) {
-                Element event = (Element) events.item(i);
-                NodeList eventTexts = event.getChildNodes();
-                for (int j = 0; j < eventTexts.getLength(); j++) {
-                    Node maybeText = eventTexts.item(j);
-                    if (maybeText.getNodeType() != Node.TEXT_NODE) {
-                        if (maybeText.getNodeType() == Node.ELEMENT_NODE
-                                && maybeText.getNodeName().equals("ud-information")) {
-                            // XXX: ud-information is weird I'll just skip it...
-                            continue;
+        String xpathTier = "//tier[@category='" + tierToCheck + "']";
+        XPath xTier = XPath.newInstance(xpathTier);
+        List tierList = xTier.selectNodes(jDoc);
+        //extra for loop to get the tier id value for exmaError
+        for (int i = 0; i< tierList.size(); i++) {
+            Object oTier = tierList.get(i);
+            if (oTier instanceof Element) {
+                Element tier = (Element) oTier;
+                String tierId = tier.getAttributeValue("id");
+                String xpathEvent = "//tier[@id='" + tierId + "']/event";
+                XPath xEvent = XPath.newInstance(xpathEvent);
+                List eventList = xEvent.selectNodes(tier);
+                for (int j = 0; j < eventList.size(); j++) {
+                        Object o = eventList.get(j);
+                        if (o instanceof Element) {
+                            Element e = (Element) o;
+                            String eventText = e.getText();
+                            String start = e.getAttributeValue("start");
+                            matches = langTool.check(eventText);
+                            String xpathStart = "//tier[@category='ref']/event[@start='" + start + "']";
+                            XPath xpathRef = XPath.newInstance(xpathStart);
+                            List refList = xpathRef.selectNodes(jDoc);
+                            if (refList.isEmpty()) {
+                                String emptyMessage = "Ref tier information seems to be missing for event '" + eventText + "'";
+                                stats.addCritical(function, cd, emptyMessage);
+                                exmaError.addError(function, cd.getURL().getFile(), tierId, start, false, emptyMessage);
+                                continue;
+                            }
+                            Object refObj = refList.get(0);
+                            if (refObj instanceof Element) {
+                                Element refEl = (Element) refObj;
+                                String refText = refEl.getText();
+                                for (RuleMatch match : matches) {
+                                    String message = "Potential error at characters "
+                                            + match.getFromPos() + "-" + match.getToPos() + ": "
+                                            + match.getMessage() + ": \""
+                                            + eventText.substring(match.getFromPos(),
+                                                    match.getToPos()) + "\" "
+                                            + "Suggested correction(s): "
+                                            + match.getSuggestedReplacements()
+                                            + ". Reference tier id: " + refText;
+                                    spellingError = true;
+                                    stats.addWarning(function, cd, message);
+                                    exmaError.addError(function, cd.getURL().getFile(), tierId, start, false, message);
+                                }
+                            }
                         }
-                        System.out.println("This is not a text node: "
-                                + maybeText);
-                        continue;
                     }
-                    Text eventText = (Text) maybeText;
-                    String text = eventText.getWholeText();
-                    matches = langTool.check(text);
-                    for (RuleMatch match : matches) {
-                        String message = "Potential error at characters "
-                                + match.getFromPos() + "-" + match.getToPos() + ": "
-                                + match.getMessage() + ": \""
-                                + text.substring(match.getFromPos(),
-                                        match.getToPos()) + "\" "
-                                + "Suggested correction(s): "
-                                + match.getSuggestedReplacements();
-                        stats.addWarning(function, cd, message
-                        );
-//                        System.out.println("Potential error at characters " + 
-//                                match.getFromPos() + "-" + match.getToPos() + ": " +
-//                                match.getMessage() + ": \"" +
-//                                text.substring(match.getFromPos(),
-//                                               match.getToPos()) + "\" " +
-//                                "Suggested correction(s): " +
-//                                match.getSuggestedReplacements());
-                        //add ExmaError tierID eventID
-                        exmaError.addError(function, cd.getURL().getFile(), tier.getAttribute("id"), event.getAttribute("start"), false, message);
+                     if (!spellingError) {
+                        stats.addCorrect(function, cd, "No spelling errors found.");
                     }
-                    if (!matches.isEmpty()) {
-                        count++;
-                    }
-                }
-
+                }       
             }
-        }
-        if (count==0) {
-            stats.addCorrect(function, cd, "No spelling errors found.");
-        }
         return stats;
-    }
-
-
+        }
+        
+    
     /**
      * Default function which determines for what type of files (basic
      * transcription, segmented transcription, coma etc.) this feature can be
