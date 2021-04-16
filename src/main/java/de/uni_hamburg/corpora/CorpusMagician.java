@@ -54,6 +54,9 @@ import de.uni_hamburg.corpora.validation.LanguageToolChecker;
 import de.uni_hamburg.corpora.visualization.HScoreHTML;
 import de.uni_hamburg.corpora.validation.ReportStatistics;
 import de.uni_hamburg.corpora.visualization.VikusViewer;
+import de.uni_hamburg.corpora.validation.ExbEventTokenizationChecker;
+import de.uni_hamburg.corpora.validation.ExbTimestampsChecker;
+import de.uni_hamburg.corpora.validation.ExbForbiddenSymbolsChecker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -310,6 +313,9 @@ public class CorpusMagician {
         allExistingCFs.add("DuplicateTierContentChecker");
         allExistingCFs.add("LanguageToolChecker");
         allExistingCFs.add("VikusViewer");
+        allExistingCFs.add("ExbEventTokenizationChecker");
+        allExistingCFs.add("ExbTimestampsChecker");
+        allExistingCFs.add("ExbForbiddenSymbolsChecker");
         Collections.sort((List<String>) allExistingCFs);
         return allExistingCFs;
     }
@@ -834,6 +840,35 @@ public class CorpusMagician {
                     case "vikusviewer":
                     VikusViewer vv = new VikusViewer();
                     cf2strcorpusfunctions.add(vv);
+                    break;
+                case "exbeventtokenizationchecker":
+                    ExbEventTokenizationChecker eetc = new ExbEventTokenizationChecker();
+                    cf2strcorpusfunctions.add(eetc);
+                    if (cfProperties != null) {
+                        // Pass on the configuration parameter
+                        if (cfProperties.containsKey("tokensTier")) {
+                            eetc.setTokensTierName(cfProperties.getProperty("tokens"));
+                            System.out.println("Tokens tier name set to " + cfProperties.getProperty("token"));
+                        }
+                        if (cfProperties.containsKey("annotationTiers")) {
+                            eetc.setTierNames(cfProperties.getProperty("annotation"));
+                            System.out.println("Tier names set to " + cfProperties.getProperty("tiers"));
+                        }
+                    }
+                    break;
+                case "exbtimestampschecker":
+                    ExbTimestampsChecker extc = new ExbTimestampsChecker();
+                    cf2strcorpusfunctions.add(extc);
+                    break;
+                case "exbforbiddensymbolschecker":
+                    ExbForbiddenSymbolsChecker efsc = new ExbForbiddenSymbolsChecker();
+                    cf2strcorpusfunctions.add(efsc);
+                    if (cfProperties != null) {
+                        if (cfProperties.containsKey("tiers")) {
+                            efsc.setTierNames(cfProperties.getProperty("tiers"));
+                            System.out.println("The tiers to check are set to " + cfProperties.getProperty("tiers"));
+                        }
+                    }
                     break;
                 default:
                     report.addCritical("CommandlineFunctionality", "Function String \"" + function + "\" is not recognized");
