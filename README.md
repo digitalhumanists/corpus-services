@@ -151,9 +151,12 @@ PID: http://hdl.handle.net/11022/0000-0007-D8A6-A
 
 ## Citation
 
-For an introduction to the system please cite 
+Please cite both the introduction into the system (Journal article) and the software publication:
 
 Hedeland, H. & Ferger, A. (2020). Towards Continuous Quality Control for Spoken Language Corpora. International Journal for Digital Curation, 15(1). https://doi.org/10.2218/ijdc.v15i1.601 
+
+Anne Ferger, Hanna Hedeland, Daniel Jettka, & Tommi Pirinen. (2020). Corpus Services (Version 1.0). Zenodo. http://doi.org/10.5281/zenodo.4725655
+
 
 [comment]: # (for more recent information please refer to ...)
 
