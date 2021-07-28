@@ -1,0 +1,30 @@
+message: "If you use this software, please cite it using these metadata."
+title: "Corpus Services"
+version: "1.0"
+license: "MIT"
+doi: "http://doi.org/10.5281/zenodo.4725655"
+date-released: 2020-05-12
+authors: 
+  -
+    family-names: Ferger
+    given-names: Anne
+    orcid: "https://orcid.org/0000-0002-1382-2658"
+  - 
+    family-names: Hedeland
+    given-names: Hanna
+    orcid: "https://orcid.org/0000-0003-4655-6082"
+  -
+    family-names: Jettka
+    given-names: Daniel
+    orcid: "https://orcid.org/0000-0002-2375-2227"
+  - 
+    family-names: Pirinen
+    given-names: Tommi
+    orcid: "https://orcid.org/0000-0003-1207-5395"
+keywords: 
+  - "continuous quality control"
+  - "quality assurance"
+  - "data curation"
+  - "corpus linguistics"
+abstract: "The (HZSK) Corpus Services were initially developed at the Hamburg Centre for Language Corpora (HZSK) as a quality control and publication framework for EXMARaLDA corpora. Since then, most development work has been done within the INEL project. A focus has been set on making the code adaptable to other use cases and data types. The Corpus Services project now bundles functionality used for maintenance, curation, conversion, and visualization of corpus data in various projects."
+cff-version: "1.1.0"
