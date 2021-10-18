@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: artifact
-        path: /home/runner/work/digitalhumanists/corpus-services/target/corpus-services-1.0.jar
+        path: /home/runner/work/corpus-services/corpus-services/target/corpus-services-1.0.jar
