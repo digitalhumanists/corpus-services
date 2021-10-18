@@ -22,7 +22,7 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Maven
-      run:  mvn install:install-file -Dfile=lib/EXMARaLDA-Preview-20201130.jar -DgroupId=org.exmaralda -DartifactId=EXMARaLDA -Dversion=Preview-20201130 -Dpackaging=jar  -DgeneratePom=true && mvn -B package --file pom.xml
+      run:  mvn install:install-file -Dfile=lib/EXMARaLDA-Preview-20201130.jar -DgroupId=org.exmaralda -DartifactId=EXMARaLDA -Dversion=Preview-20201130 -Dpackaging=jar  -DgeneratePom=true && mvn clean compile assembly:single
     - name: Upload Maven build artifact
       uses: actions/upload-artifact@v2
       with:
