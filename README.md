@@ -84,7 +84,7 @@ The latest compiled .jar file can be found [here](https://gitlab.rrz.uni-hamburg
 
 To use the services for corpora, compile it using `mvn clean compile assembly:single`.
 (See [Build with Maven](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/tree/develop/doc/Build_with_Maven.md)
-or use a pregenerated artifact from Gitlab that you can download [here](https://gitlab.rrz.uni-hamburg.de/corpus-services/corpus-services/-/jobs/artifacts/develop/browse?job=compile_withmaven). 
+or use a pregenerated artifact from GitHub Actions that you can download [here](https://nightly.link/digitalhumanists/corpus-services/workflows/maven/develop/artifact.zip) using [nightly.link](https://nightly.link/). 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -172,6 +172,8 @@ Thank you to all funders, supporters and [contributors][contributors-url]!
 
 Logo created at [LogoMakr.com](https://logomakr.com/).
 This README file was created on the basis of the [Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md).
+
+Using [nightly.link](https://nightly.link/) for links to generated artifacts.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
