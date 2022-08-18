@@ -76,7 +76,7 @@ There is also some information and scripts useful for automating the use of corp
 
 Java needs to be installed. 
 
-#### Gitlab artifacts
+#### GitHub artifacts
 
 The latest compiled .jar file can be found [here](https://nightly.link/digitalhumanists/corpus-services/workflows/maven/develop/artifact.zip).
 
